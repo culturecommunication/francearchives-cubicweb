@@ -1,0 +1,12 @@
+label span.required::after {
+  content: ' * ';
+  color: #a94442;
+}
+
+form.static {
+  margin: 1.250em 0;
+}
+
+.form-group.captcha {
+  display: none;
+}

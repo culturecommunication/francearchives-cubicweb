@@ -1,0 +1,86 @@
+[
+    {
+        "url": "/",
+        "ignores": [
+            {
+                "code": "WCAG2AA.Principle4.Guideline4_1.4_1_2.H91.A.EmptyNoId",
+                "selector": "#content-events > div > div > div > a:nth-child(1)"
+            },
+            {
+                "code": "WCAG2AA.Principle4.Guideline4_1.4_1_2.H91.A.EmptyNoId",
+                "selector": "#content-events > div > div > div > a:nth-child(2)"
+            }
+        ]
+   },
+    {
+        "url": "/sitemap",
+        "ignores": []
+    },
+    {
+        "url": "/legal_notices",
+        "ignores": []
+    },
+    {
+        "url": "/accessibility",
+        "ignores": []
+    },
+    {
+        "url": "/findingaid/c5eff3b1e3e783a05bf9dbd6b79e0ebc7c536770",
+        "ignores": []
+    },
+    {
+        "url": "/facomponent/1191c96001c40b01e6d80911269a9da093ce9ed2",
+        "ignores": []
+    },
+    {
+        "url": "/actualites",
+        "ignores": []
+    },
+    {
+        "url": "/circulaires",
+        "ignores": []
+    },
+    {
+        "url": "/circulaire/DGP_SIAF_2016_005",
+        "ignores": []
+    },
+    {
+        "url": "/commemo/recueil-2016/",
+        "ignores": [
+            {
+                "code": "WCAG2AA.Principle4.Guideline4_1.4_1_2.H91.A.EmptyNoId",
+                "selector": "#slider-dates > div > div > div > a:nth-child(1)"
+            },
+            {
+                "code": "WCAG2AA.Principle4.Guideline4_1.4_1_2.H91.A.EmptyNoId",
+                "selector": "#slider-dates > div > div > div > a:nth-child(2)"
+            }
+        ]
+    },
+    {
+        "url": "/annuaire/departements?dpt=13",
+        "ignores": []
+    },
+    {
+        "url": "/actualite/73569753",
+        "ignores": []
+    },
+    {
+        "url": "/article/26287443",
+        "ignores": []
+    },
+    {
+        "url": "/commemo/recueil-2017/26287430",
+        "ignores": [
+            {
+                "code": "WCAG2AA.Principle4.Guideline4_1.4_1_2.H91.A.EmptyNoId",
+                "selector": "#slider-dates > div > div > div > a:nth-child(1)"
+            },
+            {
+                "code": "WCAG2AA.Principle4.Guideline4_1.4_1_2.H91.A.EmptyNoId",
+                "selector": "#slider-dates > div > div > div > a:nth-child(2)"
+            }
+        ]
+    }
+
+]

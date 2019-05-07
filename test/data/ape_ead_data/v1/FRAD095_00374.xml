@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ead>
+  <eadheader>
+    <eadid countrycode="fr">FRAD095_00374</eadid>
+    <filedesc>
+      <titlestmt>
+        <titleproper>
+          <EMPH>Bureau d'enregistrement de Marines (1784-1960)</EMPH>
+        </titleproper>
+        <subtitle>Répertoire numérique</subtitle>
+        <author>Claire Pasquet en 2009, complété par Estelle Delforge, Océane Tchartiloglou et Antoine Tourte en 2013, sous la direction de Marie-Hélène Peltier et de Patrick Lapalu.</author>
+      </titlestmt>
+      <publicationstmt>
+        <publisher>Archives départementales du Val-d'Oise</publisher><address><addressline>Cergy-Pontoise</addressline></address></publicationstmt>
+    </filedesc>
+    <revisiondesc>
+      <change>
+        <ITEM>Intégration des notices du répertoire dans Thot par Caroline Pompier</ITEM>
+        <date>27/08/2014</date>
+      </change>
+      <change>
+        <ITEM>Structuration du répertoire dans l'aide au classement de Thot par Caroline Pompier</ITEM>
+        <date>27/08/2014</date>
+      </change>
+      <change>
+        <ITEM>Cet instrument de recherche a été encodé en XML conformément à la DTD EAD (version 2002) avec le logiciel Thot (module Aide au classement) de la société Sicem</ITEM>
+        <date>13/10/2014</date>
+      </change>
+    </revisiondesc>
+  </eadheader>
+  <archdesc level="fonds" otherlevel="Fonds">
+    <did>
+      <unitid countrycode="fr">3Q7 1 - 910</unitid>
+      <unittitle>Bureau d'enregistrement de Marines.</unittitle>
+      <unitdate>1784-1960</unitdate>
+      <physdesc>
+        <extent unit="">30,57 m.l. (910 articles)</extent>
+        <genreform/>
+        <dimensions/>
+      </physdesc>
+      <origination label="producteur">Seine-et-Oise. Direction de l'Enregistrement</origination>
+      <repository>
+        <extref href="www.archives.valdoise.fr">Archives départementales du Val-d'Oise</extref>
+      </repository>
+      <langmaterial/>
+    </did>
+    <bioghist>
+      <p><strong>L'enregistrement</strong></p>
+    </bioghist>
+    <scopecontent>
+      <p><span class="underline">Composition</span></p>
+    </scopecontent>
+    <controlaccess>
+      <geogname role="">Marines (Val-d'Oise ; canton)</geogname>
+      <geogname role="">Ableiges (Val-d'Oise)</geogname>
+      <subject role="">ENREGISTREMENT</subject>
+    </controlaccess>
+    <appraisal/>
+    <dao audience="" title="" href="FRAD095_00374_Annexe_0001.pdf" role="" show="" />
+    <daogrp/>
+    <dsc type="in-depth">
+      <c level="otherlevel" otherlevel="Série_organique">
+        <did>
+          <unitid countrycode="fr">c1</unitid>
+          <unittitle>Registres de formalités et actes déposés.</unittitle>
+          <unitdate>1791-1959</unitdate>
+          <physdesc>
+            <extent>752 articles</extent>
+          </physdesc>
+          <origination label="producteur">Seine-et-Oise. Direction de l'Enregistrement</origination>
+        </did>
+s       <c level="otherlevel" otherlevel="Sous-série_organique">
+          <did>
+            <unitid countrycode="fr">c11</unitid>
+            <unittitle>Actes civils publics et actes sous seing privé.</unittitle>
+            <unitdate>1791-1810</unitdate>
+            <physdesc>
+              <extent>7 registres</extent>
+            </physdesc>
+            <origination label="producteur">Seine-et-Oise. Direction de l'Enregistrement</origination>
+          </did>
+          <daogrp audience="" role="">
+            <daoloc href="foo.jpg" />
+            <daoloc href="bar.jpg" />
+          </daogrp>
+        </c>
+        <c level="otherlevel" otherlevel="Pièce" id="">
+          <did>
+            <unitid countrycode="fr" type="">c12</unitid>
+            <unittitle>1791-1792 (volume n° 42 (1))</unittitle>
+            <unitdate normal="">1791-1792</unitdate>
+            <unitdate type="date_affinee">1791 (8 juillet)-1792 (11 mai) </unitdate>
+            <physdesc>
+              <extent unit="">1 registre</extent>
+              <genreform/>
+              <dimensions/>
+            </physdesc>
+            <origination label="producteur">Seine-et-Oise. Direction de l'Enregistrement</origination>
+          </did>
+          <daogrp audience="" role="">
+            <daoloc href="bim.jpg" />
+            <daoloc href="bam.jpg" />
+          </daogrp>
+        </c>
+      </c>
+    </dsc>
+  </archdesc>
+</ead>

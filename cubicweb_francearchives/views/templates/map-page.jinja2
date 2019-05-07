@@ -1,0 +1,43 @@
+<h1>{{ map.dc_title() }}</h1>
+
+{% if map.top_content %}
+  {{ map.printable_value('top_content') }}
+{% endif %}
+
+{% if map.map_title %}
+  <div class="map-view-title">{{ map.map_title }}</div>
+{% endif %}
+
+<div class="map-view-content">
+  {{ map_form }}
+  <div id="dpt-vmap" class="jqvmap jqvmap-left" data-formid="dpt-vmap-form"></div>
+
+  {% for color, desc, data in legends %}
+    <div class="map-view-legend">
+     <svg width="2em" height="1em" class="map-view-legend-color" role="img">
+       <title>{{ desc }}</title>
+       <rect width="100%" height="100%" fill="{{ color }}" stroke-width=1 stroke="rgb(0,0,0)" />
+       </svg>
+      <div class="map-view-legend-desc">{{ desc }}</div>
+      {% if data %}
+      <ul class="sr-only">
+      {% for item, url in data %}
+        <li class="sr-only">
+        {% if url %}
+          <a href="{{ url }}"
+           target="_blank" rel="nofollow noopener noreferrer"
+           title="{{ _('Go to the site:') }} {{ item }} {{ _('- New window') }}">{{ item }}</a>
+        {% else %}
+          {{ item }}
+        {% endif %}
+        </li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+    </div>
+  {% endfor %}
+</div>
+
+{% if map.bottom_content %}
+  {{ map.printable_value('bottom_content')}}
+{% endif %}

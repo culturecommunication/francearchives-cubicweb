@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
+  <responseDate>2016-12-12T10:03:53Z</responseDate>
+  <request verb="ListRecords" metadataPrefix="ead">http://portail.cg51.mnesys.fr/oai_pmh.cgi</request>
+  <ListRecords>
+    <record>
+      <header>
+        <identifier>86869/a0114666730443PYpcW</identifier>
+        <datestamp>2011-06-24</datestamp>
+      </header>
+      <metadata>
+        <ead xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:isbn:1-931666-22-9" xmlns:xlink="http://www.w3.org/1999/xlink" xsi:schemaLocation="urn:isbn:1-931666-22-9 http://www.loc.gov/ead/ead.xsd http://www.w3.org/1999/xlink http://www.loc.gov/standards/xlink/xlink.xsd">
+          <eadheader>
+            <eadid>FRAD051_204M</eadid>
+            <filedesc>
+              <titlestmt>
+                <titleproper>MAJ - 204 M - Organisation économique pendant la guerre 1939-1945</titleproper>
+                <author>par René Gandilhon</author>
+              </titlestmt>
+              <publicationstmt>
+                <publisher>Archives départementales de la Marne</publisher>
+                <address><addressline>Châlons-en-Champagne</addressline></address>
+                <date normal="2015">2015</date>
+              </publicationstmt>
+            </filedesc>
+            <profiledesc>
+              <creation>Instrument de recherche produit au moyen du logiciel Arkhéïa Aide au classement de la société Anaphore sarl, version 3-9.3 du
+                <date normal="2011-06-24">vendredi 24 juin 2011</date>. Date de l'export :
+                <date normal="2016-06-23">jeudi 23 juin 2016</date> (11:00 h).
+                <lb/>Instrument de recherche encodé par la société Fontaine et Fils Archives Service en 2009, sous la direction des Archives départementales de la Marne</creation>
+              <langusage>Instrument de recherche rédigé en
+                <language langcode="fre">français</language>
+              </langusage>
+            </profiledesc>
+          </eadheader>
+          <archdesc level="otherlevel" otherlevel="groupe-de-fonds" id="a0114666730443PYpcW">
+            <did>
+              <unitid label="Cotes extrêmes">
+                <extptr xlink:href="http://portail.cg51.mnesys.fr/ark:/86869/a0114666730443PYpcW" />204 M 1-3105</unitid>
+              <unittitle label="Intitulé de l'unité documentaire">204 M. Organisation économique de la région de Châlons-sur-Marne et du département de la Marne pendant la guerre 1939-1945</unittitle>
+              <unitdate label="Date de l'unité documentaire" normal="1933-01-01/1957-12-31" type="inclusive">1933-1957</unitdate>
+              <physdesc label="Description physique">
+                <genreform source="liste-typedocAC">Document d'archives</genreform>
+                <lb/>
+                <lb/>
+                <extent type="nombre elements" label="Nombre d'éléments">3105 articles</extent>
+                <lb/>
+                <extent label="Métrage linéaire" unit="ml">118,00</extent>
+                <lb/>
+              </physdesc>
+              <repository label="Organisme responsable de l'accès intellectuel">Archives départementales de la Marne</repository>
+              <physloc label="Localisation physique">Centre de Reims</physloc>
+            </did>
+            <scopecontent>
+
+              <head>Présentation du contenu</head>
+              <p>Cet inventaire des Archives de la Marne que nous présentons aujourd'hui est consacré aux divers fonds d'archives provenant des administrations qui ont pris en charge, pendant la guerre de 1939-1945, la gestion des questions économiques dans la Région de Châlons-sur-Marne et le département de la Marne. De leurs attributions, de leur compétence territoriale nous reparlerons plus loin ; mais qu'il nous soit permis d'indiquer de suite que toutes concoururent au fonctionnement d'une économie dirigée, nécessitée par le besoin d'un rationnement indispensable, principalement dans le domaine alimentaire. Tout a été écrit sur les méfaits réels ou supposés du " Ravitaillement " ! Cependant, il faut bien reconnaître que sans son concours, de nombreux Français auraient succombé ; que d'autre part le personnel employé s'appliqua avec conscience aux tâches qui lui furent confiées. Certains même s'identifiant avec leurs fonctions en arrivèrent à perdre de vue la cruelle période qui avait motivé leur nomination. Illustration de cette idée ! Le début d'un discours du Directeur du Groupement d'achat et de répartition des denrées alimentaires : " Le groupement est né le 18 septembre 1940 ; c'était un bel enfant, très bien constitué, il s'est développé très rapidement et dans des conditions très favorables... " (Archives de la Marne, 204 M 2982). Combien de Marnais n'ont pas apprécié ces conditions très favorables !</p>
+              <p>En opposition cependant dans un organisme voisin une note de service laisse penser... à une certaine nonchalance : " Si aucun travail ne reste à faire après que les armoires et bureaux sont en ordre, le personnel est autorisé à travailler pour son compte à condition toutefois de faire disparaître ledit travail dès qu'un visiteur s'annonce et tant qu'il n'a pas quitté le bureau. Quant à la téléphoniste, sa place est assise sur une chaise à proximité immédiate de l'appareil et non assise sur une table comme cela lui arrive fréquemment, donnant aux visiteurs une piètre idée de la tenue des bureaux " (Archives de la Marne, 204 M 485).</p>
+              <p>Et pourtant lorsque l'historien examinera la masse imposante des textes officiels, il songera sans doute que rien ne restait à réglementer. Qu'on veuille bien en juger par la liste des succédanés dont l'emploi était autorisé dans le " café-mélange " : chiendent, coques de noix, de pépins de citrouilles, de marrons d'Inde, d'écorces de glands, feuilles de betteraves, graines de pastèques, de petit houx, de tomates, noyaux de dattes, de prunelles, pépins de pommes, de raisins, racines d'asperges, de choux fourragère, d'orties, haricots et pois jarasses déclassés... et pour terminer sarments de vignes ! (Archives de la Marne, 204 M 1639 et 2047)</p>
+              <p>La définition de la vache laitière fut l'objet des réflexions d'un aéropage ! Nous la transcrivons dans son intégralité : " femme bovine depuis la naissance du premier veau jusqu'au jour de la remise à la boucherie " (Archives de la Marne, 204 M 1009).</p>
+              <p>Ajoutons que l'étude des rapports adressés à l'administration centrale devra, dans bien des cas, être prudente. Le lecteur se reportant à ses souvenirs personnels appréciera l'optimisme du Préfet régional qui affirmait le 1er juin 1943 au Ministre de l'Agriculture et du Ravitaillement : " les files d'attente devant les magasins sont inexistantes, même dans les grands centres de ma Région " (Archives de la Marne, 204 M 369). .</p>
+              <p>On portera au passif de la réglementation des pertes de denrées dues... à des imprévoyances ou à une observation exagérée des textes. Quelques exemples pris au hasard : en 1942, un stock de 500 hectolitres de vin doit être immédiatement distribué " sa conservation ne pouvait être assurée plus de 48 heures " ! En 1943, 7.575 kilogrammes de fromages envoyés en Saône-et-Loire sont arrivés en un état tel qu'ils doivent être immédiatement portés à la voirie (Archives de la Marne, 204 M 1633 et 1671).</p>
+              <p>On appréciera également tout l'humour de quelques documents ou de certaines situations.</p>
+              <p>Direction des Services agricoles des Ardennes</p>
+              <p>Le Directeur des Services agricoles des Ardennes certifie que Mme Lambotte Céline, de Saint-Menges-(Ardennes) se trouve capable d'assurer la subsistance des animaux ci-après désignés : (3) Trois têtes de lapins reproducteurs (1 mâle, 2 femelles) ; ce bétail devant être acheté du 5 juillet 1943 au 5 août 1943 dans le département de la Marne.</p>
+              <p>A la même époque, deux contrôleurs, avertis par une voie mystérieuse, se présentent un bel après-midi dans une boucherie pour y saisir un veau abattu clandestinement. La perquisition menée avec célérité ne laisse rien découvrir dans la boutique, dans l'arrière-boutique, dans les dépendances. Poursuivant leurs recherches au premier étage, nos deux zélés préposés allaient se retirer tout déconfits, quand avisant la bouchère couchée malgré l'heure dans son lit, ils la prièrent de vouloir bien se lever, l'un d'eux s'étant en-effet aperçu que " l'impétrante " s'y trouvait toute habillée ! Quelle ne fut leur surprise, de découvrir la. bouchère reposant sous l'édredon avec une moitié de veau douillettement allongée auprès d'elle !</p>
+              <p>Ce côté anecdotique ne doit pas cependant laisser dans l'ombre les efforts prodigieux fournis pendant une décade pour organiser une économie dirigée.</p>
+              <p>Certes sous la Révolution de 1789 la carte de pain et celle de viande avaient été inventées (J. Pannier, L'Inventeur de la carte de pain dans Soc. de l'hist. du protestantisme français. Bulletin, 6e série, t. XIII, 1940, p. 436.. - A. Mathiez, La carte de viande en l'an II dans Annales révolutionnaires, nouv. série, t. IX, 1917, p. 691-693. - A. Aulard, Cartes- de viande sous la Convention nationale dans La Révolution française, t. LXX, 1917, p. 296-299) ; pendant la guerre de 1914-1918 le principe avait été étendu à d'autres produits mais c'est assurément pendant la guerre-de 1939-1945 qu'un dirigisme de toute l'économie a été conçu et réalisé.</p>
+              <p>Son histoire a été tentée mais le plus souvent à l'aide des souvenirs de ceux qui vécurent cette-période. Un roman, comme Le puits des miracles (Paris, 1945, in-8°, 239 p.), d'André Chamson n'en a-t-il pas fait la trame essentielle-de son action ?</p>
+              <p>D'autres travaux, d'ordre juridique ont vu le jour pendant la période elle-même envisagée. Ce sont alors des &#x0153;uvres " de forme " établies à l'aide des textes réglementaires. Or en cette matière, réglementation ne veut pas dire observation. N'a-t-on pas consacré des ouvrages au marché noir ? Il faudra donc consulter les fonds d'archives qui offriront les documents utiles à la connaissance des deux aspects du dirigisme : les textes et leur application. C'est la raison d'être du présent inventaire.</p>
+            </scopecontent>
+            <accessrestrict>
+
+              <head>Modalités d'accès</head>
+              <accessrestrict>
+
+                <head>Statut juridique</head>
+                <legalstatus>
+                  Archives publiques
+                </legalstatus>
+              </accessrestrict>
+              <accessrestrict>
+
+                <head>Communicabilité</head>
+                <p>Archives librement communicables</p>
+              </accessrestrict>
+            </accessrestrict>
+            <otherfindaid>
+
+              <head>Références</head>
+              <p>René GANDILHON, Répertoire numérique détaillé de la sous-série 204 M (organisation économique de la région de Châlons-sur-Marne et du département de la Marne pendant la guerre de 1939-1945), Châlons-sur-Marne, 1961</p>
+            </otherfindaid>
+            <relatedmaterial>
+
+              <head>Sources complémentaires</head>
+              <relatedmaterial type="sources-internes">
+
+                <head>Sources internes</head>
+                <p>J 2074-2131. Collection de titres de ravitaillement (1940-1949).</p>
+              </relatedmaterial>
+            </relatedmaterial>
+            <processinfo>
+              <processinfo type="rédacteur description">
+
+                <head>Rédacteur de la description</head>
+                <p>
+                  <persname role="auteur_description">René Gandilhon avec la collaboration dévouée de tout le personnel des Archives de la Marne et tout particulièrement de Mme Cavanelle, sous-archiviste, de MM. Ferrand, sous-archiviste et Michelet, commis principal, de Mme Bloquel et de M. Lemoine, employés de bureau.</persname>
+                </p>
+              </processinfo>
+            </processinfo>
+            <controlaccess>
+
+              <head>Descripteurs</head>
+              <subject source="contexte-historique">GUERRE 1939-1945</subject>
+              <subject source="contexte-historique">La guerre de 39</subject>
+              <genreform type="typir">Recherche détaillée</genreform>
+            </controlaccess>
+            <dsc type="in-depth">
+              <c id="a011466673043OiEzoO" level="otherlevel" otherlevel="groupe-de-fonds">
+                <did>
+                  <unitid label="Cotes extrêmes">
+                    <extptr xlink:href="http://portail.cg51.mnesys.fr/ark:/86869/a011466673043OiEzoO" />204 M 1-1749</unitid>
+                  <unittitle type="titre" label="Intitulé de l'unité documentaire">Fonds régionaux</unittitle>
+                  <unitdate label="Date de l'unité documentaire" normal="1940-01-01/1944-12-31" type="inclusive">1940-1944</unitdate>
+                </did>
+                <c id="a011466673043hvaWYo" level="fonds">
+                  <did>
+                    <unitid label="Cotes extrêmes">
+                      <extptr xlink:href="http://portail.cg51.mnesys.fr/ark:/86869/a011466673043hvaWYo" />204 M 1-56</unitid>
+                    <unittitle type="titre" label="Intitulé de l'unité documentaire">Préfecture régionale de Châlons-sur-Marne devenue commissariat de la République française pour la région de Châlons-sur-Marne</unittitle>
+                    <unitdate label="Date de l'unité documentaire" normal="1939-01-01/1954-12-31" type="inclusive">1939-1954</unitdate>
+                    <physdesc label="Description physique">
+                      <extent type="nombre elements" label="Nombre d'éléments">56 articles.</extent>
+                      <lb/>
+                    </physdesc>
+                    <origination label="Origine">
+                      <corpname role="producteur" altrender="administration">Préfecture régionale de Châlons-sur-Marne, devenue Commissariat de la République française pour la Région de Châlons-sur-Marne.</corpname>
+                    </origination>
+                  </did>
+                  <bioghist>
+
+                    <head>Biographie ou histoire</head>
+                    <p>La Préfecture régionale de Châlons-sur-Marne a été créée en application de la loi du 19 avril 1941, par décret du 26 août 1941. L'ordonnance du 10 janvier 1944 du Comité français de Libération nationale, puis l'ordonnance du Gouvernement provisoire de la République Française du 3 juin 1944 prévoyaient la suppression des Préfectures régionales et leur transformation en Commissariat de la République Française. Le changement eut lieu pour la Région de Châlons-sur-Marne le 29 août 1944. Le Commissariat de la République Française fut à son tour supprimé par la loi du 26 mars 1946.</p>
+                    <p>Compétence territoriale : Aube, Marne, Haute-Marne.</p>
+                    <p>Siège : Châlons-sur-Marne, rue Carnot.</p>
+                  </bioghist>
+                  <c id="a01146667304327Wjje" level="recordgrp">
+                    <did>
+                      <unitid label="Cotes extrêmes">
+                        <extptr xlink:href="http://portail.cg51.mnesys.fr/ark:/86869/a01146667304327Wjje" />204 M 1-6</unitid>
+                      <unittitle type="titre" label="Intitulé de l'unité documentaire">Généralités</unittitle>
+                      <unitdate label="Date de l'unité documentaire" normal="1942-01-01/1946-12-31" type="inclusive">1942-1946</unitdate>
+                    </did>
+                    <c id="a011466673043On0ZlI" level="file">
+                      <did>
+                        <unitid label="Cotes extrêmes">
+                          <extptr xlink:href="http://portail.cg51.mnesys.fr/ark:/86869/a011466673043On0ZlI" />204 M 1</unitid>
+                        <unittitle label="Intitulé de l'unité documentaire">Situation matérielle des administrations publiques</unittitle>
+                        <unitdate label="Date de l'unité documentaire" normal="1945-01-01/1945-12-31">1945</unitdate>
+                      </did>
+                      <scopecontent>
+
+                        <head>Présentation du contenu</head>
+                        <p>Résultats de l'enquête du Secrétariat général pour les affaires économiques.</p>
+                      </scopecontent>
+                      <controlaccess>
+
+                        <head>Descripteurs</head>
+                        <subject source="contexte-historique">GUERRE 1939-1945</subject>
+                      </controlaccess>
+                    </c>
+                    <c id="a0114666730436Aq4dF" level="file">
+                      <did>
+                        <unitid label="Cotes extrêmes">
+                          <extptr xlink:href="http://portail.cg51.mnesys.fr/ark:/86869/a0114666730436Aq4dF" />204 M 2</unitid>
+                        <unittitle label="Intitulé de l'unité documentaire">Génie rural</unittitle>
+                        <unitdate label="Date de l'unité documentaire" normal="1944-01-01/1945-12-31" type="inclusive">1944-1945</unitdate>
+                      </did>
+                      <scopecontent>
+
+                        <head>Présentation du contenu</head>
+                        <p>Instructions et correspondance concernant le fonctionnement du service ; affaires particulières avec des communes.</p>
+                      </scopecontent>
+                      <controlaccess>
+
+                        <head>Descripteurs</head>
+                        <subject source="contexte-historique">GUERRE 1939-1945</subject>
+                      </controlaccess>
+                    </c>
+                  </c>
+                </c>
+              </c>
+            </dsc>
+          </archdesc>
+        </ead>
+      </metadata>
+    </record>
+    <record>
+      <header>
+        <identifier>86870/a0114666730443PYpcW</identifier>
+        <datestamp>2011-07-24</datestamp>
+      </header>
+      <metadata>
+        <ead xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:isbn:1-931666-22-9" xmlns:xlink="http://www.w3.org/1999/xlink" xsi:schemaLocation="urn:isbn:1-931666-22-9 http://www.loc.gov/ead/ead.xsd http://www.w3.org/1999/xlink http://www.loc.gov/standards/xlink/xlink.xsd">
+          <eadheader>
+            <eadid>FRAD051_205M</eadid>
+            <filedesc>
+              <titlestmt>
+                <titleproper>205 M - Organisation économique pendant la guerre 1938-1946</titleproper>
+                <author>par René Gandilhon</author>
+              </titlestmt>
+              <publicationstmt>
+                <publisher>Archives départementales de la Marne</publisher>
+                <address><addressline>Châlons-en-Champagne</addressline></address>
+                <date normal="2015">2015</date>
+              </publicationstmt>
+            </filedesc>
+            <profiledesc>
+              <creation>Instrument de recherche produit au moyen du logiciel Arkhéïa Aide au classement de la société Anaphore sarl, version 3-9.3 du
+                <date normal="2011-06-24">vendredi 24 juin 2011</date>. Date de l'export :
+                <date normal="2016-06-23">jeudi 23 juin 2016</date> (11:00 h).
+                <lb/>Instrument de recherche encodé par la société Fontaine et Fils Archives Service en 2009, sous la direction des Archives départementales de la Marne</creation>
+              <langusage>Instrument de recherche rédigé en
+                <language langcode="fre">français</language>
+              </langusage>
+            </profiledesc>
+          </eadheader>
+          <archdesc level="otherlevel" otherlevel="groupe-de-fonds" id="a0114666730443PYpcW">
+            <did>
+              <unitid label="Cotes extrêmes">
+                <extptr xlink:href="http://portail.cg51.mnesys.fr/ark:/86869/a0114666730443PYpcW" />204 M 1-3105</unitid>
+              <unittitle label="Intitulé de l'unité documentaire">204 M. Organisation économique de la région de Châlons-sur-Marne et du département de la Marne pendant la guerre 1939-1945</unittitle>
+              <unitdate label="Date de l'unité documentaire" normal="1933-01-01/1957-12-31" type="inclusive">1933-1957</unitdate>
+              <physdesc label="Description physique">
+                <genreform source="liste-typedocAC">Document d'archives</genreform>
+                <lb/>
+                <lb/>
+                <extent type="nombre elements" label="Nombre d'éléments">3105 articles</extent>
+                <lb/>
+                <extent label="Métrage linéaire" unit="ml">118,00</extent>
+                <lb/>
+              </physdesc>
+              <repository label="Organisme responsable de l'accès intellectuel">Archives départementales de la Marne</repository>
+              <physloc label="Localisation physique">Centre de Reims</physloc>
+            </did>
+           
+            <scopecontent>
+              <head>Présentation du contenu</head>
+              <p>Cet inventaire des Archives de la Marne</p>
+            </scopecontent>
+            <arrangement>
+
+              <head>Mode de classement</head>
+              <p>La circulaire de la Direction générale des Archives de France, en date du 18 juillet 1941, relative à l'organisation des papiers des services de la guerre de 1914-1918 avait prescrit le classement des documents de l'espèce en une subdivision spéciale de la série R, mais avait cependant prévu le maintien dans la série M de ces fonds dans les Archives départementales où les dossiers relatifs aux guerres de 1814-1815 et 1870-1871 y avaient été placés. Or ce cas d'exception était justement celui des Archives de la Marne où un Inventaire de la série M a. été publié en 1940. Les sous-séries utilisées s'étant élevées à 202, nous avons donc prévu, en accord avec la Direction générale des Archives de France, de réserver la sous-série 203 M aux fonds de la guerre de 1914-1918 et d'attribuer la cote 204 M aux fonds de la guerre 1939-1945. Nous avons joint en appendice une bibliographie des imprimés périodiques et non périodiques se-rapportant au sujet, mais comme nous le précisons à nouveau en tête de l'Annexe I, le lecteur voudra bien y voir un inventaire des imprimés conservés aux Archives de la Marne et non une bibliographie exhaustive.. C'est en effet, à nos yeux, l'amorce d'un travail d'ensemble, fort utile, mais qui, croyons-nous, ne pourra être qu'une &#x0153;uvre collective. Nous avons également joint la description d'une collection de 2.943 spécimens de titres de rationnement. De ce fait, sa cotation a été effectuée dans la série J (J 2074 à 2131:). Ce bel ensemble a été obtenu grâce au concours que M. Lamiral, de Châlons-sur-Marne, a bien voulu généreusement nous prêter, en donnant aux Archives de la Marne, les éléments d'une collection réunie patiemment pendant la guerre, ce dont nous le remercions bien vivement. Le dépouillement des fonds, la collecte près des organismes nous ont permis d'y apporter un substantiel complément.</p>
+            </arrangement>
+            <accessrestrict>
+
+              <head>Modalités d'accès</head>
+              <accessrestrict>
+
+                <head>Statut juridique</head>
+                <legalstatus>
+                  Archives publiques
+                </legalstatus>
+              </accessrestrict>
+              <accessrestrict>
+
+                <head>Communicabilité</head>
+                <p>Archives librement communicables</p>
+              </accessrestrict>
+            </accessrestrict>
+            <otherfindaid>
+
+              <head>Références</head>
+              <p>René GANDILHON, Répertoire numérique détaillé de la sous-série 204 M (organisation économique de la région de Châlons-sur-Marne et du département de la Marne pendant la guerre de 1939-1945), Châlons-sur-Marne, 1961</p>
+            </otherfindaid>
+            <relatedmaterial>
+
+              <head>Sources complémentaires</head>
+              <relatedmaterial type="sources-internes">
+
+                <head>Sources internes</head>
+                <p>J 2074-2131. Collection de titres de ravitaillement (1940-1949).</p>
+              </relatedmaterial>
+            </relatedmaterial>
+            <processinfo>
+              <processinfo type="rédacteur description">
+
+                <head>Rédacteur de la description</head>
+                <p>
+                  <persname role="auteur_description">René Gandilhon avec la collaboration dévouée de tout le personnel des Archives de la Marne et tout particulièrement de Mme Cavanelle, sous-archiviste, de MM. Ferrand, sous-archiviste et Michelet, commis principal, de Mme Bloquel et de M. Lemoine, employés de bureau.</persname>
+                </p>
+              </processinfo>
+            </processinfo>
+            <controlaccess>
+
+              <head>Descripteurs</head>
+              <subject source="contexte-historique">GUERRE 1939-1945</subject>
+              <genreform type="typir">Recherche détaillée</genreform>
+            </controlaccess>
+            <dsc type="in-depth">
+              <c id="a011466673043OiEzoO" level="otherlevel" otherlevel="groupe-de-fonds">
+                <did>
+                  <unitid label="Cotes extrêmes">
+                    <extptr xlink:href="http://portail.cg51.mnesys.fr/ark:/86869/a011466673043OiEzoO" />204 M 1-1749</unitid>
+                  <unittitle type="titre" label="Intitulé de l'unité documentaire">Fonds régionaux</unittitle>
+                  <unitdate label="Date de l'unité documentaire" normal="1940-01-01/1944-12-31" type="inclusive">1940-1944</unitdate>
+                </did>
+                <c id="a011466673043hvaWYo" level="fonds">
+                  <did>
+                    <unitid label="Cotes extrêmes">
+                      <extptr xlink:href="http://portail.cg51.mnesys.fr/ark:/86869/a011466673043hvaWYo" />204 M 1-56</unitid>
+                    <unittitle type="titre" label="Intitulé de l'unité documentaire">Préfecture régionale de Châlons-sur-Marne devenue commissariat de la République française pour la région de Châlons-sur-Marne</unittitle>
+                    <unitdate label="Date de l'unité documentaire" normal="1939-01-01/1954-12-31" type="inclusive">1939-1954</unitdate>
+                    <physdesc label="Description physique">
+                      <extent type="nombre elements" label="Nombre d'éléments">56 articles.</extent>
+                      <lb/>
+                    </physdesc>
+                    <origination label="Origine">
+                      <corpname role="producteur" altrender="administration">Préfecture régionale de Châlons-sur-Marne, devenue Commissariat de la République française pour la Région de Châlons-sur-Marne.</corpname>
+                    </origination>
+                  </did>
+                  <bioghist>
+
+                    <head>Biographie ou histoire</head>
+                    <p>La Préfecture régionale de Châlons-sur-Marne a été créée en application de la loi du 19 avril 1941, par décret du 26 août 1941. L'ordonnance du 10 janvier 1944 du Comité français de Libération nationale, puis l'ordonnance du Gouvernement provisoire de la République Française du 3 juin 1944 prévoyaient la suppression des Préfectures régionales et leur transformation en Commissariat de la République Française. Le changement eut lieu pour la Région de Châlons-sur-Marne le 29 août 1944. Le Commissariat de la République Française fut à son tour supprimé par la loi du 26 mars 1946.</p>
+                    <p>Compétence territoriale : Aube, Marne, Haute-Marne.</p>
+                    <p>Siège : Châlons-sur-Marne, rue Carnot.</p>
+                  </bioghist>
+                </c>
+              </c>
+            </dsc>
+          </archdesc>
+        </ead>
+      </metadata>
+    </record>
+  </ListRecords>
+</OAI-PMH>

@@ -1,0 +1,50 @@
+@mixin vendor-prefix($property, $value) {
+  -webkit-#{$property}: #{$value};
+     -moz-#{$property}: #{$value};
+       -o-#{$property}: #{$value};
+          #{$property}: #{$value};
+}
+
+@mixin transition($value) {
+  @include vendor-prefix('transition', $value);
+}
+
+@mixin filter($value) {
+  @include vendor-prefix('filter', $value);
+}
+
+@mixin if-wider-than($breakpoint) {
+  @media (min-width: #{map-get($screen-widths, $breakpoint)}) {
+    @content;
+  }
+}
+
+@mixin compute-base-font-size($fs-map) {
+  @each $breakpoint, $fs-font-size in $fs-map {
+    @media (min-width: #{map-get($screen-widths, $breakpoint)}) {
+      font-size: $fs-font-size;
+    }
+  }
+}
+
+@mixin hidden-text() {
+  text-indent: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+@mixin more-link {
+  display: block;
+  background-image: url('../images/icon_plus_blue.svg');
+  bacckground-repeat: no-repeat;
+  background-size: 3em;
+  background-size: contain;
+  line-height: 3.4em;
+  color: #fff;
+  font-size: 1em;
+}
+
+@mixin outline-button-focus {
+  outline: thin dotted;
+  outline-offset: -2px;
+}

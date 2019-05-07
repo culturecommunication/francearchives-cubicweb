@@ -1,0 +1,7 @@
+<section id="document" class="card-view">
+    <h1>{{ entity.title }}</h1>
+    {% if entity.synopsis %}
+    <div class="card-view__summary">{{ entity.synopsis }}</div>
+    {% endif %}
+    <div class="card-view__content">{{ entity.printable_value('content') }}</div>
+</section>

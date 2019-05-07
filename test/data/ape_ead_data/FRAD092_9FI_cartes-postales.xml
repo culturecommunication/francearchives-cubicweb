@@ -1,0 +1,244 @@
+<?xml version='1.0' encoding='utf-8'?>
+<OAI-PMH xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.openarchives.org/OAI/2.0/" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
+  <responseDate>2018-06-13T12:43:47Z</responseDate>
+  <request verb="GetRecord" metadataPrefix="ape_ead" identifier="300c316509c34bd7c830f1420f7a46e275fc4f95">https://localhost:80/oai</request>
+  <GetRecord>
+    <record>
+      <header>
+        <identifier>300c316509c34bd7c830f1420f7a46e275fc4f95</identifier>
+        <datestamp>2018-06-13T12:43:46Z</datestamp>
+      </header>
+      <metadata><ead xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="urn:isbn:1-931666-22-9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" audience="external" xsi:schemaLocation="urn:isbn:1-931666-22-9 http://www.loc.gov/ead/ead.xsd">
+  <eadheader>
+    <eadid identifier="FRAD092_9FI_cartes-postales">FRAD092_9FI_cartes-postales</eadid>
+    <filedesc>
+      <titlestmt>
+        <titleproper>Cartes postales anciennes</titleproper>
+      </titlestmt>
+      <publicationstmt>
+        <publisher>AD 92</publisher>
+      </publicationstmt>
+    </filedesc>
+  </eadheader>
+  <archdesc level="fonds">
+    <did>
+      <unitid>
+        <extptr xlink:href="https://opendata.hauts-de-seine.fr/explore/dataset/cartes-postales/" xlink:type="simple"/>
+      </unitid>
+      <unittitle>Cartes postales anciennes</unittitle>
+      <unitdate>1900-1900</unitdate>
+      <physdesc>5 cartons</physdesc>
+      <origination>Archives des Hauts-de-Seine</origination>
+      <langmaterial>italien</langmaterial>
+    </did>
+    <controlaccess>
+      <subject>Cartes postales</subject>
+      <subject>urbanisation</subject>
+      <geogname>Antony (Hauts-de-Seine)</geogname>
+      <geogname>Hauts-de-Seine</geogname>
+    </controlaccess>
+    <relatedmaterial>
+      <p>Collection photographie département Essonne.</p>
+    </relatedmaterial>
+    <accessrestrict>
+      <p>Libre accès</p>
+    </accessrestrict>
+    <userestrict>
+      <p>Libre de droit</p>
+    </userestrict>
+    <dsc>
+      <c>
+        <did>
+          <unitid><extptr xlink:href="https://opendata.hauts-de-seine.fr/api/datasets/1.0/cartes-postales/images/8ee3d34b124926666f78afa361566542" xlink:type="simple"/>9FI/BAG_10</unitid>
+          <unittitle>Le Dépot des Tramways</unittitle>
+          <unitdate>1900</unitdate>
+          <physdesc>12x19 cm</physdesc>
+          <origination>Archives privées Mr X</origination>
+        </did>
+        <controlaccess>
+          <subject>Bâtiment public > Gare</subject>
+          <geogname>Bagneux</geogname>
+        </controlaccess>
+        <accessrestrict>
+          <p>Libre accès</p>
+        </accessrestrict>
+        <userestrict>
+          <p>Libre de droit</p>
+        </userestrict>
+      </c>
+      <c>
+        <did>
+          <unitid><extptr xlink:href="https://opendata.hauts-de-seine.fr/api/datasets/1.0/cartes-postales/images/8ee3d34b124926666f78afa361566542" xlink:type="simple"/>9FI/BAG_16</unitid>
+          <unittitle>La Fontaine</unittitle>
+          <unitdate>1900</unitdate>
+          <physdesc>13x19 cm</physdesc>
+          <origination>Archives privées Mr X</origination>
+        </did>
+        <controlaccess>
+          <subject>Edicule public > Fontaine</subject>
+          <geogname>Bagneux</geogname>
+        </controlaccess>
+        <accessrestrict>
+          <p>Libre accès</p>
+        </accessrestrict>
+        <userestrict>
+          <p>Libre de droit</p>
+        </userestrict>
+      </c>
+      <c>
+        <did>
+          <unitid><extptr xlink:href="https://opendata.hauts-de-seine.fr/api/datasets/1.0/cartes-postales/images/a2f59c7e228d2c624a092f87e1727739" xlink:type="simple"/>9FI/BAG_17</unitid>
+          <unittitle>Place Dampierre - Monument élevé &#224; la mémoire de soldats tombés dans le combat du 13 octobre 1870 [...]</unittitle>
+          <unitdate>1900</unitdate>
+          <physdesc>14x19 cm</physdesc>
+          <origination>Entreprise Pajol</origination>
+        </did>
+        <controlaccess>
+          <subject>Monument Rue et place</subject>
+          <geogname>Bagneux</geogname>
+        </controlaccess>
+        <accessrestrict>
+          <p>Libre accès</p>
+        </accessrestrict>
+        <userestrict>
+          <p>Libre de droit</p>
+        </userestrict>
+      </c>
+      <c>
+        <did>
+          <unitid>9FI/BAG_19</unitid>
+          <unittitle>Monument Dampierre</unittitle>
+          <unitdate>1900</unitdate>
+          <physdesc>15x19 cm</physdesc>
+          <origination>Entreprise Pajol</origination>
+        </did>
+        <controlaccess>
+          <subject>Monument</subject>
+          <geogname>Bagneux</geogname>
+        </controlaccess>
+        <accessrestrict>
+          <p>Libre accès</p>
+        </accessrestrict>
+        <userestrict>
+          <p>Libre de droit</p>
+        </userestrict>
+      </c>
+      <c>
+        <did>
+          <unitid>9FI/BAG_20</unitid>
+          <unittitle>Le Square et la Statue de la République</unittitle>
+          <unitdate>1900</unitdate>
+          <physdesc>16x19 cm</physdesc>
+          <origination>Entreprise Pajol</origination>
+        </did>
+        <controlaccess>
+          <subject>Monument Parc et jardin</subject>
+          <geogname>Bagneux</geogname>
+        </controlaccess>
+        <accessrestrict>
+          <p>Libre accès</p>
+        </accessrestrict>
+        <userestrict>
+          <p>Libre de droit</p>
+        </userestrict>
+      </c>
+      <c>
+        <did>
+          <unitid>9FI/BAG_21</unitid>
+          <unittitle>La Sous-Station Electrique</unittitle>
+          <unitdate>1900</unitdate>
+          <physdesc>17x19 cm</physdesc>
+          <origination>Entreprise Pajol</origination>
+        </did>
+        <controlaccess>
+          <subject>Bâtiment public</subject>
+          <geogname>Bagneux</geogname>
+        </controlaccess>
+        <accessrestrict>
+          <p>Libre accès</p>
+        </accessrestrict>
+        <userestrict>
+          <p>Libre de droit</p>
+        </userestrict>
+      </c>
+      <c>
+        <did>
+          <unitid>9FI/BAG_22</unitid>
+          <unittitle>La Cité des Oiseaux</unittitle>
+          <unitdate>1932</unitdate>
+          <physdesc>18x19 cm</physdesc>
+          <origination>Entreprise Pajol</origination>
+        </did>
+        <controlaccess>
+          <subject>Logement social > Cité du Champ des Oiseaux</subject>
+          <geogname>Bagneux</geogname>
+        </controlaccess>
+        <accessrestrict>
+          <p>Libre accès</p>
+        </accessrestrict>
+        <userestrict>
+          <p>Libre de droit</p>
+        </userestrict>
+      </c>
+      <c>
+        <did>
+          <unitid>9FI/BAG_23</unitid>
+          <unittitle>Cité des Oiseaux</unittitle>
+          <unitdate>1932</unitdate>
+          <physdesc>19x19 cm</physdesc>
+          <origination>Entreprise Pajol</origination>
+        </did>
+        <controlaccess>
+          <subject>Logement social > Cité du Champ des Oiseaux</subject>
+          <geogname>Bagneux</geogname>
+        </controlaccess>
+        <accessrestrict>
+          <p>Libre accès</p>
+        </accessrestrict>
+        <userestrict>
+          <p>Libre de droit</p>
+        </userestrict>
+      </c>
+      <c>
+        <did>
+          <unitid>9FI/BAG_24</unitid>
+          <unittitle>Cité du Champ des Oiseaux</unittitle>
+          <unitdate>1932</unitdate>
+          <physdesc>20x19 cm</physdesc>
+          <origination>Entreprise Pajol</origination>
+        </did>
+        <controlaccess>
+          <subject>Logement social > Cité du Champ des Oiseaux</subject>
+          <geogname>Bagneux</geogname>
+        </controlaccess>
+        <accessrestrict>
+          <p>Libre accès</p>
+        </accessrestrict>
+        <userestrict>
+          <p>Libre de droit</p>
+        </userestrict>
+      </c>
+      <c>
+        <did>
+          <unitid>9FI/BAG_25</unitid>
+          <unittitle>Cité du Champ des Oiseaux : Le Jardin d'Enfants</unittitle>
+          <unitdate>1932</unitdate>
+          <physdesc>21x19 cm</physdesc>
+          <origination>Entreprise Pajol</origination>
+        </did>
+        <controlaccess>
+          <subject>Logement social > Cité du Champ des Oiseaux</subject>
+          <geogname>Bagneux</geogname>
+        </controlaccess>
+        <accessrestrict>
+          <p>Libre accès</p>
+        </accessrestrict>
+        <userestrict>
+          <p>Libre de droit</p>
+        </userestrict>
+      </c>
+    </dsc>
+  </archdesc>
+</ead></metadata></record>
+  </GetRecord>
+</OAI-PMH>

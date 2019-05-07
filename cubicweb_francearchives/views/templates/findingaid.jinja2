@@ -1,0 +1,76 @@
+<section id="document" class="document-view">
+  {% block head %}
+    <h1><span class="sr-only">{{ _(entity.__regid__) }} : </span>{{ title }}</h1>
+  {% endblock %}
+  {% block metadata %}
+    <div class="content-metadata">
+      <div class="content-metadata-item">
+        <i class="fa fa-calendar-o" aria-hidden="true">&nbsp;</i><span>{{date}}</span>
+      </div>
+      {% for attachment in attachments %}
+      <div class="content-metadata-item">
+        <a href="{{ attachment.url | e }}"
+          {% if attachment.target_blank %}
+          target="_blank" rel="noopener noreferrer nofollow"
+          {% endif %}
+          {% if attachment.title %}
+          title="{{ attachment.title }}"
+          {% endif %}
+        >
+          <i class="fa fa-download" aria-hidden="true"></i>
+          {{ attachment.link }}
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  {% endblock %}
+
+  {% block subhead %}
+  {% endblock %}
+
+  {% set publisher_title = entity.publisher_title %}
+  {% if publisher %}
+  <div class="grey-sidebar right-col">
+    <h2 class="no-style">{{ publisher.title_label }}</h2> {{ publisher.title }}
+    <div class="grey-sidebar_buttons">
+      {% if publisher.contact_url %}
+      <a href="{{ publisher.contact_url }}">{{ publisher.contact_label }}</a>
+      {% endif %}
+      {% if publisher.site_url %}
+      <a href="{{ publisher.site_url }}"
+        title="{{ _('Go to the site:') }} {{ publisher_title }} {{ _('- New window') }}"
+        target="_blank" rel="noopener noreferrer nofollow" >{{ publisher.site_label }}
+      </a>
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
+
+  {% set publisher_title = entity.publisher_title %}
+  <div class="media left-col">
+    {% if entity.illustration_url %}
+    <div class="media-left">
+      <a target="_blank"
+         rel="noopener noreferrer nofollow"
+         href="{{ entity.thumbnail_dest }}"
+         title="{{ _('Go to the site:') }} {{ publisher_title }} {{ _('- New window') }}"
+         aria-hidden="true">
+        <img src="{{ entity.illustration_url }}"
+           data-defaultsrc="{{ default_picto_src }}"
+           alt="{{_('Site:')}} {{ publisher_title }}"
+        />
+      </a>
+    </div>
+    {% endif %}
+
+    <div class="media-body">
+      {% for propname, value in main_props %}
+      <div class="row indexes-values">
+        <div class="col-md-3"><h2 class="no-style">{{ propname }}</h2></div>
+        <div class="col-md-9">{{ value }}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+ <div class="clearfix"></div>
+</section>

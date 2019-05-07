@@ -1,0 +1,44 @@
+/* service */
+
+#select-dpt {
+  margin-bottom: 10px;
+  margin-left: 10px;
+}
+
+#archives-services:before {
+  content: "";
+  display: block;
+  width: 70%;
+  height: 3px;
+  background-color: $royal-blue;
+  margin-top: 3em;
+  margin-bottom: 3em;
+}
+
+.service-info {
+
+  h2 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-size: 1.188rem;
+    line-height: 1.1;
+    color: $dark-grey;
+    font-weight: normal;
+  }
+}
+
+.section-title  {
+  display: block;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.section-subtitle {
+  text-align: center;
+  font-size: 0.75em;
+  color: #666666;
+  border-top: 1px solid #666666;
+  margin: auto;
+  font-weight: bold;
+  padding-top: 5px;
+}

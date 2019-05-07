@@ -1,0 +1,12 @@
+/* Font face & icon */
+
+@font-face {
+  font-family: 'Lovelo';
+  src: url('../fonts/lovelo/Lovelo-Black.otf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.lovelo {
+  font-family: $lovelo;
+}

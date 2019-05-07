@@ -1,0 +1,19 @@
+<div class="content-404">
+  <p>{{ notfound_msg }}</p>
+  <img src="{{ notfound_picture }}" class="img-responsive notfound_img"
+       alt="" />
+</div>
+
+<section id="content-headings" class="headings-404">
+  <div class="row">
+    {% for sectdesc in section_descs %}
+      <div class="col-md-4">
+        <a href="{{ sectdesc.url }}">
+          <div class="heading-{{ sectdesc.cssclass }}"></div>
+          <div class="heading-item-top">{{ sectdesc.title }}</div>
+          <div class="heading-item-bottom">{{ sectdesc.label }}</div>
+        </a>
+      </div>
+    {% endfor %}
+  </div>
+</section>

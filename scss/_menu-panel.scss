@@ -1,0 +1,75 @@
+$menu-panel--icon-size: 6em;
+$menu-panel--icon-size__small: 3em;
+
+#menu-panel {
+  position: absolute;
+  z-index: 30;
+  margin-right: $bootstrap-padding;
+  min-width: $min-width;
+  background-color: $royal-blue;
+  padding: 1.250em 0;
+  color: white;
+
+  h2, p, a, a:focus, a:visited, a:hover {
+    color: white;
+  }
+  ul {
+    list-style-type: none;
+    margin: 0 15px;
+    padding: 0;
+  }
+  .content {
+    margin: 0 15px;
+  }
+  .heading {
+    display: inline-block;
+    margin-top: 0;
+    height: $menu-panel--icon-size__small;
+    background-repeat: no-repeat;
+    background-size: $menu-panel--icon-size__small;
+    padding: 0 0 2em ($menu-panel--icon-size__small + 1em);
+
+    h2 {
+      display: inline;
+      margin: 0;
+      border-bottom: 1px solid transparent;
+      padding: 1em 0 0 0;
+      line-height: 2.5em;
+      text-transform: uppercase;
+      font-weight: bold;
+      font-size: 1em;
+    }
+
+    p {
+      display: inline;
+      padding-top: 0.5em;
+
+      &:before { content: " — "; }
+    }
+
+    @include if-wider-than(md) {
+        height: $menu-panel--icon-size;
+        background-size: $menu-panel--icon-size;
+        padding: 0 0 0.5em ($menu-panel--icon-size + 1em);
+
+        h2 {
+          display: inline-block;
+          border-bottom-color: white;
+        }
+        p { display: block; }
+        p:before { content: ""; }
+    }
+
+    &.discover {
+      background-image: url('../images/decouvrir-trans.svg');
+    }
+
+    &.understand {
+      background-image: url('../images/comprendre-trans.svg');
+    }
+
+    &.manage {
+      background-image: url('../images/gerer-trans.svg');
+    }
+  }
+}

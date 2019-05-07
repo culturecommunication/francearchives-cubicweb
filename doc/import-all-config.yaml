@@ -1,0 +1,69 @@
+# default location ~/.config/francearchives.yaml
+commands:
+  - import-eac
+  - skos-import
+  - import-directories
+  - import-cms-data
+  - import-oai
+  - import-dc
+  - import-ead
+  - import-exhibits
+  - import-maps
+  - index-in-es
+  - import-subscribers
+
+import-eac:
+  args:
+    - /opt/input-data/unprocessed/eac-data/*/*.xml
+
+
+import-oai:
+  opts:
+    fpath: /opt/input-data/cms_data/oai-service-map.csv
+  args:
+    - "http://www.archives28.fr/arkotheque/oai-pmh-2/oai2.php?verb=ListRecords&metadataPrefix=nomina&set=ad28_registres_matricules"
+
+skos-import:
+  opts:
+    cw-store: massive
+  args:
+    - /opt/input-data/cms_data/*.rdf
+
+
+import-cms-data:
+  opts:
+    dlcachedir: /opt/dlcachedir
+    nodownload: True
+    host: postgres
+    user: toto
+    password: toto
+    database: siaf_exsite
+    commemo-extradata: /opt/cms_data/commemo-extradata.csv
+
+import-directories:
+  args:
+    - /opt/cms_data/services-directory.csv
+    - /opt/cms_data/services-departements.csv
+    - /opt/cms_data/logos_services
+
+
+import-ead:
+  args:
+    - /opt/ir_data/*/*.xml
+    - /opt/ir_data/pdf/*.pdf
+
+import-exhibits:
+  args:
+    - /opt/cms_data/expositions_virtuelles.csv
+
+import-maps:
+  args:
+    - /opt/cms_data/maps
+
+import-dc:
+  args:
+    - /opt/ir_data/mae.csv
+
+import-subscribers:
+  args:
+    - /opt/cms_data/subscribers.csv

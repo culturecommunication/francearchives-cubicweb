@@ -1,0 +1,54 @@
+{% if message_error %}
+<div class="alert alert-danger">
+   <div class="form-message-content-error">{{ message_error }}</div>
+ </div>
+
+{% endif %}
+
+   <div class="form-group{% if contact_name_error %} has-error{% endif %}">
+       <label class="control-label" for="name">{{ contact_name_label }}
+              <span class="required" title="{{ required_info }}"></span>
+       </label>
+        {% if contact_name_error %}
+          <span class="error text-danger">{{ contact_name_error }}</span>
+        {% endif %}
+        <input name="name" id="name" class="form-control" type="text" tabindex="1" aria-required="true" value="{{ name_value }}">
+    </div>
+    <div class="form-group{% if contact_email_error %} has-error{% endif %}">
+        <label class="control-label" for="email">{{ contact_email_label }}
+               <span class="required" title="{{ required_info }}"></span>
+        </label>
+        {% if contact_email_error %}
+          <span class="error text-danger">{{ contact_email_error }}</span>
+        {% endif %}
+        <input name="email" id="email" class="form-control" type="text" tabindex="2" aria-required="true" value="{{ email_value }}">
+    </div>
+    <div class="form-group{% if contact_option_error %} has-error{% endif %}">
+        <label class="control-label" for="contact-object">{{ contact_object_label }}
+               <span class="required" title="{{ required_info }}"></span>
+        </label>
+        {% if contact_select_error %}
+          <span class="error text-danger">{{ contact_select_error }}</span>
+        {% endif %}
+        <select name="object" id="contact-object" class="form-control" aria-required="true" tabindex="3">
+           {% for option in contact_objects %}
+           {% set option_val = ["contact_object", loop.index]|join('_') %}
+           <option value="{{ option_val}}" {% if option_val == object_value|string()%} selected="selected" {% endif %}>{{option}}</option>
+           {% endfor %}
+        </select>
+      </div>
+      <div class="form-group{% if contact_message_error %} has-error{% endif %}">
+        <label class="control-label" for="message">{{ contact_message_label }}
+               <span class="required" title="{{ required_info }}"></span>
+        </label>
+       {% if contact_message_error %}
+          <span class="error text-danger">{{ contact_message_error }}</span>
+        {% endif %}
+        <textarea cols="29" rows="10" id="message" class="form-control" name="message" aria-required="true" tabindex="4">{{ message_value }}</textarea>
+      </div>
+      <div class="form-group captcha">
+         <label class="control-label" for="captcha">{{ contact_captcha_label }}
+                <span class="required" title="{{ required_info }}"></span>
+         </label>
+          <input class="form-control" id="captcha" name="captcha" tabindex="5" value="" type="text">      </div>
+      <button class="btn btn-primary" name="submit" type="submit" tabindex="5">{{ submit_value }}</button>

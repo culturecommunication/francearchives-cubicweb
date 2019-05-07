@@ -1,0 +1,423 @@
+.sr {
+  &-title {
+    text-align: center;
+    font-weight: bold;
+    padding-bottom: 0.5em;
+    &--circular {
+      text-decoration: underline;
+      font-weight: normal;
+    }
+  }
+
+  &-title &-text {
+    color: $medium-grey;
+  }
+}
+
+.cwjs-aside.col-xs-3 {
+  width: 100%;
+  padding-left: 0px;
+  padding-right: 0px;
+  @include if-wider-than(xs) {
+    width: 25%;
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+}
+
+#content-results>h2 {
+  text-transform: uppercase;
+  background-color: $royal-blue;
+  color: white;
+  font-weight: bolder;
+  font-stretch: condensed;
+  padding: 0.75em 10px;
+  margin: 0;
+  @extend .lovelo;
+  font-size: 1em;
+  line-height: 1.5em;
+  text-align: center;
+  @include if-wider-than(lg) {
+    text-align: left;
+  }
+}
+
+.document-category-facet {
+  padding: 1em 0 1.5em 0;
+  margin-bottom: 2em;
+  @include if-wider-than(lg) {
+    padding: 2.5em 0;
+    margin-bottom: 2.5em;
+  }
+
+  .facet-label:first-letter {
+    text-transform: uppercase;
+  }
+}
+
+.document-category {
+  color: $medium-grey;
+  text-align: center;
+  white-space: nowrap;
+  border-right: 1px solid #bcbdc0;
+
+  &--last { border-right-color: transparent; }
+
+  padding: 0px;
+  @include if-wider-than(xs) { padding: 10px 5px; }
+
+  * {
+      display: block;
+      margin: auto;
+  }
+
+  img {
+    width: 40px;
+    height: 40px;
+    @include if-wider-than(xs) {
+      width: 80px;
+      height: 80px;
+    }
+  }
+
+  a { color: $medium-grey; }
+
+  .facet__label {
+    display: none;
+    @include if-wider-than(lg) { display: block; }
+  }
+
+  &--selected {
+    color: $royal-blue;
+
+    a { color: $royal-blue; }
+  }
+}
+
+.facet__body li.facet__more_options {
+  padding-top: 0.5em;
+}
+
+.facet {
+  &__more_options {
+    cursor: pointer;
+    color: $royal-blue;
+    margin: auto;
+    text-align: center;
+    border-top: 1px solid $light-medium-grey;
+  }
+
+  &__more_options.show_options {
+    background-image: url('../images/arrow_left_white.png');
+  }
+
+  &__more_options.hide_options {
+    background-image: url('../images/icon_plus_blue.svg');
+  }
+
+  &__value.more-option {
+    background: $less-light-grey;
+  }
+
+}
+
+.facet__values > .more-option {
+  border-top: 1px solid $light-medium-grey;
+}
+
+.facet__values > .more-option ~ .more-option {
+  border: none;
+}
+
+#search-context {
+  width: 80%;
+  margin: auto;
+  background-color: $light-grey;
+  padding: 1em;
+}
+
+
+#search-context h2 {
+  margin-top: 0px;
+}
+
+.searched-terms {
+  font-style: italic;
+}
+
+.searched-terms::before {
+  content: '« ';
+}
+
+.searched-terms::after {
+  content: ' »';
+}
+
+.section-context {
+  margin: -2em auto auto;
+  background-color: $light-grey;
+  padding: 1em 2em;
+
+  h1 {
+    margin: 0.7em 0;
+    text-align: center;
+  }
+
+  .row {
+    text-align: justify;
+  }
+
+  &__list {
+    margin-top: 1em;
+  }
+}
+
+/* pagination */
+
+ul.pagination>li>a,
+ul.pagination>li>span {
+  min-height: 2em;
+  line-height: 2em;
+  text-align: center;
+  padding: 0 0.7em;
+  display: inline-block;
+  font-weight: bold;
+  color: $medium-grey;
+  background-color: $light-grey;
+  border: solid #fff;
+  border-width: 0 0 0 2px;
+  font-size: 1.2em;
+}
+
+ul.pagination>li>a:focus,
+ul.pagination>li>a:hover,
+ul.pagination>li>span:focus,
+ul.pagination>li>span:hover {
+  border: solid #fff;
+  border-width: 0 0 0 2px;
+}
+
+ul.pagination>.active>a,
+ul.pagination>.active>a:focus,
+ul.pagination>.active>a:hover,
+ul.pagination>.active>span,
+ul.pagination>.active>span:focus,
+ul.pagination>.active>span:hover {
+  border-color: #fff;
+  background-color: $royal-blue;
+}
+
+/* search views */
+#content-results {
+  padding: 0;
+
+  @include if-wider-than(lg) {
+    padding-left: 1.5em;
+    padding-right: 0;
+  }
+}
+
+li:first-child .document {
+    border-top-color: transparent;
+}
+
+.document {
+  margin: 0;
+  border-top: 1px solid $light-medium-grey;
+  border-bottom: 3px solid transparent;
+  padding: 1em;
+
+  &:hover {
+    background: $light-grey;
+    border-bottom: 3px solid $royal-blue;
+    outline-bottom: 0 solid $light-medium-grey;
+  }
+
+  &>* { padding: 0; }
+
+  .image-fixed-frame {
+    display: block;
+    overflow-y: hidden;
+    width: 100%;
+
+    img { width: 100%; }
+
+    @include if-wider-than(sm) { height: 20em; }
+    @include if-wider-than(md) { height: 15em; }
+    @include if-wider-than(lg) { height: 15em; }
+  }
+
+  .picto img {
+      margin: 2px auto auto;
+  }
+}
+
+.document-title {
+  color: $royal-blue;
+  font-size: 1.2em;
+  font-weight: bold;
+
+  a {
+    color: $royal-blue;
+  }
+
+  &::after {
+    @extend %after-border;
+
+    content: "";
+    display: block;
+    width: 108px;
+    height: 3px;
+    background-color: $royal-blue;
+    margin-top: 0.6em;
+    margin-bottom: 1.250em;
+  }
+}
+
+@mixin picto-image($category, $color) {
+  background-image: url('../images/doctype_#{$category}_#{$color}.svg');
+}
+
+.document-excerpt__text {
+  margin: 0.5em 2em;
+  padding: 0.5em 1em;
+  font-style: italic;
+  border-left: 1px solid $light-medium-grey;
+  color: #000;
+  display: block;
+
+  em {
+    font-weight: bold;
+  }
+}
+
+blockquote {
+  font-size: inherit
+}
+
+.picto {
+  margin: auto;
+  background-size: 45px;
+  background-repeat: no-repeat;
+  background-position: top center;
+  padding-top: 45px;
+  @include picto-image('all', 'blue');
+  @include if-wider-than(sm) {
+    background-size: 80px;
+    padding-top: 80px;
+  }
+
+  &--small {
+    background-size: 45px;
+    padding-top: 45px;
+  }
+}
+
+$categories: (
+  'all', 'persons', 'circulars', 'services',
+  'edito', 'commemorations', 'archives'
+);
+
+@each $category in $categories {
+  .picto-#{$category}           { @include picto-image($category, 'grey'); }
+  .picto-#{$category}--selected { @include picto-image($category, 'blue'); }
+}
+
+.circular-status {
+  width: 0.8em;
+  height: 0.8em;
+  display: inline-block;
+  border-radius: 50%;
+
+  &-in-effect                            { background: #01c832; }
+  &-obsolete                             { background: #f19700; }
+  &-revoked                              { background: #c80132; }
+  &-punctual                             { background: #000000; }
+  &-in-effect-partially { background: #c9ffa7; }
+
+  &--block {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0.8em;
+    display: block;
+  }
+}
+
+.informations {
+  @include if-wider-than(sm) {
+    padding-left: 1em;
+  }
+}
+
+#facet-pniaancestorsfacetrenderer {
+    position: relative;
+}
+
+div.informations li.N::before {
+  content: 'Naissance : ';
+}
+div.informations li.A::before {
+  content: 'Abjuration : ';
+}
+
+div.informations li.AN::before {
+  content: 'Acte notarié : ';
+}
+
+div.informations li.B::before {
+  content: 'Baptême : ';
+}
+div.informations li.BANS::before {
+  content: 'Bans de mariage : ';
+}
+div.informations li.CM::before {
+  content: 'Contrat de mariage : ';
+}
+div.informations li.D::before {
+  content: 'Décès : ';
+}
+div.informations li.JU::before {
+  content: 'Jugement : ';
+}
+div.informations li.M::before {
+  content: 'Mariage : ';
+}
+div.informations li.N::before {
+  content: 'Naissance : ';
+}
+div.informations li.MPF::before {
+  content: 'Mort pour la France : ';
+}
+div.informations li.P::before {
+  content: 'Permission : ';
+}
+div.informations li.PR::before {
+  content: 'Promesse de mariage : ';
+}
+div.informations li.PU::before {
+  content: 'Publication de mariage : ';
+}
+div.informations li.R::before {
+  content: 'Résidence : ';
+}
+div.informations li.RM::before {
+  content: 'Registre matricule : ';
+}
+div.informations li.RE::before {
+  content: 'Reconnaissance : ';
+}
+div.informations li.REA::before {
+  content: 'Réhabilitation : ';
+}
+div.informations li.RP::before {
+  content: 'Recensement : ';
+}
+div.informations li.RT::before {
+  content: 'Rôle de taille : ';
+}
+div.informations li.S::before {
+  content: 'Sépulture : ';
+}
+div.informations li.SV::before {
+  content: 'Sans vie : ';
+}

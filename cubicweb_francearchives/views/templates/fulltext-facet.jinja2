@@ -1,0 +1,22 @@
+<div class="facet hidden-print">
+  <h3 class="no-style facet__title cwjs-facet-title">
+    <a href="#">{{ _('fulltext-facet-label') | escape }}</a>
+  </h3>
+  <div class="facet__body facet__noitems">
+    <form id="fulltext-facet" action="{{ fulltext_form_action }}" role="search">
+      <div class="form-group">
+        {% for name, value in fulltext_params.items() %}
+          <input type="hidden" name="{{ name }}" value="{{ value | escape }}" />
+        {% endfor %}
+        <div class="input-group">
+          <label for="fulltext-input" class="sr-only">{{ _('fulltext-facet-label') | escape }}</label>
+          <input id="fulltext-input" name="fulltext_facet" value="{{ fulltext_value }}" class="form-control facet__focusable-item" />
+          <div class="input-group-btn">
+            <input type="submit" value="{{ _('search') }}"
+                   class="btn btn-default btn-right facet__focusable-item" />
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

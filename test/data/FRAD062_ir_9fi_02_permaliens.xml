@@ -1,0 +1,2120 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml-stylesheet href="ead2002_ead.css" type="text/css"?>
+<!DOCTYPE ead PUBLIC "+//ISBN 1-931666-00-8//DTD ead.dtd (Encoded Archival Description (EAD) Version 2002)//EN" "ead2002/ead.dtd">
+<ead>
+	<eadheader countryencoding="iso3166-1" dateencoding="iso8601" langencoding="iso639-2b" repositoryencoding="iso15511" scriptencoding="iso15924">
+		<eadid countrycode="FR" mainagencycode="FRAD062">frad062_ir_9fi_01</eadid>
+		<filedesc>
+			<titlestmt>
+				<titleproper>9 Fi 1-111 - Fonds James Gates : photographies de la cathédrale de Saint-Omer (1921-1922)</titleproper>
+				<subtitle>Répertoire numérique</subtitle>
+			</titlestmt>
+			<publicationstmt>
+				<publisher>Archives départementales du Pas-de-Calais</publisher>
+				<date>19/02/2018</date>
+				<address><addressline>Arras</addressline></address>
+			</publicationstmt>
+		</filedesc>
+		<profiledesc>
+			<creation>Cet instrument de recherche a été exporté depuis le progiciel de gestion d'archives Thot par les Archives départementales du Pas-de-Calais.</creation>
+			<langusage>Instrument de recherche rédigé en <language langcode="fre">français</language></langusage>
+		</profiledesc>
+	</eadheader>
+	<archdesc level="fonds">
+		<did>
+			<repository>Archives départementales du Pas-de-Calais</repository>
+			<unitid countrycode="FR" repositorycode="AD062">9 Fi 1-111</unitid>
+			<unittitle>Fonds James-Gates : photographies de la cathédrale de Saint-Omer.</unittitle>
+			<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+			<physdesc>
+				<extent>111 photographies.</extent>
+				<dimensions>18 x 24 cm (épr.) ; 28 x 38,5 cm (f.) ; 32,5 x 43 cm (sup.).</dimensions>
+				<physfacet type="support">Support photographique</physfacet>
+			</physdesc>
+		</did>
+		<acqinfo>
+			<p>Achat</p>
+		</acqinfo>
+		<scopecontent>
+			<p>
+				<date type="normal" normal="1921/1922">Période concernée : [1921-1922]</date>
+			</p>
+		</scopecontent>
+		<userestrict>
+			<p>Reproductible.</p>
+		</userestrict>
+		<phystech>
+			<p>Certaines épreuves sont détourées sur fond blanc.</p>
+		</phystech>
+		<note type="bas_page">
+			<p>La date des prise de vues nous est connue grâce à une lettre de James Gates, en date du 1er décembre 1921, conservée dans l'exemplaire de l'"Épigraphie du Pas-de-Calais" de Roger
+				Rodière, t. V, pp. 130-131. Le photographe y indique avoir pris 100 clichés de la cathédrale de Saint-Omer. Son travail est arrêté car le "puits est à sec" ; il lui reste 10 ou 15
+				clichés à faire.</p>
+		</note>
+		<note type="edition">
+			<p><bibref>
+					<persname role="auteur">Gates, James (1850-1929)</persname>
+				</bibref></p>
+		</note>
+		<otherfindaid>
+			<p>Inventaire dactylographié, 1977, 4 p.</p>
+		</otherfindaid>
+		<controlaccess>
+			<geogname>Saint-Omer (Pas-de-Calais, France)</geogname>
+			<geogname>Saint-Omer (Pas-de-Calais, France) -- Basilique Notre-Dame</geogname>
+			<persname>Gates, James (1850-1929)</persname>
+			<persname role="auteur">Gates, James (1850-1929)</persname>
+			<subject>Cathédrale</subject>
+		</controlaccess>
+		<dsc>
+			<c level="file">
+				<did>
+					<unitid countrycode="FR" repositorycode="AD062">9 Fi 1-10</unitid>
+					<unittitle>Vues extérieures : grand portail et portails nord.</unittitle>
+					<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+				</did>
+				<c level="item">
+					<did>
+						<unitid countrycode="FR" repositorycode="AD062">9 Fi 1</unitid>
+						<unittitle>Portail nord et tour.</unittitle>
+						<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+						<dao href="http://archivesenligne.pasdecalais.fr/ark:/64297/5e7c97997adc45bcdafd11b170ae7b11" role="image"/>
+					</did>
+					<controlaccess>
+						<subject>Vue d'architecture</subject>
+						<subject>Cathédrale</subject>
+						<subject>Tour</subject>
+						<subject>Portail</subject>
+						<subject>Place</subject>
+					</controlaccess>
+				</c>
+				<c level="item">
+					<did>
+						<unitid countrycode="FR" repositorycode="AD062">9 Fi 2</unitid>
+						<unittitle>Portail de la tour.</unittitle>
+						<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+						<dao href="http://archivesenligne.pasdecalais.fr/ark:/64297/1a9927cc6cbbe29139031df77d2be489" role="thumbnail"/>
+					</did>
+					<controlaccess>
+						<subject>Vue d'architecture</subject>
+						<subject>Cathédrale</subject>
+						<subject>Portail</subject>
+					</controlaccess>
+				</c>
+				<c level="item">
+					<did>
+						<unitid countrycode="FR" repositorycode="AD062">9 Fi 3</unitid>
+						<unittitle>Grand portail.</unittitle>
+						<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+						<dao href="http://archivesenligne.pasdecalais.fr/ark:/64297/ac2d1ece1da30446e317e6a21858a371" role="image"/>
+					</did>
+					<controlaccess>
+						<subject>Vue d'architecture</subject>
+						<subject>Cathédrale</subject>
+						<subject>Portail</subject>
+						<subject>Escalier</subject>
+					</controlaccess>
+				</c>
+				<c level="item">
+					<did>
+						<unitid countrycode="FR" repositorycode="AD062">9 Fi 4</unitid>
+						<unittitle>Anneau de bronze sur la porte droite du grand portail, antérieur au XIIIe siècle.</unittitle>
+						<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+						<dao href="http://archivesenligne.pasdecalais.fr/ark:/64297/d26ec6b1c98cff1c5a801b071f838de9" role="thumbnail"/>
+					</did>
+					<controlaccess>
+						<subject>Vue d'architecture</subject>
+						<subject>Cathédrale</subject>
+						<subject>Portail</subject>
+						<subject>Ferronnerie</subject>
+					</controlaccess>
+				</c>
+				<c level="item">
+					<did>
+						<unitid countrycode="FR" repositorycode="AD062">9 Fi 5</unitid>
+						<unittitle>Anneau de bronze sur la porte gauche du grand portail, antérieur au XIIIe siècle.</unittitle>
+						<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+						<dao href="http://archivesenligne.pasdecalais.fr/ark:/64297/8e3b687840f5c6db24e01f607e0e1fcc"/>
+					</did>
+					<controlaccess>
+						<subject>Vue d'architecture</subject>
+						<subject>Cathédrale</subject>
+						<subject>Portail</subject>
+						<subject>Ferronnerie</subject>
+					</controlaccess>
+				</c>
+				<c level="item">
+					<did>
+						<unitid countrycode="FR" repositorycode="AD062">9 Fi 6</unitid>
+						<unittitle>Portail du transept nord, XVe siècle.</unittitle>
+						<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+						<dao href="http://archivesenligne.pasdecalais.fr/ark:/64297/4e0e79fd38ea1cadd7e7949839ae77e5"/>
+					</did>
+					<controlaccess>
+						<subject>Vue d'architecture</subject>
+						<subject>Cathédrale</subject>
+						<subject>Portail</subject>
+					</controlaccess>
+				</c>
+				<c level="item">
+					<did>
+						<unitid countrycode="FR" repositorycode="AD062">9 Fi 7</unitid>
+						<unittitle>Absidiole romane.</unittitle>
+						<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+						<dao href="http://archivesenligne.pasdecalais.fr/ark:/64297/bcb8c9cadecf494196921be6e2e08424"/>
+					</did>
+					<controlaccess>
+						<subject>Vue d'architecture</subject>
+						<subject>Cathédrale</subject>
+						<subject>Façade</subject>
+					</controlaccess>
+				</c>
+				<c level="item">
+					<did>
+						<unitid countrycode="FR" repositorycode="AD062">9 Fi 8</unitid>
+						<unittitle>Arcades et figures sous le petit portail (côté nord).</unittitle>
+						<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+					</did>
+					<accessrestrict>
+						<p>Le document a été constaté manquant lors du récolement effectué en juin 1977.</p>
+					</accessrestrict>
+				</c>
+				<c level="item">
+					<did>
+						<unitid countrycode="FR" repositorycode="AD062">9 Fi 9</unitid>
+						<unittitle>Arcades et figures sous le petit portail (côté gauche).</unittitle>
+						<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+						<dao href="http://archivesenligne.pasdecalais.fr/ark:/64297/4cb9bbf79a7a1f0ddfe78030cc895efd"/>
+					</did>
+					<controlaccess>
+						<subject>Vue d'architecture</subject>
+						<subject>Cathédrale</subject>
+						<subject>Arcade</subject>
+						<subject>Sculpture</subject>
+						<subject>Tête</subject>
+						<subject>Affiche</subject>
+					</controlaccess>
+				</c>
+				<c level="item">
+					<did>
+						<unitid countrycode="FR" repositorycode="AD062">9 Fi 10</unitid>
+						<unittitle>Arcades. En haut, les ruines de Saint-Bertin en 1814 et le tympan du portail.</unittitle>
+						<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+						<dao href="http://archivesenligne.pasdecalais.fr/ark:/64297/2e559ebd1afbbbcb72bb6aa51d1de130"/>
+					</did>
+					<controlaccess>
+						<subject>Vue d'architecture</subject>
+						<subject>Cathédrale</subject>
+						<subject>Arcade</subject>
+						<subject>Église</subject>
+						<subject>Abbaye</subject>
+						<subject>Ruines</subject>
+						<subject>Bénédictin</subject>
+					</controlaccess>
+				</c>
+			</c>
+			<c level="file">
+				<did>
+					<unitid countrycode="FR" repositorycode="AD062">9 Fi 11-96, 105</unitid>
+					<unittitle>Vues intérieures.</unittitle>
+					<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+				</did>
+				<c level="file">
+					<did>
+						<unitid countrycode="FR" repositorycode="AD062">9 Fi 11-20, 105</unitid>
+						<unittitle>Nef et choeur.</unittitle>
+						<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+					</did>
+					<c level="item">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 11</unitid>
+							<unittitle>La grande nef, vue prise d'en bas.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+							<dao href="http://archivesenligne.pasdecalais.fr/ark:/64297/1c30145b1b3bb546aedf1439ce702630"/>
+						</did>
+						<controlaccess>
+							<subject>Vue d'architecture</subject>
+							<subject>Cathédrale</subject>
+							<subject>Vue d'intérieur</subject>
+							<subject>Chaire à prêcher</subject>
+						</controlaccess>
+					</c>
+					<c level="item">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 12</unitid>
+							<unittitle>La grande nef, vue prise des orgues.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+							<dao href="http://archivesenligne.pasdecalais.fr/ark:/64297/968c64021a05327c063189cc1ab80535"/>
+						</did>
+						<controlaccess>
+							<subject>Vue d'architecture</subject>
+							<subject>Cathédrale</subject>
+							<subject>Vue d'intérieur</subject>
+							<subject>Vu d'en haut</subject>
+							<subject>Chaire à prêcher</subject>
+						</controlaccess>
+					</c>
+					<c level="item">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 105</unitid>
+							<unittitle>L'abbé Dusautoir, l'érudit guide de la cathédrale, devant le choeur.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+							<dao href="http://archivesenligne.pasdecalais.fr/ark:/64297/8cd49c1de39fd86d79e1c21753a4332d"/>
+						</did>
+						<controlaccess>
+							<persname>Dusautoir, Augustin (abbé)</persname>
+							<subject>Portrait</subject>
+							<subject>Abbé</subject>
+							<subject>En pied</subject>
+							<subject>Portant</subject>
+							<subject>Livre</subject>
+							<subject>Fond de paysage</subject>
+							<subject>Autel</subject>
+						</controlaccess>
+					</c>
+					<c level="item">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 13</unitid>
+							<unittitle>Le choeur (carrelage, tracé d'un labyrinthe).</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+							<dao href="http://archivesenligne.pasdecalais.fr/ark:/64297/46126c5017cdaed6692d62bd4f6332d2"/>
+						</did>
+						<controlaccess>
+							<subject>Vue d'architecture</subject>
+							<subject>Cathédrale</subject>
+							<subject>Vue d'intérieur</subject>
+							<subject>Autel</subject>
+						</controlaccess>
+					</c>
+					<c level="item">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 14</unitid>
+							<unittitle>Le maître-autel. Table d'autel et chandeliers en bois doré provenant de l'abbaye de Saint-Bertin.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+							<dao href="http://archivesenligne.pasdecalais.fr/ark:/64297/3d727da821df8fc5b231f428376cffbd"/>
+						</did>
+						<controlaccess>
+							<subject>Vue d'architecture</subject>
+							<subject>Cathédrale</subject>
+							<subject>Vue d'intérieur</subject>
+							<subject>Autel</subject>
+						</controlaccess>
+					</c>
+					<c level="item">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 15</unitid>
+							<unittitle>Une des sculptures des stalles du choeur [représentant] Saint-Omer.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+							<dao href="http://archivesenligne.pasdecalais.fr/ark:/64297/a314ba42981456918ad3a38def446528"/>
+						</did>
+						<controlaccess>
+							<persname>Omer (saint ; 0600-0670)</persname>
+							<subject>Représentation d'objet</subject>
+							<subject>Relief</subject>
+							<subject>Figure</subject>
+							<subject>Évêque</subject>
+							<subject>En médaillon</subject>
+							<subject>Ornementation</subject>
+						</controlaccess>
+					</c>
+					<c level="item">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 16</unitid>
+							<unittitle>Les grandes orgues, 1717.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+							<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0016_0001.jpg"/>
+						</did>
+						<controlaccess>
+							<subject>Vue d'architecture</subject>
+							<subject>Cathédrale</subject>
+							<subject>Vue d'intérieur</subject>
+							<subject>Orgue</subject>
+						</controlaccess>
+					</c>
+					<c level="item">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 17</unitid>
+							<unittitle>Perspective de la nef gauche.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+							<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0017_0001.jpg"/>
+						</did>
+						<controlaccess>
+							<subject>Vue d'architecture</subject>
+							<subject>Cathédrale</subject>
+							<subject>Vue d'intérieur</subject>
+							<subject>Voûte</subject>
+						</controlaccess>
+					</c>
+					<c level="item">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 18</unitid>
+							<unittitle>Perspective de la nef gauche et partie du transept gauche.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+							<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0018_0001.jpg"/>
+						</did>
+						<controlaccess>
+							<subject>Vue d'architecture</subject>
+							<subject>Cathédrale</subject>
+							<subject>Vue d'intérieur</subject>
+							<subject>Voûte</subject>
+						</controlaccess>
+					</c>
+					<c level="item">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 19</unitid>
+							<unittitle>Perspective du transept gauche.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+						</did>
+						<accessrestrict>
+							<p>Le document a été constaté manquant lors du récolement effectué en juin 1977.</p>
+						</accessrestrict>
+					</c>
+					<c level="item">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 20</unitid>
+							<unittitle>La chaire (provenant de l'ancienne chapelle des Dominicaines).</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+							<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0020_0001.jpg"/>
+						</did>
+						<controlaccess>
+							<subject>Vue d'architecture</subject>
+							<subject>Cathédrale</subject>
+							<subject>Vue d'intérieur</subject>
+							<subject>Chaire à prêcher</subject>
+						</controlaccess>
+					</c>
+				</c>
+				<c level="item">
+					<did>
+						<unitid countrycode="FR" repositorycode="AD062">9 Fi 21</unitid>
+						<unittitle>Portail nord, XVIIIe siècle et horloge, 1558.</unittitle>
+						<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+						<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0021_0001.jpg"/>
+					</did>
+					<controlaccess>
+						<subject>Vue d'architecture</subject>
+						<subject>Cathédrale</subject>
+						<subject>Vue d'intérieur</subject>
+						<subject>Portail</subject>
+						<subject>Horloge</subject>
+						<subject>Astronomie</subject>
+					</controlaccess>
+				</c>
+				<c level="item">
+					<did>
+						<unitid countrycode="FR" repositorycode="AD062">9 Fi 22</unitid>
+						<unittitle>Bénitier, anciens fonts du XVIe siècle.</unittitle>
+						<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+						<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0022_0001.jpg"/>
+					</did>
+					<controlaccess>
+						<subject>Vue d'architecture</subject>
+						<subject>Cathédrale</subject>
+						<subject>Vue d'intérieur</subject>
+						<subject>Bénitier</subject>
+					</controlaccess>
+				</c>
+				<c level="item">
+					<did>
+						<unitid countrycode="FR" repositorycode="AD062">9 Fi 23</unitid>
+						<unittitle>Anciennes dalles.</unittitle>
+						<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+						<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0023_0001.jpg"/>
+					</did>
+					<controlaccess>
+						<persname>Vierge (sainte)</persname>
+						<persname>Jésus-Christ</persname>
+						<persname>Joseph (saint)</persname>
+						<subject>Représentation d'objet</subject>
+						<subject>Relief</subject>
+						<subject>Scène biblique</subject>
+						<subject>Ange</subject>
+						<subject>Étoile</subject>
+						<subject>Animal</subject>
+						<subject>Berceau</subject>
+					</controlaccess>
+				</c>
+				<c level="item">
+					<did>
+						<unitid countrycode="FR" repositorycode="AD062">9 Fi 24</unitid>
+						<unittitle>Dalles du XIIIe siècle.</unittitle>
+						<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+						<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0024_0001.jpg"/>
+					</did>
+					<controlaccess>
+						<subject>Représentation d'objet</subject>
+						<subject>Sculpture</subject>
+						<subject>Relief</subject>
+						<subject>Figure</subject>
+						<subject>Oiseau</subject>
+						<subject>Femme</subject>
+						<subject>Ange</subject>
+						<subject>Ornementation</subject>
+					</controlaccess>
+				</c>
+				<c level="item">
+					<did>
+						<unitid countrycode="FR" repositorycode="AD062">9 Fi 25</unitid>
+						<unittitle>[Plaque de] fondation, 1322.</unittitle>
+						<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+						<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0025_0001.jpg"/>
+					</did>
+					<controlaccess>
+						<subject>Représentation d'objet</subject>
+						<subject>Relief</subject>
+						<subject>Représentation non figurative</subject>
+					</controlaccess>
+				</c>
+				<c level="item">
+					<did>
+						<unitid countrycode="FR" repositorycode="AD062">9 Fi 26</unitid>
+						<unittitle>[Plaque de] fondation Nicolas Rembert, 1503.</unittitle>
+						<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+						<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0026_0001.jpg"/>
+					</did>
+					<controlaccess>
+						<subject>Représentation d'objet</subject>
+						<subject>Relief</subject>
+						<subject>Représentation non figurative</subject>
+					</controlaccess>
+				</c>
+				<c level="item">
+					<did>
+						<unitid countrycode="FR" repositorycode="AD062">9 Fi 27</unitid>
+						<unittitle>Le Grand Dieu de Thérouanne, XIIIe siècle.</unittitle>
+						<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+						<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0027_0001.jpg"/>
+					</did>
+					<controlaccess>
+						<persname>Jésus-Christ</persname>
+						<persname>Vierge (sainte)</persname>
+						<persname>Jean (saint)</persname>
+						<subject>Représentation d'objet</subject>
+						<subject>Sculpture</subject>
+						<subject>Scène</subject>
+						<subject>Assis</subject>
+						<subject>Prière</subject>
+						<subject>De profil</subject>
+						<subject>Agenouillé</subject>
+					</controlaccess>
+				</c>
+				<c level="item">
+					<did>
+						<unitid countrycode="FR" repositorycode="AD062">9 Fi 28</unitid>
+						<unittitle>Descente de croix, tableau attribué à Rubens.</unittitle>
+						<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+						<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0028_0001.jpg"/>
+					</did>
+					<controlaccess>
+						<persname>Jésus-Christ</persname>
+						<persname>Vierge (sainte)</persname>
+						<subject>Représentation d'objet</subject>
+						<subject>Peinture</subject>
+						<subject>Ornementation</subject>
+						<subject>Scène biblique</subject>
+					</controlaccess>
+				</c>
+				<c level="file">
+					<did>
+						<unitid countrycode="FR" repositorycode="AD062">9 Fi 29-61</unitid>
+						<unittitle>Monuments funéraires, bas-reliefs et ex-voto.</unittitle>
+						<unitdate calendar="gregorian" era="ce" normal="1921/1922">1921-1922</unitdate>
+						<unitdate calendar="gregorian" era="ce" datechar="libre">[1921-1922]</unitdate>
+					</did>
+					<c level="item">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 29</unitid>
+							<unittitle>Pierre tombale de Michel Ficefate, de sa mère et de sa soeur, 1415.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+							<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0029_0001.jpg"/>
+						</did>
+						<controlaccess>
+							<persname>Ficefate (famille)</persname>
+							<subject>Représentation d'objet</subject>
+							<subject>Tombeau</subject>
+							<subject>Relief</subject>
+							<subject>Groupe de figures</subject>
+							<subject>Religieux</subject>
+							<subject>Religieuse</subject>
+							<subject>En pied</subject>
+							<subject>Prière</subject>
+							<subject>Architecture religieuse</subject>
+						</controlaccess>
+					</c>
+					<c level="item">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 30</unitid>
+							<unittitle>Monument funéraire de Vincent Brejon, chapelain, 1433.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+							<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0030_0001.jpg"/>
+						</did>
+						<controlaccess>
+							<persname>Vierge (sainte)</persname>
+							<persname>Jésus-Christ</persname>
+							<persname>Brejon, Vincent</persname>
+							<persname>Nicaise (saint)</persname>
+							<subject>Représentation d'objet</subject>
+							<subject>Ensemble funéraire</subject>
+							<subject>Relief</subject>
+							<subject>Scène</subject>
+							<subject>Vierge à l'enfant</subject>
+							<subject>Assis</subject>
+							<subject>Saint</subject>
+							<subject>Agenouillé</subject>
+						</controlaccess>
+					</c>
+					<c level="item">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 31</unitid>
+							<unittitle>Pierre tombale de Simon Bocheux, doyen du chapitre, 1462.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+							<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0031_0001.jpg"/>
+						</did>
+						<controlaccess>
+							<persname>Bocheux, Simon</persname>
+							<subject>Représentation d'objet</subject>
+							<subject>Tombeau</subject>
+							<subject>Relief</subject>
+							<subject>Figure</subject>
+							<subject>Religieux</subject>
+							<subject>En pied</subject>
+							<subject>Prière</subject>
+							<subject>Architecture religieuse</subject>
+						</controlaccess>
+					</c>
+					<c level="item">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 32</unitid>
+							<unittitle>Pierre tombale de Toussaint de la Ruelle, chanoine, 1470.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+							<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0032_0001.jpg"/>
+						</did>
+						<controlaccess>
+							<persname>Toussaint de la Ruelle</persname>
+							<subject>Représentation d'objet</subject>
+							<subject>Tombeau</subject>
+							<subject>Relief</subject>
+							<subject>Figure</subject>
+							<subject>Religieux</subject>
+							<subject>En pied</subject>
+							<subject>Prière</subject>
+							<subject>Architecture religieuse</subject>
+						</controlaccess>
+					</c>
+					<c level="item">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 33</unitid>
+							<unittitle>Dalle funéraire d'Agnès de Boubers, dame de Matringhem.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+							<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0033_0001.jpg"/>
+						</did>
+						<controlaccess>
+							<persname>Boubers (famille de)</persname>
+							<subject>Représentation d'objet</subject>
+							<subject>Tombeau</subject>
+							<subject>Relief</subject>
+							<subject>Figure</subject>
+							<subject>Femme</subject>
+							<subject>En pied</subject>
+							<subject>Prière</subject>
+						</controlaccess>
+					</c>
+					<c level="item">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 34</unitid>
+							<unittitle>Bas-relief de Michel Ponche, chanoine, 1436.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+							<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0034_0001.jpg"/>
+						</did>
+						<controlaccess>
+							<persname>Vierge (sainte)</persname>
+							<persname>Jésus-Christ</persname>
+							<persname>Ponche, Michel (chanoine)</persname>
+							<subject>Représentation d'objet</subject>
+							<subject>Ensemble funéraire</subject>
+							<subject>Relief</subject>
+							<subject>Scène</subject>
+							<subject>Vierge à l'enfant</subject>
+							<subject>Assis</subject>
+							<subject>Ange</subject>
+							<subject>Prière</subject>
+							<subject>De profil</subject>
+							<subject>Religieux</subject>
+						</controlaccess>
+					</c>
+					<c level="item">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 35</unitid>
+							<unittitle>Bas-relief d'un chanoine : Baptême de Notre Seigneur, 1450.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+							<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0035_0001.jpg"/>
+						</did>
+						<controlaccess>
+							<persname>Jésus-Christ</persname>
+							<subject>Représentation d'objet</subject>
+							<subject>Ensemble funéraire</subject>
+							<subject>Relief</subject>
+							<subject>Scène biblique</subject>
+						</controlaccess>
+					</c>
+					<c level="item">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 36</unitid>
+							<unittitle>Bas-relief d'un chanoine : Jésus-Christ ressuscité et triomphant de la mort.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+							<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0036_0001.jpg"/>
+						</did>
+						<controlaccess>
+							<persname>Jésus-Christ</persname>
+							<subject>Représentation d'objet</subject>
+							<subject>Ensemble funéraire</subject>
+							<subject>Relief</subject>
+							<subject>Scène biblique</subject>
+							<subject>Groupe de figures</subject>
+							<subject>Cadavre</subject>
+							<subject>Ange</subject>
+						</controlaccess>
+					</c>
+					<c level="item">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 37</unitid>
+							<unittitle>Bas-relief de Jean Coquillau, 1455.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+							<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0037_0001.jpg"/>
+						</did>
+						<controlaccess>
+							<persname>Jésus-Christ</persname>
+							<persname>Vierge (sainte)</persname>
+							<persname>Coquillau, Jean</persname>
+							<subject>Représentation d'objet</subject>
+							<subject>Ensemble funéraire</subject>
+							<subject>Relief</subject>
+							<subject>Scène biblique</subject>
+							<subject>Groupe de figures</subject>
+							<subject>Assis</subject>
+							<subject>Ange</subject>
+						</controlaccess>
+					</c>
+					<c level="item">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 38</unitid>
+							<unittitle>Ex-voto de Jean de Libourg. Messe de saint Grégoire, 1470.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+							<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0038_0001.jpg"/>
+						</did>
+						<controlaccess>
+							<geogname>Rome (Italie)</geogname>
+							<persname>Jésus-Christ</persname>
+							<persname>Libourg, Jean de</persname>
+							<subject>Représentation d'objet</subject>
+							<subject>Ensemble funéraire</subject>
+							<subject>Relief</subject>
+							<subject>Ex-voto</subject>
+							<subject>Scène</subject>
+							<subject>Chapelle</subject>
+							<subject>Groupe de figures</subject>
+							<subject>Agenouillé</subject>
+							<subject>Prière</subject>
+							<subject>Christ en croix</subject>
+							<subject>Autel</subject>
+							<subject>Épée</subject>
+							<subject>Échelle</subject>
+							<subject>Coq</subject>
+							<subject>Main</subject>
+							<subject>Ornementation</subject>
+						</controlaccess>
+					</c>
+					<c level="item">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 39</unitid>
+							<unittitle>Bas-relief de Philippe de Vivier, 1471.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+							<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0039_0001.jpg"/>
+						</did>
+						<controlaccess>
+							<persname>Jésus-Christ</persname>
+							<subject>Représentation d'objet</subject>
+							<subject>Ensemble funéraire</subject>
+							<subject>Relief</subject>
+							<subject>Scène biblique</subject>
+							<subject>Groupe de figures</subject>
+							<subject>Agenouillé</subject>
+						</controlaccess>
+					</c>
+					<c level="item">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 40</unitid>
+							<unittitle>Monument funéraire d'un ancien vicaire, 1474.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+							<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0040_0001.jpg"/>
+						</did>
+						<controlaccess>
+							<persname>Jésus-Christ</persname>
+							<persname>Thomas (saint)</persname>
+							<subject>Représentation d'objet</subject>
+							<subject>Sculpture</subject>
+							<subject>Scène biblique</subject>
+							<subject>Ange</subject>
+							<subject>Figure</subject>
+							<subject>Blessé</subject>
+						</controlaccess>
+					</c>
+					<c level="item">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 41</unitid>
+							<unittitle>Bas-relief d'Antoine de Tramecourt (mort en 1478).</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+							<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0041_0001.jpg"/>
+						</did>
+						<controlaccess>
+							<persname>Pierre (saint ; ....-0070)</persname>
+							<persname>Jésus-Christ</persname>
+							<persname>Vierge (sainte)</persname>
+							<persname>Joseph (saint)</persname>
+							<persname>Philippe (saint)</persname>
+							<subject>Représentation d'objet</subject>
+							<subject>Scène biblique</subject>
+							<subject>Groupe de figures</subject>
+							<subject>Ange</subject>
+							<subject>Bergerie</subject>
+							<subject>Ornementation</subject>
+						</controlaccess>
+					</c>
+					<c level="item">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 42</unitid>
+							<unittitle>Bas-relief de Jean de la Carouwe, 1497.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+							<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0042_0001.jpg"/>
+						</did>
+						<controlaccess>
+							<persname>Vierge (sainte)</persname>
+							<persname>Jésus-Christ</persname>
+							<persname>Carouwe, Jean de la</persname>
+							<subject>Représentation d'objet</subject>
+							<subject>Scène</subject>
+							<subject>Vierge à l'enfant</subject>
+							<subject>Trône</subject>
+							<subject>Assis</subject>
+							<subject>Groupe de figures</subject>
+							<subject>Prière</subject>
+							<subject>Agenouillé</subject>
+						</controlaccess>
+					</c>
+					<c level="item">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 43</unitid>
+							<unittitle>Bas-relief : Vierge à l'enfant entouré d'un donateur, d'un saint évêque et d'une sainte martyre, XVe siècle.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+							<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0043_0001.jpg"/>
+						</did>
+						<controlaccess>
+							<persname>Vierge (sainte)</persname>
+							<persname>Jésus-Christ</persname>
+							<subject>Représentation d'objet</subject>
+							<subject>Scène</subject>
+							<subject>Vierge à l'enfant</subject>
+							<subject>Trône</subject>
+							<subject>Groupe de figures</subject>
+							<subject>Femme</subject>
+							<subject>Religieux</subject>
+							<subject>Prière</subject>
+							<subject>Agenouillé</subject>
+						</controlaccess>
+					</c>
+					<c level="item">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 44</unitid>
+							<unittitle>Monument funéraire de Sidrach de Lalaing, doyen du chapitre, 1533.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+							<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0044_0001.jpg"/>
+						</did>
+						<controlaccess>
+							<persname>Lalaing (famille de)</persname>
+							<persname>Ananias</persname>
+							<persname>Azarias</persname>
+							<persname>Misael</persname>
+							<subject>Vue d'architecture</subject>
+							<subject>Cathédrale</subject>
+							<subject>Vue d'intérieur</subject>
+							<subject>Représentation d'objet</subject>
+							<subject>Ensemble funéraire</subject>
+							<subject>Relief</subject>
+							<subject>Scène biblique</subject>
+							<subject>Statue</subject>
+							<subject>Garçon</subject>
+							<subject>Feu</subject>
+							<subject>Ornementation</subject>
+						</controlaccess>
+					</c>
+					<c level="item">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 45</unitid>
+							<unittitle>Monument funéraire de Jean Louchart, grand chantre, 1561.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+							<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0045_0001.jpg"/>
+						</did>
+						<controlaccess>
+							<persname>Vierge (sainte)</persname>
+							<persname>Joseph (saint)</persname>
+							<persname>Jésus-Christ</persname>
+							<subject>Représentation d'objet</subject>
+							<subject>Ensemble funéraire</subject>
+							<subject>Relief</subject>
+							<subject>Scène biblique</subject>
+							<subject>Temple</subject>
+							<subject>Vue d'intérieur</subject>
+						</controlaccess>
+					</c>
+					<c level="item">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 46</unitid>
+							<unittitle>Ex-voto de Jean de Bur, échevin de Saint-Omer et de Marie de Loo sa femme, 1596.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+							<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0046_0001.jpg"/>
+						</did>
+						<controlaccess>
+							<subject>Vue d'architecture</subject>
+							<subject>Cathédrale</subject>
+							<subject>Vue d'intérieur</subject>
+							<subject>Représentation d'objet</subject>
+							<subject>Ensemble funéraire</subject>
+							<subject>Relief</subject>
+							<subject>Ex-voto</subject>
+							<subject>Représentation non figurative</subject>
+						</controlaccess>
+					</c>
+					<c level="item">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 47</unitid>
+							<unittitle>Bas-relief de Jean-Marie de Marnix, doyen du chapitre, 1648.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+							<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0047_0001.jpg"/>
+						</did>
+						<controlaccess>
+							<subject>Vue d'architecture</subject>
+							<subject>Cathédrale</subject>
+							<subject>Vue d'intérieur</subject>
+							<subject>Représentation d'objet</subject>
+							<subject>Relief</subject>
+							<subject>Scène</subject>
+							<subject>Dieu biblique</subject>
+							<subject>Colombe</subject>
+						</controlaccess>
+					</c>
+					<c level="item">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 48</unitid>
+							<unittitle>Bas-relief du chanoine Duroy, XVIIIe siècle.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+							<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0048_0001.jpg"/>
+						</did>
+						<controlaccess>
+							<persname>Vierge (sainte)</persname>
+							<persname>Jésus-Christ</persname>
+							<persname>Duroy (chanoine)</persname>
+							<subject>Vue d'architecture</subject>
+							<subject>Cathédrale</subject>
+							<subject>Vue d'intérieur</subject>
+							<subject>Représentation d'objet</subject>
+							<subject>Ensemble funéraire</subject>
+							<subject>Sculpture</subject>
+							<subject>Évêque</subject>
+							<subject>Relief</subject>
+							<subject>Scène</subject>
+							<subject>Vierge à l'enfant</subject>
+							<subject>Pilier</subject>
+							<subject>Enfant</subject>
+							<subject>Debout</subject>
+							<subject>Homme</subject>
+							<subject>Agenouillé</subject>
+							<subject>Prière</subject>
+							<subject>Religieux</subject>
+						</controlaccess>
+					</c>
+					<c level="item">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 49</unitid>
+							<unittitle>Bas-relief à la mémoire des chanoines Coyecques et Doron, 1856.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+							<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0049_0001.jpg"/>
+						</did>
+						<controlaccess>
+							<persname>Jésus-Christ</persname>
+							<persname>Doron (chanoine)</persname>
+							<subject>Vue d'architecture</subject>
+							<subject>Cathédrale</subject>
+							<subject>Vue d'intérieur</subject>
+							<subject>Représentation d'objet</subject>
+							<subject>Relief</subject>
+							<subject>Scène biblique</subject>
+							<subject>Aigle</subject>
+						</controlaccess>
+					</c>
+					<c level="item">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 50</unitid>
+							<unittitle>Bas-relief : Vierge à l'enfant et au chat.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+							<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0050_0001.jpg"/>
+						</did>
+						<controlaccess>
+							<persname>Vierge (sainte)</persname>
+							<persname>Jésus-Christ</persname>
+							<subject>Représentation d'objet</subject>
+							<subject>Relief</subject>
+							<subject>Scène biblique</subject>
+							<subject>Vierge à l'enfant</subject>
+							<subject>Chat</subject>
+							<subject>Boeuf</subject>
+							<subject>Cheval</subject>
+						</controlaccess>
+					</c>
+					<c level="item">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 51</unitid>
+							<unittitle>Bas-relief : Le songe de Joseph, école flamande, Renaissance.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+						</did>
+						<accessrestrict>
+							<p>Le document a été constaté manquant lors du récolement effectué en juin 1977.</p>
+						</accessrestrict>
+					</c>
+					<c level="item">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 52</unitid>
+							<unittitle>Bas-relief de saint Hubert, XVe siècle.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+							<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0052_0001.jpg"/>
+						</did>
+						<controlaccess>
+							<persname>Hubert (saint)</persname>
+							<subject>Représentation d'objet</subject>
+							<subject>Relief</subject>
+							<subject>Scène</subject>
+							<subject>Croix</subject>
+							<subject>Ange</subject>
+							<subject>Mitre</subject>
+							<subject>Fond de paysage</subject>
+							<subject>Bois</subject>
+							<subject>Cheval</subject>
+						</controlaccess>
+					</c>
+					<c level="item">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 53</unitid>
+							<unittitle>Bas-relief en albâtre : L'adoration des bergers.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+							<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0053_0001.jpg"/>
+						</did>
+						<controlaccess>
+							<persname>Jésus-Christ</persname>
+							<persname>Vierge (sainte)</persname>
+							<persname>Joseph (saint)</persname>
+							<subject>Représentation d'objet</subject>
+							<subject>Relief</subject>
+							<subject>Scène biblique</subject>
+							<subject>Ange</subject>
+							<subject>Berger</subject>
+							<subject>Bergerie</subject>
+						</controlaccess>
+					</c>
+					<c level="item">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 54</unitid>
+							<unittitle>Bas-relief en albâtre : Descente de croix et Crucifixion.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+							<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0054_0001.jpg"/>
+						</did>
+						<controlaccess>
+							<persname>Vierge (sainte)</persname>
+							<subject>Représentation d'objet</subject>
+							<subject>Relief</subject>
+							<subject>Scène biblique</subject>
+							<subject>Groupe de figures</subject>
+							<subject>Fond de paysage</subject>
+							<subject>Ville</subject>
+							<subject>Soldat</subject>
+							<subject>Femme</subject>
+						</controlaccess>
+					</c>
+					<c level="item">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 55</unitid>
+							<unittitle>Sarcophage de saint Erkembode, VIIIe siècle.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+							<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0055_0001.jpg"/>
+						</did>
+						<controlaccess>
+							<persname>Erkembode (saint ; ....-0742)</persname>
+							<subject>Vue d'architecture</subject>
+							<subject>Cathédrale</subject>
+							<subject>Vue d'intérieur</subject>
+							<subject>Représentation d'objet</subject>
+							<subject>Tombeau</subject>
+							<subject>Sculpture</subject>
+							<subject>Relief</subject>
+						</controlaccess>
+					</c>
+					<c level="item">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 56</unitid>
+							<unittitle>Tombeau de saint Omer, XIIIe siècle.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+							<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0056_0001.jpg"/>
+						</did>
+						<controlaccess>
+							<persname>Omer (saint ; 0600-0670)</persname>
+							<subject>Vue d'architecture</subject>
+							<subject>Cathédrale</subject>
+							<subject>Vue d'intérieur</subject>
+							<subject>Tombeau</subject>
+							<subject>Sculpture</subject>
+							<subject>Saint</subject>
+							<subject>Relief</subject>
+						</controlaccess>
+					</c>
+					<c level="item">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 57</unitid>
+							<unittitle>Tête de la statue gisante du tombeau de saint Omer.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+							<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0057_0001.jpg"/>
+						</did>
+						<controlaccess>
+							<persname>Omer (saint ; 0600-0670)</persname>
+							<subject>Représentation d'objet</subject>
+							<subject>Sculpture</subject>
+							<subject>Figure</subject>
+							<subject>Saint</subject>
+							<subject>Homme</subject>
+							<subject>Tête</subject>
+							<subject>De profil</subject>
+						</controlaccess>
+					</c>
+					<c level="item">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 58</unitid>
+							<unittitle>Partie du mausolée de Philippe de sainte Aldegonde, bailli de Saint-Omer (1555-1574). Vierge mère en albâtre.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+						</did>
+						<accessrestrict>
+							<p>Le document a été constaté manquant lors du récolement effectué en juin 1977.</p>
+						</accessrestrict>
+					</c>
+					<c level="item">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 59</unitid>
+							<unittitle>Mausolée d'Eustache de Croy, 1530.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+							<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0059_0001.jpg"/>
+						</did>
+						<controlaccess>
+							<persname>Omer (saint ; 0600-0670)</persname>
+							<persname>Croÿ, Eustache de</persname>
+							<subject>Vue d'architecture</subject>
+							<subject>Cathédrale</subject>
+							<subject>Vue d'intérieur</subject>
+							<subject>Tombeau</subject>
+							<subject>Sculpture</subject>
+							<subject>Saint</subject>
+							<subject>Religieux</subject>
+							<subject>Agenouillé</subject>
+							<subject>Prière</subject>
+						</controlaccess>
+					</c>
+					<c level="item">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 60</unitid>
+							<unittitle>Mausolée d'Eustache de Croy, statue, 1530.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+						</did>
+						<accessrestrict>
+							<p>Le document a été constaté manquant lors du récolement effectué en juin 1977.</p>
+						</accessrestrict>
+					</c>
+					<c level="item">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 61</unitid>
+							<unittitle>Sainte Philomène, oeuvre en marbre blanc de Louis Noël.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+							<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0061_0001.jpg"/>
+						</did>
+						<controlaccess>
+							<persname>Philomène (sainte)</persname>
+							<subject>Vue d'architecture</subject>
+							<subject>Cathédrale</subject>
+							<subject>Vue d'intérieur</subject>
+							<subject>Autel</subject>
+							<subject>Sculpture</subject>
+							<subject>Figure</subject>
+							<subject>Femme</subject>
+						</controlaccess>
+					</c>
+				</c>
+				<c level="file">
+					<did>
+						<unitid countrycode="FR" repositorycode="AD062">9 Fi 62-96</unitid>
+						<unittitle>Chapelles.</unittitle>
+						<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+					</did>
+					<c level="file">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 62-64</unitid>
+							<unittitle>Chapelle du Saint-Sépulcre.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+						</did>
+						<c level="item">
+							<did>
+								<unitid countrycode="FR" repositorycode="AD062">9 Fi 62</unitid>
+								<unittitle>Chapelle du Saint-Sépulcre, XVIIe siècle.</unittitle>
+								<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+								<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0062_0001.jpg"/>
+							</did>
+							<controlaccess>
+								<subject>Vue d'architecture</subject>
+								<subject>Cathédrale</subject>
+								<subject>Vue d'intérieur</subject>
+								<subject>Chapelle</subject>
+								<subject>Sculpture</subject>
+								<subject>Relief</subject>
+							</controlaccess>
+						</c>
+						<c level="item">
+							<did>
+								<unitid countrycode="FR" repositorycode="AD062">9 Fi 63</unitid>
+								<unittitle>Chapelle du Saint-Sépulcre : mise au tombeau, XVIIe siècle.</unittitle>
+								<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+								<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0063_0001.jpg"/>
+							</did>
+							<controlaccess>
+								<persname>Jésus-Christ</persname>
+								<subject>Vue d'architecture</subject>
+								<subject>Cathédrale</subject>
+								<subject>Vue d'intérieur</subject>
+								<subject>Relief</subject>
+								<subject>Scène biblique</subject>
+								<subject>Groupe de figures</subject>
+								<subject>Cadavre</subject>
+							</controlaccess>
+						</c>
+						<c level="item">
+							<did>
+								<unitid countrycode="FR" repositorycode="AD062">9 Fi 64</unitid>
+								<unittitle>Chapelle du Saint-Sépulcre : Confessionnal.</unittitle>
+								<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+								<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0064_0001.jpg"/>
+							</did>
+							<controlaccess>
+								<subject>Vue d'architecture</subject>
+								<subject>Cathédrale</subject>
+								<subject>Vue d'intérieur</subject>
+								<subject>Confessionnal</subject>
+								<subject>Peinture</subject>
+							</controlaccess>
+						</c>
+					</c>
+					<c level="file">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 65-69</unitid>
+							<unittitle>Chapelle des fonts baptismaux.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+						</did>
+						<c level="item">
+							<did>
+								<unitid countrycode="FR" repositorycode="AD062">9 Fi 65</unitid>
+								<unittitle>Chapelle des fonts baptismaux et de la conception de la Vierge, 1623.</unittitle>
+								<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+								<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0065_0001.jpg"/>
+							</did>
+							<controlaccess>
+								<persname>Vierge (sainte)</persname>
+								<persname>Jésus-Christ</persname>
+								<subject>Vue d'architecture</subject>
+								<subject>Cathédrale</subject>
+								<subject>Vue d'intérieur</subject>
+								<subject>Chapelle</subject>
+								<subject>Sculpture</subject>
+								<subject>Vierge à l'enfant</subject>
+								<subject>Porte</subject>
+							</controlaccess>
+						</c>
+						<c level="item">
+							<did>
+								<unitid countrycode="FR" repositorycode="AD062">9 Fi 66</unitid>
+								<unittitle>Chapelle des fonts baptismaux : La flagellation, bas-relief funéraire, XVe siècle.</unittitle>
+								<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+								<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0066_0001.jpg"/>
+							</did>
+							<controlaccess>
+								<persname>Jésus-Christ</persname>
+								<subject>Représentation d'objet</subject>
+								<subject>Ensemble funéraire</subject>
+								<subject>Relief</subject>
+								<subject>Scène biblique</subject>
+							</controlaccess>
+						</c>
+						<c level="item">
+							<did>
+								<unitid countrycode="FR" repositorycode="AD062">9 Fi 67</unitid>
+								<unittitle>Chapelle des fonts baptismaux : La Sainte Trinité, XVe siècle.</unittitle>
+								<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+								<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0067_0001.jpg"/>
+							</did>
+							<controlaccess>
+								<subject>Représentation d'objet</subject>
+								<subject>Ensemble funéraire</subject>
+								<subject>Relief</subject>
+								<subject>Scène biblique</subject>
+								<subject>Christ en croix</subject>
+							</controlaccess>
+						</c>
+						<c level="item">
+							<did>
+								<unitid countrycode="FR" repositorycode="AD062">9 Fi 68</unitid>
+								<unittitle>Chapelle des fonts baptismaux : Vierge mère, XVe siècle.</unittitle>
+								<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+								<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0068_0001.jpg"/>
+							</did>
+							<controlaccess>
+								<persname>Vierge (sainte)</persname>
+								<persname>Jésus-Christ</persname>
+								<subject>Représentation d'objet</subject>
+								<subject>Ensemble funéraire</subject>
+								<subject>Relief</subject>
+								<subject>Scène biblique</subject>
+								<subject>Vierge à l'enfant</subject>
+								<subject>Groupe de figures</subject>
+							</controlaccess>
+						</c>
+						<c level="item">
+							<did>
+								<unitid countrycode="FR" repositorycode="AD062">9 Fi 69</unitid>
+								<unittitle>Chapelle des fonts baptismaux : La Vierge et l'enfant, peinture sur bois.</unittitle>
+								<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+								<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0069_0001.jpg"/>
+							</did>
+							<controlaccess>
+								<persname>Vierge (sainte)</persname>
+								<persname>Jésus-Christ</persname>
+								<subject>Représentation d'objet</subject>
+								<subject>Peinture</subject>
+								<subject>Scène biblique</subject>
+								<subject>Vierge à l'enfant</subject>
+								<subject>Ornementation</subject>
+							</controlaccess>
+						</c>
+					</c>
+					<c level="file">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 70-73</unitid>
+							<unittitle>Chapelle de la Conception de la Vierge.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+						</did>
+						<c level="item">
+							<did>
+								<unitid countrycode="FR" repositorycode="AD062">9 Fi 70</unitid>
+								<unittitle>Chapelle de la Conception de la Vierge. Fronton : la fuite en Égypte.</unittitle>
+								<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+								<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0070_0001.jpg"/>
+							</did>
+							<controlaccess>
+								<persname>Jésus-Christ</persname>
+								<persname>Vierge (sainte)</persname>
+								<persname>Joseph (saint)</persname>
+								<subject>Représentation d'objet</subject>
+								<subject>Relief</subject>
+								<subject>Scène biblique</subject>
+								<subject>Âne</subject>
+							</controlaccess>
+						</c>
+						<c level="item">
+							<did>
+								<unitid countrycode="FR" repositorycode="AD062">9 Fi 71</unitid>
+								<unittitle>Chapelle de la Conception de la Vierge. Fronton : Le repos de la Sainte Famille.</unittitle>
+								<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+								<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0071_0001.jpg"/>
+							</did>
+							<controlaccess>
+								<persname>Jésus-Christ</persname>
+								<persname>Vierge (sainte)</persname>
+								<persname>Joseph (saint)</persname>
+								<subject>Représentation d'objet</subject>
+								<subject>Relief</subject>
+								<subject>Scène biblique</subject>
+								<subject>Repos</subject>
+								<subject>Assis</subject>
+							</controlaccess>
+						</c>
+						<c level="item">
+							<did>
+								<unitid countrycode="FR" repositorycode="AD062">9 Fi 72</unitid>
+								<unittitle>Chapelle de la Conception de la Vierge : Robert de Saint-Martin, chapelain de l'Empereur Charles Quint, Le Christ sortant victorieux du tombeau, sainte Barbe
+									vierge, tryptique sur bois, 1562.</unittitle>
+								<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+								<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0072_0001.jpg"/>
+							</did>
+							<controlaccess>
+								<persname>Saint-Martin, Robert de (chapelain ; ....-1562)</persname>
+								<persname>Barbe (sainte)</persname>
+								<persname>Jésus-Christ</persname>
+								<subject>Représentation d'objet</subject>
+								<subject>Peinture</subject>
+								<subject>Scène biblique</subject>
+								<subject>Squelette</subject>
+								<subject>Groupe de figures</subject>
+								<subject>Femme</subject>
+								<subject>Moine</subject>
+								<subject>Fond de paysage</subject>
+								<subject>Tour</subject>
+								<subject>Église</subject>
+							</controlaccess>
+						</c>
+						<c level="item">
+							<did>
+								<unitid countrycode="FR" repositorycode="AD062">9 Fi 73</unitid>
+								<unittitle>Chapelle de la Conception de la Vierge : Naissance et mort de Jean-Baptiste, dyptique.</unittitle>
+								<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+								<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0073_0001.jpg"/>
+							</did>
+							<controlaccess>
+								<persname>Jean-Baptiste (saint)</persname>
+								<persname>Salomé</persname>
+								<subject>Représentation d'objet</subject>
+								<subject>Peinture</subject>
+								<subject>Scène biblique</subject>
+								<subject>Cadavre</subject>
+								<subject>Tête</subject>
+								<subject>Bourreau</subject>
+								<subject>Accouchement</subject>
+								<subject>Naissance</subject>
+								<subject>Femme</subject>
+								<subject>Lit</subject>
+								<subject>Nourrisson</subject>
+							</controlaccess>
+						</c>
+					</c>
+					<c level="file">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 74-79</unitid>
+							<unittitle>Chapelle Notre-Dame des Miracles.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+						</did>
+						<c level="item">
+							<did>
+								<unitid countrycode="FR" repositorycode="AD062">9 Fi 74</unitid>
+								<unittitle>Porte de l'ancien retable de Notre-Dame des Miracles, 1610.</unittitle>
+								<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+								<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0074_0001.jpg"/>
+							</did>
+							<controlaccess>
+								<subject>Vue d'architecture</subject>
+								<subject>Cathédrale</subject>
+								<subject>Vue d'intérieur</subject>
+								<subject>Porte</subject>
+								<subject>Retable</subject>
+								<subject>Lion</subject>
+							</controlaccess>
+						</c>
+						<c level="item">
+							<did>
+								<unitid countrycode="FR" repositorycode="AD062">9 Fi 75</unitid>
+								<unittitle>Retable de l'ancien autel de Notre-Dame des Miracles, 1610.</unittitle>
+								<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+								<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0075_0001.jpg"/>
+							</did>
+							<controlaccess>
+								<subject>Vue d'architecture</subject>
+								<subject>Cathédrale</subject>
+								<subject>Vue d'intérieur</subject>
+								<subject>Retable</subject>
+								<subject>Ange</subject>
+								<subject>Saint-Esprit</subject>
+								<subject>Rayons lumineux</subject>
+							</controlaccess>
+						</c>
+						<c level="item">
+							<did>
+								<unitid countrycode="FR" repositorycode="AD062">9 Fi 76</unitid>
+								<unittitle>Chapelle de Notre-Dame des Miracles, 1875.</unittitle>
+								<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+								<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0076_0001.jpg"/>
+							</did>
+							<controlaccess>
+								<subject>Vue d'architecture</subject>
+								<subject>Cathédrale</subject>
+								<subject>Vue d'intérieur</subject>
+								<subject>Chapelle</subject>
+								<subject>Autel</subject>
+								<subject>Grille</subject>
+							</controlaccess>
+						</c>
+						<c level="item">
+							<did>
+								<unitid countrycode="FR" repositorycode="AD062">9 Fi 77</unitid>
+								<unittitle>Statue miraculeuse de Notre-Dame des Miracles (vue de face), XIIIe siècle.</unittitle>
+								<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+								<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0077_0001.jpg"/>
+							</did>
+							<controlaccess>
+								<persname>Vierge (sainte)</persname>
+								<persname>Jésus-Christ</persname>
+								<subject>Représentation d'objet</subject>
+								<subject>Statue</subject>
+								<subject>Figure biblique</subject>
+								<subject>Vierge à l'enfant</subject>
+								<subject>Couronne</subject>
+								<subject>Assis</subject>
+								<subject>Trône</subject>
+							</controlaccess>
+						</c>
+						<c level="item">
+							<did>
+								<unitid countrycode="FR" repositorycode="AD062">9 Fi 78</unitid>
+								<unittitle>Statue miraculeuse de Notre-Dame des Miracles (vue de trois-quarts), XIIIe siècle.</unittitle>
+								<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+								<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0078_0001.jpg"/>
+							</did>
+							<controlaccess>
+								<persname>Vierge (sainte)</persname>
+								<persname>Jésus-Christ</persname>
+								<subject>Représentation d'objet</subject>
+								<subject>Statue</subject>
+								<subject>Figure biblique</subject>
+								<subject>Vierge à l'enfant</subject>
+								<subject>Couronne</subject>
+								<subject>Assis</subject>
+								<subject>Trône</subject>
+							</controlaccess>
+						</c>
+						<c level="item">
+							<did>
+								<unitid countrycode="FR" repositorycode="AD062">9 Fi 79</unitid>
+								<unittitle>Cloche de l'ancienne chapelle de Notre-Dame des Miracles.</unittitle>
+								<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+								<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0079_0001.jpg"/>
+							</did>
+							<controlaccess>
+								<subject>Représentation d'objet</subject>
+								<subject>Cloche</subject>
+							</controlaccess>
+						</c>
+					</c>
+					<c level="file">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 80-82</unitid>
+							<unittitle>Chapelle de Wissocq.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+						</did>
+						<c level="item">
+							<did>
+								<unitid countrycode="FR" repositorycode="AD062">9 Fi 80</unitid>
+								<unittitle>Chapelle dite de Wissocq, 1621.</unittitle>
+								<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+								<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0080_0001.jpg"/>
+							</did>
+							<controlaccess>
+								<persname>Vierge (sainte)</persname>
+								<persname>Jésus-Christ</persname>
+								<subject>Vue d'architecture</subject>
+								<subject>Cathédrale</subject>
+								<subject>Vue d'intérieur</subject>
+								<subject>Chapelle</subject>
+								<subject>Sculpture</subject>
+								<subject>Relief</subject>
+								<subject>Vierge à l'enfant</subject>
+								<subject>Chat</subject>
+							</controlaccess>
+						</c>
+						<c level="item">
+							<did>
+								<unitid countrycode="FR" repositorycode="AD062">9 Fi 81</unitid>
+								<unittitle>Chapelle dite de Wissocq, tombeau d'Antoine de Wissocq, 1405.</unittitle>
+								<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+								<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0081_0001.jpg"/>
+							</did>
+							<controlaccess>
+								<persname>Vierge (sainte)</persname>
+								<persname>Jésus-Christ</persname>
+								<persname>Wissocq, Antoine de</persname>
+								<subject>Vue d'architecture</subject>
+								<subject>Cathédrale</subject>
+								<subject>Vue d'intérieur</subject>
+								<subject>Tombeau</subject>
+								<subject>Relief</subject>
+								<subject>Homme</subject>
+								<subject>Peinture</subject>
+								<subject>Vierge à l'enfant</subject>
+							</controlaccess>
+						</c>
+						<c level="item">
+							<did>
+								<unitid countrycode="FR" repositorycode="AD062">9 Fi 82</unitid>
+								<unittitle>Chapelle dite de Wissocq : la Vierge dans la gloire, tryptique.</unittitle>
+								<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+								<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0082_0001.jpg"/>
+							</did>
+							<controlaccess>
+								<persname>Vierge (sainte)</persname>
+								<persname>Jésus-Christ</persname>
+								<subject>Représentation d'objet</subject>
+								<subject>Peinture</subject>
+								<subject>Figure</subject>
+								<subject>Homme</subject>
+								<subject>Fond de paysage</subject>
+								<subject>Figure biblique</subject>
+								<subject>Vierge à l'enfant</subject>
+								<subject>Couronne</subject>
+								<subject>Rayons lumineux</subject>
+								<subject>Ange</subject>
+								<subject>Groupe de figures</subject>
+							</controlaccess>
+						</c>
+					</c>
+					<c level="file">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 83-85</unitid>
+							<unittitle>Chapelles de sainte Aldegonde.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+						</did>
+						<c level="item">
+							<did>
+								<unitid countrycode="FR" repositorycode="AD062">9 Fi 83</unitid>
+								<unittitle>Chapelle de sainte Aldegonde, collatérale nord, XVIIe siècle.</unittitle>
+								<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+								<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0083_0001.jpg"/>
+							</did>
+							<controlaccess>
+								<subject>Vue d'architecture</subject>
+								<subject>Cathédrale</subject>
+								<subject>Vue d'intérieur</subject>
+								<subject>Chapelle</subject>
+								<subject>Porte</subject>
+								<subject>Sculpture</subject>
+							</controlaccess>
+						</c>
+						<c level="item">
+							<did>
+								<unitid countrycode="FR" repositorycode="AD062">9 Fi 84</unitid>
+								<unittitle>Chapelle de sainte Aldegonde, collatérale sud.</unittitle>
+								<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+								<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0084_0001.jpg"/>
+							</did>
+							<controlaccess>
+								<persname>Hubert (saint)</persname>
+								<subject>Vue d'architecture</subject>
+								<subject>Cathédrale</subject>
+								<subject>Vue d'intérieur</subject>
+								<subject>Chapelle</subject>
+								<subject>Porte</subject>
+								<subject>Sculpture</subject>
+								<subject>Relief</subject>
+							</controlaccess>
+						</c>
+						<c level="item">
+							<did>
+								<unitid countrycode="FR" repositorycode="AD062">9 Fi 85</unitid>
+								<unittitle>Chapelle de sainte Aldegonde, sainte Aldegonde, buste en bois, XVIIIe siècle.</unittitle>
+								<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+								<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0085_0001.jpg"/>
+							</did>
+							<controlaccess>
+								<persname>Aldegonde (sainte)</persname>
+								<subject>Représentation d'objet</subject>
+								<subject>Sculpture</subject>
+								<subject>Portrait</subject>
+								<subject>Buste</subject>
+								<subject>Femme</subject>
+								<subject>Colombe</subject>
+							</controlaccess>
+						</c>
+					</c>
+					<c level="file">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 86-87</unitid>
+							<unittitle>Chapelle de saint Léonard.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+						</did>
+						<c level="item">
+							<did>
+								<unitid countrycode="FR" repositorycode="AD062">9 Fi 86</unitid>
+								<unittitle>Chapelle de saint Léonard.</unittitle>
+								<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+								<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0086_0001.jpg"/>
+							</did>
+							<controlaccess>
+								<subject>Vue d'architecture</subject>
+								<subject>Cathédrale</subject>
+								<subject>Vue d'intérieur</subject>
+								<subject>Chapelle</subject>
+								<subject>Autel</subject>
+								<subject>Sculpture</subject>
+								<subject>Décor d'architecture</subject>
+								<subject>Peinture</subject>
+							</controlaccess>
+						</c>
+						<c level="item">
+							<did>
+								<unitid countrycode="FR" repositorycode="AD062">9 Fi 87</unitid>
+								<unittitle>Chapelle de saint Léonard, piscine, XVIe siècle.</unittitle>
+								<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+								<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0087_0001.jpg"/>
+							</did>
+							<controlaccess>
+								<subject>Vue d'architecture</subject>
+								<subject>Cathédrale</subject>
+								<subject>Vue d'intérieur</subject>
+							</controlaccess>
+						</c>
+					</c>
+					<c level="file">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 88</unitid>
+							<unittitle>Chapelle de saint Omer.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+						</did>
+						<c level="item">
+							<did>
+								<unitid countrycode="FR" repositorycode="AD062">9 Fi 88</unitid>
+								<unittitle>Chapelle de saint Omer, 1631.</unittitle>
+								<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+								<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0088_0001.jpg"/>
+							</did>
+							<controlaccess>
+								<persname>Omer (saint ; 0600-0670)</persname>
+								<subject>Vue d'architecture</subject>
+								<subject>Cathédrale</subject>
+								<subject>Vue d'intérieur</subject>
+								<subject>Chapelle</subject>
+								<subject>Porte</subject>
+								<subject>Sculpture</subject>
+								<subject>Relief</subject>
+							</controlaccess>
+						</c>
+					</c>
+					<c level="file">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 89-90</unitid>
+							<unittitle>Chapelle de saint Erkembode.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+						</did>
+						<c level="item">
+							<did>
+								<unitid countrycode="FR" repositorycode="AD062">9 Fi 89</unitid>
+								<unittitle>Chapelle de saint Erkembode.</unittitle>
+								<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+								<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0089_0001.jpg"/>
+							</did>
+							<controlaccess>
+								<persname>Erkembode (saint ; ....-0742)</persname>
+								<subject>Vue d'architecture</subject>
+								<subject>Cathédrale</subject>
+								<subject>Vue d'intérieur</subject>
+								<subject>Chapelle</subject>
+								<subject>Porte</subject>
+								<subject>Sculpture</subject>
+							</controlaccess>
+						</c>
+						<c level="item">
+							<did>
+								<unitid countrycode="FR" repositorycode="AD062">9 Fi 90</unitid>
+								<unittitle>Reliquaire de saint Erkembode, XVe siècle.</unittitle>
+								<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+								<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0090_0001.jpg"/>
+							</did>
+							<controlaccess>
+								<persname>Erkembode (saint ; ....-0742)</persname>
+								<subject>Représentation d'objet</subject>
+								<subject>Objet du culte</subject>
+								<subject>Reliquaire</subject>
+							</controlaccess>
+						</c>
+					</c>
+					<c level="file">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 91-93</unitid>
+							<unittitle>Chapelle de saint Maxime.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+						</did>
+						<c level="item">
+							<did>
+								<unitid countrycode="FR" repositorycode="AD062">9 Fi 91</unitid>
+								<unittitle>Chapelle de saint Maxime.</unittitle>
+								<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+								<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0091_0001.jpg"/>
+							</did>
+							<controlaccess>
+								<subject>Vue d'architecture</subject>
+								<subject>Cathédrale</subject>
+								<subject>Vue d'intérieur</subject>
+								<subject>Chapelle</subject>
+								<subject>Porte</subject>
+								<subject>Sculpture</subject>
+							</controlaccess>
+						</c>
+						<c level="item">
+							<did>
+								<unitid countrycode="FR" repositorycode="AD062">9 Fi 92</unitid>
+								<unittitle>Chapelle de saint Maxime. Saint Adrien, l'adoration des bergers, le donateur : tryptique sur bois.</unittitle>
+								<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+								<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0092_0001.jpg"/>
+							</did>
+							<controlaccess>
+								<persname>Adrien de Nicomédie (saint ; ....-0306)</persname>
+								<persname>Vierge (sainte)</persname>
+								<persname>Jésus-Christ</persname>
+								<subject>Représentation d'objet</subject>
+								<subject>Peinture</subject>
+								<subject>Scène biblique</subject>
+								<subject>Figure</subject>
+								<subject>Épée</subject>
+								<subject>Armure</subject>
+								<subject>Fond de paysage</subject>
+								<subject>Berger</subject>
+								<subject>Ange</subject>
+								<subject>Homme</subject>
+								<subject>Religieux</subject>
+								<subject>Saint</subject>
+								<subject>Agenouillé</subject>
+							</controlaccess>
+						</c>
+						<c level="item">
+							<did>
+								<unitid countrycode="FR" repositorycode="AD062">9 Fi 93</unitid>
+								<unittitle>Chapelle de saint Maxime. Saint Omer, saint Bertin : tryptique sur bois (revers des volets).</unittitle>
+								<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+								<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0093_0001.jpg"/>
+							</did>
+							<controlaccess>
+								<persname>Omer (saint ; 0600-0670)</persname>
+								<subject>Représentation d'objet</subject>
+								<subject>Peinture</subject>
+								<subject>Figure</subject>
+								<subject>Homme</subject>
+								<subject>En pied</subject>
+								<subject>Mitre</subject>
+								<subject>Bateau</subject>
+							</controlaccess>
+						</c>
+					</c>
+					<c level="file">
+						<did>
+							<unitid countrycode="FR" repositorycode="AD062">9 Fi 94-96</unitid>
+							<unittitle>Autres chapelles.</unittitle>
+							<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+						</did>
+						<c level="item">
+							<did>
+								<unitid countrycode="FR" repositorycode="AD062">9 Fi 94</unitid>
+								<unittitle>Chapelle de la Conception de Notre-Dame, XVe siècle.</unittitle>
+								<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+								<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0094_0001.jpg"/>
+							</did>
+							<controlaccess>
+								<subject>Vue d'architecture</subject>
+								<subject>Cathédrale</subject>
+								<subject>Vue d'intérieur</subject>
+								<subject>Chapelle</subject>
+								<subject>Porte</subject>
+								<subject>Sculpture</subject>
+							</controlaccess>
+						</c>
+						<c level="item">
+							<did>
+								<unitid countrycode="FR" repositorycode="AD062">9 Fi 95</unitid>
+								<unittitle>Chapelle de Notre-Dame de Montreuil et de l'Assomption, 1708.</unittitle>
+								<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+								<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0095_0001.jpg"/>
+							</did>
+							<controlaccess>
+								<subject>Vue d'architecture</subject>
+								<subject>Cathédrale</subject>
+								<subject>Vue d'intérieur</subject>
+								<subject>Chapelle</subject>
+								<subject>Porte</subject>
+								<subject>Sculpture</subject>
+								<subject>Peinture</subject>
+							</controlaccess>
+						</c>
+						<c level="item">
+							<did>
+								<unitid countrycode="FR" repositorycode="AD062">9 Fi 96</unitid>
+								<unittitle>Chapelle du Calvaire (mission de 1828).</unittitle>
+								<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+								<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0096_0001.jpg"/>
+							</did>
+							<controlaccess>
+								<persname>Jésus-Christ</persname>
+								<subject>Vue d'architecture</subject>
+								<subject>Cathédrale</subject>
+								<subject>Vue d'intérieur</subject>
+								<subject>Chapelle</subject>
+								<subject>Crucifix</subject>
+								<subject>Sculpture</subject>
+								<subject>Femme</subject>
+								<subject>Fond de paysage</subject>
+							</controlaccess>
+						</c>
+					</c>
+				</c>
+			</c>
+			<c level="file">
+				<did>
+					<unitid countrycode="FR" repositorycode="AD062">9 Fi 97-104, 106-111</unitid>
+					<unittitle>Mobilier, reliquaires, retable, trésors, missel.</unittitle>
+					<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+				</did>
+				<c level="item">
+					<did>
+						<unitid countrycode="FR" repositorycode="AD062">9 Fi 97</unitid>
+						<unittitle>Ancien retable de la chapelle des Trépassés.</unittitle>
+						<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+						<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0097_0001.jpg"/>
+					</did>
+					<controlaccess>
+						<persname>Vierge (sainte)</persname>
+						<persname>Jésus-Christ</persname>
+						<subject>Représentation d'objet</subject>
+						<subject>Retable</subject>
+						<subject>Scène biblique</subject>
+						<subject>Groupe de figures</subject>
+						<subject>Femme</subject>
+						<subject>Dragon</subject>
+						<subject>Tour</subject>
+						<subject>Vierge à l'enfant</subject>
+						<subject>Ciel</subject>
+						<subject>Rayons lumineux</subject>
+						<subject>Homme</subject>
+						<subject>De profil</subject>
+						<subject>Livre</subject>
+					</controlaccess>
+				</c>
+				<c level="item">
+					<did>
+						<unitid countrycode="FR" repositorycode="AD062">9 Fi 98</unitid>
+						<unittitle>Panneau en bois sculpté de la confrérie du Saint-Viatique.</unittitle>
+						<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+						<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0098_0001.jpg"/>
+					</did>
+					<controlaccess>
+						<subject>Représentation d'objet</subject>
+						<subject>Scène</subject>
+						<subject>Ange</subject>
+						<subject>Ciel</subject>
+						<subject>Rayons lumineux</subject>
+						<subject>Encensoir</subject>
+						<subject>Trompette</subject>
+						<subject>Homme</subject>
+						<subject>En pied</subject>
+						<subject>Calice</subject>
+						<subject>Autel</subject>
+						<subject>Portant</subject>
+						<subject>Luminaire</subject>
+						<subject>Ange</subject>
+					</controlaccess>
+				</c>
+				<c level="item">
+					<did>
+						<unitid countrycode="FR" repositorycode="AD062">9 Fi 99</unitid>
+						<unittitle>Reliquaire et reliques de saint Omer (reposoir le jour de sa fête).</unittitle>
+						<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+						<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0099_0001.jpg"/>
+					</did>
+					<controlaccess>
+						<persname>Omer (saint ; 0600-0670)</persname>
+						<subject>Représentation d'objet</subject>
+						<subject>Reliquaire</subject>
+						<subject>Buste</subject>
+						<subject>Religieux</subject>
+						<subject>Mitre</subject>
+						<subject>Décor d'architecture</subject>
+						<subject>Autel</subject>
+					</controlaccess>
+				</c>
+				<c level="item">
+					<did>
+						<unitid countrycode="FR" repositorycode="AD062">9 Fi 100</unitid>
+						<unittitle>Reliquaire de saint Omer.</unittitle>
+						<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+						<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0100_0001.jpg"/>
+					</did>
+					<controlaccess>
+						<persname>Omer (saint ; 0600-0670)</persname>
+						<subject>Représentation d'objet</subject>
+						<subject>Reliquaire</subject>
+						<subject>Buste</subject>
+						<subject>Religieux</subject>
+						<subject>Mitre</subject>
+					</controlaccess>
+				</c>
+				<c level="item">
+					<did>
+						<unitid countrycode="FR" repositorycode="AD062">9 Fi 101</unitid>
+						<unittitle>Reliquaire de saint Omer.</unittitle>
+						<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+						<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0101_0001.jpg"/>
+					</did>
+					<controlaccess>
+						<persname>Omer (saint ; 0600-0670)</persname>
+						<subject>Représentation d'objet</subject>
+						<subject>Reliquaire</subject>
+						<subject>Buste</subject>
+						<subject>Religieux</subject>
+						<subject>Mitre</subject>
+					</controlaccess>
+				</c>
+				<c level="item">
+					<did>
+						<unitid countrycode="FR" repositorycode="AD062">9 Fi 102</unitid>
+						<unittitle>Tête de saint Omer fleuri.</unittitle>
+						<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+						<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0102_0001.jpg"/>
+					</did>
+					<controlaccess>
+						<persname>Omer (saint ; 0600-0670)</persname>
+						<subject>Représentation d'objet</subject>
+						<subject>Reliquaire</subject>
+						<subject>Tête</subject>
+						<subject>Religieux</subject>
+						<subject>Mitre</subject>
+					</controlaccess>
+				</c>
+				<c level="item">
+					<did>
+						<unitid countrycode="FR" repositorycode="AD062">9 Fi 103</unitid>
+						<unittitle>Reliquaire de saint Bertin.</unittitle>
+						<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+						<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0103_0001.jpg"/>
+					</did>
+					<controlaccess>
+						<persname>Bertin (saint ; ....-0698)</persname>
+						<subject>Représentation d'objet</subject>
+						<subject>Reliquaire</subject>
+						<subject>Buste</subject>
+						<subject>Religieux</subject>
+						<subject>Socle</subject>
+						<subject>Décor d'architecture</subject>
+					</controlaccess>
+				</c>
+				<c level="item">
+					<did>
+						<unitid countrycode="FR" repositorycode="AD062">9 Fi 104</unitid>
+						<unittitle>Reliquaires de saint Maxime, contenant le chef de ce saint (à gauche) et de saint Erkembode, contenant une partie importante du chef de ce saint (à
+							droite).</unittitle>
+						<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+						<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0104_0001.jpg"/>
+					</did>
+					<controlaccess>
+						<persname>Maxime (saint)</persname>
+						<subject>Représentation d'objet</subject>
+						<subject>Reliquaire</subject>
+						<subject>Buste</subject>
+						<subject>Religieux</subject>
+						<subject>Mitre</subject>
+					</controlaccess>
+				</c>
+				<c level="item">
+					<did>
+						<unitid countrycode="FR" repositorycode="AD062">9 Fi 106</unitid>
+						<unittitle>Trésor. Croix de Clairmarais (vue de face).</unittitle>
+						<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+						<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0106_0001.jpg"/>
+					</did>
+					<controlaccess>
+						<subject>Représentation d'objet</subject>
+						<subject>Relief</subject>
+						<subject>Christ en croix</subject>
+					</controlaccess>
+				</c>
+				<c level="item">
+					<did>
+						<unitid countrycode="FR" repositorycode="AD062">9 Fi 107</unitid>
+						<unittitle>Trésor. Croix de Clairmarais (vue de dos).</unittitle>
+						<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+						<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0107_0001.jpg"/>
+					</did>
+					<controlaccess>
+						<subject>Représentation d'objet</subject>
+					</controlaccess>
+				</c>
+				<c level="item">
+					<did>
+						<unitid countrycode="FR" repositorycode="AD062">9 Fi 108</unitid>
+						<unittitle>Trésor. Pixyde en cuivre doré, XIIe siècle.</unittitle>
+						<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+						<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0108_0001.jpg"/>
+					</did>
+					<controlaccess>
+						<subject>Représentation d'objet</subject>
+						<subject>Objet du culte</subject>
+					</controlaccess>
+				</c>
+				<c level="item">
+					<did>
+						<unitid countrycode="FR" repositorycode="AD062">9 Fi 109</unitid>
+						<unittitle>Trésor. Ostensoir, XVIIIe siècle.</unittitle>
+						<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+						<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0109_0001.jpg"/>
+					</did>
+					<controlaccess>
+						<subject>Représentation d'objet</subject>
+						<subject>Objet du culte</subject>
+						<subject>Ostensoir</subject>
+					</controlaccess>
+				</c>
+				<c level="item">
+					<did>
+						<unitid countrycode="FR" repositorycode="AD062">9 Fi 110</unitid>
+						<unittitle>Missel d'Odoard de Bersaques, grande miniature représentant saint Omer dans sa cathédrale, XVIe siècle [manuscrit du chapitre collégial conservé à la bibliothèque de
+							l'Agglomération du Pays de Saint-Omer, Ms. 060].</unittitle>
+						<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+						<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0110_0001.jpg"/>
+					</did>
+					<controlaccess>
+						<persname>Omer (saint ; 0600-0670)</persname>
+						<subject>Représentation d'objet</subject>
+						<subject>Estampe</subject>
+						<subject>Figure</subject>
+						<subject>Religieux</subject>
+						<subject>Mitre</subject>
+						<subject>Fond de paysage</subject>
+						<subject>Vue d'intérieur</subject>
+						<subject>Cathédrale</subject>
+					</controlaccess>
+				</c>
+				<c level="item">
+					<did>
+						<unitid countrycode="FR" repositorycode="AD062">9 Fi 111</unitid>
+						<unittitle>Missel d'Odoard de Bersaques, première page, miniature de dédicace, XVIe siècle [manuscrit du chapitre collégial conservé à la bibliothèque de l'Agglomération du
+							Pays de Saint-Omer, Ms. 060].</unittitle>
+						<unitdate calendar="gregorian" era="ce" normal="1921/1922">[1921-1922]</unitdate>
+						<dao href="\collections_et_fonds_iconographiques\serie_fi\9fi\frad062_9fi_0111_0001.jpg"/>
+					</did>
+					<controlaccess>
+						<persname>Étienne (saint ; ....-0034)</persname>
+						<persname>André (saint ; 1er siècle)</persname>
+						<persname>Lucie de Syracuse (sainte ; 0283-0310)</persname>
+						<persname>Agnès de Rome (sainte ; 0291-0304)</persname>
+						<persname>Odoard de Bersaques (prévot)</persname>
+						<subject>Représentation d'objet</subject>
+						<subject>Peinture</subject>
+						<subject>Groupe de figures</subject>
+						<subject>Martyre</subject>
+						<subject>Croix</subject>
+						<subject>Épée</subject>
+						<subject>Partie de tête</subject>
+						<subject>Clé</subject>
+						<subject>Évêque</subject>
+						<subject>Mitre</subject>
+						<subject>Prière</subject>
+						<subject>Don</subject>
+						<subject>Infirme</subject>
+						<subject>Gril</subject>
+						<subject>Toussaint</subject>
+						<subject>Enluminure</subject>
+					</controlaccess>
+				</c>
+			</c>
+		</dsc>
+	</archdesc>
+</ead>

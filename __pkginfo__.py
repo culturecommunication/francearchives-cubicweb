@@ -1,0 +1,1 @@
+cubicweb_francearchives/__pkginfo__.py

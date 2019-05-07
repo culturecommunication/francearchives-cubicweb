@@ -1,0 +1,203 @@
+#pagefooter {
+  background-color: $royal-blue;
+  color: #fff;
+  margin: $bootstrap-padding;
+  padding: 0;
+}
+
+#pagefooter .footer-actions {
+  border-top: 1px solid #fff;
+  border-bottom: 1px solid #fff;
+  padding: 2em 3em;
+
+  text-align: left;
+  @include if-wider-than(sm) {
+    text-align: center;
+  }
+}
+
+#pagefooter .footer-actions a {
+  display: block;
+  padding: 0.5em 0;
+
+  @include if-wider-than(sm) {
+    display: inline;
+    padding-left: 1.250em;
+  }
+}
+
+#pagefooter a,
+#pagefooter a:hover,
+#pagefooter a:visited,
+#pagefooter a:focus {
+  color: #fff;
+}
+
+#content-connected {
+  background: $light-grey;
+  padding: 2.5em 2em 2.5em;
+}
+
+#content-connected h5 {
+  color: $medium-grey;
+}
+
+#nl-col-connected {
+  @include if-wider-than(md) {
+    padding-left: 1em;
+    border-left: 1px solid $medium-grey;
+  }
+}
+
+#sn-label-connected {
+  font-size: 2em;
+  text-transform: uppercase;
+  color: $medium-grey;
+  font-weight: bold;
+  @extend .lovelo;
+}
+
+#nl-label-connected {
+  font-size: 1.75em;
+  display: inline-block;
+  color: $medium-grey;
+  font-weight: normal;
+}
+
+#content-connected .btn-nl {
+  height: 3em;
+  padding-top: 0.8em;
+  font-size: 1.2em;
+  @extend .lovelo;
+}
+
+#footer-content {
+  background: $royal-blue;
+  color: #fff;
+  margin: 0;
+  padding: 3em;
+  @include if-wider-than(sm) {
+      padding: 8em 3em 5em 3em;
+  }
+
+  h2 { /* h3 font styles */
+    margin-bottom: 1em;
+    text-transform: uppercase;
+    font-weight: bold;
+    color: #fff;
+    @media (min-width: map-get($screen-widths,'xs')) {
+      font-size: map-get(map-get($header-sizes, 'xs'), 'h3');
+    }
+    @media (min-width: map-get($screen-widths,'md')) {
+      font-size: map-get(map-get($header-sizes, 'md'), 'h3');
+    }
+  }
+
+  ul {
+    padding-left: 0;
+    text-align: left;
+    list-style-type: none;
+
+    li {
+      padding: 0.5em 0;
+    }
+  }
+
+  a {
+    display: block;
+
+    @include if-wider-than(sm) {
+      border-left-color: white;
+    }
+  }
+
+  .footer-content__ministry {
+     h2 {
+       text-transform: none;
+       font-weight: normal;
+       font-size: 1.25rem;
+     }
+     a {
+       min-height: 2.5em; // to avoid borders with different heights
+       font-size: 1em;
+
+       @include if-wider-than(sm) {
+         min-height: 4em; // to avoid borders with different heights
+       }
+     }
+
+     div {
+       text-align: left;
+       padding: 0;
+       border-right: 1px solid transparent;
+
+       @include if-wider-than(sm) {
+         padding: 1em;
+         border-right-color: white;
+         text-align: center;
+       }
+     }
+
+     div:last-child {
+         border-right-width: 0;
+     }
+  }
+
+  .footer-content__links {
+    div {
+      padding: 1em 0;
+      border-right: 1px solid transparent;
+
+      @include if-wider-than(sm) {
+        padding: 1em;
+        border-right-color: white;
+      }
+    }
+
+    & > div:last-child {
+      border: none;
+    }
+
+    & > div:first-child {
+       border-left: 1px solid transparent;
+
+       @include if-wider-than(lg) {
+        border-left-color: white;
+       }
+    }
+  }
+}
+
+#footer-signature {
+  margin-bottom: 4em;
+  background: url('../images/footer_signature_text-francearchive.png') no-repeat left;
+  height: 25px;
+  @include if-wider-than(sm) {
+    background-position: center;
+    height: 50px;
+  }
+  background-size: contain; // must be after height to work!?
+}
+
+#copyright {
+  padding: 3.125em 0;
+  text-align: center;
+}
+
+#copyright span {
+  font-size: 1.25em;
+}
+
+@each $sn in $social-networks-share {
+  ##{$sn}-share-button {
+    display: inline-block;
+    height: 3em;
+    width: 3em;
+    background: url('../images/icon-social-#{$sn}-white.svg') no-repeat;
+    background-position: center center;
+    background-color: $royal-blue;
+    background-size: 50%;
+
+    @include hidden-text();
+  }
+}

@@ -1,0 +1,175 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"PO-Revision-Date: 2017-01-24 16:53+0100\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "de_lang"
+msgstr ""
+
+msgid "en_lang"
+msgstr ""
+
+msgid "es_lang"
+msgstr ""
+
+msgid "fr_lang"
+msgstr ""
+
+msgid "accruals_label"
+msgstr ""
+
+msgid "all cw_etype"
+msgstr ""
+
+msgid "all escategory"
+msgstr ""
+
+msgid "all creation_date"
+msgstr ""
+
+msgid "all unittid"
+msgstr ""
+
+msgid "all commemoration_year"
+msgstr ""
+
+msgid "all year"
+msgstr ""
+
+msgid "all publisher"
+msgstr ""
+
+msgid "all digitized"
+msgstr ""
+
+msgid "all originators"
+msgstr ""
+
+msgid "all ancestors"
+msgstr ""
+
+msgid "all status"
+msgstr ""
+
+msgid "all siaf_daf_kind"
+msgstr ""
+
+msgid "all siaf_daf_signing_year"
+msgstr ""
+
+msgid "all business_field"
+msgstr ""
+
+msgid "all archival_field"
+msgstr ""
+
+msgid "appraisal_label"
+msgstr ""
+
+msgid "arrangement_label"
+msgstr ""
+
+msgid "bibref_label"
+msgstr ""
+
+msgid "custodhist_label"
+msgstr ""
+
+msgid "Blog_plural"
+msgstr ""
+
+msgid "Virtual_exhibit_plural"
+msgstr ""
+
+msgid "Other_plural"
+msgstr ""
+
+msgid "Publication_plural"
+msgstr ""
+
+msgid "###ToSearch###"
+msgstr ""
+
+msgid "inventory"
+msgstr ""
+
+msgid "Change the navigation language"
+msgstr ""
+
+msgid "Go to the page"
+msgstr ""
+
+msgid "Go back to page:"
+msgstr ""
+
+msgid "Go to the section"
+msgstr ""
+
+msgid "Go to the site:"
+msgstr ""
+
+msgid "- New window"
+msgstr ""
+
+
+msgid "Go back to the FranceArchives"
+msgstr ""
+
+msgid "FranceArchives: Portail National des Archives de France"
+msgstr ""
+
+msgid "Follow FranceArchives on Facebook"
+msgstr ""
+
+msgid "Follow FranceArchives on Twitter"
+msgstr ""
+
+msgid "Follow FranceArchives on Youtube"
+msgstr ""
+
+msgid "Go to Google+"
+msgstr ""
+
+
+msgid "Share FranceArchives on Facebook"
+msgstr ""
+
+msgid "Share FranceArchives on Twitter"
+msgstr ""
+
+msgid "Share FranceArchives on Youtube"
+msgstr ""
+
+msgid "Share FranceArchives on Google+"
+msgstr ""
+
+msgid "Go to FranceArchives page on LinkedIn"
+msgstr ""
+
+
+msgid "Open the menu"
+msgstr ""
+
+msgid "Site:"
+msgstr ""
+
+msgid "originalsloc_label"
+msgstr ""
+
+msgid "Go to the top of the page"
+msgstr ""
+
+msgid "geoname"
+msgstr ""
+
+msgid "www.geonames.org"
+msgstr ""

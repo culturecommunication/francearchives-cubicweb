@@ -1,0 +1,31 @@
+
+{% macro subtree(items, level) %}
+  <ul>
+    {% for item in items %}
+      <li>
+        {% if item.etype == 'Section' %}
+          <i class="fa pointer fold fa-caret-right {{ "rotate-90" if item.children else "rotate-0" }}"></i>
+        {% endif %}
+        {% if item.etype == "CommemorationItem" %}
+	  <i class="fa fa-bank"></i>
+        {% elif item.etype == "NewsContent" %}
+	  <i class="fa fa-newspaper-o"></i>
+        {% elif item.etype == "BaseContent" %}
+	  <i class="fa fa-file-text-o"></i>
+        {% endif %}
+        <h{{ level }} class="no-style no-style__inline no-style__nobold">
+        <a href="{{ item.url }}">{{item.title}}</a>
+        </h{{ level }}>
+        {% if item.children %}
+          {{ subtree(item.children, level+1) }}
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+{% endmacro %}
+
+
+<h1>{{ title }}</h1>
+<div id="tree-container">
+  {{ subtree(sections, 1) }}
+</div>

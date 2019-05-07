@@ -1,0 +1,224 @@
+@import "timeline";
+
+/* homepage */
+
+.openSans-char {
+  font-family: "Open Sans", sans-serif;
+}
+
+#content-headings {
+  background-color: $light-grey;
+  padding-bottom: 1em;
+  height: 100%;
+  display: none;
+  @include if-wider-than(xs) {
+    display: block;
+  }
+
+  .row {
+      margin-right: 0;
+      margin-left: 0;
+  }
+}
+
+#content-headings .heading-discover {
+  background: url('../images/decouvrir.svg') no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+#content-headings .heading-understand {
+  background: url('../images/comprendre.svg') no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+#content-headings .heading-manage {
+  background: url('../images/gerer.svg') no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+#content-headings a {
+  display: block;
+}
+
+#content-headings .heading-item-top {
+  @extend .lovelo;
+  display: block;
+  color: $royal-blue;
+  font-size: 1.4em;
+  font-weight: bold;
+  text-align: center;
+  text-transform: uppercase;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+#content-headings .heading-item-bottom {
+  font-family: "Open Sans", sans-serif;
+  text-align: center;
+  color: $medium-grey;
+  border-top: 1px solid $medium-grey;
+  margin: auto;
+  display: table;
+  font-weight: bold;
+  font-size: 1.165em;
+  padding-bottom: 70px;
+  padding-top: 5px;
+}
+
+.content-section-bbg {
+  margin-bottom: 4.063em;
+}
+
+#content-events {
+  padding-top: 3em;
+
+  .event {
+    margin: 1em;
+    background-color: #F5F6E8;
+    text-align: center;
+    display: block;
+
+
+    img {
+      height: 17em;
+    }
+
+    &__header {
+      display: block;
+      height: 2em;
+      background-image: url('../images/icon_plus_blue.svg');
+      background-repeat: no-repeat;
+      background-position: left;
+      background-size: contain;
+      background-color: white;
+      padding: 0.25em;
+      padding-left: 2.5em;
+      text-align: left;
+      font-size: 1.5em;
+      font-family: $lovelo;
+      font-weight: bold;
+      color: $royal-blue;
+      text-transform: uppercase;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .lSSlideOuter .lSPager.lSpg > li {
+    a {
+      height: 1.250em;
+      width: 1.250em;
+      background-image: url('../images/rhombus_gray.svg');
+      background-color: transparent;
+      background-size: 1.2em;
+      background-repeat: no-repeat;
+      border-radius: 0;
+    }
+
+    &.active a {
+      background-image: url('../images/rhombus_blue.svg');
+    }
+  }
+
+  .lSAction > a {
+    background-image: url('../images/slider_controls.png');
+  }
+}
+
+.content-events-bbg {
+  padding-top: 120px;
+}
+
+/*
+
+#content-events .event-header {
+  background: url('../images/body_events_iconplus-60x60px.png') no-repeat;
+  background-size: contain;
+  z-index: 1;
+  position: relative;
+  bottom: 3.750em;
+  height: 3.750em;
+}
+
+#content-events .event-header a {
+  @extend .lovelo;
+  font-size: 1.875em;
+  background: #fff;
+  color: $royal-blue;
+  display: inline-block;
+  margin-left: 2em;
+  padding-top: 0.333em;
+  padding-left: 0.833em;
+  height: 2em;
+  width: 12em;
+}
+*/
+
+#content-news {
+  background: $light-grey;
+}
+
+.content-news-tbg {
+  border-top: 8px solid #eee;
+}
+
+.content-news-bbg {
+  padding-top: 55px;
+  border-bottom: 8px solid #eee;
+}
+
+#content-news-date {
+  margin-right: 0;
+  display: block;
+  line-height: 100px;
+  font-size: 24px;
+}
+
+#content-news-date .date {
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 1.2em;
+  font-family: 'Lovelo';
+  margin-top: 70px;
+}
+
+#content-topics {
+  margin-left: 1.875em;
+  margin-right: 1.875em;
+  padding-top: 3.75em;
+}
+
+#content-topics .topic {
+  margin: 0 0.625em 1.25em 0.625em;
+}
+
+#content-topics .topic-header {
+  background: url('../images/body_topics_iconplus-40x40px.png') no-repeat;
+  background-size: contain;
+  z-index: 1;
+  position: relative;
+  height: 2.5em;
+  bottom: 2.5em;
+  line-height: 1em;
+}
+
+#content-topics .topic-header a {
+  @extend .lovelo;
+  font-size: 1.250em;
+  background: #fff;
+  color: $royal-blue;
+  display: inline-block;
+  margin-left: 2em;
+  padding-top: 0.350em;
+  padding-left: 0.750em;
+  height: 2em;
+  width: 11em;
+}
+
+.content-topic-bbg {
+  padding-top: 155px;
+}

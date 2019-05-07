@@ -1,0 +1,159 @@
+ /* no home page */
+
+.content-main-image {
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+#social-networks {
+  margin: auto;
+}
+
+/*related articles/news */
+.siderelated {
+  $image-size: 10em;
+
+  margin-top: 20px;
+
+  &__header {
+    @extend .lovelo;
+    background-color: $royal-blue;
+    color: white;
+    font-weight: bold;
+    padding: 0.75em 30px;
+    display: block;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-align: center;
+  }
+
+  &__content-item {
+    padding: 1em 0;
+    border-top: 1px solid $light-medium-grey;
+    clear: both;
+
+    &::after {
+      content: '';
+      display: block;
+      clear: both;
+    }
+
+    &__title, &__date, &__chapo {
+      padding-left: $image-size + 1;
+    }
+
+    &__title {
+      color: $royal-blue;
+      font-size: 1em;
+      font-weight: bold;
+      margin-bottom: 1em;
+    }
+
+    &__date {
+      color: $medium-grey;
+    }
+
+    &__date .fa {
+      padding-left: 0;
+    }
+  }
+
+  &__more-content {
+    height: 2em;
+    width: 2em;
+    margin: 2em auto auto;
+    @include more-link;
+  }
+
+  img {
+    float: left;
+    margin-right: 0.5em;
+    width: $image-size;
+  }
+}
+
+/* articles */
+
+#article>input {
+  width: 100%;
+}
+
+#article .toolbar {
+  position: absolute;
+  right: 10px;
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.2s ease;
+}
+
+#article>div:hover .toolbar {
+  transform: scaleY(1);
+}
+
+#article {
+  padding: 0 1em;
+  text-align: justify;
+
+  &::after {
+    content: '';
+    display: block;
+    clear: both;
+  }
+}
+
+.article-subtitle {
+  font-size: 1.2em;
+  font-weight: 555;
+}
+
+.article-subtitle::after {
+  @extend %after-border;
+}
+
+.newscontent-chapo {
+  margin: 1.25em 0;
+  font-size: 1.125em;
+  font-weight: 400;
+}
+
+#article h2:after {
+  content: "";
+  display: block;
+  width: 216px;
+  height: 5px;
+  background-color: $royal-blue;
+  margin-top: 25px;
+  margin-bottom: 30px;
+}
+
+
+/* images  */
+
+.images {
+  margin-right: 1em;
+  float: none;
+  max-width: 100%;
+  text-align: center;
+
+  @include if-wider-than(xs) {
+    margin-right: 1em;
+    float: left;
+    max-width: 40%;
+    text-align: left;
+  }
+
+  img {
+    margin: auto;
+    @include if-wider-than(xs) { margin: 0; }
+  }
+}
+
+.image-item {
+  margin-bottom: 1em;
+}
+
+.image-item-metadata {
+  font-size: 0.9em;
+  margin-top: 1em;
+  margin-right: 1em;
+}

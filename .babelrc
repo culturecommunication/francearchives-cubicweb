@@ -1,0 +1,34 @@
+{
+  "env": {
+    "production": {
+      "presets": [
+        ["env", {
+          "targets": {
+            "browsers": ["Firefox >= 48", "Chrome >= 50", "ie >= 9"]
+          }
+        }]
+      ]
+    },
+    "development": {
+      "presets": [
+        ["env", {
+          "targets": {
+            "browsers": ["last 1 Chrome version", "last 1 Firefox version"]
+          }
+        }]
+      ]
+    },
+    "test": {
+      "presets": [
+        [
+          "env",
+          {
+            "targets": {
+              "node": "current"
+            }
+          }
+        ]
+      ]
+    }
+  }
+}

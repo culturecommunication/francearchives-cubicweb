@@ -1,0 +1,36 @@
+{
+  "name": "pnia",
+  "version": "1.0.0",
+  "description": "Summary ------- pnia",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "react": "^16.0.0",
+    "react-bootstrap-table": "^4.1.1",
+    "react-dom": "^16.0.0"
+  },
+  "devDependencies": {
+    "async": "^2.6.0",
+    "babel": "^6.23.0",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "chalk": "^2.3.0",
+    "eslint": "^4.9.0",
+    "eslint-plugin-react": "^7.4.0",
+    "pa11y": "^5.0.0-beta.5",
+    "webpack": "^3.8.1",
+    "wordwrap": "^1.0.0"
+  },
+  "scripts": {
+    "build": "webpack --progress",
+    "a11y": "A11Y_HOST=http://localhost:8080 node pa11y-runner.js",
+    "build-dev": "FA_DEV=1 webpack --progress",
+    "watch": "FA_DEV=1 webpack --progress -d --watch"
+  },
+  "author": "LOGILAB <contact@logilab.fr>",
+  "license": "CECILL-2.1"
+}

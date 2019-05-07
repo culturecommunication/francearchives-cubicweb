@@ -1,0 +1,15 @@
+include *.py
+recursive-include * *.py
+include scss/*.scss
+include cubicweb_francearchives/dataimport/xslt/*.xsl
+include cubicweb_francearchives/views/portal_config.yaml
+recursive-include cubicweb_francearchives/migration/initialdata *
+recursive-include cubicweb_francearchives/data *.gif *.png *.ico *.css *.js *.svg *.jpg *.json
+recursive-include cubicweb_francearchives/data/fonts *
+recursive-include cubicweb_francearchives/i18n *.po
+recursive-include cubicweb_francearchives/wdoc *
+recursive-include cubicweb_francearchives/dataimport *.sql
+recursive-include cubicweb_francearchives/dataimport/images *.jpg
+include cubicweb_francearchives/dataimport/*.json
+include cubicweb_francearchives/views/templates/*.jinja2
+recursive-include cubicweb_francearchives/data/veritejs/css/icons *.eot *.ttf *.woff

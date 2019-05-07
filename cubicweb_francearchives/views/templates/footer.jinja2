@@ -1,0 +1,111 @@
+<footer role="contentinfo" id="pagefooter" class="container-fluid hidden-print">
+  <section id="content-connected">
+    <div class="row">
+      <div class="col-md-6" id="sn-col-connected">
+        <div class="row">
+          <div class="col-md-5">
+            <h1 class="no-style" id="sn-label-connected">
+                 {{ _("###stay connected###") }}
+            </h1>
+          </div>
+          {% set new_window = _('- New window') %}
+          <div class="col-md-7 nowrap">
+            <a id="fb-share-button"
+               href="https://www.facebook.com/sharer.php?u={{page_url}}&t={{ title | urlencode }}"
+               target="_blank" rel="nofollow noopener noreferrer"
+               title="{{ _('Share FranceArchives on Facebook') }} {{ new_window }}">
+               <span class="sr-only">{{ _('Follow FranceArchives on Facebook') }}</span>
+            </a>
+            <a id="twitter-share-button"
+               href="https://twitter.com/intent/tweet?url={{ page_url}}"
+               original_referer="{{ page_url }}" target="_blank"
+               rel="nofollow noopener noreferrer"
+               title="{{ _('Share FranceArchives on Twitter') }} {{ new_window }}">
+               <span class="sr-only">{{ _('Follow FranceArchives on Twitter') }}</span>
+            </a>
+            <a id="google-share-button"
+               href="https://plus.google.com/share?url={{ page_url }}"
+               target="_blank" rel="nofollow noopener noreferrer"
+               onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;"
+               title="{{ _('Share FranceArchives on Google+') }} {{ new_window }}">
+               <span class="sr-only">{{ _('Go to Google+') }}</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6" id="nl-col-connected">
+        <div class="row">
+          <div class="col-md-6">
+            <h1 class="no-style" id="nl-label-connected">{{ _('###subscribe to our newsletter###') }}</h1>
+          </div>
+          <div class="col-md-6">
+            <a href="{{ base_url}}/lettre-info" class="btn btn-primary btn-nl">
+              {{ _('###subscribe###') }}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <div id="footer-content" class="row">
+    <h1 class="sr-only">{{ _('Footer content') }}</h1>
+    <div class="col-lg-6">
+      <div id="footer-signature" class="row"></div>
+      <div class="row footer-content__ministry">
+        <div class="col-sm-4">
+          <h2>
+            <a href="{{ footer.mcc_url }}"
+               target="_blank" rel="nofollow noopener noreferrer"
+               title="{{ _('Go to the site:') }} {{ _('###ministry_culture###') }} {{ _('- New window') }}">{{ _('###ministry_culture###') }}</a>
+          </h2>
+        </div>
+        <div class="col-sm-4">
+          <h2>
+            <a href="{{ footer.mindef_url }}"
+               target="_blank" rel="nofollow noopener noreferrer"
+               title="{{ _('Go to the site:') }} {{ _('###ministry_defense###') }} {{ _('- New window') }}">{{ _('###ministry_defense###') }}</a>
+          </h2>
+        </div>
+        <div class="col-sm-4">
+          <h2>
+            <a href="{{ footer.mae_url }}"
+               target="_blank" rel="nofollow noopener noreferrer"
+               title="{{ _('Go to the site:') }} {{ _('###ministry_foreign_affairs###') }} {{ _('- New window') }}">{{ _('###ministry_foreign_affairs###') }}</a>
+          </h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="row footer-content__links">
+        {% for section in footer.sections %}
+        <div class="col-sm-4">
+          <h2>{{ picklabel(section.labels, lang) }}</h2>
+          <ul>
+            {% for link in section.links %}
+            <li>
+            {% set label = picklabel(link.labels, lang) %}
+            <a href="{{ link.url | format(base_url=base_url+'/')}}"
+               {% if not link.url.startswith('%(base_url)s') %}
+               target="_blank" rel="nofollow noopener noreferrer"
+               title="{{ _('Go to the site:') }} {{ label }} {{ _('- New window') }}"
+               {% endif %}
+            >{{ label }}</a>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <div class="footer-actions">
+    {% for link in footer.footer_links %}
+    <a href="{{ link.url | format(base_url=base_url+'/')}}">
+       {{ picklabel(link.labels, lang) }}
+    </a>
+    {% endfor %}
+  </div>
+  <div id="copyright">
+    <span>{{ _('###site-copyright###') }}</span>
+  </div>
+</footer>

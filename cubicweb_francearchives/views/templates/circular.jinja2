@@ -1,0 +1,21 @@
+<section id="document" class="circular-view">
+  {% block head %}
+    <h1><span class="sr-only">{{ _(entity.__regid__) }} : </span>{{ entity.title }}</h1>
+  {% endblock %}
+  {% if date %}
+    <div class="content-metadata">
+        <div class="content-metadata-item">
+          <i class="fa fa-calendar-o", aria-hidden="true"></i>
+          <span> {{date}}</span>
+      </div>
+    </div>
+  {% else %}
+  <div class="empty-content-metadata"></div>
+  {% endif %}
+  {% for propname, value in main_props %}
+      <div class="row indexes-values">
+      <div class="col-md-3"><h2 class="no-style">{{ propname }}</h2></div>
+      <div class="col-md-9">{{ value }}</div>
+      </div>
+  {% endfor %}
+</section>

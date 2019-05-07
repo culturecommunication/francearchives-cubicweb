@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ead xmlns="urn:isbn:1-931666-22-9"
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="urn:isbn:1-931666-22-9 http://www.archivesportaleurope.net/Portal/profiles/apeEAD.xsd http://www.w3.org/1999/xlink http://www.loc.gov/standards/xlink/xlink.xsd"
+     audience="external">
+   <eadheader countryencoding="iso3166-1"
+              dateencoding="iso8601"
+              langencoding="iso639-2b"
+              repositoryencoding="iso15511"
+              scriptencoding="iso15924"
+              relatedencoding="MARC21">
+      <eadid identifier="FR-AN_FRAN_IR_051016"
+             countrycode="FR"
+             mainagencycode="FR-AN"
+             url="https://www.siv.archives-nationales.culture.gouv.fr/siv/IR/FRAN_IR_051016">FRAN_IR_051016</eadid>
+      <filedesc>
+         <titlestmt>
+            <titleproper encodinganalog="245">Guerre 1914 - 1918. Fonds du ministère des Pensions : livre d'or des Morts pour la France - Département des Pyrénées-Orientales (1919-1935).</titleproper>
+            <subtitle>Répertoire numérique des articles 19860711/412 à 19860711/415</subtitle>
+            <author encodinganalog="245$c">Damien Richard, conservateur aux Archives nationales, d'après un bordereau du ministère des Anciens Combattants. Mis à jour par Michèle Conchon, conservateur en chef, et Isabelle Geoffroy, chargée d'études documentaires, aux Archives nationales - département Exécutif et Législatif</author>
+         </titlestmt>
+         <publicationstmt>
+            <publisher>Archives nationales (France)</publisher>
+            <address>
+               <addressline>Pierrefitte-sur-Seine</addressline>
+            </address>
+            <date encodinganalog="260$c"
+                  calendar="gregorian"
+                  era="ce"
+                  normal="2014-01-01/2014-12-31">2014</date>
+         </publicationstmt>
+      </filedesc>
+      <profiledesc>
+         <creation>Généré à partir d'un fichier EXCEL, migré en CSV et enrichi. </creation>
+         <langusage>
+            <language encodinganalog="041" langcode="fre" scriptcode="Latn">Français</language>
+         </langusage>
+         <descrules>Conforme à la norme ISAD(G) et aux règles d'application de la DTD EAD (version 2002) aux Archives nationales.</descrules>
+      </profiledesc>
+      <revisiondesc>
+         <change>
+            <date/>
+            <item>Converted_apeEAD_version_2015-06-SNAPSHOT</item>
+         </change>
+      </revisiondesc>
+   </eadheader>
+   <archdesc level="fonds"
+             type="inventory"
+             encodinganalog="3.1.4"
+             relatedencoding="ISAD(G)v2">
+      <did>
+         <unitid encodinganalog="3.1.1" type="call number">19860711/412-19860711/415</unitid>
+         <unittitle encodinganalog="3.1.2">Guerre 1914-1918. Fonds du ministère des Pensions : livres d'or des Morts pour la France. Département des Pyrénées-Orientales (1919-1935)</unittitle>
+         <unitdate calendar="gregorian"
+                   era="ce"
+                   normal="1919-01-01/1935-12-31"
+                   encodinganalog="3.1.3">1919-1935</unitdate>
+         <physdesc encodinganalog="3.1.5">
+            <extent>0,50 ml.</extent>
+         </physdesc>
+         <langmaterial encodinganalog="3.4.3">
+            <language langcode="fre" scriptcode="Latn">Français</language>
+         </langmaterial>
+         <repository>Archives nationales (France)</repository>
+         <physloc>Pierrefitte-sur-Seine</physloc>
+      </did>
+      <accessrestrict encodinganalog="3.4.1">
+         <p>Librement communicable</p>
+      </accessrestrict>
+      <userestrict encodinganalog="3.4.5">
+         <p>Ce fonds est libre de droits</p>
+      </userestrict>
+      <altformavail encodinganalog="3.5.2">
+         <p>Le fonds a fait l'objet d'une numérisation en 2009, matérialisée par deux versements de CD-Roms, et d'une mise en ligne en 2014 dans la Salle des inventaires virtuelle.</p>
+      </altformavail>
+      <originalsloc encodinganalog="3.5.1">
+         <p>Site de Pierrefitte-sur-Seine</p>
+      </originalsloc>
+      <acqinfo encodinganalog="3.2.4">
+         <p>Versement</p>
+      </acqinfo>
+      <bioghist encodinganalog="3.2.2">
+         <p>Ministère des Pensions.</p>
+      </bioghist>
+      <custodhist encodinganalog="3.2.3">
+         <p>Le versement 19860711 a fait l'objet d'un transfert du ministère des Anciens Combattants aux Archives nationales - site de Paris - avant 1986, où il a été préalablement coté dans la sous-série F/9. En 1986, pour des raisons matérielles de gestion d'espace sur le site de Paris (construction du CARAN), le fonds a été transféré sur le site de Fontainebleau des Archives nationales, avec deux autres fonds également cotés en F/9.</p>
+      </custodhist>
+      <appraisal encodinganalog="3.3.2">
+         <p>Aucune élimination n'a eu lieu depuis le versement.</p>
+      </appraisal>
+      <arrangement encodinganalog="3.3.4">
+         <p>Géographique : par commune (état des communes en France et outre-mer de 1919).</p>
+      </arrangement>
+      <accruals encodinganalog="3.3.3">
+         <p>Néant.</p>
+      </accruals>
+      <scopecontent encodinganalog="summary">
+         <p>Dès 1914, la qualité de « Mort pour la France » est attribuée aux civils et aux soldats victimes de la Première Guerre mondiale ; ainsi, tout au long du conflit, le ministère de la Guerre tient à jour un fichier de tous les soldats honorés de cette mention qui répondait à des critères précis : seules les personnes décédées entre le 2 août 1914 et le 24 octobre 1919, morts sur le champ de bataille ou à cause de dommages directement imputables au conflit, étaient susceptibles de la recevoir.</p>
+         <p>Par la loi du 25 octobre 1919, « relative à la commémoration et à la glorification des morts pour la France au cours de la Grande guerre », l’État lance le projet d'un<emph render="italic">Livre d'or</emph>comprenant les noms de tous ces héros anonymes, qui serait déposé au Panthéon. Le ministère des Pensions, nouvellement créé, est chargé d'établir, à partir du fichier existant, la liste des Morts pour la France de chaque commune ; il l'adresse en 1929 aux maires qui la contrôlent et l'amendent. Des correspondances témoignent souvent de ces échanges entre les deux parties. Toutefois, les décalages entre les noms figurant sur les monuments aux morts et ceux des Livres d'or proviennent du fait que la liste du ministère est établie en 1929 alors que les monuments aux morts ont presque tous été érigés entre 1920 et 1925. En 1935, la présentation matérielle du futur Livre d'or est fixée : 120 volumes devaient être imprimés en plusieurs exemplaires, dont un serait déposé au Panthéon. Les contraintes budgétaires, puis le début de la Seconde Guerre mondiale, mirent fin au projet, en laissant subsister la documentation préparatoire.</p>
+         <p>Les Archives nationales conservent ainsi pour chaque commune française, la liste des soldats Morts pour la France, classée par ordre alphabétique des départements puis des localités. Ces listes nominatives communales permettent de connaître les nom et prénom de chaque personne, ainsi que la date et le lieu de son décès. Le lieu de sépulture, en revanche, n'est pas indiqué. En principe, les personnes mentionnées sont celles qui sont nées ou résidaient dans la commune au moment de la mobilisation, mais un flou a longtemps subsisté sur cette question ; c'est ce qui explique, pour une part, les divergences entre les listes communales de Morts pour la France et les noms portés sur les monuments aux morts.</p>
+         <p>Les listes définitives ont fait l'objet d'une numérisation dont les images sont consultables en ligne. Les correspondances qui ont conduit à leur établissement ne sont pas disponibles en ligne ; leur existence, qui n'est pas systématique, est indiquée dans l'instrument de recherche.</p>
+      </scopecontent>
+      <separatedmaterial encodinganalog="3.5.3">
+         <p>Du même producteur, le ministère des Pensions, les Archives nationales conservent également à Pierrefitte-sur-Seine les registres d'état-civil des régiments et des hôpitaux militaires de la Première Guerre mondiale (191860726/1 à 404 et 19860727/1 à 606). </p>
+      </separatedmaterial>
+      <relatedmaterial encodinganalog="3.5.3">
+         <p>Le Livre d'or peut permettre d'effectuer une recherche à caractère nominatif, dès lors que l'on connaît le lieu d'origine de l'individu recherché, mais d'autres sources conservées par le ministère de la Défense apparaissent plus adaptées à ce type de recherche :</p>
+         <p>Le fichier nominatif des soldats Morts pour la France est accessible en ligne sur le site</p>
+         <p>www.memoiredeshommes.sga.defense.gouv.fr</p>
+         <p>Un fichier nominatif des lieux de sépulture est également mis en ligne à l'adresse suivante : www.sepulturesdeguerre.sga.defense.gouv.fr</p>
+         <p>Enfin, le fichier des marins morts pour la France est consultable au Service historique de la Défense, à Vincennes. Des renseignements complémentaires sont accessibles sur le site www.servicehistorique.sga.defense.gouv.fr</p>
+         <p>Site Mémoire des hommes (fichier des Morts pour la France)Fichier nominatif des lieux de sépultureFichier des marins Morts pour la France</p>
+      </relatedmaterial>
+      <otherfindaid encodinganalog="3.4.5">
+         <p>Chaque département concerné, au sein du versement 19860711, a fait l'objet d'un répertoire numérique.</p>
+      </otherfindaid>
+      <dsc type="othertype">
+         <c encodinganalog="3.1.4" id="cvrzlu674gw-bh7rjf9inw21">
+            <did>
+               <unitid type="call number" encodinganalog="3.1.1">
+                  <extptr xlink:href="https://www.siv.archives-nationales.culture.gouv.fr/siv/rechercheconsultation/consultation/ir/consultationIR.action?udId=cvrzlu674gw-bh7rjf9inw21&amp;irId=FRAN_IR_051016"/>19860711/412-19860711/415 - 19860711/412</unitid>
+               <unittitle encodinganalog="3.1.2">ALBERE (L')</unittitle>
+               <dao xlink:href="https://www.siv.archives-nationales.culture.gouv.fr/siv/rechercheconsultation/consultation/multimedia/Galerie.action?mediaParam==?UTF-8?B?RlJEQUZBTjg1X09GOXYxNzM1NDFfTC5qcGcjRlJEQUZBTjg1X09GOXYxNzM1NDVfTC5qcGc=?=&amp;udTitle==?UTF-8?B?UExBTi1ERS1MQS1UT1VS?=&amp;xpointer=&amp;mmName"
+                    xlink:title="ALBERE (L')"
+                    xlink:role="UNKNOWN"/>
+               <dao xlink:href="https://www.siv.archives-nationales.culture.gouv.fr/mm/media/download/FRDAFAN85_OF9v173541_L-min.jpg"
+                    xlink:title="thumbnail"/>
+            </did>
+         </c>
+         <c encodinganalog="3.1.5" id="cvrzlu676s8-otnuvnme55uc">
+            <did>
+               <unitid>19860711/412-19860711/411 - 19860711/409</unitid>
+               <unittitle encodinganalog="3.1.2">ALENYA</unittitle>
+            </did>
+            <scopecontent>Liste des morts pour la France de la commune</scopecontent>
+         </c>
+      </dsc>
+   </archdesc>
+</ead>

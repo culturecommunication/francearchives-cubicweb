@@ -1,0 +1,53 @@
+<div class="document row">
+  <div class="hidden-xs col-sm-4">
+    <a href="{{ entity.url }}"
+       title="{{ entity.link_title }}"
+       aria-hidden="true"
+       class="picto image-link">
+      <img class="img-responsive"
+           src="{{ illustration | escape }}"
+           data-defaultsrc="{{ default_picto_src }}"
+           alt="{{ illustration_alt | escape }}"
+           />
+       <span class="sr-only">{{ entity.title }}</span>
+    </a>
+  </div>
+  <div class="col-xs-10 col-sm-7">
+    <div class="informations">
+      <div class="document-title">{{ entity.alink }}</div>
+
+      {% block subtitle %} {% endblock %}
+
+      {% if highlights %}
+        <div class="document-excerpt">{{ _('Notice excerpt:') }}</div>
+           <blockquote class="document-excerpt__text">
+           {% for value in highlights %}
+            <p>…{{ value }}…</p>
+           {% endfor %}
+           </blockquote>
+      {% endif %}
+
+      {% block itemprops %}
+        {% for label, value in item_properties %}
+          {% if value %}
+            <div class="document-properties">
+              {% if label is none %}
+                {{ value }}
+              {% else %}
+                {{ label }}{{ _(':') }}{{ value }}
+              {% endif %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      {% endblock %}
+
+    </div>
+  </div>
+  <div class="col-xs-2 col-sm-1">
+    {% block rightcol %}
+    <div class="picto picto--small
+                picto-{{ document_category }}
+                picto-{{ document_category }}--selected"></div>
+    {% endblock %}
+  </div>
+</div>

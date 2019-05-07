@@ -1,0 +1,50 @@
+{% macro imageitem(image, default_picto_src) %}
+  {% if image %}
+  {% set legend=image.caption or image.copyright %}
+  {% if legend %}
+  <figure class="image-item" role="group">
+  {% endif %}
+    <img class="img-responsive"
+         src="{{ image.image_file[0].download_url() }}"
+             alt="{{ image.alt }}"
+             data-defaultsrc="{{ default_picto_src }}"
+    />
+    {% if legend %}
+    <figcaption class="image-item-metadata">
+       {% if image.caption  %}
+           <div class="image-item-legend">{{ image.caption }}</div>
+       {% endif %}
+       {% if image.copyright  %}
+           <div class="image-item-copyright">© {{image.copyright }}</div>
+       {% endif %}
+    </figcaption>
+    </figure>
+    {% endif %}
+  {% endif %}
+{% endmacro %}
+
+{% macro imagelist(images, default_picto_src) %}
+  {% if images %}
+    <div class="images">
+      {% for image in images %}
+       {{ imageitem(image, default_picto_src) }}
+     {% endfor %}
+    </div>
+  {% endif %}
+{% endmacro %}
+
+
+{% macro home_section_header(grey_title, blue_title) %}
+<div class="content-section-header">
+    <h1><span class="content-section-header-grey">{{ grey_title }}
+              <span class="openSans-char">&amp;</span>
+         </span>
+         <span class="content-section-header-blue">{{ blue_title }}</span>
+    </h1>
+</div>
+<div class="rhombus-title">
+    <span class="medium-grey-line mr20"></span>
+    <span class="rhombus"></span>
+    <span class="medium-grey-line ml20"></span>
+</div>
+{% endmacro %}

@@ -1,0 +1,30 @@
+.navbar-pnia {
+  margin: 0;
+}
+
+.navtools{
+ padding: $navbar-padding 0;
+ margin: 0px;
+}
+
+#logo-container {
+  overflow: hidden;
+  padding: 0;
+
+  img {
+    height: 3em;
+    margin-top: 0.5em;
+    @include if-wider-than(sm) { margin-top: 0; }
+  }
+
+  .navbar-toggle {
+    display: none;
+  }
+}
+
+/* menu */
+
+.navbar-nav {
+    margin-top: 0;
+    margin-bottom: 0;
+}

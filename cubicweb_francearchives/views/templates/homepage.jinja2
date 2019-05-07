@@ -1,0 +1,15 @@
+<nav id="content-headings" role="navigation">
+<div class ="row">
+     <h1 class="sr-only">{{ _('Content') }} </h1>
+    {% for title, label, url, cssclass, desc in topsections %}
+    <div class="col-md-4">
+        <a href="{{ base_url }}/{{  url }}">
+            <div class="heading-{{ cssclass }}"></div>
+            <h2><span class="heading-item-top">{{ title }}</span>
+                <span class="heading-item-bottom">{{ label }}</span>
+            </h2>
+        </a>
+    </div>
+    {% endfor %}
+</div>
+</nav>

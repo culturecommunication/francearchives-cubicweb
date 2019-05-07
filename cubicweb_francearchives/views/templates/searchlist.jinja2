@@ -1,0 +1,89 @@
+{# XXX must be conditionalized by cls.display_results_info + content depends on etype #}
+
+<h1 class="sr-only">{{ _('Search results') }}</h1>
+{% if results_title %}
+{% block result_title %}
+<h2 class="sr sr-title">
+    <span class="sr sr-nbresults">{{ results_title }}</span>
+    {% if query_string %}
+      <span class="sr sr-text">&nbsp;-&nbsp;</span>
+      <span class="sr-only">{{ _('for the query:')  }} </span>
+      <span class="sr sr-text">{{ query_string | escape }}</span>
+    {% endif %}
+</h2>
+{% endblock %}
+{% endif %}
+
+{% if extra_link %}
+<div class="row sr-title">
+  <a href="{{ extra_link.href }}" title="{{ extra_link.title }}">
+    {{ extra_link.text }}
+  </a>
+</div>
+{% endif %}
+{% if response.hits.total %}
+
+  {# etype facet bar #}
+  {% if not restrict_to_single_etype %}
+    <div class="row document-category-facet hidden-print hidden-xs">
+      {% for dcf in document_category_facets %}
+        {% if dcf.count > 0 and not dcf.selected %}
+          <a href="{{ dcf.url | escape }}" class="document-facet">
+        {% endif %}
+        <div class="col-xs-2 document-category
+                    {{ 'document-category--last' if loop.last }}
+                    picto picto-{{ dcf.category }}
+                    {{ 'picto-' + dcf.category + '--selected' if dcf.selected }}"
+                    >
+          <span class="facet__label">{{ dcf.label }}</span>
+          <span>[ {{ dcf.count | format_number(req) }} ]</span>
+        </div>
+        {% if dcf.count > 0 and not dcf.selected %}
+          </a>
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {# facets #}
+  <aside id="aside-main-left" class="col-lg-4 cwjs-aside">
+    {# fulltext facet #}
+    {% include "fulltext-facet.jinja2" %}
+
+    {# other facets #}
+    {% for facet in facets %}
+    {{ facet }}
+    {% endfor %}
+  </aside>
+
+  {# results #}
+  <div id="content-results" class="col-lg-8">
+    <h2>{{ search_title }}</h2>
+    <ul class="list list-unstyled">
+      {% for item in search_results %}
+        <li>
+          {{ item }}
+        </li>
+      {% endfor %}
+    </ul>
+
+    <span class="sr-only">{{ _('Pagination') }}</span>
+    <ul class="pagination hidden-print">
+      {% for page_link in pagination %}
+      <li {% if page_link.current %}class="active"{% endif %}>
+        {% if page_link.link %}
+        <a href="{{ page_link.link }}" title="{{ page_link.title }}">
+        {{ page_link.name }}
+        {% if page_link.hidden_label %}
+        <span class="sr-only">{{ page_link.hidden_label }}</span>
+        {% endif %}
+        </a>
+        {% else %}
+        <span>{{ page_link.name }}</span>
+        {% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+{% endif %}

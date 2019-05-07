@@ -1,0 +1,52 @@
+Source: cubicweb-francearchives
+Section: web
+Priority: optional
+Maintainer: LOGILAB S.A. (Paris, FRANCE) <contact@logilab.fr>
+Build-Depends:
+ debhelper (>= 9),
+ python (>= 2.6.5),
+ python-setuptools,
+ dh-python,
+ dh-systemd,
+ ruby-sass,
+Standards-Version: 3.9.6
+X-Python-Version: >= 2.6
+
+Package: cubicweb-francearchives
+Architecture: all
+Depends:
+ ${python:Depends},
+ ${misc:Depends},
+ python-cubicweb (>= 3.24.0), python-cubicweb (<< 3.25.0),
+ python-six (>= 1.4.0),
+ python-pyoai,
+ python-yaml,
+ cubicweb-eac (>= 0.2.0),
+ cubicweb-eac (<< 0.3.0),
+ cubicweb-prov (>= 0.2.0),
+ cubicweb-prov (<< 0.3.0),
+ cubicweb-elasticsearch (>= 0.7.5),
+ cubicweb-varnish (>= 0.4.0),
+ cubicweb-oaipmh (>= 0.5.0),
+ cubicweb-file (>= 1.19.0),
+ cubicweb-link (>= 1.8.0),
+ cubicweb-card,
+ cubicweb-skos,
+ cubicweb-sentry,
+ python-glamconv (>= 0.1.5),
+ python-rdflib (>= 4.2.0),
+ python-jinja2,
+ poppler-utils,
+ python-babel,
+ python-requests,
+ python-imaging,
+ python-psycopg2,
+ python-rdflib-jsonld,
+ python-vobject (<< 0.9.0),
+Description: FranceArchives
+ CubicWeb is a semantic web application framework.
+ .
+ FranceArchives
+ .
+ This package will install all the components you need to run the
+ cubicweb-francearchives application (cube :)..

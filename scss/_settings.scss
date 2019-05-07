@@ -1,0 +1,119 @@
+/* Breakpoints */
+
+$screen-widths: (
+  xxs: 100px,
+  xs: 480px,
+  sm: 768px,
+  md: 992px,
+  lg: 1200px,
+  xl: 1600px,
+  xxl: 1900px
+);
+
+$screen-ratios: (
+  "1/1": 1 / 1,
+  "4/3": 4 / 3,
+  "16/10": 16 / 10
+);
+
+$bootstrap-padding: 15px;
+$min-width: 360px;
+
+/* Layout */
+$navbar-height: 3em;
+$navbar-padding: 0.7em;
+$hero-height: 24em;
+$searchbar-height: 3em;
+$search-input-height: $searchbar-height * 4/6;
+$search-input-width: $search-input-height;
+$search-input-padding: $searchbar-height * 1/6;
+$content-headings-height: 10em;
+$menu-line-height: 3em;
+
+/* Fonts */
+$lovelo: 'Lovelo', 'OpenSans';
+
+/* Font sizes */
+$font-size-root: 16px !default;
+$line-height-base: 1.5 !default;
+$headings-line-height: 1.1 !default;
+$header-font-size: 2.250em;
+
+$font-sizes: (
+  xxs: .65rem,
+  xs: .65rem,
+  sm: .775rem,
+  md: .875rem,
+  lg: .975rem,
+  xl: 1rem,
+);
+
+$header-sizes: (
+  xxs: (
+    h1: 1.500rem,
+    h2: 1.250rem,
+    h3: 1.188rem,
+    h4: 1.125rem,
+    h5: 1.063rem,
+    h6: 1rem,
+  ),
+  xs: (
+    h1: 1.500rem,
+    h2: 1.250rem,
+    h3: 1.188rem,
+    h4: 1.125rem,
+    h5: 1.063rem,
+    h6: 1rem,
+  ),
+  md: (
+    h1: 1.8rem,
+    h2: 1.525rem,
+    h3: 1.45rem,
+    h4: 1.25rem,
+    h5: 1rem,
+    h6: 1rem,
+  ),
+);
+
+
+
+@each $breakpoint,
+$headers in $header-sizes {
+  @media (min-width: #{map-get($screen-widths, $breakpoint)}) {
+    @each $header,
+    $font-size in $headers {
+      #{$header} {
+        font-size: $font-size;
+      }
+      
+      .#{$header} {
+        font-size: $font-size;
+      }
+
+    }
+  }
+}
+
+.h1, .h2, .h3, h1, h2, h3 {
+  margin-top: 1.15em;
+  margin-bottom: 0.7em;
+ }
+
+.h4, .h5, .h6, h4, h5, h6 {
+  margin-top: 1em;
+  margin-bottom: 0.7em;
+}
+
+/* Colors */
+$light-grey: #f6f6f6;
+$less-light-grey: #eeeeee;
+$light-medium-grey: #cbcbcb;
+$medium-grey: #666666;
+$dark-grey: #333333;
+$royal-blue: #0d4e96;
+$dark-dodger-blue: #09669d;
+
+$social-networks-share: ("fb", "twitter", "google", "linkedin");
+$social-networks: ("fb", "twitter", "google",
+                   "youtube", "pinterest", "twitter");
+$social-network-icon-size: 2em;

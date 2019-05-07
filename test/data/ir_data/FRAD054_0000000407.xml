@@ -1,0 +1,2444 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ead xmlns:xlink="http://www.w3.org/1999/xlink"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns="urn:isbn:1-931666-22-9"
+ xsi:schemaLocation="urn:isbn:1-931666-22-9
+ http://www.archivesportaleurope.net/Portal/profiles/apeEAD.xsd http://www.w3.org/1999/xlink
+ http://www.loc.gov/standards/xlink/xlink.xsd"
+ audience="external">
+<eadheader countryencoding="iso3166-1" dateencoding="iso8601" langencoding="iso639-2b" relatedencoding="MARC21" repositoryencoding="iso15511" scriptencoding="iso15924">
+<eadid countrycode="FR" identifier="FRAD054_0000000407" mainagencycode="FR-FRAD054">FRAD054_0000000407</eadid>
+<filedesc>
+<titlestmt>
+<titleproper type="fre" encodinganalog="245">Fonds Claude Renson <lb/>31 Fi</titleproper>
+<subtitle>Reportage photographique sur les travaux de la place Stanislas de Nancy, 2004-2005</subtitle>
+<author encodinganalog="245$c">par Amandine Villars ; sous la direction de Christel Jajoux</author>
+</titlestmt>
+<publicationstmt>
+<publisher encodinganalog="260$b">Archives départementales de la Meurthe-et-Moselle</publisher>
+<address>
+<addressline>Nancy</addressline>
+</address>
+<date calendar="gregorian" era="ce" normal="2012" encodinganalog="260$c">2012</date>
+</publicationstmt>
+</filedesc>
+<profiledesc>
+<creation>Instrument de recherche produit au moyen du logiciel Arkhéïa Aide au classement de la société Anaphore sarl, version 8-4.3 du <date calendar="gregorian" era="ce" normal="2017-02-03">vendredi 3 février 2017</date>. 
+Date de l'export : <date calendar="gregorian" era="ce" normal="2017-05-31">mercredi 31 mai 2017</date> (12:01 h)</creation>
+<langusage>Instrument de recherche rédigé en <language langcode="fre" scriptcode="Latn" encodinganalog="041">français</language>
+</langusage>
+</profiledesc>
+</eadheader>
+<archdesc encodinganalog="3.1.4" relatedencoding= "ISAD(G)v2" level="fonds">
+<did>
+<unitid encodinganalog="3.1.1">31 Fi 1-186</unitid>
+<unittitle encodinganalog="3.1.2">Reportage photographique : Claude Renson.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2008">fin XXe s.-2008</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="nombre elements">Environ 6000 tirages photographiques regroupés en 13 boîtes pour le reportage photographique sur les travaux de la place Stanislas à Nancy, 138 diapositives de reproductions d'affiches, 1 dossier documentaire sur les travaux de maquettiste.</extent>
+<extent unit="ml">2,00</extent>
+<dimensions>21 x 29,7 cm; 5 x 5 cm</dimensions>
+<physfacet type="noir et blanc ou couleur">Tirages photographiques en couleur (en majorité) et noir et blanc, diapositives en couleur</physfacet>
+</physdesc>
+<repository>Archives départementales de Meurthe-et-Moselle.</repository>
+<langmaterial encodinganalog="3.4.3">Français</langmaterial>
+<origination encodinganalog="3.2.1">
+<persname>Claude Renson.</persname>
+</origination>
+</did>
+<bioghist encodinganalog="3.2.2">
+<head>Biographie ou histoire</head>
+<p>Claude Renson, maquettiste en architecture, retraité, s'est pris de passion pour les travaux de la place Stanislas. De juillet 2004 à mai 2005, il suit l'évolution du chantier de restauration de la place Stanislas avec l'accord du maitre d'oeuvre et de l'entreprise générale Eurovia.</p>
+</bioghist>
+<acqinfo encodinganalog="3.2.1">
+<head>Informations sur les modalités d'entrée</head>
+<p>Don d'archives privées.</p>
+</acqinfo>
+<scopecontent encodinganalog="summary">
+<head>Présentation du contenu</head>
+<p>Le fonds est constitué d'une part d'un reportage photographique sur les travaux de rénovation de la place Stanislas à Nancy qui ont eu lieu en 2004 et 2005, reportage réalisé par Claude Renson dans un cadre privé, d'autre part, sur des reproductions d'affiches de la fin du XIXe et début XXe siècles conservées aux archives municipales de la Ville de Nancy.</p>
+</scopecontent>
+<appraisal encodinganalog="3,3,2">
+<head>Informations sur l'évaluation</head>
+<p>Aucune élimination</p>
+</appraisal>
+<accruals encodinganalog="3.3.3">
+<head>Accroissements</head>
+<p>Aucun</p>
+</accruals>
+<arrangement encodinganalog="3.3.4">
+<head>Mode de classement</head>
+<p>Chronologique. Les photographies ont été regroupées par dossiers et par périodes chronologiques successives. De juillet 2004 à mai 2005, l'auteur a fait des dizaines de clichés par jour, détaillant les travaux exécutés sur la place Stanislas. Les reproductions d'affiches ont été classées également par ordre chronologique.</p>
+</arrangement>
+<prefercite>
+<head>Mention conseillée</head>
+<p>Archives départementales de Meurthe-et-Moselle.</p>
+</prefercite>
+<accessrestrict encodinganalog="3.4.1">
+<p>
+<emph render="bold">Statut juridique</emph>
+</p>
+<p>Archives privées</p>
+</accessrestrict>
+<originalsloc encodinganalog="3.5.1">
+<head>Localisation des originaux</head>
+<p>Certains clichés de la collection ont été prétés au restaurant l'Arrosoir avant la remise du fonds aux archives départementales et n'ont pas été restitués</p>
+</originalsloc>
+<relatedmaterial encodinganalog="3.5.3">
+<head>Sources complémentaires</head>
+<p>
+<emph render="bold">Sources internes</emph>
+</p>
+<p>Voir les articles de L'Est Républicain concernant la place Stanislas (10 octobre 2005, 27 novembre 2005, 4 décembre 2005) et le numéro 346 de l'Est magazine du 27 novembre 2005.</p>
+</relatedmaterial>
+<processinfo encodinganalog="3.7.1">
+<head>Rédacteur de la description</head>
+<p>Amandine Villars (stagiaire) et Christel Jajoux</p>
+</processinfo>
+<processinfo encodinganalog="3.7.1">
+<head>Date de création de la description</head>
+<p>2017-05-31</p>
+</processinfo>
+<processinfo encodinganalog="3.7.1">
+<head>Date de dernière modification de la description</head>
+<p>2017-05-31</p>
+</processinfo>
+<dsc type="othertype">
+<c id="FRAD054_0000000407_tt1-1" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1">31 Fi 1-46</unitid>
+<unittitle encodinganalog="3.1.2">Nancy, place Stanislas, travaux : reportage photographique</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2004/2008">2004-2008</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>opération d'urbanisme</subject>
+<geogname>Nancy (Meurthe-et-Moselle, France) -- Place Stanislas</geogname>
+<name>Renson, Claude</name>
+</controlaccess>
+<c id="FRAD054_0000000407_de-1" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 1</unitid>
+<unittitle encodinganalog="3.1.2">Juillet.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2004">23 juillet-6 août 2004</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">216 impressions numériques en 216 feuilles (180 sur papier glacé, 36 sur papier cartonné)</extent>
+</physdesc>
+</did>
+<odd encodinganalog="3.6.1">
+<head>Notes ISBD</head>
+<p>Certains clichés de la collection ont été prétés au Restaurant l'Arrosoir et n'ont pas été restitués.</p>
+</odd>
+</c>
+<c id="FRAD054_0000000407_de-2" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 2</unitid>
+<unittitle encodinganalog="3.1.2">Août.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2004">6-31 août 2004</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">187 impressions numériques en 187 feuilles (186 sur papier glacé, 1 sur papier cartonné)</extent>
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-3" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 3</unitid>
+<unittitle encodinganalog="3.1.2">Septembre.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2004">1er-6 septembre 2004</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">146 impressions numériques en 146 feuilles ( papier cartonné )</extent>
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-4" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 4</unitid>
+<unittitle encodinganalog="3.1.2">Septembre (suite).</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2004">7-8 septembre 2004</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">194 impressions numériques en 194 feuilles ( papier cartonné )</extent>
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-5" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 5</unitid>
+<unittitle encodinganalog="3.1.2">Septembre (suite).</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2004">8-9 septembre 2004</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">111 impressions numériques en 111 feuilles (papier cartonné)</extent>
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-6" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 6</unitid>
+<unittitle encodinganalog="3.1.2">Septembre (suite).</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2004">10-13 septembre 2004</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">121 impressions numériques en 121 feuilles ( papier cartonné )</extent>
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-7" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 7</unitid>
+<unittitle encodinganalog="3.1.2">Septembre (suite).</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2004">14-15 septembre 2004</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">139 impressions numériques en 139 feuilles ( papier cartonné )</extent>
+</physdesc>
+</did>
+<odd encodinganalog="3.6.1">
+<head>Notes ISBD</head>
+<p>La photographie numéro 642 est manquante.</p>
+</odd>
+</c>
+<c id="FRAD054_0000000407_de-8" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 8</unitid>
+<unittitle encodinganalog="3.1.2">Septembre (suite).</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2004">16-21 septembre 2004</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">107 impressions numériques en 107 feuilles ( papier cartonné )</extent>
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-9" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 9</unitid>
+<unittitle encodinganalog="3.1.2">Septembre (suite).</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2004">21-28 septembre 2004</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">135 impressions numériques en 135 feuilles ( papier cartonné )</extent>
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-10" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 10</unitid>
+<unittitle encodinganalog="3.1.2">Fin septembre, début octobre.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2004">29 septembre-1 octobre 2004</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">106 impressions numériques en 106 feuilles ( papier cartonné )</extent>
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-11" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 11</unitid>
+<unittitle encodinganalog="3.1.2">Octobre.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2004">4-11 octobre 2004</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">161 impressions numériques en 161 feuilles ( papier cartonné )</extent>
+</physdesc>
+</did>
+<odd encodinganalog="3.6.1">
+<head>Notes ISBD</head>
+<p>La photographie numéro 82 est manquante.</p>
+</odd>
+</c>
+<c id="FRAD054_0000000407_de-12" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 12</unitid>
+<unittitle encodinganalog="3.1.2">Octobre (suite).</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2004">12-18 octobre 2004</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">124 impressions numériques en 124 feuilles ( papier cartonné )</extent>
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-13" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 13</unitid>
+<unittitle encodinganalog="3.1.2">Octobre (suite).</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2004">18-21 octobre 2004</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">126 impressions numériques en 126 feuilles ( papier cartonné )</extent>
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-14" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 14</unitid>
+<unittitle encodinganalog="3.1.2">Octobre (suite).</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2004">21-25 octobre 2004</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">106 impressions numériques en 106 feuilles ( papier cartonné )</extent>
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-15" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 15</unitid>
+<unittitle encodinganalog="3.1.2">Octobre (suite).</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2004">25-28 octobre 2004</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">209 impressions numériques en 209 feuilles ( papier cartonné )</extent>
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-16" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 16</unitid>
+<unittitle encodinganalog="3.1.2">Novembre.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2004">1er-3 novembre 2004</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">121 impressions numériques en 121 feuilles ( papier cartonné )</extent>
+</physdesc>
+</did>
+<odd encodinganalog="3.6.1">
+<head>Notes ISBD</head>
+<p>La photographie 89 est manquante.</p>
+</odd>
+</c>
+<c id="FRAD054_0000000407_de-17" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 17</unitid>
+<unittitle encodinganalog="3.1.2">Novembre (suite).</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2004">3-9 novembre 2004</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">117 impressions numériques en 117 feuilles ( papier cartonné )</extent>
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-18" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 18</unitid>
+<unittitle encodinganalog="3.1.2">Novembre (suite).</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2004">10-16 novembre 2004</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">152 impressions numériques en 152 feuilles (papier cartonné)</extent>
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-19" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 19</unitid>
+<unittitle encodinganalog="3.1.2">Novembre (suite).</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2004">17-19 novembre 2004</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">119 impressions numériques en 119 feuilles ( papier cartonné )</extent>
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-20" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 20</unitid>
+<unittitle encodinganalog="3.1.2">Novembre (suite).</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2004">22-25 novembre 2004</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">204 impressions numériques en 204 feuilles ( papier cartonné )</extent>
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-21" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 21</unitid>
+<unittitle encodinganalog="3.1.2">Novembre (suite).</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2004">25-30 novembre 2004</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">104 impressions numériques en 104 feuilles ( papier cartonné )</extent>
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-22" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 22</unitid>
+<unittitle encodinganalog="3.1.2">Décembre.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2004">1er-6 décembre 2004</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">109 impressions numériques en 109 feuilles ( papier cartonné )</extent>
+</physdesc>
+</did>
+<odd encodinganalog="3.6.1">
+<head>Notes ISBD</head>
+<p>La photographie numéro 12 est manquante.</p>
+</odd>
+</c>
+<c id="FRAD054_0000000407_de-23" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 23</unitid>
+<unittitle encodinganalog="3.1.2">Décembre (suite).</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2004">6-10 décembre 2004</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">107 impressions numériques en 107 feuilles ( papier cartonné )</extent>
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-24" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 24</unitid>
+<unittitle encodinganalog="3.1.2">Décembre (suite).</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2004">10-16 décembre 2004</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">90 impressions numériques en 90 feuilles ( papier cartonné )</extent>
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-25" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 25</unitid>
+<unittitle encodinganalog="3.1.2">Janvier.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2005">10-21 janvier 2005</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">209 impressions numériques en 209 feuilles ( papier cartonné )</extent>
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-26" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 26</unitid>
+<unittitle encodinganalog="3.1.2">Janvier (suite).</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2005">21-31 janvier 2005</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">119 impressions numériques en 119 feuilles ( papier cartonné )</extent>
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-27" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 27</unitid>
+<unittitle encodinganalog="3.1.2">Février.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2005">1er-4 février 2005</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">122 impressions numériques en 122 feuilles ( papier cartonné )</extent>
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-28" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 28</unitid>
+<unittitle encodinganalog="3.1.2">Février (suite).</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2005">4-8 février 2005</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">118 impressions numériques en 118 feuilles ( papier cartonné )</extent>
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-29" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 29</unitid>
+<unittitle encodinganalog="3.1.2">Février (suite).</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2005">8-14 février 2005</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">118 impressions numériques en 118 feuilles ( papier cartonné )</extent>
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-30" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 30</unitid>
+<unittitle encodinganalog="3.1.2">Février (suite).</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2005">14-18 février 2005</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">117 impressions numériques en 117 feuilles ( papier caronné )</extent>
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-31" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 31</unitid>
+<unittitle encodinganalog="3.1.2">Février (suite).</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2005">18-28 février 2005</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">113 impressions numériques en 113 feuilles ( papier cartonné )</extent>
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-32" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 32</unitid>
+<unittitle encodinganalog="3.1.2">Mars.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2005">2-14 mars 2005</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">122 impressions numériques en 122 feuilles ( papier cartonné )</extent>
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-33" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 33</unitid>
+<unittitle encodinganalog="3.1.2">Mars (suite).</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2005">14-21 mars 2005</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">122 impressions numériques en 122 feuilles ( papier cartonné )</extent>
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-34" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 34</unitid>
+<unittitle encodinganalog="3.1.2">Mars (suite).</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2005">21-24 mars 2005</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">116 impressions numériques en 116 feuilles ( papier cartonné )</extent>
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-35" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 35</unitid>
+<unittitle encodinganalog="3.1.2">Mars (suite).</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2005">21-24 mars 2005</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">121 impressions numériques en 121 feuilles (papier cartonné)</extent>
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-36" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 36</unitid>
+<unittitle encodinganalog="3.1.2">Avril.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2005">4-6 avril 2005</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">112 impressions numériques en 112 feuilles (papier cartonné)</extent>
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-37" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 37</unitid>
+<unittitle encodinganalog="3.1.2">Avril (suite).</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2005">7-13 avril 2005</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">123 impressions numériques en 123 feuilles ( papier cartonné )</extent>
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-38" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 38</unitid>
+<unittitle encodinganalog="3.1.2">Avril (suite).</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2005">13-18 avril 2005</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">120 impressions numériques en 120 feuilles ( papier cartonné )</extent>
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-39" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 39</unitid>
+<unittitle encodinganalog="3.1.2">Avril (suite).</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2005">18-22 avril 2005</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">124 impressions numériques en 124 feuilles ( papier cartonné )</extent>
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-40" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 40</unitid>
+<unittitle encodinganalog="3.1.2">Avril (suite).</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2005">22-28 avril 2005</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">126 impressions numériques en 126 feuilles ( papier cartonné )</extent>
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-41" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 41</unitid>
+<unittitle encodinganalog="3.1.2">Fin avril, début mai.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2005">23 avril-3 mai 2005</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">130 impressions numériques en 130 feuilles ( papier cartonné )</extent>
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-42" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 42</unitid>
+<unittitle encodinganalog="3.1.2">Restauration de l'hôtel de ville.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2004">2004</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">18 impressions numériques en 18 feuilles (papier cartonné)</extent>
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<geogname>Nancy, Hôtel de ville de (Meurthe-et-Moselle, France)</geogname>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-43" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 43</unitid>
+<unittitle encodinganalog="3.1.2">Photographies aériennes par ballons.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2004">2004</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">13 impressions numériques en 13 feuilles ( papier cartonné )</extent>
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-44" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 44</unitid>
+<unittitle encodinganalog="3.1.2">Démonstration et essai de pavement avant travaux.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2004">2004</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">1 impression numérique en 1 feuille ( papier cartonné )</extent>
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-45" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 45</unitid>
+<unittitle encodinganalog="3.1.2">Photographie de l'arc Héré.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2004">2004</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">5 impressions numériques en 5 feuilles ( papier cartonné )</extent>
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<geogname>Nancy (Meurthe-et-Moselle, France) -- Arc Héré</geogname>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-46" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 46</unitid>
+<unittitle encodinganalog="3.1.2">Correspondance.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2005/2008">2005-2008</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<odd encodinganalog="3.6.1">
+<head>Notes ISBD</head>
+<p>.</p>
+</odd>
+</c>
+</c>
+<c id="FRAD054_0000000407_tt1-2" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1">31 Fi 47-185</unitid>
+<unittitle encodinganalog="3.1.2">Reproductions d'affiches par Claude Renson</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Présentation du contenu</head>
+<p>Documents conservés aux Archives municipales de Nancy</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<geogname>Nancy (Meurthe-et-Moselle, France)</geogname>
+<name>Renson, Claude</name>
+</controlaccess>
+<c id="FRAD054_0000000407_tt2-3" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1">31 Fi 47-117</unitid>
+<unittitle encodinganalog="3.1.2">Affiches (1880-1909)</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<c id="FRAD054_0000000407_de-47" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 47</unitid>
+<unittitle encodinganalog="3.1.2">Fête nationale : 14 juillet 1880 ; allocution du Président de la République à l'occasion de la distribution des drapeaux.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">1 photographie positive transparente (diapositive)</extent>
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête nationale</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-48" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 48</unitid>
+<unittitle encodinganalog="3.1.2">Fête nationale : 14 juillet 1881.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">1 photographie positive transparente (diapositive)</extent>
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête nationale</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-49" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 49</unitid>
+<unittitle encodinganalog="3.1.2">Fête nationale : 14 juillet 1881.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">1 photographie positive transparente (diapositive)</extent>
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête nationale</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-52" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 50</unitid>
+<unittitle encodinganalog="3.1.2">Arsène Blondin, funambule : 1882 ; sur la Seine.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">1 photographie positive transparente (diapositive)</extent>
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête</subject>
+<persname>Blondin, Arsène</persname>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-53" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 51</unitid>
+<unittitle encodinganalog="3.1.2">[Arsène Blondin, funambule : 1882 ; sur la Seine].</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête</subject>
+<persname>Blondin, Arsène</persname>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-54" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 52</unitid>
+<unittitle encodinganalog="3.1.2">Concours régional agricole et hippique : 1883.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>concours agricole</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-55" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 53</unitid>
+<unittitle encodinganalog="3.1.2">Grande fête de gymnastique : 7 juin 1883.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>manifestation sportive</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-50" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 54</unitid>
+<unittitle encodinganalog="3.1.2">Fête nationale : 14 juillet 1883.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">1 photographie positive transparente (diapositive)</extent>
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête nationale</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-56" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 55</unitid>
+<unittitle encodinganalog="3.1.2">Concours régional agricole : 7 juin 1885 ; fête de nuit.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>concours agricole</subject>
+<subject>fête</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-57" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 56</unitid>
+<unittitle encodinganalog="3.1.2">Grande fête de gymnastique et d'armes : 7 juin 1885.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>manifestation sportive</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-58" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 57</unitid>
+<unittitle encodinganalog="3.1.2">Concours régional agricole : 9 juin 1885.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>concours agricole</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-59" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 58</unitid>
+<unittitle encodinganalog="3.1.2">Concours régional agricole : 9 juin 1885 ; grande fête de nuit.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>concours agricole</subject>
+<subject>fête</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-60" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 59</unitid>
+<unittitle encodinganalog="3.1.2">Concours régional agricole : 11 juin 1885 ; fête aérostatique.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>concours agricole</subject>
+<subject>fête</subject>
+<subject>manifestation sportive</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-61" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 60</unitid>
+<unittitle encodinganalog="3.1.2">Concours régional agricole : 13 juin 1885.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>concours agricole</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-62" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 61</unitid>
+<unittitle encodinganalog="3.1.2">Congrès de Nancy : 12-19 août 1886.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>sciences</subject>
+<corpname>Association française pour l'avancement des sciences</corpname>
+<corpname>Congrès de Nancy</corpname>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-63" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 62</unitid>
+<unittitle encodinganalog="3.1.2">Congrès de Nancy : 12-19 août 1886 : avancement des sciences.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>sciences</subject>
+<corpname>Association française pour l'avancement des sciences</corpname>
+<corpname>Congrès de Nancy</corpname>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-64" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 63</unitid>
+<unittitle encodinganalog="3.1.2">Congrès de Nancy : 12-22 août 1886 : avancement des sciences.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>sciences</subject>
+<corpname>Association française pour l'avancement des sciences</corpname>
+<corpname>Congrès de Nancy</corpname>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-51" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 64</unitid>
+<unittitle encodinganalog="3.1.2">Centenaire de 1789 : 5 mai 1889 ; anniversaire de la réunion des états généraux.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">1 photographie positive transparente (diapositive)</extent>
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>commémoration</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-65" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 65</unitid>
+<unittitle encodinganalog="3.1.2">Fête nationale : 1889 ; grand bal.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête nationale</subject>
+<subject>bal public</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-66" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 66</unitid>
+<unittitle encodinganalog="3.1.2">Fête nationale : 14 juillet 1889 ; centenaire.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête nationale</subject>
+<subject>commémoration</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-67" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 67</unitid>
+<unittitle encodinganalog="3.1.2">Fêtes du centenaire 1789 : 21 juillet 1889.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête</subject>
+<subject>commémoration</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-68" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 68</unitid>
+<unittitle encodinganalog="3.1.2">Grande fête gratuite : 12 janvier 1890.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-69" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 69</unitid>
+<unittitle encodinganalog="3.1.2">Concerts populaires : 14 février 1892.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête</subject>
+<subject>manifestation culturelle</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-70" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 70</unitid>
+<unittitle encodinganalog="3.1.2">Concerts populaires : 28 février 1892 ; conservatoire de musique.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête</subject>
+<subject>manifestation culturelle</subject>
+<subject>musique</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-71" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 71</unitid>
+<unittitle encodinganalog="3.1.2">XIIIe fête fédérale : 4-5-6 juin 1892 ; gymnastique.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête</subject>
+<subject>manifestation sportive</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-72" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 72</unitid>
+<unittitle encodinganalog="3.1.2">XIIIe fête fédérale : 5-6 juin 1892 ; gymnastique.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête</subject>
+<subject>manifestation sportive</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-73" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 73</unitid>
+<unittitle encodinganalog="3.1.2">Fêtes de Nancy : 1892 ; Carnot.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête</subject>
+<subject>visite officielle</subject>
+<persname>Carnot, Sadi</persname>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-74" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 74</unitid>
+<unittitle encodinganalog="3.1.2">Le président de la République dans l'Est : juin 1892.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête</subject>
+<subject>visite officielle</subject>
+<persname>Carnot, Sadi</persname>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-75" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 75</unitid>
+<unittitle encodinganalog="3.1.2">Fête de nuit : 13 juillet 1892.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête nationale</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-76" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 76</unitid>
+<unittitle encodinganalog="3.1.2">Conservatoire : 1894.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête</subject>
+<subject>musique</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-77" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 77</unitid>
+<unittitle encodinganalog="3.1.2">Fête nationale : 14 juillet 1894.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête nationale</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-78" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 78</unitid>
+<unittitle encodinganalog="3.1.2">Nancy : 1895 : grande cavalcade pour les pauvres.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête</subject>
+<subject>carnaval</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-79" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 79</unitid>
+<unittitle encodinganalog="3.1.2">Monument Carnot : 27 octobre 1895 ; tombola.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête</subject>
+<geogname>Nancy (Meurthe-et-Moselle, France) -- Monument Carnot</geogname>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-80" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 80</unitid>
+<unittitle encodinganalog="3.1.2">Monument Carnot : 1896 ; inauguration.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête</subject>
+<geogname>Nancy (Meurthe-et-Moselle, France) -- Monument Carnot</geogname>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-81" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 81</unitid>
+<unittitle encodinganalog="3.1.2">Monument Carnot : 25 juin 1896 ; annonce inauguration.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête</subject>
+<geogname>Nancy (Meurthe-et-Moselle, France) -- Monument Carnot</geogname>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-82" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 82</unitid>
+<unittitle encodinganalog="3.1.2">Monument Carnot : 28 juin 1896 ; inauguration.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête</subject>
+<geogname>Nancy (Meurthe-et-Moselle, France) -- Monument Carnot</geogname>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-83" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 83</unitid>
+<unittitle encodinganalog="3.1.2">[Monument Carnot] : 28 juin 1896 ; mesures d'ordre.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête</subject>
+<geogname>Nancy (Meurthe-et-Moselle, France) -- Monument Carnot</geogname>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-84" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 84</unitid>
+<unittitle encodinganalog="3.1.2">Alliance franco-russe : 27 août 1897 ; pavoisons.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête</subject>
+<corpname>Alliance franco-russe</corpname>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-85" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 85</unitid>
+<unittitle encodinganalog="3.1.2">École professionnelle de l'Est : 1900 ; grand prix, exposition universelle.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>manifestation commerciale</subject>
+<corpname>école professionnelle de l'Est</corpname>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-86" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 86</unitid>
+<unittitle encodinganalog="3.1.2">Fête nationale : 1902.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête nationale</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-87" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 87</unitid>
+<unittitle encodinganalog="3.1.2">Concerts, conservatoire : 9 novembre 1902.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête</subject>
+<subject>musique</subject>
+<subject>manifestation culturelle</subject>
+<subject>formation musicale</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-88" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 88</unitid>
+<unittitle encodinganalog="3.1.2">Concerts, conservatoire : 18 janvier 1903.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête</subject>
+<subject>musique</subject>
+<subject>manifestation culturelle</subject>
+<subject>formation musicale</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-89" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 89</unitid>
+<unittitle encodinganalog="3.1.2">Motocyclette Peugeot : 1904 ; course.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>manifestation sportive</subject>
+<persname>Peugeot</persname>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-90" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 90</unitid>
+<unittitle encodinganalog="3.1.2">Société chorale Alsace-Lorraine : 13-14-15 août 1904 ; diplôme, ville d'Épinal.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>manifestation culturelle</subject>
+<subject>musique</subject>
+<subject>formation musicale</subject>
+<geogname>Épinal (Vosges, France)</geogname>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-91" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 91</unitid>
+<unittitle encodinganalog="3.1.2">Concerts, conservatoire : 6 novembre 1904 ; direction Guy Ropartz.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>manifestation culturelle</subject>
+<subject>musique</subject>
+<subject>formation musicale</subject>
+<subject>fête</subject>
+<persname>Ropartz, Guy</persname>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-92" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 92</unitid>
+<unittitle encodinganalog="3.1.2">Concerts, conservatoire : 4 décembre 1904 ; direction Guy Ropartz.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>manifestation culturelle</subject>
+<subject>musique</subject>
+<subject>formation musicale</subject>
+<subject>fête</subject>
+<persname>Ropartz, Guy</persname>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-93" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 93</unitid>
+<unittitle encodinganalog="3.1.2">Concerts, conservatoire : 18 décembre 1904.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>manifestation culturelle</subject>
+<subject>musique</subject>
+<subject>formation musicale</subject>
+<subject>fête</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-94" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 94</unitid>
+<unittitle encodinganalog="3.1.2">Concerts, conservatoire : 15 janvier 1905.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>manifestation culturelle</subject>
+<subject>musique</subject>
+<subject>formation musicale</subject>
+<subject>fête</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-95" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 95</unitid>
+<unittitle encodinganalog="3.1.2">Concerts, conservatoire : 12 février 1905 ; Wagner.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>manifestation culturelle</subject>
+<subject>musique</subject>
+<subject>formation musicale</subject>
+<subject>fête</subject>
+<persname>Wagner</persname>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-96" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 96</unitid>
+<unittitle encodinganalog="3.1.2">Fête nationale : 1905 ; programme.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête nationale</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-97" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 97</unitid>
+<unittitle encodinganalog="3.1.2">Fête aérostatique : 14 juillet 1905.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête</subject>
+<subject>manifestation sportive</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-98" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 98</unitid>
+<unittitle encodinganalog="3.1.2">Fête aérostatique : 1905.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête</subject>
+<subject>manifestation sportive</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-99" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 99</unitid>
+<unittitle encodinganalog="3.1.2">Fêtes aérostatiques : 1905.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête</subject>
+<subject>manifestation sportive</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-100" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 100</unitid>
+<unittitle encodinganalog="3.1.2">Fête aérostatique : 1905.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête</subject>
+<subject>manifestation sportive</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-101" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 101</unitid>
+<unittitle encodinganalog="3.1.2">Fête aérostatique : 1905.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête</subject>
+<subject>manifestation sportive</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-102" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 102</unitid>
+<unittitle encodinganalog="3.1.2">Société de tir : 1882-1905 ; plan général.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête</subject>
+<corpname>Société de tir</corpname>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-103" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 103</unitid>
+<unittitle encodinganalog="3.1.2">Société nationale de tir : 1905 ; grands concours.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête</subject>
+<corpname>Société de tir</corpname>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-104" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 104</unitid>
+<unittitle encodinganalog="3.1.2">Roi du Cambodge : 3 juillet 1906.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête</subject>
+<subject>visite officielle</subject>
+<persname>Cambodge, Roi du</persname>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-105" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 105</unitid>
+<unittitle encodinganalog="3.1.2">Roi du Cambodge : 5 juillet 1906 ; arrêté.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête</subject>
+<subject>visite officielle</subject>
+<persname>Cambodge, Roi du</persname>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-106" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 106</unitid>
+<unittitle encodinganalog="3.1.2">Roi du Cambodge : 5 juillet 1906 ; arrêté.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête</subject>
+<subject>visite officielle</subject>
+<persname>Cambodge, Roi du</persname>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-107" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 107</unitid>
+<unittitle encodinganalog="3.1.2">Concerts, conservatoire : 3 février 1907.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête</subject>
+<subject>musique</subject>
+<subject>manifestation culturelle</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-108" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 108</unitid>
+<unittitle encodinganalog="3.1.2">Concours international de musique : 11 juin 1907.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête</subject>
+<subject>musique</subject>
+<subject>manifestation culturelle</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-109" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 109</unitid>
+<unittitle encodinganalog="3.1.2">Concours international de musique : 16-17 juin 1907.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête</subject>
+<subject>musique</subject>
+<subject>manifestation culturelle</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-110" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 110</unitid>
+<unittitle encodinganalog="3.1.2">Grand concours international de musique : 15-17 juin 1907 ; diplôme.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête</subject>
+<subject>musique</subject>
+<subject>manifestation culturelle</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-111" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 111</unitid>
+<unittitle encodinganalog="3.1.2">Société centrale d'horticulture : 12-15 juillet 1907 ; expsoition.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête</subject>
+<subject>manifestation culturelle</subject>
+<subject>horticulture</subject>
+<corpname>Société centrale d'horticulture</corpname>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-112" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 112</unitid>
+<unittitle encodinganalog="3.1.2">Groupe l'Émancipation, Gustave Hervé : juin 1908 ; grand concert.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête</subject>
+<subject>manifestation culturelle</subject>
+<subject>musique</subject>
+<corpname>l'Émancipation</corpname>
+<name>Hervé, Gustave</name>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-113" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 113</unitid>
+<unittitle encodinganalog="3.1.2">Concours agricole : 1908 ; mesures d'ordre.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>concours agricole</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-114" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 114</unitid>
+<unittitle encodinganalog="3.1.2">Concours nationaux agricoles : 18-21 juin 1908.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>concours agricole</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-115" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 115</unitid>
+<unittitle encodinganalog="3.1.2">Fête nationale : 14 juillet 1908.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête nationale</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-116" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 116</unitid>
+<unittitle encodinganalog="3.1.2">Nancy-Londres : 8 septembre 1908 ; exposition franco-britanique.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>manifestation culturelle</subject>
+<geogname>Londres</geogname>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-117" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 117</unitid>
+<unittitle encodinganalog="3.1.2">Comédie de Lorraine : 5 septembre 1909 ; voyage de M. Perrichon.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>manifestation culturelle</subject>
+<subject>compagnie théâtrale</subject>
+<persname>Labiche, Eugène</persname>
+<title>Le voyage de M. Perrichon</title>
+</controlaccess>
+</c>
+</c>
+<c id="FRAD054_0000000407_tt2-1" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1">31 Fi 118-171</unitid>
+<unittitle encodinganalog="3.1.2">Exposition 1909</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>manifestation commerciale</subject>
+<subject>manifestation culturelle</subject>
+<subject>manifestation sportive</subject>
+<subject>manifestation publique</subject>
+<corpname>Exposition (Nancy, 1909)</corpname>
+<geogname>Nancy (Meurthe-et-Moselle, France)</geogname>
+</controlaccess>
+<c id="FRAD054_0000000407_de-118" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 118</unitid>
+<unittitle encodinganalog="3.1.2">Affiche générale : mai-octobre.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-119" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 119</unitid>
+<unittitle encodinganalog="3.1.2">Affiche générale : mai-octobre.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-120" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 120</unitid>
+<unittitle encodinganalog="3.1.2">Affiche de Claudin.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<persname>Claudin, Pierre Roger</persname>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-121" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 121</unitid>
+<unittitle encodinganalog="3.1.2">Affiche de Claudin.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<persname>Claudin, Pierre Roger</persname>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-122" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 122</unitid>
+<unittitle encodinganalog="3.1.2">Inauguration : 19-20 juin.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-123" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 123</unitid>
+<unittitle encodinganalog="3.1.2">Programme, journée.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-124" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 124</unitid>
+<unittitle encodinganalog="3.1.2">Exposition.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-125" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 125</unitid>
+<unittitle encodinganalog="3.1.2">Porte d'entrée.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-126" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 126</unitid>
+<unittitle encodinganalog="3.1.2">Maison alsacienne.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-127" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 127</unitid>
+<unittitle encodinganalog="3.1.2">Austellung Nancy.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-128" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 128</unitid>
+<unittitle encodinganalog="3.1.2">Grand feu d'artifice.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-129" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 129</unitid>
+<unittitle encodinganalog="3.1.2">Distribution des récompenses.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-130" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 130</unitid>
+<unittitle encodinganalog="3.1.2">Salle des fêtes.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-186" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 131</unitid>
+<unittitle encodinganalog="3.1.2">Salle des fêtes.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-132" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 132</unitid>
+<unittitle encodinganalog="3.1.2">Salle des fêtes.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-133" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 133</unitid>
+<unittitle encodinganalog="3.1.2">Palais n°6.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-134" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 134</unitid>
+<unittitle encodinganalog="3.1.2">Palais de l'électricité.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-135" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 135</unitid>
+<unittitle encodinganalog="3.1.2">Palais des textiles.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-136" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 136</unitid>
+<unittitle encodinganalog="3.1.2">Palais des textiles.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-137" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 137</unitid>
+<unittitle encodinganalog="3.1.2">Palais des textiles.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-138" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 138</unitid>
+<unittitle encodinganalog="3.1.2">Palais des textiles.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-139" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 139</unitid>
+<unittitle encodinganalog="3.1.2">Concours dentelles, broderies : mai.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-140" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 140</unitid>
+<unittitle encodinganalog="3.1.2">Grande semaine anglaise : mai.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-141" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 141</unitid>
+<unittitle encodinganalog="3.1.2">Travaux : 20 juin.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-142" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 142</unitid>
+<unittitle encodinganalog="3.1.2">Courses auto. : juin.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-143" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 143</unitid>
+<unittitle encodinganalog="3.1.2">Festival Wagner : 20 juillet.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<persname>Wagner</persname>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-144" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 144</unitid>
+<unittitle encodinganalog="3.1.2">Fête de bienfaisance : 10-25 juillet ; cortège historique Lorraine.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-145" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 145</unitid>
+<unittitle encodinganalog="3.1.2">Cortège historique : 18-25 juillet ; sortie.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-146" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 146</unitid>
+<unittitle encodinganalog="3.1.2">Cortège historique ; chevaux.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-147" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 147</unitid>
+<unittitle encodinganalog="3.1.2">Couronnement de la muse du peuple : 14-15 août.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-148" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 148</unitid>
+<unittitle encodinganalog="3.1.2">Couronnement de la muse du peuple : 15 août.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-149" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 149</unitid>
+<unittitle encodinganalog="3.1.2">Couronnement de la muse du peuple : 15 août.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-150" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 150</unitid>
+<unittitle encodinganalog="3.1.2">Avaition : 1er-8 septembre ; champ de course de Jarville.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>aéronef</subject>
+<geogname>Jarville-la-Malgrange (Meurthe-et-Moselle, France)</geogname>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-151" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 151</unitid>
+<unittitle encodinganalog="3.1.2">Concert symphonique : 9 septembre ; Guignol.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-152" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 152</unitid>
+<unittitle encodinganalog="3.1.2">Fête des fleurs : 11-12 septembre.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-153" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 153</unitid>
+<unittitle encodinganalog="3.1.2">Revue des troupes : 11-14 septembre.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-154" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 154</unitid>
+<unittitle encodinganalog="3.1.2">Congrès de la pâtisserie : 15 septembre ; fête de nuit.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-155" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 155</unitid>
+<unittitle encodinganalog="3.1.2">Congrès forestier : 16 septembre.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-156" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 156</unitid>
+<unittitle encodinganalog="3.1.2">Congrès aéronautique : 18 septembre ; concert symphonique.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-157" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 157</unitid>
+<unittitle encodinganalog="3.1.2">Congrès aéronautique : 19 septembre.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-158" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 158</unitid>
+<unittitle encodinganalog="3.1.2">Concerts symphoniques à l'Exèdre : 23 septembre.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-159" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 159</unitid>
+<unittitle encodinganalog="3.1.2">Horticulture : 24 septembre ; grand concours.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>horticulture</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-160" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 160</unitid>
+<unittitle encodinganalog="3.1.2">Fêtes franco-belges : 25-27 septembre.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-161" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 161</unitid>
+<unittitle encodinganalog="3.1.2">Fêtes franco-belges : 26 septembre.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-162" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 162</unitid>
+<unittitle encodinganalog="3.1.2">Fêtes franco-belges : 26 septembre ; grande fête de nuit.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-163" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 163</unitid>
+<unittitle encodinganalog="3.1.2">1000 bouquets offerts par Caiffa : 30 septembre.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<geogname>Caïffa (Israel)</geogname>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-164" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 164</unitid>
+<unittitle encodinganalog="3.1.2">Congrès union sycliste vélocypédique de France : 15 octobre.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-165" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 165</unitid>
+<unittitle encodinganalog="3.1.2">Aviation, aérostation : mai-octobre ; ballon dirigeable "Ville de Nancy".</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>aéronef</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-166" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 166</unitid>
+<unittitle encodinganalog="3.1.2">Concerts : 16 octobre.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-167" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 167</unitid>
+<unittitle encodinganalog="3.1.2">Journée populaire et militaire : 17 octobre.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-168" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 168</unitid>
+<unittitle encodinganalog="3.1.2">Concert musique militaire : 23 octobre ; usines Lang : défilé sénégalais.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<corpname>Lang, usines</corpname>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-169" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 169</unitid>
+<unittitle encodinganalog="3.1.2">Fêtes de la vigne et du houblon : 24 octobre.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-170" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 170</unitid>
+<unittitle encodinganalog="3.1.2">Concert musique militaire : 26 octobre.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+</c>
+<c id="FRAD054_0000000407_de-171" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 171</unitid>
+<unittitle encodinganalog="3.1.2">Visite, délégations commerciales anglaises : 27 octobre.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+</c>
+</c>
+<c id="FRAD054_0000000407_tt2-4" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1">31 Fi 172-180</unitid>
+<unittitle encodinganalog="3.1.2">Affiches (1910-1912)</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<c id="FRAD054_0000000407_de-172" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 172</unitid>
+<unittitle encodinganalog="3.1.2">Circuit de l'Est : 1910.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>aéronef</subject>
+<subject>manifestation sportive</subject>
+<geogname>Jarville-la-Malgrange (Meurthe-et-Moselle, France)</geogname>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-173" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 173</unitid>
+<unittitle encodinganalog="3.1.2">Circuit de l'Est : 9-10-11 août 1910.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>aéronef</subject>
+<subject>manifestation sportive</subject>
+<geogname>Jarville-la-Malgrange (Meurthe-et-Moselle, France)</geogname>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-174" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 174</unitid>
+<unittitle encodinganalog="3.1.2">Conservatoire : 13 août 1910 ; professeur de harpe.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>manifestation culturelle</subject>
+<subject>musique</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-175" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 175</unitid>
+<unittitle encodinganalog="3.1.2">Théâtre : 19 octobre 1910.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>manifestation culturelle</subject>
+<subject>compagnie théâtrale</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-176" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 176</unitid>
+<unittitle encodinganalog="3.1.2">Victimes du Liberté : 26 octobre 1911 ; soirée de gala.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête</subject>
+<subject>manifestation culturelle</subject>
+<persname>Delcassé, Théophile</persname>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-177" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 177</unitid>
+<unittitle encodinganalog="3.1.2">Manon : 29 octobre 1911 ; grand ballet.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête</subject>
+<subject>manifestation culturelle</subject>
+<subject>danse</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-178" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 178</unitid>
+<unittitle encodinganalog="3.1.2">Exposition d'art lorrain : 22 novembre 1910-15 janvier 1911 ; P. E. Colin.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>manifestation culturelle</subject>
+<subject>art</subject>
+<persname>Colin, Paul-Émile</persname>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-179" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 179</unitid>
+<unittitle encodinganalog="3.1.2">Fêtes d'aviation : avril 1912.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête</subject>
+<subject>aéronef</subject>
+<subject>manifestation sportive</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-180" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 180</unitid>
+<unittitle encodinganalog="3.1.2">Réception de M. Poincaré : 27 juillet 1912.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>visite officielle</subject>
+<persname>Poincaré, Raymond</persname>
+</controlaccess>
+</c>
+</c>
+<c id="FRAD054_0000000407_tt2-5" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1">31 Fi 181-185</unitid>
+<unittitle encodinganalog="3.1.2">Affiches (sans date)</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<c id="FRAD054_0000000407_de-181" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 181</unitid>
+<unittitle encodinganalog="3.1.2">Concours international de gymnastique : 22-23 juin.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>manifestation sportive</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-182" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 182</unitid>
+<unittitle encodinganalog="3.1.2">Course hippique.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>manifestation sportive</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-183" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 183</unitid>
+<unittitle encodinganalog="3.1.2">Grand ballon : 14 juillet.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>fête nationale</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-184" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 184</unitid>
+<unittitle encodinganalog="3.1.2">Représentation de bienfaisance : 20 octobre ; film.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>manifestation culturelle</subject>
+</controlaccess>
+</c>
+<c id="FRAD054_0000000407_de-185" level="item" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 185</unitid>
+<unittitle encodinganalog="3.1.2">Fêtes de Jeanne d'Arc.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2000">fin XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>manifestation culturelle</subject>
+<subject>fête</subject>
+<persname>Jeanne d'Arc</persname>
+</controlaccess>
+</c>
+</c>
+</c>
+<c id="FRAD054_0000000407_tt1-3" level="file" encodinganalog="3.1.4">
+<did>
+<unittitle encodinganalog="3.1.2">Documentation</unittitle>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<c id="FRAD054_0000000407_de-187" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 186</unitid>
+<unittitle encodinganalog="3.1.2">Missions aériennes : inventaire des vvues aériennes qui seront versées par la suite par Claude Foucaulx qui les enregistre sur son site qui est celui du reportage de Claude Renson sur les travaux de la Place Stanislas / Claude Renson.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1990">janvier 1990</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">30 cm non paginé ; 30 cm.</extent>
+</physdesc>
+</did>
+<odd encodinganalog="3.6.1">
+<head>Notes ISBD</head>
+<p>2 exemplaires.</p>
+</odd>
+<controlaccess>
+<head>Descripteurs</head>
+<geogname>Nancy (Meurthe-et-Moselle, France) -- Place Stanislas</geogname>
+<name>Renson, Claude</name>
+</controlaccess>
+</c>
+</c>
+</dsc>
+</archdesc>
+</ead>

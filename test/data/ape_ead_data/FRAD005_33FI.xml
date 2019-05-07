@@ -1,0 +1,1841 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ead xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="urn:isbn:1-931666-22-9">
+<eadheader>
+<eadid countrycode="FR" identifier="FRAD005_33FI" url="https://francearchives.fr/findingaid/ee81f35ba975a0aceabfff4e2de751df3cccaff3">FRAD005_33FI</eadid>
+<filedesc>
+<titlestmt>
+<titleproper>Répertoire numérique du fonds 33Fi - Fonds Baranger</titleproper>
+<author>par Catherine Briotet, attachée de conservation</author>
+</titlestmt>
+<publicationstmt>
+<publisher>Archives départementales des Hautes-Alpes</publisher>
+<address><addressline>Gap</addressline></address>
+<date normal="2013">2013</date>
+</publicationstmt>
+</filedesc>
+<profiledesc>
+<creation>Instrument de recherche produit au moyen du logiciel Arkhéïa Aide au classement de la société Anaphore sarl, version 3-10.5 du <date normal="2012-03-09">vendredi 9 mars 2012</date>. 
+Date de l'export : <date normal="2016-01-06">mercredi 6 janvier 2016</date> (15:04 h)</creation>
+<langusage>Instrument de recherche rédigé en <language langcode="fre">français</language></langusage>
+</profiledesc>
+</eadheader>
+<archdesc level="fonds">
+<did><unitid>33 Fi 1-106</unitid>
+<unittitle>Fonds Baranger</unittitle>
+<unitdate normal="1955/1978">1955-sans date</unitdate>
+<physdesc>
+<genreform>Document d'archives</genreform> 
+Photographies 
+<extent>106 articles</extent> 
+<extent unit="ml">2.20</extent> 
+</physdesc>
+<repository>Archives départementales des Hautes-Alpes</repository>
+<physloc label="Localisation physique">Archives départementales des Hautes-Alpes</physloc>
+<origination label="Origine">
+<corpname>Baranger, Henri</corpname>
+</origination>
+</did>
+<bioghist>
+<head/>
+<p>Établissement établi 2 rue Parrot à Paris dans le 12e arrondissement, spécialisé dans la photographie industrielle et la photographie de chantier.</p>
+</bioghist>
+<custodhist>
+<head>Historique de la conservation</head>
+<p>Fonds ayant été jeté par son producteur et récupéré par un particulier. Ce dernier a réalisé la vente d'une partie du fonds à différents services d'archives départementales après l'avoir reclassé par département et par chantier. Le particulier en question a conservé au titre de sa collection une partie des photos représentant des engins de chantier.</p>
+</custodhist>
+<acqinfo>
+<head>Informations sur les modalités d'entrée</head>
+<p>Achat 2011</p>
+</acqinfo>
+<scopecontent>
+<p>Photographies de divers travaux réalisés dans le département des Hautes-Alpes, en particulier les travaux de réalisation du barrage de Serre-Ponçon et du pont de Savines.</p>
+</scopecontent>
+<accruals>
+<head>Accroissements</head>
+<p>Fonds clos</p>
+</accruals>
+<arrangement>
+<head>Mode de classement</head>
+<p>classement méthodique par commune</p>
+</arrangement>
+<accessrestrict>
+<head>Modalités d'accès</head>
+<p><emph render="bold">Statut juridique</emph></p>
+<p>
+Archives privées
+</p>
+<p><emph render="bold">Communicabilité</emph></p>
+<p>Librement communicable</p>
+</accessrestrict>
+<userestrict>
+<head>Conditions d'utilisation</head>
+<p>Reproduction interdite</p>
+</userestrict>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>Construction</subject>
+<subject>Chantier</subject>
+<subject>Entreprise du bâtiment</subject>
+<persname>Baranger, Henri</persname>
+<genreform>Recherche détaillée</genreform>
+</controlaccess>
+<dsc type="othertype">
+<c id="tt1-1">
+<!--titre niveau 1-->
+<did>
+<unitid>33 Fi 83</unitid>
+<unittitle type="titre">Briançon</unittitle>
+<unitdate normal="1955/1978">Sans date</unitdate>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<geogname>Briançon (Hautes-Alpes, France)</geogname>
+</controlaccess>
+<c id="tt2-15">
+<!--titre niveau 2-->
+<did>
+<unitid>33 Fi 83</unitid>
+<unittitle type="titre">Ville</unittitle>
+<unitdate normal="1955/1978">Sans date</unitdate>
+</did>
+<c id="de-84">
+<did>
+<unitid>33 Fi 83</unitid>
+<unittitle>Vue générale, vue n°143.</unittitle>
+<unitdate normal="1955/1978">Sans date</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Cliché Noir et Blanc 18 cm x 24 cm.</p>
+</scopecontent>
+</c>
+</c>
+<c id="tt2-1">
+<!--titre niveau 2-->
+<did>
+<unitid>33 Fi 66</unitid>
+<unittitle type="titre">Pont Baldy</unittitle>
+<unitdate normal="1963/1965">1963-1965</unitdate>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<geogname>Pont Baldy (Briançon, Hautes-Alpes, France)</geogname>
+</controlaccess>
+<c id="de-1">
+<did>
+<unitid>33 Fi 1</unitid>
+<unittitle>Vues n°1427 à 1438</unittitle>
+<unitdate normal="1963">1963</unitdate>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00001/FRAD005_33FI_00001_0001.JPG" xlink:role="image:first"/>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00001/FRAD005_33FI_00001_0040.JPG" xlink:role="image:last"/>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés 18 x 24 cm N-B ; n°1428 : tirage photographique.</p>
+</scopecontent>
+</c>
+<c id="de-2">
+<did>
+<unitid>33 Fi 2</unitid>
+<unittitle>Vues n°1468 à 1486.</unittitle>
+<unitdate normal="1963">1963</unitdate>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00002/FRAD005_33FI_00002_0001.JPG" xlink:role="image:first"/>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00002/FRAD005_33FI_00002_0037.JPG" xlink:role="image:last"/>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés 18 x 24 cm N-B ; 1486 : cliché couleurs.</p>
+</scopecontent>
+</c>
+<c id="de-3">
+<did>
+<unitid>33 Fi 3</unitid>
+<unittitle>Vues n°1531 à 1551.</unittitle>
+<unitdate normal="1963">1963</unitdate>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00003/FRAD005_33FI_00003_0001.JPG" xlink:role="image:first"/>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00003/FRAD005_33FI_00003_0044.JPG" xlink:role="image:last"/>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés 18 x 24 cm N-B et quelques tirages papier ; 1569-1570 : cliché couleurs.</p>
+</scopecontent>
+</c>
+<c id="de-4">
+<did>
+<unitid>33 Fi 4</unitid>
+<unittitle>Vues n°1585 à 1592.</unittitle>
+<unitdate normal="1963">1963</unitdate>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00004/FRAD005_33FI_00004_0001.JPG" xlink:role="image:first"/>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00004/FRAD005_33FI_00004_0011.JPG" xlink:role="image:last"/>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés 18 x 24 cm N-B ; 1592 : cliché couleurs.</p>
+</scopecontent>
+</c>
+<c id="de-5">
+<did>
+<unitid>33 Fi 5</unitid>
+<unittitle>Vues n°1656 à 1680.</unittitle>
+<unitdate normal="1963">1963</unitdate>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00005/FRAD005_33FI_00005_0001.JPG" xlink:role="image:first"/>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00005/FRAD005_33FI_00005_0025.JPG" xlink:role="image:last"/>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés 18 x 24 cm N-B.</p>
+</scopecontent>
+</c>
+<c id="de-6">
+<did>
+<unitid>33 Fi 6</unitid>
+<unittitle>Vues n°1687 à 1692.</unittitle>
+<unitdate normal="1964">1964</unitdate>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00006/FRAD005_33FI_00006_0001.JPG" xlink:role="image:first"/>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00006/FRAD005_33FI_00006_0013.JPG" xlink:role="image:last"/>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés 18 x 24 cm N-B.</p>
+</scopecontent>
+</c>
+<c id="de-7">
+<did>
+<unitid>33 Fi 7</unitid>
+<unittitle>Vues n° 1783 à 1811, et 1827 et 1828.</unittitle>
+<unitdate normal="1964">1964</unitdate>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00007/FRAD005_33FI_00007_0001.JPG" xlink:role="image:first"/>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00007/FRAD005_33FI_00007_0032.JPG" xlink:role="image:last"/>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés 18 x 24 cm N-B ; 1827 et 1828 : couleurs.</p>
+</scopecontent>
+</c>
+<c id="de-8">
+<did>
+<unitid>33 Fi 8</unitid>
+<unittitle>Vues n° 1861 à 1899.</unittitle>
+<unitdate normal="1964">1964</unitdate>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00008/FRAD005_33FI_00008_0001.JPG" xlink:role="image:first"/>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00008/FRAD005_33FI_00008_0051.JPG" xlink:role="image:last"/>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés 18 x 24 cm N-B ; 1898 et 1899 : couleurs.</p>
+</scopecontent>
+</c>
+<c id="de-9">
+<did>
+<unitid>33 Fi 9</unitid>
+<unittitle>Vues n° 1911 à 1932.</unittitle>
+<unitdate normal="1964">1964</unitdate>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00009/FRAD005_33FI_00009_0001.JPG" xlink:role="image:first"/>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00009/FRAD005_33FI_00009_0034.JPG" xlink:role="image:last"/>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés et tirages papier 18 x 24 cm N-B.</p>
+</scopecontent>
+</c>
+<c id="de-10">
+<did>
+<unitid>33 Fi 10</unitid>
+<unittitle>Vues n° 1941 à 1962.</unittitle>
+<unitdate normal="1964">1964</unitdate>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00010/FRAD005_33FI_00010_0001.JPG" xlink:role="image:first"/>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00010/FRAD005_33FI_00010_0029.JPG" xlink:role="image:last"/>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés 18 x 24 cm N-B ; 1941 à 1943 : couleurs.</p>
+</scopecontent>
+</c>
+<c id="de-11">
+<did>
+<unitid>33 Fi 11</unitid>
+<unittitle>Vues n° 2068 à 2091.</unittitle>
+<unitdate normal="1965">1965</unitdate>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00011/FRAD005_33FI_00011_0001.JPG" xlink:role="image:first"/>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00011/FRAD005_33FI_00011_0023.JPG" xlink:role="image:last"/>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés 18 x 24 cm N-B.</p>
+</scopecontent>
+</c>
+<c id="de-12">
+<did>
+<unitid>33 Fi 12</unitid>
+<unittitle>Vues n° 2176 à 2185.</unittitle>
+<unitdate normal="1965">1965</unitdate>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00012/FRAD005_33FI_00012_0001.JPG" xlink:role="image:first"/>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00012/FRAD005_33FI_00012_0017.JPG" xlink:role="image:last"/>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Tirages papier 18 x 24 cm N-B.</p>
+</scopecontent>
+</c>
+<c id="de-13">
+<did>
+<unitid>33 Fi 13</unitid>
+<unittitle>Vues n° 2186 à 2187.</unittitle>
+<unitdate normal="1965">1965</unitdate>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00013/FRAD005_33FI_00013_0001.JPG" xlink:role="image:first"/>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00013/FRAD005_33FI_00013_0017.JPG" xlink:role="image:last"/>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés et tirages papier 18 x 24 cm N-B. </p><p>Sous le n° 2186 : 16 vues différentes.</p>
+</scopecontent>
+</c>
+<c id="de-14">
+<did>
+<unitid>33 Fi 14</unitid>
+<unittitle>Vues n° 2242 à 2255.</unittitle>
+<unitdate normal="1965">1965</unitdate>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00014/FRAD005_33FI_00014_0001.JPG" xlink:role="image:first"/>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00014/FRAD005_33FI_00014_0014.JPG" xlink:role="image:last"/>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés 18 x 24 cm N-B.</p>
+</scopecontent>
+</c>
+<c id="de-15">
+<did>
+<unitid>33 Fi 15</unitid>
+<unittitle>Vues n° 2287 à 2318.</unittitle>
+<unitdate normal="1965">1965</unitdate>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00015/FRAD005_33FI_00015_0001.JPG" xlink:role="image:first"/>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00015/FRAD005_33FI_00015_0033.JPG" xlink:role="image:last"/>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés et tirages papier 18 x 24 cm N-B.</p>
+</scopecontent>
+</c>
+<c id="de-16">
+<did>
+<unitid>33 Fi 16</unitid>
+<unittitle>Vues n° 2264 ; 2319-2321 ; 2378 ; 2698-2699.</unittitle>
+<unitdate normal="1965">1965</unitdate>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00016/FRAD005_33FI_00016_0001.JPG" xlink:role="image:first"/>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00016/FRAD005_33FI_00016_0007.JPG" xlink:role="image:last"/>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés et tirages en couleurs (18 cm x 24 cm).</p>
+</scopecontent>
+</c>
+<c id="de-67">
+<did>
+<unitid>33 Fi 66</unitid>
+<unittitle>Vues n°2354 à 2372.</unittitle>
+<unitdate normal="1965">1965</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés N et B 18 cm x 24 cm et tirages papier.</p>
+</scopecontent>
+</c>
+</c>
+</c>
+<c id="tt1-2">
+<!--titre niveau 1-->
+<did>
+<unitid>33 Fi 105-106-23, 57, 58, 92, 95-98, 100-101, 104-30, 32-39, 43, 48, 59-64, 70, 89, 103</unitid>
+<unittitle type="titre">Serre-Ponçon</unittitle>
+<unitdate normal="1956/1978">1956-1978</unitdate>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>Ouvrage d'art</subject>
+<subject>Barrage hydroélectrique</subject>
+<subject>Aménagement des eaux</subject>
+<geogname>Savines-le-Lac (Hautes-Alpes, France)</geogname>
+<geogname>Serre-Ponçon (Rousset, Hautes-Alpes; lieu-dit)</geogname>
+<geogname>Barrage de Serre-Ponçon (Rousset, Hautes-Alpes, France)</geogname>
+<geogname>La Durance, Rivière (France)</geogname>
+</controlaccess>
+<c id="tt2-2">
+<!--titre niveau 2-->
+<did>
+<unitid>33 Fi 106</unitid>
+<unittitle type="titre">Client : C.I.T.R.A.</unittitle>
+<unitdate normal="1956/1957">1956-1957</unitdate>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<corpname>Compagnie industrielle de travaux (CITRA)</corpname>
+</controlaccess>
+<c id="de-17">
+<did>
+<unitid>33 Fi 17</unitid>
+<unittitle>Vues n°1 à 29.</unittitle>
+<unitdate normal="1956">1956</unitdate>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00017/FRAD005_33FI_00017_0001.JPG" xlink:role="image:first"/>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00017/FRAD005_33FI_00017_0029.JPG" xlink:role="image:last"/>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés 18 cm x 24 cm N-B.</p>
+</scopecontent>
+</c>
+<c id="de-18">
+<did>
+<unitid>33 Fi 18</unitid>
+<unittitle>Vues n°32 à 69.</unittitle>
+<unitdate normal="1956">1956</unitdate>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00018/FRAD005_33FI_00018_0001.JPG" xlink:role="image:first"/>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00018/FRAD005_33FI_00018_0040.JPG" xlink:role="image:last"/>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés 18 cm x 24 cm N-B ; quelques tirages.</p>
+</scopecontent>
+</c>
+<c id="de-19">
+<did>
+<unitid>33 Fi 19</unitid>
+<unittitle>Vues n°74 à 109.</unittitle>
+<unitdate normal="1956">1956</unitdate>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00019/FRAD005_33FI_00019_0001.JPG" xlink:role="image:first"/>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00019/FRAD005_33FI_00019_0036.JPG" xlink:role="image:last"/>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés 18 cm x 24 cm N-B.</p>
+</scopecontent>
+</c>
+<c id="de-20">
+<did>
+<unitid>33 Fi 20</unitid>
+<unittitle>Vues n°114 à 136.</unittitle>
+<unitdate normal="1956">1956</unitdate>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00020/FRAD005_33FI_00020_0001.JPG" xlink:role="image:first"/>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00020/FRAD005_33FI_00020_0027.JPG" xlink:role="image:last"/>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés 18 cm x 24 cm N-B.</p>
+</scopecontent>
+</c>
+<c id="de-21">
+<did>
+<unitid>33 Fi 21</unitid>
+<unittitle>Vues n°138 à 149.</unittitle>
+<unitdate normal="1956">1956</unitdate>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00021/FRAD005_33FI_00021_0001.JPG" xlink:role="image:first"/>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00021/FRAD005_33FI_00021_0012.JPG" xlink:role="image:last"/>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés 18 cm x 24 cm N-B.</p>
+</scopecontent>
+</c>
+<c id="de-22">
+<did>
+<unitid>33 Fi 22</unitid>
+<unittitle>Vues n°150 à 179.</unittitle>
+<unitdate normal="1956">1956</unitdate>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00022/FRAD005_33FI_00022_0001.JPG" xlink:role="image:first"/>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00022/FRAD005_33FI_00022_0027.JPG" xlink:role="image:last"/>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés 18 cm x 24 cm N-B ; 174 à 176 : 20 cm x 40 cm.</p>
+</scopecontent>
+</c>
+<c id="de-23">
+<did>
+<unitid>33 Fi 23</unitid>
+<unittitle>Vues n°180 à 203.</unittitle>
+<unitdate normal="1956">1956</unitdate>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00023/FRAD005_33FI_00023_0001.JPG" xlink:role="image:first"/>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00023/FRAD005_33FI_00023_0024.JPG" xlink:role="image:last"/>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés 18 cm x 24 cm N-B.</p>
+</scopecontent>
+</c>
+<c id="de-24">
+<did>
+<unitid>33 Fi 24</unitid>
+<unittitle>Vues n°204 à 222.</unittitle>
+<unitdate normal="1956">1956</unitdate>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00024/FRAD005_33FI_00024_0001.JPG" xlink:role="image:first"/>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00024/FRAD005_33FI_00024_0019.JPG" xlink:role="image:last"/>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés 18 cm x 24 cm N-B.</p>
+</scopecontent>
+</c>
+<c id="de-25">
+<did>
+<unitid>33 Fi 25</unitid>
+<unittitle>Vues n°223 à 251.</unittitle>
+<unitdate normal="1956">1956</unitdate>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00025/FRAD005_33FI_00025_0001.JPG" xlink:role="image:first"/>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00025/FRAD005_33FI_00025_0029.JPG" xlink:role="image:last"/>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés 18 cm x 24 cm N-B ; quelques tirages.</p>
+</scopecontent>
+</c>
+<c id="de-26">
+<did>
+<unitid>33 Fi 26</unitid>
+<unittitle>Vues n°254 à 269.</unittitle>
+<unitdate normal="1956">1956</unitdate>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00026/FRAD005_33FI_00026_0001.JPG" xlink:role="image:first"/>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00026/FRAD005_33FI_00026_0015.JPG" xlink:role="image:last"/>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés 18 cm x 24 cm N-B.</p>
+</scopecontent>
+</c>
+<c id="de-27">
+<did>
+<unitid>33 Fi 27</unitid>
+<unittitle>Vues n°270 à 295.</unittitle>
+<unitdate normal="1957">1957</unitdate>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00027/FRAD005_33FI_00027_0001.JPG" xlink:role="image:first"/>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00027/FRAD005_33FI_00027_0026.JPG" xlink:role="image:last"/>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés 18 cm x 24 cm N-B.</p>
+</scopecontent>
+</c>
+<c id="de-28">
+<did>
+<unitid>33 Fi 28</unitid>
+<unittitle>Vues n°296 à 298.</unittitle>
+<unitdate normal="1957">1957</unitdate>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00028/FRAD005_33FI_00028_0001.JPG" xlink:role="image:first"/>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00028/FRAD005_33FI_00028_0003.JPG" xlink:role="image:last"/>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés 18 cm x 24 cm N-B ; quelques tirages.</p>
+</scopecontent>
+</c>
+<c id="de-106">
+<did>
+<unitid>33 Fi 105</unitid>
+<unittitle>Vues n° 70 à 73 ; 137 ; 174 à 176 ; 252, 253.</unittitle>
+<unitdate normal="1956">1956</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés Noir et Blanc 20 cm x 40 cm .</p>
+</scopecontent>
+</c>
+<c id="de-107">
+<did>
+<unitid>33 Fi 106</unitid>
+<unittitle>Viaduc du Beynon.</unittitle>
+<unitdate normal="1956">1956</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Cliché Noir et Blanc 20 cm x 40 cm .</p>
+</scopecontent>
+</c>
+</c>
+<c id="tt2-5">
+<!--titre niveau 2-->
+<did>
+<unitid>33 Fi 49-58, 92, 95-98, 100-101, 104-30, 32-47</unitid>
+<unittitle type="titre">Client : G.T.M. (Grands Travaux de Marseille)</unittitle>
+<unitdate normal="1959/1978">1959-1978</unitdate>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<corpname>Grands Travaux de Marseille</corpname>
+</controlaccess>
+<c id="de-29">
+<did>
+<unitid>33 Fi 29</unitid>
+<unittitle>Construction du pont de Savines, vues n°354 à 381.</unittitle>
+<unitdate normal="1959">1959</unitdate>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00029/FRAD005_33FI_00029_0001.JPG" xlink:role="image:first"/>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00029/FRAD005_33FI_00029_0033.JPG" xlink:role="image:last"/>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés 18 cm x 24 cm N-B.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<geogname>Savines-le-Lac (Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+<c id="de-31">
+<did>
+<unitid>33 Fi 30</unitid>
+<unittitle>Construction du pont de Savines, vues n°387 à 404.</unittitle>
+<unitdate normal="1959">1959</unitdate>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00030/FRAD005_33FI_00030_0001.JPG" xlink:role="image:first"/>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00030/FRAD005_33FI_00030_0024.JPG" xlink:role="image:last"/>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés 18 cm x 24 cm N-B.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<geogname>Savines-le-Lac (Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+<c id="de-33">
+<did>
+<unitid>33 Fi 32</unitid>
+<unittitle>Riou-Bourdoux, vues n°419 à 444.</unittitle>
+<unitdate normal="1959">1959</unitdate>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00032/FRAD005_33FI_00032_0001.JPG" xlink:role="image:first"/>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00032/FRAD005_33FI_00032_0030.JPG" xlink:role="image:last"/>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés et tirages 18 cm x 24 cm N-B.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>Cours d'eau</subject>
+<geogname>Prunières (Hautes-Alpes, France)</geogname>
+<geogname>Le Riou-Bourdoux, Torrent de (Prunières, Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+<c id="de-34">
+<did>
+<unitid>33 Fi 33</unitid>
+<unittitle>Ubaye, vues n°445 à 452.</unittitle>
+<unitdate normal="1959">1959</unitdate>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00033/FRAD005_33FI_00033_0001.JPG" xlink:role="image:first"/>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00033/FRAD005_33FI_00033_0016.JPG" xlink:role="image:last"/>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés 18 cm x 24 cm N-B.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>Cours d'eau</subject>
+<geogname>L'Ubaye, Torrent de (Barcelonnette, Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+<c id="de-35">
+<did>
+<unitid>33 Fi 34</unitid>
+<unittitle>Savines, vues n°453 à 482.</unittitle>
+<unitdate normal="1959">1959</unitdate>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00034/FRAD005_33FI_00034_0001.JPG" xlink:role="image:first"/>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00034/FRAD005_33FI_00034_0032.JPG" xlink:role="image:last"/>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés 18 cm x 24 cm N-B.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<geogname>Savines-le-Lac (Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+<c id="de-36">
+<did>
+<unitid>33 Fi 35</unitid>
+<unittitle>Pont sur l'Ubaye, vues n°483 à 493.</unittitle>
+<unitdate normal="1959">1959</unitdate>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00035/FRAD005_33FI_00035_0001.JPG" xlink:role="image:first"/>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00035/FRAD005_33FI_00035_0011.JPG" xlink:role="image:last"/>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés 18 cm x 24 cm N-B.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>Cours d'eau</subject>
+<geogname>L'Ubaye, Torrent de (Barcelonnette, Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+<c id="de-37">
+<did>
+<unitid>33 Fi 36</unitid>
+<unittitle>Vues n°515 à 532.</unittitle>
+<unitdate normal="1959">1959</unitdate>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00036/FRAD005_33FI_00036_0001.JPG" xlink:role="image:first"/>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00036/FRAD005_33FI_00036_0024.JPG" xlink:role="image:last"/>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés 18 cm x 24 cm N-B.</p>
+</scopecontent>
+</c>
+<c id="de-38">
+<did>
+<unitid>33 Fi 37</unitid>
+<unittitle>Ubaye, vues n°533 à 537.</unittitle>
+<unitdate normal="1959">1959</unitdate>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00037/FRAD005_33FI_00037_0001.JPG" xlink:role="image:first"/>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00037/FRAD005_33FI_00037_0006.JPG" xlink:role="image:last"/>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés 18cm x 24 cm N-B.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>Cours d'eau</subject>
+<geogname>L'Ubaye, Torrent de (Barcelonnette, Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+<c id="de-39">
+<did>
+<unitid>33 Fi 38</unitid>
+<unittitle>Savines, Riou Bourdou, Réallon, vues n°593 à 611.</unittitle>
+<unitdate normal="1959">1959</unitdate>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00038/FRAD005_33FI_00038_0001.JPG" xlink:role="image:first"/>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00038/FRAD005_33FI_00038_0022.JPG" xlink:role="image:last"/>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés N-B 18cm x 24 cm ; avec quelques tirages.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>Cours d'eau</subject>
+<geogname>Savines-le-Lac (Hautes-Alpes, France)</geogname>
+<geogname>Réallon (Hautes-Alpes, France)</geogname>
+<geogname>Prunières (Hautes-Alpes, France)</geogname>
+<geogname>Le Riou-Bourdoux, Torrent de (Prunières, Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+<c id="de-40">
+<did>
+<unitid>33 Fi 39</unitid>
+<unittitle>Vues n°612 à 620.</unittitle>
+<unitdate normal="1959">1959</unitdate>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00039/FRAD005_33FI_00039_0001.JPG" xlink:role="image:first"/>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00039/FRAD005_33FI_00039_0020.JPG" xlink:role="image:last"/>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés N-B 18cm x 24 cm.</p>
+</scopecontent>
+</c>
+<c id="de-41">
+<did>
+<unitid>33 Fi 40</unitid>
+<unittitle>Savines, Riou Bourdou, Réallon, vues n°623 à 625.</unittitle>
+<unitdate normal="1959">1959</unitdate>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00040/FRAD005_33FI_00040_0001.JPG" xlink:role="image:first"/>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00040/FRAD005_33FI_00040_0002.JPG" xlink:role="image:last"/>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés couleurs 18cm x 24 cm.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>Cours d'eau</subject>
+<geogname>Réallon (Hautes-Alpes, France)</geogname>
+<geogname>Prunières (Hautes-Alpes, France)</geogname>
+<geogname>Savines-le-Lac (Hautes-Alpes, France)</geogname>
+<geogname>Le Riou-Bourdoux, Torrent de (Prunières, Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+<c id="de-42">
+<did>
+<unitid>33 Fi 41</unitid>
+<unittitle>Ubaye, La Grande côte, vues n°654 à 662.</unittitle>
+<unitdate normal="1959">1959</unitdate>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00041/FRAD005_33FI_00041_0001.JPG" xlink:role="image:first"/>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00041/FRAD005_33FI_00041_0013.JPG" xlink:role="image:last"/>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés N-B 18 cm x 24 cm.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>Cours d'eau</subject>
+<geogname>L'Ubaye, Torrent de (Barcelonnette, Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+<c id="de-43">
+<did>
+<unitid>33 Fi 42</unitid>
+<unittitle>Vues n°663 à 690.</unittitle>
+<unitdate normal="1959">1959</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés N-B 18 cm x 24 cm, avec tirages.</p>
+</scopecontent>
+</c>
+<c id="de-44">
+<did>
+<unitid>33 Fi 43</unitid>
+<unittitle>Vues n°694 à 701.</unittitle>
+<unitdate normal="1959">1959</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés N-B 18 cm x 24 cm.</p>
+</scopecontent>
+</c>
+<c id="de-45">
+<did>
+<unitid>33 Fi 44</unitid>
+<unittitle>Vues n°705 à 733.</unittitle>
+<unitdate normal="1960">1960</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés N-B 18 cm x 24 cm.</p>
+</scopecontent>
+</c>
+<c id="de-46">
+<did>
+<unitid>33 Fi 45</unitid>
+<unittitle>Vues n°703 ; 704 ; 734 ; 735 ; 736 ; 771.</unittitle>
+<unitdate normal="1960">1960</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés N-B 18 cm x 24 cm, et tirages. </p><p>Vieux village de Savines, et pont en construction.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<geogname>Savines-le-Lac (Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+<c id="de-47">
+<did>
+<unitid>33 Fi 46</unitid>
+<unittitle>Vues n°737 à 770</unittitle>
+<unitdate normal="1960">1960</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés N-B 18 cm x 24 cm, et tirages.</p>
+</scopecontent>
+</c>
+<c id="de-48">
+<did>
+<unitid>33 Fi 47</unitid>
+<unittitle>Vues n°772 à 784</unittitle>
+<unitdate normal="1960">1960</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés N-B 18 cm x 24 cm, et tirages.</p>
+</scopecontent>
+</c>
+<c id="de-49">
+<did>
+<unitid>33 Fi 48</unitid>
+<unittitle>Vues n°823 à 837</unittitle>
+<unitdate normal="1960">1960</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés N-B 18 cm x 24 cm.</p>
+</scopecontent>
+</c>
+<c id="de-50">
+<did>
+<unitid>33 Fi 49</unitid>
+<unittitle>Pont de Savines et Réallon, vues n°847 à 850 ; 858 et 859.</unittitle>
+<unitdate normal="1960">1960</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés N-B 18 cm x 24 cm ; 858 et 859 : clichés couleurs 18 cm x 24 cm.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<geogname>Réallon (Hautes-Alpes, France)</geogname>
+<geogname>Savines-le-Lac (Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+<c id="de-51">
+<did>
+<unitid>33 Fi 50</unitid>
+<unittitle>Savines, Riou-Bourdou, Réallon, Le Lauzet, vues n°860 à 881.</unittitle>
+<unitdate normal="1960">1960</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés N-B 18 cm x 24 cm ; 862 à 865 et 881 : 20 cm x 40 cm, rangés en 33 Fi 100.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>Cours d'eau</subject>
+<geogname>Le Lauzet-Ubaye (Alpes-de-Haute-Provence, France)</geogname>
+<geogname>Réallon (Hautes-Alpes, France)</geogname>
+<geogname>Savines-le-Lac (Hautes-Alpes, France)</geogname>
+<geogname>Prunières (Hautes-Alpes, France)</geogname>
+<geogname>Le Riou-Bourdoux, Torrent de (Prunières, Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+<c id="de-52">
+<did>
+<unitid>33 Fi 51</unitid>
+<unittitle>Pont de Riou-Bourdou, vue n°882 ; gare, vues n°885 et 886.</unittitle>
+<unitdate normal="1960">1960</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés couleurs 18 cm x 24 cm et tirages papier.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>Cours d'eau</subject>
+<subject>Gare</subject>
+<geogname>Le Riou-Bourdoux, Torrent de (Prunières, Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+<c id="de-53">
+<did>
+<unitid>33 Fi 52</unitid>
+<unittitle>Pont Ubaye, Grande Côte, Savines, Riou Bourdou, vues n°916 à 940.</unittitle>
+<unitdate normal="1960">1960</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés N et B 18 cm x 24 cm </p><p>Vues n°948 et 949 : clichés couleurs représentant le pont de Savines avec le vieux village en contre-bas.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>Cours d'eau</subject>
+<geogname>Savines-le-Lac (Hautes-Alpes, France)</geogname>
+<geogname>Le Riou-Bourdoux, Torrent de (Prunières, Hautes-Alpes, France)</geogname>
+<geogname>L'Ubaye, Torrent de (Barcelonnette, Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+<c id="de-54">
+<did>
+<unitid>33 Fi 53</unitid>
+<unittitle>Vues n°953 à 976</unittitle>
+<unitdate normal="1960">1960</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés N et B 18 cm x 24 cm et tirages papier</p><p>Photographies d'une église, bâtiment d'une colonie de vacances, paysages divers, ouvriers au travail (images non localisées).</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>Ouvrier du bâtiment</subject>
+<subject>Centre de vacances</subject>
+<subject>Édifice cultuel</subject>
+</controlaccess>
+</c>
+<c id="de-55">
+<did>
+<unitid>33 Fi 54</unitid>
+<unittitle>Pont de la Grande Côte, Le Villaret, Le Lauzet, vues n°977 à 991.</unittitle>
+<unitdate normal="1960">1960</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés N et B 18 cm x 24 cm et tirages papier</p><p>Vue n° 977 avec inscription : "pont de Savines, 1960".</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<geogname>Le Villaret (Turriers, Alpes-de-Haute-Provence; hameau)</geogname>
+<geogname>Le Lauzet-Ubaye (Alpes-de-Haute-Provence, France)</geogname>
+<geogname>Savines-le-Lac (Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+<c id="de-56">
+<did>
+<unitid>33 Fi 55</unitid>
+<unittitle>Pont de Savines, Grande Côte, vues n°1046 à 1051.</unittitle>
+<unitdate normal="1961">1961</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés N et B 18 cm x 24 cm et tirages papier</p><p>n°1050 et 1051, 20 cm x 40 cm.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<geogname>Savines-le-Lac (Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+<c id="de-57">
+<did>
+<unitid>33 Fi 56</unitid>
+<unittitle>Vues n°1087 à 1089</unittitle>
+<unitdate normal="1961">1961</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés couleurs 18 cm x 24 cm </p><p>maisons, villages disparus.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<geogname>Savines-le-Lac (Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+<c id="de-58">
+<did>
+<unitid>33 Fi 57</unitid>
+<unittitle>Pont de Savines, vues n°2655 à 2686.</unittitle>
+<unitdate normal="1966">1966</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés N et B 18 cm x 24 cm.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<geogname>Savines-le-Lac (Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+<c id="de-59">
+<did>
+<unitid>33 Fi 58</unitid>
+<unittitle>Vues non numérotées, non datées.</unittitle>
+<unitdate normal="1966">Sans date</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés N et B 18 cm x 24 cm.</p>
+</scopecontent>
+</c>
+<c id="de-93">
+<did>
+<unitid>33 Fi 92</unitid>
+<unittitle>Savines.</unittitle>
+<unitdate normal="1978">1978</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>4 clichés couleurs 10 cm x 12 cm.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<geogname>Savines-le-Lac (Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+<c id="de-96">
+<did>
+<unitid>33 Fi 95</unitid>
+<unittitle>Vues n°382 à 385</unittitle>
+<unitdate normal="1959">1959</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés Noir et Blanc 20 cm x 40 cm.</p>
+</scopecontent>
+</c>
+<c id="de-97">
+<did>
+<unitid>33 Fi 96</unitid>
+<unittitle>Pont de Savines, construction.</unittitle>
+<unitdate normal="1959">1959</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés Noir et Blanc 20 cm x 40 cm.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<geogname>Savines-le-Lac (Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+<c id="de-98">
+<did>
+<unitid>33 Fi 97</unitid>
+<unittitle>Pont de Savines, construction, vues n°416 à 418.</unittitle>
+<unitdate normal="1959">1959</unitdate>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00097/FRAD005_33FI_00097_0001.JPG" xlink:role="image:first"/>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00097/FRAD005_33FI_00097_0003.JPG" xlink:role="image:last"/>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés Noir et Blanc 20 cm x 40 cm.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<geogname>Savines-le-Lac (Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+<c id="de-99">
+<did>
+<unitid>33 Fi 98</unitid>
+<unittitle>Pont de Savines, vues n°843 à 845.</unittitle>
+<unitdate normal="1960">1960</unitdate>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00098/FRAD005_33FI_00098_0001.JPG" xlink:role="image:first"/>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00098/FRAD005_33FI_00098_0004.JPG" xlink:role="image:last"/>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés Noir et Blanc 20 cm x 40 cm ; 1 tirage papier.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<geogname>Savines-le-Lac (Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+<c id="de-101">
+<did>
+<unitid>33 Fi 100</unitid>
+<unittitle>Pont de Savines.</unittitle>
+<unitdate normal="1960">1960</unitdate>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00100/FRAD005_33FI_00100_0001.JPG" xlink:role="image:first"/>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00100/FRAD005_33FI_00100_0006.JPG" xlink:role="image:last"/>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Vues n°862 à 865 P, clichés Noir et Blanc 20 cm x 40 cm ; 2 tirages papier.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<geogname>Savines-le-Lac (Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+<c id="de-102">
+<did>
+<unitid>33 Fi 101</unitid>
+<unittitle>Vues n°1050 à 1062 ; 1082.</unittitle>
+<unitdate normal="1973/1960">Sans date</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés et tirages papier Noir et Blanc 20 cm x 40 cm .</p>
+</scopecontent>
+</c>
+<c id="de-105">
+<did>
+<unitid>33 Fi 104</unitid>
+<unittitle>Le Lauzet, Ubaye, vue n°933.</unittitle>
+<unitdate normal="1960">1960</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Cliché et tirage papier Noir et Blanc 20 cm x 40 cm . </p><p>Client : G. T. M.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<geogname>Le Lauzet-Ubaye (Alpes-de-Haute-Provence, France)</geogname>
+</controlaccess>
+</c>
+</c>
+<c id="tt2-7">
+<!--titre niveau 2-->
+<did>
+<unitid>33 Fi 59</unitid>
+<unittitle type="titre">Client : Ruvenhorst Humbert</unittitle>
+<unitdate normal="1960">1960</unitdate>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<corpname>Ruvenhorst Humbert</corpname>
+</controlaccess>
+<c id="de-60">
+<did>
+<unitid>33 Fi 59</unitid>
+<unittitle>Vues n°1 à 12.</unittitle>
+<unitdate normal="1960">1960</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés N et B 18 cm x 24 cm.</p>
+</scopecontent>
+</c>
+</c>
+<c id="tt2-8">
+<!--titre niveau 2-->
+<did>
+<unitid>33 Fi 60</unitid>
+<unittitle type="titre">Client : Weitz</unittitle>
+<unitdate normal="1960">1960</unitdate>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<corpname>Weitz</corpname>
+</controlaccess>
+<c id="de-61">
+<did>
+<unitid>33 Fi 60</unitid>
+<unittitle>Vues n°6382 à 6386 ; 6426</unittitle>
+<unitdate normal="1960">1960</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés N et B 18 cm x 24 cm. </p><p>vue 6426 : reconstruction de Savines.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<geogname>Savines-le-Lac (Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+</c>
+<c id="tt2-9">
+<!--titre niveau 2-->
+<did>
+<unitid>33 Fi 61</unitid>
+<unittitle type="titre">Client : La technique des travaux</unittitle>
+<unitdate normal="1965">1965</unitdate>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<corpname>La technique des travaux</corpname>
+</controlaccess>
+<c id="de-62">
+<did>
+<unitid>33 Fi 61</unitid>
+<unittitle>Village de Savines, vues n°1 à 12.</unittitle>
+<unitdate normal="1965">1965</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés N et B 18 cm x 24 cm.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<geogname>Savines-le-Lac (Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+</c>
+<c id="tt2-10">
+<!--titre niveau 2-->
+<did>
+<unitid>33 Fi 62</unitid>
+<unittitle type="titre">Client : S.N.I.B.</unittitle>
+<unitdate normal="1965">Sans date</unitdate>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<corpname>S.N.I.B.</corpname>
+</controlaccess>
+<c id="de-63">
+<did>
+<unitid>33 Fi 62</unitid>
+<unittitle>Habitations, vues n°1 à 14.</unittitle>
+<unitdate normal="1965">Sans date</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés N et B 18 cm x 24 cm.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<geogname>Savines-le-Lac (Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+</c>
+<c id="tt2-11">
+<!--titre niveau 2-->
+<did>
+<unitid>33 Fi 63</unitid>
+<unittitle type="titre">Client : COFFRAL</unittitle>
+<unitdate normal="1956/1958">1956-1958</unitdate>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<corpname>COFFRAL</corpname>
+</controlaccess>
+<c id="de-64">
+<did>
+<unitid>33 Fi 63</unitid>
+<unittitle>Vues n°18 à 24.</unittitle>
+<unitdate normal="1956/1958">1956-1958</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés N et B 18 cm x 24 cm.</p>
+</scopecontent>
+</c>
+</c>
+<c id="tt2-12">
+<!--titre niveau 2-->
+<did>
+<unitid>33 Fi 64</unitid>
+<unittitle type="titre">Client : Ateliers de Pierrefitte</unittitle>
+<unitdate normal="1956">1956</unitdate>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<corpname>Ateliers de Pierrefitte</corpname>
+</controlaccess>
+<c id="de-65">
+<did>
+<unitid>33 Fi 64</unitid>
+<unittitle>Vues n°1 à 6.</unittitle>
+<unitdate normal="1956">1956</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés N et B 18 cm x 24 cm.</p>
+</scopecontent>
+</c>
+</c>
+<c id="tt2-14">
+<!--titre niveau 2-->
+<did>
+<unitid>33 Fi 70</unitid>
+<unittitle type="titre">Client : S.G.E.</unittitle>
+<unitdate normal="1965">1965</unitdate>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<corpname>S.G.E.</corpname>
+</controlaccess>
+<c id="de-71">
+<did>
+<unitid>33 Fi 70</unitid>
+<unittitle>Pont de Lestré, vues n°19, 28, 46, 47.</unittitle>
+<unitdate normal="1965">1965</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés N et B 18 cm x 24 cm.</p>
+</scopecontent>
+</c>
+</c>
+<c id="tt2-13">
+<!--titre niveau 2-->
+<did>
+<unitid>33 Fi 65, 88-89, 103</unitid>
+<unittitle type="titre">Divers</unittitle>
+<unitdate normal="1956/1971">Sans date</unitdate>
+</did>
+<c id="de-66">
+<did>
+<unitid>33 Fi 65</unitid>
+<unittitle>Exposition sur les barrages de la Durance.</unittitle>
+<unitdate normal="1956/1962">Sans date</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés N et B 18 cm x 24 cm. </p><p>Exposition ayant eu lieu à Beaucaire et concernant notamment les barrages de Serres-Ponçon, Sainte-Tulle et Castillon.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>Manifestation culturelle</subject>
+<geogname>Castellane (Alpes-de-Haute-Provence, France)</geogname>
+<geogname>Sainte-Tulle (Alpes-de-Haute-Provence, France)</geogname>
+<geogname>Beaucaire (Gard, France)</geogname>
+</controlaccess>
+</c>
+<c id="de-89">
+<did>
+<unitid>33 Fi 88</unitid>
+<unittitle>Établissement Hausherr - France, vues n°1 à 8.</unittitle>
+<unitdate normal="1971">Sans date</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés Noir et Blanc 18 cm x 24 cm.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<corpname>Établissement Hausherr</corpname>
+</controlaccess>
+</c>
+<c id="de-90">
+<did>
+<unitid>33 Fi 89</unitid>
+<unittitle>Savines (?), conduite sous-terraine : deux clichés.</unittitle>
+<unitdate normal="1971">Sans date</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés Noir et Blanc, 18 cm x 24 cm.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<geogname>Savines-le-Lac (Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+<c id="de-104">
+<did>
+<unitid>33 Fi 103</unitid>
+<unittitle>Savines, "travaux finis", vue générale, vue du village (église).</unittitle>
+<unitdate normal="1961">Sans date</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>3 tirages papier Noir et Blanc.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>Édifice cultuel</subject>
+<geogname>Savines-le-Lac (Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+</c>
+</c>
+<c id="tt1-4">
+<!--titre niveau 1-->
+<did>
+<unitid>33 Fi 84</unitid>
+<unittitle type="titre">La Saulce</unittitle>
+<unitdate normal="1959/1982">1959-s.d.</unitdate>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<geogname>La Saulce (Hautes-Alpes, France)</geogname>
+</controlaccess>
+<c id="de-85">
+<did>
+<unitid>33 Fi 84</unitid>
+<unittitle>Vue générale, vues n°126 et 127.</unittitle>
+<unitdate normal="1965/1982">Sans date</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés Noir et Blanc 18 cm x 24 cm.</p>
+</scopecontent>
+</c>
+<c id="tt2-4">
+<!--titre niveau 2-->
+<did>
+<unitid>33 Fi 31</unitid>
+<unittitle type="titre">Client : G.T.M. (Grands Travaux de Marseille)</unittitle>
+<unitdate normal="1959">1959</unitdate>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<corpname>Grands Travaux de Marseille</corpname>
+</controlaccess>
+<c id="de-32">
+<did>
+<unitid>33 Fi 31</unitid>
+<unittitle>Canal, vues n°405 à 415.</unittitle>
+<unitdate normal="1959">1959</unitdate>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00031/FRAD005_33FI_00031_0001.JPG" xlink:role="image:first"/>
+<dao xlink:type="simple" xlink:href="/FRAD005/FRAD005_FI/FRAD005_33FI/FRAD005_33FI_00031/FRAD005_33FI_00031_0011.JPG" xlink:role="image:last"/>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés et tirages 18 cm x 24 cm N-B.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>Aménagement des eaux</subject>
+<subject>Eau</subject>
+</controlaccess>
+</c>
+</c>
+</c>
+<c id="tt1-6">
+<!--titre niveau 1-->
+<did>
+<unitid>33 Fi 79-82, 85-87, 90-91, 94-69, 71-78</unitid>
+<unittitle type="titre">Lieux divers (Hautes-Alpes)</unittitle>
+<unitdate normal="1955/1982">1955-s.d.</unitdate>
+</did>
+<c id="de-68">
+<did>
+<unitid>33 Fi 67</unitid>
+<unittitle>Vallouise, paysages, vues n°405 et 406.</unittitle>
+<unitdate normal="1955">1955</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés N et B 18 cm x 24 cm.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<geogname>Vallouise (Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+<c id="de-69">
+<did>
+<unitid>33 Fi 68</unitid>
+<unittitle>Saint-Etienne-le-Laus, village, sanctuaire (chapelle du Précieux Sang), vues n°128 et 129.</unittitle>
+<unitdate normal="1955">1955</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés N et B 18 cm x 24 cm.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>Édifice cultuel</subject>
+<geogname>Saint-Étienne-le-Laus (Hautes-Alpes, France)</geogname>
+<geogname>Notre-Dame du Laus (Saint-Étienne-le-Laus, Hautes-Alpes; hameau)</geogname>
+</controlaccess>
+</c>
+<c id="de-70">
+<did>
+<unitid>33 Fi 69</unitid>
+<unittitle>Orcières, vues n°335 et 336.</unittitle>
+<unitdate normal="1963">1963</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés N et B 18 cm x 24 cm. </p><p>Client : Pingon.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<corpname>Pingon</corpname>
+<geogname>Orcières (Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+<c id="de-72">
+<did>
+<unitid>33 Fi 71</unitid>
+<unittitle>Théus, demoiselles coiffées, vues n°132 à 134.</unittitle>
+<unitdate normal="1963">Sans date</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés N et B 18 cm x 24 cm.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>Site</subject>
+<geogname>Théus (Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+<c id="de-73">
+<did>
+<unitid>33 Fi 72</unitid>
+<unittitle>Château-Queyras, village, vues n°147 à 149.</unittitle>
+<unitdate normal="1965">-1965</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés N et B 18 cm x 24 cm.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<geogname>Château-ville-Vieille (Hautes-Alpes, France)</geogname>
+<geogname>Château-Queyras (Château-Ville-Vieille, Hautes-Alpes; hameau)</geogname>
+</controlaccess>
+</c>
+<c id="de-74">
+<did>
+<unitid>33 Fi 73</unitid>
+<unittitle>Laragne, réservoir, vues n°941 à 947 et 1021.</unittitle>
+<unitdate normal="1960">1960</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés N et B, 18 cm x 24 cm. </p><p>Client G. T. M.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>Aménagement des eaux</subject>
+<corpname>Grands Travaux de Marseille</corpname>
+<geogname>Laragne-Montéglin (Hautes-Alpes, France)</geogname>
+<geogname>Laragne (Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+<c id="de-75">
+<did>
+<unitid>33 Fi 74</unitid>
+<unittitle>Laragne, colonie G.T.M., réservoir, vues n°953 à 976.</unittitle>
+<unitdate normal="1960">1960</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés N et B et tirages papier 18 cm x 24 cm. </p><p>Client : G. T. M., M. Giry.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>Centre de vacances</subject>
+<subject>Aménagement des eaux</subject>
+<corpname>Grands Travaux de Marseille</corpname>
+<geogname>Laragne (Hautes-Alpes, France)</geogname>
+<geogname>Laragne-Montéglin (Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+<c id="de-76">
+<did>
+<unitid>33 Fi 75</unitid>
+<unittitle>Laragne, réservoir, vues n°1020 à 1023.</unittitle>
+<unitdate normal="1961">1961</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés N et B 18 cm x 24 cm. </p><p>Client : G. T. M., M. Giry.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>Aménagement des eaux</subject>
+<corpname>Grands Travaux de Marseille</corpname>
+<geogname>Laragne (Hautes-Alpes, France)</geogname>
+<geogname>Laragne-Montéglin (Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+<c id="de-77">
+<did>
+<unitid>33 Fi 76</unitid>
+<unittitle>Saint-Bonnet, pont, vues n°54 à 58.</unittitle>
+<unitdate normal="1956">1956</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés N et B 18 cm x 24 cm. </p><p>Client : entreprise Cheval à Montélimard.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>Ouvrage d'art</subject>
+<geogname>Saint-Bonnet-en-Champsaur (Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+<c id="de-78">
+<did>
+<unitid>33 Fi 77</unitid>
+<unittitle>Gap, hôtel Le Relais.</unittitle>
+<unitdate normal="1956">Sans date</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Cliché N et B ; 18 cm x 24 cm.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>Hôtel de tourisme</subject>
+<geogname>Gap (Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+<c id="de-79">
+<did>
+<unitid>33 Fi 78</unitid>
+<unittitle>Champcella, usine, vues n°1812 à 1819 ; 1851 à 1860.</unittitle>
+<unitdate normal="1964">1964</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés N et B et tirages papier ; 18 cm x 24 cm. </p><p>Client G. T. M., M. Giry.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>Bâtiment industriel</subject>
+<corpname>Grands Travaux de Marseille</corpname>
+<geogname>Champcella (Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+<c id="de-80">
+<did>
+<unitid>33 Fi 79</unitid>
+<unittitle>Champcella, usine, vues n°2187 à 2191.</unittitle>
+<unitdate normal="1965">1965</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés N et B et tirages papier ; 18 cm x 24 cm. </p><p>Client : G. T. M., M. Giry.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>Bâtiment industriel</subject>
+<corpname>Grands Travaux de Marseille</corpname>
+<geogname>Champcella (Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+<c id="de-81">
+<did>
+<unitid>33 Fi 80</unitid>
+<unittitle>Avançon, le sanctuaire, vue générale, vues 130 et 131.</unittitle>
+<unitdate normal="1956/1970">Sans date</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Cliché N et B 18 cm x 24 cm. </p><p>Mention manuscrite "sanctuaire à Avançon".</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>Édifice cultuel</subject>
+<geogname>Avançon (Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+<c id="de-82">
+<did>
+<unitid>33 Fi 81</unitid>
+<unittitle>Col Bayard.</unittitle>
+<unitdate normal="1965/1982">Sans date</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Diapositive couleurs 18 cm x 24 cm. </p><p>Signée "Béranger".</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<geogname>Bayard, Col de (Gap, Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+<c id="de-83">
+<did>
+<unitid>33 Fi 82</unitid>
+<unittitle>Embrun, le roc et la cathédrale, vues n°135 à 138.</unittitle>
+<unitdate normal="1965">Sans date</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés Noir et Blanc 18 cm x 24 cm.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<geogname>Embrun (Hautes-Alpes, France)</geogname>
+<geogname>Cathédrale Notre-Dame du Réal (Embrun, Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+<c id="de-86">
+<did>
+<unitid>33 Fi 85</unitid>
+<unittitle>Le Poët, vues n°123 et 124.</unittitle>
+<unitdate normal="1965">Sans date</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés Noir et Blanc 18 cm x 24 cm.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<geogname>Le Poët (Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+<c id="de-87">
+<did>
+<unitid>33 Fi 86</unitid>
+<unittitle>Vars, hôtel "Pierre et Pasquet".</unittitle>
+<unitdate normal="1971">1971</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Clichés N et B et couleurs 10 cm x 12 cm, et tirages couleurs.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>Hôtel de tourisme</subject>
+<geogname>Vars (Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+<c id="de-88">
+<did>
+<unitid>33 Fi 87</unitid>
+<unittitle>La Roche-de-Rame, lac.</unittitle>
+<unitdate normal="1971">Sans date</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Diapositive couleurs, 18 cm x 24 cm.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>Nappe d'eau</subject>
+<geogname>La Roche-de-Rame (Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+<c id="de-91">
+<did>
+<unitid>33 Fi 90</unitid>
+<unittitle>"Hôtel Christiana" à Val-d'Isère.</unittitle>
+<unitdate normal="1956/1972">Sans date</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Tirage Noir et Blanc en 4 exemplaires, 18 cm x 24 cm.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>Hôtel de tourisme</subject>
+<geogname>Val-d'Isère (Savoie, France)</geogname>
+</controlaccess>
+</c>
+<c id="de-92">
+<did>
+<unitid>33 Fi 91</unitid>
+<unittitle>Ventavon.</unittitle>
+<unitdate normal="1973">1973</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>25 clichés couleurs 10 cm x 12 cm, client Ballot.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<corpname>Ballot</corpname>
+<geogname>Ventavon (Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+<c id="de-109">
+<did>
+<unitid>33 Fi 93</unitid>
+<unittitle>Saint-Martin-de-Queyrières (?), vue générale.</unittitle>
+<unitdate normal="1960">Sans date</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Diapositive couleurs 23,6 cm x 17,5 cm. </p><p>Signature "H. Baranger, Paris" dans le coin droit.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<geogname>Saint-Martin-de-Queyrières (Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+<c id="de-95">
+<did>
+<unitid>33 Fi 94</unitid>
+<unittitle>Route de Vallouise.</unittitle>
+<unitdate normal="1978">Sans date</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Diapositive couleurs, 18 cm x 24 cm.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>Réseau routier</subject>
+<geogname>Vallouise (Hautes-Alpes, France)</geogname>
+</controlaccess>
+</c>
+</c>
+<c id="tt1-7">
+<!--titre niveau 1-->
+<did>
+<unitid>33 Fi 99, 102</unitid>
+<unittitle type="titre">Lieux divers (hors Hautes-Alpes)</unittitle>
+<unitdate normal="1960/1961">1960-1961</unitdate>
+</did>
+<c id="de-100">
+<did>
+<unitid>33 Fi 99</unitid>
+<unittitle>Pont d'Allos.</unittitle>
+<unitdate normal="1960">1960</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Vues n°881 et 887, clichés Noir et Blanc 20 cm x 40 cm ; 1 tirage papier.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>Ouvrage d'art</subject>
+<geogname>Allos (Alpes-de-Haute-Provence, France)</geogname>
+</controlaccess>
+</c>
+<c id="de-103">
+<did>
+<unitid>33 Fi 102</unitid>
+<unittitle>Allos, "travaux finis", vue n°1082.</unittitle>
+<unitdate normal="1961">1961</unitdate>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Cliché Noir et Blanc 20 cm x 40 cm ; 2 tirages papier.</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>Ouvrage d'art</subject>
+<geogname>Allos (Alpes-de-Haute-Provence, France)</geogname>
+</controlaccess>
+</c>
+</c>
+</dsc>
+</archdesc>
+</ead>

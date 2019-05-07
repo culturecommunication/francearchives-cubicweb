@@ -1,0 +1,180 @@
+/* FindingEid */
+
+#document-tbg {
+  margin-top: 110px;
+}
+
+#content-article a {
+  color: $medium-grey;
+}
+
+#document .title {
+  color: $royal-blue;
+  font-size: 40px;
+  font-weight: bold;
+}
+
+#document .media img {
+  max-width: 200px;
+}
+
+.document-main-image {
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+.document-paragraph {
+  margin-top: 20px;
+  font-size: 24px;
+  color: $medium-grey;
+}
+
+.maincontent dl dt {
+  margin-bottom: 10px;
+  padding-bottom: 2px;
+  border-bottom: 1px dotted $royal-blue;
+}
+
+.virtualexhibit-view .indexes-values {
+   margin-top: 1em
+}
+
+.indexes-values {
+  padding-bottom: 0.5em;
+}
+
+.indexes-values {
+  h2 {
+    color: $dark-grey;
+    font-weight: bold;
+  }
+
+  &__title {
+    font-weight: bold;
+  }
+}
+
+.ead-label {
+  font-weight: bold;
+}
+
+b.ead-autolabel {
+  display: none
+}
+
+/* detailed path */
+
+#detailed-path {
+  margin-top: 3.125em;
+  background-color: $light-grey;
+  padding-bottom: 3.125em;
+}
+
+ul.detailed-path-list {
+  list-style-type: none;
+  padding-left: 40px;
+  margin-bottom: 20px;
+}
+
+.detailed-path-list-item,
+.detailed-path-list-item-last {
+  min-height: 32px;
+  padding: 0.5em 0px 0.5em 70px;
+}
+
+.detailed-path-list-item {
+  border-left: 1px solid $medium-grey;
+  background: url('../images/level_tree_big.png') left 50% no-repeat;
+}
+
+.detailed-path-list-item-last{
+  background: url('../images/level_tree_big_last.png') left 70% no-repeat;
+}
+
+.detailed-path-root-level {
+  min-height: 55px;
+  background-color: $royal-blue;
+  color: #fff;
+  font-size: 1.25em;
+}
+
+.detailed-path-inner-levels {
+  margin-left: -1.5em;
+  padding: 1em 1em 0 1em;
+}
+
+.detailed-path-root-level a,
+.detailed-path-root-level a:visited,
+.detailed-path-root-level a:hover {
+  color: #fff;
+}
+
+.detailed-path-root-level div:nth-child(2) {
+  padding-top: 0.4em;
+}
+
+.detailed-path-root-picto {
+  width: 55px;
+  height: 55px;
+  margin-right: 10px;
+  display: inline-block;
+  float: left;
+  background: url('../images/body_searchFilter_pictoSpace_55x55.png') no-repeat;
+}
+
+/* viewer */
+
+#viewer {
+  border-bottom: 1px solid $light-grey;
+  border-left: 1px solid $light-grey;
+  border-right: 1px solid $light-grey;
+  border-top: 8px solid $royal-blue;
+  height: 1010px;
+  margin-left: 30px;
+  margin-right: 30px;
+}
+
+.right-col {
+  @include if-wider-than(sm) {
+    float: right;
+    width: 29%;}
+}
+
+.left-col {
+  @include if-wider-than(sm) {
+    float: left;
+    width: 69% }
+}
+
+.grey-sidebar {
+  min-height: 20px;
+  padding: 19px;
+  margin-bottom: 20px;
+  background-color: $light-grey;
+
+  h2 {
+    color: $dark-grey;
+  }
+  .grey-sidebar_buttons {
+    margin-top: 1em;
+
+    a {
+      color: #fff;
+      background: $dark-dodger-blue;
+      display: inline-block;
+      padding: 3px 6px;
+      margin-bottom: 0.5em;
+      lign-height: 1.5em;
+      text-align: center;
+      vertical-align: middle;
+      cursor: pointer;
+      user-select: none;
+      border: none;
+    }
+
+    a:hover {
+      color: #fff;
+      border: none;
+    }
+  }
+}

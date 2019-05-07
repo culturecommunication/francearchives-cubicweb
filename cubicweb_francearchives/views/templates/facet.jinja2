@@ -1,0 +1,19 @@
+<div class="facet hidden-print" id="facet-{{ facetid }}">
+    <h3 class="no-style facet__title cwjs-facet-title"><a href="#">{{ facet_label }}</a></h3>
+    <div class="facet__body">
+        <ul class="facet__values /">
+        {% for item in facet_items %}
+        {{ item }}
+        {% endfor %}
+        {% if more_facet_items %}
+          {% for item in more_facet_items %}
+            {{ item }}
+          {% endfor %}
+          <li class="facet__more_options">
+            <a href="#" class="hide_options facet__focusable-item" style="display: none">{{ less_items_label }}</a>
+            <a href="#" class="show_options facet__focusable-item" >{{ more_items_label }}</a>
+          </li>
+        {% endif %}
+        </ul>
+     </div>
+</div>

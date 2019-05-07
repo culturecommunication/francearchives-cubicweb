@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ead xmlns="urn:isbn:1-931666-22-9"
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="urn:isbn:1-931666-22-9 http://www.archivesportaleurope.net/Portal/profiles/apeEAD.xsd http://www.w3.org/1999/xlink http://www.loc.gov/standards/xlink/xlink.xsd"
+     audience="external">
+   <eadheader countryencoding="iso3166-1"
+              dateencoding="iso8601"
+              langencoding="iso639-2b"
+              repositoryencoding="iso15511"
+              scriptencoding="iso15924"
+              relatedencoding="MARC21">
+      <eadid identifier="FR-AN_FRAN_IR_000224"
+             countrycode="FR"
+             mainagencycode="FR-AN"
+             url="https://www.siv.archives-nationales.culture.gouv.fr/siv/IR/FRAN_IR_000224">FRAN_IR_000224</eadid>
+      <filedesc>
+         <titlestmt>
+            <titleproper encodinganalog="245">Bâtiments civils et palais nationaux (XIXe-XXe siècles)</titleproper>
+            <subtitle>Répertoire numérique, avec index des noms géographiques, de personnes et de matières (F/21/4919-F/21/5128)</subtitle>
+            <author encodinganalog="245$c">Par E. Dunan</author>
+         </titlestmt>
+         <publicationstmt>
+            <publisher>Archives nationales</publisher>
+            <date encodinganalog="260$c"
+                  calendar="gregorian"
+                  era="ce"
+                  normal="1963-01-01/1963-12-31">1963</date>
+         </publicationstmt>
+      </filedesc>
+      <profiledesc>
+         <creation>Cet instrument de recherche a été encodé en 2010 par l'entreprise diadeis dans le cadre du chantier de dématérialisation des instruments de recherche des Archives Nationales sur la base d'une DTD conforme à la DTD EAD (encoded archival description) et créée par le service de dématérialisation des instruments de recherche des Archives Nationales </creation>
+      </profiledesc>
+      <revisiondesc>
+         <change>
+            <date/>
+            <item>Converted_apeEAD_version_2015-06-SNAPSHOT</item>
+         </change>
+      </revisiondesc>
+   </eadheader>
+   <archdesc level="fonds"
+             type="inventory"
+             encodinganalog="3.1.4"
+             relatedencoding="ISAD(G)v2">
+      <did>
+         <unitid encodinganalog="3.1.1" type="call number">F/21/4919-F/21/5128</unitid>
+         <unittitle encodinganalog="3.1.2">Bâtiments civils et palais nationaux</unittitle>
+         <unitdate calendar="gregorian"
+                   era="ce"
+                   normal="1801-01-01/2000-12-31"
+                   encodinganalog="3.1.3">XIXe-XXe siècles</unitdate>
+         <physloc>Pierrefitte</physloc>
+      </did>
+      <scopecontent encodinganalog="summary">
+         <p>Les 210 registres (F21* 4919-5128 et 4961 bis)</p>
+      </scopecontent>
+      <dsc type="othertype">
+         <c encodinganalog="3.1.4" id="d_1">
+            <did>
+               <unitid type="call number" encodinganalog="3.1.1">
+                  <extptr xlink:href="https://www.siv.archives-nationales.culture.gouv.fr/siv/rechercheconsultation/consultation/ir/consultationIR.action?udId=d_1&amp;irId=FRAN_IR_000224"/>F/21/4919-F/21/5128 - F/21/4919</unitid>
+               <unittitle encodinganalog="3.1.2">Bâtiments civils et Palais nationaux. Enregistrement chronologique du courrier, arrivée : désignation des services, numéros d'ordre d'arrivée, analyse des lettres reçues, parfois renvoi au n° d'ordre précédent se rapportant à la même affaire. 508 p.</unittitle>
+            </did>
+            <c encodinganalog="3.1.4" id="d_1_1">
+               <did>
+                  <unitid type="call number" encodinganalog="3.1.1">
+                     <extptr xlink:href="https://www.siv.archives-nationales.culture.gouv.fr/siv/rechercheconsultation/consultation/ir/consultationIR.action?udId=d_1_1&amp;irId=FRAN_IR_000224"/>F/21/4919-F/21/5128 - Pièces 1-190</unitid>
+                  <unittitle encodinganalog="3.1.2">1er septembre 1871-30 décembre 1872 (n°560-2734)</unittitle>
+               </did>
+            </c>
+          </c>
+      </dsc>
+   </archdesc>
+</ead>

@@ -1,0 +1,1567 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+	xmlns="http://data.culture.fr/thesaurus/resource/ark:/67717/T96#"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+	xmlns:foaf="http://xmlns.com/foaf/0.1/"
+	xmlns:mcc="http://data.culture.fr/thesaurus/elements/1.0/"
+	xmlns:dct="http://purl.org/dc/terms/"
+	xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+	xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+	xmlns:map="http://www.w3c.rl.ac.uk/2003/11/21-skos-mapping#"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+	xmlns:owl="http://www.w3.org/2002/07/owl#"
+	xmlns:ark="http://data.culture.fr/thesaurus/resource/ark:/67717/"
+	xmlns:iso-thes="http://purl.org/iso25964/skos-thes#"
+	xmlns:xl="http://www.w3.org/2008/05/skos-xl#"
+	xmlns:ginco="http://data.culture.fr/thesaurus/ginco/ns/"
+	xmlns:ark6="http://data.culture.fr/thesaurus/resource/ark:/67717/6"
+	xmlns:ark7="http://data.culture.fr/thesaurus/resource/ark:/67717/2"
+	xmlns:ark2="http://data.culture.fr/thesaurus/resource/ark:/67717/083"
+	xmlns:ark3="http://data.culture.fr/thesaurus/resource/ark:/67717/37"
+	xmlns:ark4="http://data.culture.fr/thesaurus/resource/ark:/67717/361"
+	xmlns:ark5="http://data.culture.fr/thesaurus/resource/ark:/67717/45884">
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-38">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">entretien</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/c6def73d-4101-46da-9a8e-105b388b4dae"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-17">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">commissionnement</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/f7a76e19-3f69-46c6-ae86-f45af51728f2"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-42">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">exécution budgétaire</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/87029ad9-6eeb-48ba-aeae-cfdd47689b32"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-40">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">évacuation</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<skos:scopeNote xml:lang="fr-fr">Il s'agit bien là d'une action résultant d'une décision
+			administrative.</skos:scopeNote>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/ba514938-bb47-49cc-89a2-7d22b0f6f4df"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-62">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">recensement</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<skos:scopeNote xml:lang="fr-fr">S'emploie pour toute opération permanente, régulière,
+			occasionnelle, de comptage, quel que soit l'objet du dénombrement, exception faite des
+			recensements de population (descripteur autorisé par le thesaurus).</skos:scopeNote>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/dc38a633-6cf2-43c3-b71d-c84f933ff92c"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-20">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">conciliation</skos:prefLabel>
+	<skos:altLabel xml:lang="fr-fr">arbitrage</skos:altLabel>
+	<skos:altLabel xml:lang="fr-fr">médiation</skos:altLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/33094914-62ed-493f-adf6-e0950c8f8a51"/>
+	<xl:altLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/2f005f9a-9cb5-48ba-bdd3-5748a429ce27"/>
+	<xl:altLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/6042c58f-bb26-4f5a-89af-37712037fa5d"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-53">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">location</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/ea97a89b-e77a-4c4e-bb12-dec8006d9f5a"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-65">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">recrutement</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<skos:related rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-48"/>
+	<ginco:TermeAssocie rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-48"/>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/7a418f13-0905-4a02-8fb4-33b8540c6f62"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-51">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">informatisation</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<skos:related rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-39"/>
+	<ginco:TermeAssocie rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-39"/>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/0290b8d6-f7f6-439b-ac15-d7d427adfab8"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-31">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">délégation</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<skos:scopeNote xml:lang="fr-fr">S'emploie pour désigner exclusivement les délégations de
+			service public. Le terme CONCESSION sera choisi pour tout autre cas de convention (ex:
+			concession de travaux, concession d'aménagement).</skos:scopeNote>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/150a7506-9a86-45bc-902c-5e3464797d10"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-59">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">programmation</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/4efe1529-7871-4b6d-9bc5-6654a13806ef"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-28">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">contrôle sanitaire</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/f9d1c65e-9f12-4e11-9e2c-e0c9fa61252d"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-43">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">exploitation commerciale</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/a0427c1f-7988-40d0-aef5-8a8c51bb0e62"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-68">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">restauration</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<skos:scopeNote xml:lang="fr-fr">S'emploie pour la restauration du patrimoine mobilier et
+			immobilier.</skos:scopeNote>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/146f1c85-9c79-44f5-868e-fe61944ff53a"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-23">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">contrôle budgétaire</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/05d18358-ecec-4d28-bb87-605f872c4608"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-16">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">classement</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<skos:scopeNote xml:lang="fr-fr">S'emploie pour les installations classées, les bâtiments
+			recevant du public, les hôtels et les campings... Ne s'emploie pas pour le patrimoine
+			(voir PROTECTION).</skos:scopeNote>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/e7ef2552-cfa6-48d3-9634-1c2467cb9fc7"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-39">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">équipement matériel</skos:prefLabel>
+	<skos:altLabel xml:lang="fr-fr">habillement</skos:altLabel>
+	<skos:altLabel xml:lang="fr-fr">armement</skos:altLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<skos:related rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-51"/>
+	<ginco:TermeAssocie rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-51"/>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/bd08e632-dcdf-4bde-9c23-c77efbec39b0"/>
+	<xl:altLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/802ce071-2274-4761-9f1a-9d59e0fa7f30"/>
+	<xl:altLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/435f0248-8fb6-4f61-8906-791e0209741d"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-1">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">abolition</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/a3528038-a043-4016-9651-a57cc9227484"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-50">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">indemnisation</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/92307a1b-8422-438f-b655-65da817cd711"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-21">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">construction</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<skos:scopeNote xml:lang="fr-fr">Le terme s'emploie quand l'Etat, une collectivité territoriale
+			ou un organisme public sont maîtres d'ouvrage (construction d'un bâtiment administratif
+			ou de toute infrastructure publique).</skos:scopeNote>
+	<skos:related rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-7"/>
+	<ginco:TermeAssocie rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-7"/>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/897f48e0-9642-424a-9712-adef969b1de8"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-45">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">fonctionnement</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/e34f5fdd-a1c9-4c07-8cbd-6ec4c019a0de"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-6">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">agrément</skos:prefLabel>
+	<skos:altLabel xml:lang="fr-fr">habilitation</skos:altLabel>
+	<skos:altLabel xml:lang="fr-fr">homologation</skos:altLabel>
+	<skos:altLabel xml:lang="fr-fr">labellisation</skos:altLabel>
+	<skos:altLabel xml:lang="fr-fr">approbation</skos:altLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/323f39b1-e408-4453-b2f5-17e4e59ea61d"/>
+	<xl:altLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/6c77f778-97f7-4567-a21f-488f34947c8e"/>
+	<xl:altLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/62566ad7-e0f8-47d5-9ac3-cd0df6ed16d1"/>
+	<xl:altLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/c17b5ed7-cfc2-4a58-9703-05cd97837313"/>
+	<xl:altLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/cef9ad4d-0dde-41f0-a734-2a5cbb510b11"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-19">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">concession</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<skos:scopeNote xml:lang="fr-fr">Voir note sur délégation.</skos:scopeNote>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/79beecdf-8bdc-4fbf-aa62-4a6f8dbcac0d"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-4">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">adhésion</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/67bb9e98-c970-4035-b474-faae9513197a"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-67">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">réquisition</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/ca4e93bd-1e5c-463c-a9c7-6f6381c72a77"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-10">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">assiette</skos:prefLabel>
+	<skos:altLabel xml:lang="fr-fr">évaluation fiscale</skos:altLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/28250f78-a8f3-4c91-9579-159c6b670a6d"/>
+	<xl:altLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/572555be-08cb-41e2-8a5b-81f952721906"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-63">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">recours hiérarchique</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<skos:scopeNote xml:lang="fr-fr">S'emploie quand la contestation fait l'objet d'un règlement ou
+			d'une tentative de règlement dans un contexte purement administratif.</skos:scopeNote>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/8fff5407-db48-45dd-ae46-4f98c9492a69"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-26">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">contrôle de sécurité</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/17ad83a7-c507-46fc-ac10-71f911138db6"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-33">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">désignation</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<skos:scopeNote xml:lang="fr-fr">Le terme s'emploie pour les dossiers traitant de la
+			composition et de la représentation des membres d'un organisme consultatif, d'une
+			association, d'un organisme délibérant.</skos:scopeNote>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/02a4addf-847a-4dd5-81aa-1cee93bf5a19"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-71">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">tutelle financière</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/7df9c043-8fc7-4cf5-9713-f4a3cb86859b"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-55">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">organisation</skos:prefLabel>
+	<skos:altLabel xml:lang="fr-fr">modernisation</skos:altLabel>
+	<skos:altLabel xml:lang="fr-fr">réforme administrative</skos:altLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<skos:scopeNote xml:lang="fr-fr">Terme à associer avec le mot objet STRUCTURE ADMINISTRATIVE
+			pour tout ce qui touche à l'évaluation, la modernisation et aux réformes des structures
+			administratives.</skos:scopeNote>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/d336b00d-a173-4e0d-a16d-1c38b6c1ce80"/>
+	<xl:altLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/63e57cee-4b60-4eb7-b10d-a7a35cb010cf"/>
+	<xl:altLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/04ddc6ce-74c3-4693-b6ec-70d5b52ea9bd"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-48">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">gestion du personnel</skos:prefLabel>
+	<skos:altLabel xml:lang="fr-fr">mise en disponibilité</skos:altLabel>
+	<skos:altLabel xml:lang="fr-fr">nomination</skos:altLabel>
+	<skos:altLabel xml:lang="fr-fr">affectation</skos:altLabel>
+	<skos:altLabel xml:lang="fr-fr">mise à la retraite</skos:altLabel>
+	<skos:altLabel xml:lang="fr-fr">détachement</skos:altLabel>
+	<skos:altLabel xml:lang="fr-fr">intégration</skos:altLabel>
+	<skos:altLabel xml:lang="fr-fr">destitution</skos:altLabel>
+	<skos:altLabel xml:lang="fr-fr">avancement</skos:altLabel>
+	<skos:altLabel xml:lang="fr-fr">licenciement</skos:altLabel>
+	<skos:altLabel xml:lang="fr-fr">suspension</skos:altLabel>
+	<skos:altLabel xml:lang="fr-fr">notation</skos:altLabel>
+	<skos:altLabel xml:lang="fr-fr">promotion professionnelle</skos:altLabel>
+	<skos:altLabel xml:lang="fr-fr">titularisation</skos:altLabel>
+	<skos:altLabel xml:lang="fr-fr">mise à disposition</skos:altLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<skos:related rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-65"/>
+	<ginco:TermeAssocie rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-65"/>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/b9f0a19c-50cd-4142-98ab-dba7ab9ee1c9"/>
+	<xl:altLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/ac71eed1-46f0-4de2-9a4c-06d84353b3a5"/>
+	<xl:altLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/76e042ed-00bf-4298-8a03-02916f51b411"/>
+	<xl:altLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/c37735ee-38a9-476d-85a0-d98ffd16a35f"/>
+	<xl:altLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/09932ab9-d93e-48ee-9f4f-be31eafeaadc"/>
+	<xl:altLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/c2ee14ec-ff36-4c9f-a081-bfd2d68cc688"/>
+	<xl:altLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/ef113b7e-05b5-4d14-8e38-74d84c2ea338"/>
+	<xl:altLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/c6fcf8c8-d1bc-4e70-924e-de55b3e56f8a"/>
+	<xl:altLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/11dc59f3-babb-43e1-9bea-eb2d01a16741"/>
+	<xl:altLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/9b4601b8-d092-4b5f-ab6e-a5da55bbe344"/>
+	<xl:altLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/717d3709-37ca-4cc8-8ee7-f907a1a96ebe"/>
+	<xl:altLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/7491e218-d53d-456a-92c2-5cfc0ad356be"/>
+	<xl:altLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/8c6378d9-d4e0-4b3f-9d75-e7a3f84727db"/>
+	<xl:altLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/92c5a14c-ef9a-47aa-be36-99f889dcfcd1"/>
+	<xl:altLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/c91631cc-fd98-4e5e-8ecc-3cd83ae6232a"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-2">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">abstention</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/fb2449d5-8e13-4a11-bf20-5600c24707f5"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-64">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">recouvrement</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<skos:related rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-47"/>
+	<ginco:TermeAssocie rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-47"/>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/cafa72b2-940f-4078-83d5-448555d0651c"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-9">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">arpentage</skos:prefLabel>
+	<skos:altLabel xml:lang="fr-fr">métrage</skos:altLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/8cfb35f3-88e0-49a2-8004-5cb03fa95ac1"/>
+	<xl:altLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/5d90c553-4839-4b1c-b644-f9870450898a"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-69">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">tarification</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/9c5d8547-514d-43ee-b1dc-d29f9b294992"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-27">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">contrôle fiscal</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/3c97f59d-b86a-4a4f-83df-48eba52d019f"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-35">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">dissolution</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/18c3be39-41bc-413c-becd-9d4acd197655"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-24">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">contrôle de gestion</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/ceab4b72-216e-4779-acba-43be2e575712"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-57">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">préparation budgétaire</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/34c3bc32-5f54-4763-aa02-0b218cf8ba7d"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-5">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">adjudication</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/95a7e57b-3b66-47ae-95b8-1c992a3cb2d3"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-12">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">assurance</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/abc9dea4-1602-468a-8592-efa442369504"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-46">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">garantie d'emprunt</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/338af358-5835-48c7-b9d8-2f54d35d7f39"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-49">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">immatriculation</skos:prefLabel>
+	<skos:altLabel xml:lang="fr-fr">francisation</skos:altLabel>
+	<skos:altLabel xml:lang="fr-fr">affiliation</skos:altLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<skos:scopeNote xml:lang="fr-fr">S'emploie pour toute sorte d'immatriculation : immatriculation
+			de voiture, inscription au registre du commerce...</skos:scopeNote>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/90802258-2585-4512-916c-9e1d186cdc55"/>
+	<xl:altLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/3bd03f55-8852-4942-9b73-27793e43b752"/>
+	<xl:altLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/dd77d881-51b9-4e94-a0c3-90bfdae075ee"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-34">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">destruction</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/2b83c99b-ad94-48f6-a3d4-f0f0626da0d2"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-54">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">numérisation</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/00b7044c-2e57-420f-967d-f26d2807ec86"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-61">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">protection</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<skos:scopeNote xml:lang="fr-fr">S'emploie pour les sites naturels, les sites archéologiques,
+			les monuments historiques, les antiquités et objets d'art, les archives privées, les
+			secteurs sauvegardés, les ZPPAUP.</skos:scopeNote>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/44c60db6-b24c-4230-a25a-3c88bf7da282"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-56">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">placement</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<skos:scopeNote xml:lang="fr-fr">S'emploie notamment à propos de l'emploi, de l'aide sociale à
+			l'enfance et des travailleurs handicapés, des personnes âgées et des malades
+			mentaux.</skos:scopeNote>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/1ed9116e-9130-4c15-a1bd-cc99091fafbc"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-32">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">dénomination</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<skos:scopeNote xml:lang="fr-fr">S'emploie pour la dénomination des noms de rues, de places, de
+			bâtiments...</skos:scopeNote>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/96e0bfd9-7172-4a37-91b1-c4ed6c118f68"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-66">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">réglementation</skos:prefLabel>
+	<skos:altLabel xml:lang="fr-fr">abrogation</skos:altLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/a1b9e982-7757-4cd9-a628-216444e6a342"/>
+	<xl:altLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/a7a912a5-b286-4c0f-9ef2-4b394bf85fca"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-15">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">cession</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/6ae4a370-9115-4d56-b301-0b10432b2af6"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-29">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">coopération</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/7fc5861b-f3ef-4d7a-b68c-72ecce03fe82"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-44">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">financement</skos:prefLabel>
+	<skos:altLabel xml:lang="fr-fr">dotation</skos:altLabel>
+	<skos:altLabel xml:lang="fr-fr">subvention</skos:altLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/8a311d1e-3ce0-46d8-aada-38f8effeaf2d"/>
+	<xl:altLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/fd33d768-8694-4dd5-b760-143082a51379"/>
+	<xl:altLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/997b9444-d7a1-45cd-8446-752b85230eef"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-22">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">contrôle</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/6de3b20e-b770-4e21-a5cb-3563a7a39602"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-11">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">assignation</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/c3e95c9f-b6a4-4361-98ff-1980bacd1d07"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-60">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">promotion</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/ee1368d2-628b-49f7-818b-5eac4c90d847"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-7">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">aménagement</skos:prefLabel>
+	<skos:altLabel xml:lang="fr-fr">rénovation</skos:altLabel>
+	<skos:altLabel xml:lang="fr-fr">extension</skos:altLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<skos:related rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-21"/>
+	<ginco:TermeAssocie rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-21"/>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/372f485d-a69f-4669-ad48-c1469d9b0317"/>
+	<xl:altLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/77b408d2-2ca4-4a5d-baaf-063d23c7f9d2"/>
+	<xl:altLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/ffbfccdc-ae49-45c8-b41c-a97c777a030a"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-37">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">enquête publique</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/0df2a025-9ed8-4288-9e7a-e0ab34fecbaa"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-18">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">communication</skos:prefLabel>
+	<skos:altLabel xml:lang="fr-fr">information</skos:altLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/d9df853b-2624-436a-a118-48fac0891ab3"/>
+	<xl:altLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/5ddfe557-a231-4173-9fac-3806f09ec17a"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-58">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">prévention</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/4f25f30f-6e45-4738-8267-fc21d435d415"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-3">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">acquisition</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/4a86e67e-8774-49b4-8740-4b3884aae986"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-14">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">caution</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/dea064c0-2802-4724-966a-0c8996d26301"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-41">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">évaluation</skos:prefLabel>
+	<skos:altLabel xml:lang="fr-fr">audit</skos:altLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/c04fb7cc-078b-4204-a375-d96e9939d3d0"/>
+	<xl:altLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/a3a28045-cf12-46df-8175-daf720ad7afe"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-52">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">inspection</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/2593f77c-cb53-4538-9ddc-3d2c4cca78a8"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-70">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">tutelle administrative</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/b8522f66-8cbc-4cbc-84e4-073b196efef8"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-30">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">coordination</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/0c9d0959-2fdc-403b-8db8-046696cfd104"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-13">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">autorisation</skos:prefLabel>
+	<skos:altLabel xml:lang="fr-fr">dérogation</skos:altLabel>
+	<skos:altLabel xml:lang="fr-fr">dispense</skos:altLabel>
+	<skos:altLabel xml:lang="fr-fr">interdiction</skos:altLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/685b9879-1ee6-4f6f-a4a5-42ee5c15c71c"/>
+	<xl:altLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/d56664fa-5796-4311-9a52-d413523c6bc5"/>
+	<xl:altLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/bf989eed-38a6-4636-b58b-4055ca7f090e"/>
+	<xl:altLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/ae8da8b6-7672-4c79-a745-2c34f534ea2f"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-47">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">gestion comptable</skos:prefLabel>
+	<skos:altLabel xml:lang="fr-fr">mandatement</skos:altLabel>
+	<skos:altLabel xml:lang="fr-fr">liquidation comptable</skos:altLabel>
+	<skos:altLabel xml:lang="fr-fr">apurement</skos:altLabel>
+	<skos:altLabel xml:lang="fr-fr">ordonnancement</skos:altLabel>
+	<skos:altLabel xml:lang="fr-fr">engagement</skos:altLabel>
+	<skos:altLabel xml:lang="fr-fr">paiement</skos:altLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<skos:related rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-64"/>
+	<ginco:TermeAssocie rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-64"/>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/0b419107-ee4c-472a-af32-0c59f52bbf58"/>
+	<xl:altLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/3cce3ba9-6b56-4295-9fc1-4c8921148a08"/>
+	<xl:altLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/b4c3e851-34f2-44d6-a93f-fbf277551bcb"/>
+	<xl:altLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/62486468-3f31-4040-8de9-e0e88075c814"/>
+	<xl:altLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/b18697c9-ce6e-4796-8add-df471e3e00f5"/>
+	<xl:altLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/a64ef3f4-b702-4c86-ad71-954500613b4b"/>
+	<xl:altLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/5493d3ec-d027-4236-aa15-1000808b34be"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-8">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">appel d'offres</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/8b77bb90-9dd8-40db-9926-f9063d53680a"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-25">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">contrôle de légalité</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/92165ac4-f65b-44b7-ad5e-3338cd0c18aa"/>
+</skos:Concept>
+<skos:Concept rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-36">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<skos:inScheme rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2"/>
+	<skos:prefLabel xml:lang="fr-fr">enquête</skos:prefLabel>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:prefLabel rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/ad6a20a0-a4ba-4a1e-ba45-e9a6b17b71d2"/>
+</skos:Concept>
+<owl:ObjectProperty rdf:about="http://data.culture.fr/thesaurus/ginco/ns/causeEffet">
+	<rdfs:label>causeEffet</rdfs:label>
+	<rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#related"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://data.culture.fr/thesaurus/ginco/ns/actionProduction">
+	<rdfs:label>actionProduction</rdfs:label>
+	<rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#related"/>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://data.culture.fr/thesaurus/ginco/ns/broaderGeneric">
+	<rdfs:label>broaderGeneric</rdfs:label>
+	<rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#broader"/>
+	<owl:inverseOf>
+		<owl:ObjectProperty rdf:about="http://data.culture.fr/thesaurus/ginco/ns/narrowerGeneric">
+			<rdfs:label>narrowerGeneric</rdfs:label>
+			<rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#narrower"/>
+			<owl:inverseOf rdf:resource="http://data.culture.fr/thesaurus/ginco/ns/broaderGeneric"/>
+		</owl:ObjectProperty>
+	</owl:inverseOf>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://data.culture.fr/thesaurus/ginco/ns/broaderPartitive">
+	<rdfs:label>broaderPartitive</rdfs:label>
+	<rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#broader"/>
+	<owl:inverseOf>
+		<owl:ObjectProperty rdf:about="http://data.culture.fr/thesaurus/ginco/ns/narrowerPartitive">
+			<rdfs:label>narrowerPartitive</rdfs:label>
+			<rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#narrower"/>
+			<owl:inverseOf rdf:resource="http://data.culture.fr/thesaurus/ginco/ns/broaderPartitive"/>
+		</owl:ObjectProperty>
+	</owl:inverseOf>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://data.culture.fr/thesaurus/ginco/ns/narrowerInstantive">
+	<rdfs:label>narrowerInstantive</rdfs:label>
+	<rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#narrower"/>
+	<owl:inverseOf>
+		<owl:ObjectProperty rdf:about="http://data.culture.fr/thesaurus/ginco/ns/broaderInstantive">
+			<rdfs:label>broaderInstantive</rdfs:label>
+			<rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#broader"/>
+			<owl:inverseOf rdf:resource="http://data.culture.fr/thesaurus/ginco/ns/narrowerInstantive"/>
+		</owl:ObjectProperty>
+	</owl:inverseOf>
+</owl:ObjectProperty>
+<owl:ObjectProperty rdf:about="http://data.culture.fr/thesaurus/ginco/ns/TermeAssocie">
+	<rdfs:label>TermeAssocie</rdfs:label>
+	<rdfs:subPropertyOf rdf:resource="http://www.w3.org/2004/02/skos/core#related"/>
+</owl:ObjectProperty>
+<owl:DatatypeProperty rdf:about="http://data.culture.fr/thesaurus/ginco/ns/CustomConceptAttribute">
+	<rdfs:label>CustomConceptAttribute</rdfs:label>
+</owl:DatatypeProperty>
+<owl:DatatypeProperty rdf:about="http://purl.org/iso25964/skos-thes#status">
+	<rdfs:label>status</rdfs:label>
+</owl:DatatypeProperty>
+<skos:ConceptScheme rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/T2">
+	<dc:title>Liste d'autorité Actions pour l'indexation des archives locales</dc:title>
+	<dc:creator rdf:nodeID="node190ksog4sx4"/>
+	<dc:contributor></dc:contributor>
+	<dc:publisher>Ministère de la culture et de la communication</dc:publisher>
+	<dc:description>La liste d'autorité "Actions" réunit des descripteurs désignant des actions, des modes d'intervention ou des procédures. Ces descripteurs ne sont pas par eux-mêmes des termes d'indexation mais doivent être associés à un ou 	plusieurs descripteurs du thésaurus-matières, si le contexte documentaire l'exige.</dc:description>
+	<dct:modified>2014-03-19T11:40:43+0100</dct:modified>
+	<dc:type>Liste contrôlée</dc:type>
+	<dc:rights>CC-BY-SA</dc:rights>
+	<dc:subject></dc:subject>
+	<dc:coverage></dc:coverage>
+	<dc:language>fr-FR</dc:language>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-38"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-17"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-42"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-40"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-62"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-20"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-53"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-65"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-51"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-31"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-59"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-28"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-43"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-68"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-23"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-16"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-39"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-1"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-50"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-21"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-45"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-6"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-19"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-4"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-67"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-10"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-63"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-26"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-33"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-71"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-55"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-48"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-2"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-64"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-9"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-69"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-27"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-35"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-24"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-57"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-5"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-12"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-46"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-49"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-34"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-54"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-61"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-56"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-32"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-66"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-15"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-29"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-44"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-22"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-11"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-60"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-7"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-37"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-18"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-58"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-3"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-14"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-41"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-52"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-70"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-30"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-13"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-47"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-8"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-25"/>
+	<skos:hasTopConcept rdf:resource="http://data.culture.fr/thesaurus/resource/ark:/67717/T2-36"/>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<modified xmlns="http://purl.org/dc/terms/http://purl.org/dc/terms/">2014-09-03T13:32:18.685+02:00</modified>
+	<dc:relation></dc:relation>
+	<dc:source></dc:source>
+	<dct:issued>Publication</dct:issued>
+</skos:ConceptScheme>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/e7ef2552-cfa6-48d3-9634-1c2467cb9fc7">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">classement</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/17ad83a7-c507-46fc-ac10-71f911138db6">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">contrôle de sécurité</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/a3528038-a043-4016-9651-a57cc9227484">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">abolition</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/dc38a633-6cf2-43c3-b71d-c84f933ff92c">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">recensement</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/87029ad9-6eeb-48ba-aeae-cfdd47689b32">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">exécution budgétaire</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/4efe1529-7871-4b6d-9bc5-6654a13806ef">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">programmation</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:SimpleNonPreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/5d90c553-4839-4b1c-b644-f9870450898a">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">métrage</xl:literalForm>
+</iso-thes:SimpleNonPreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/8cfb35f3-88e0-49a2-8004-5cb03fa95ac1">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">arpentage</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/abc9dea4-1602-468a-8592-efa442369504">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">assurance</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/96e0bfd9-7172-4a37-91b1-c4ed6c118f68">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">dénomination</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/338af358-5835-48c7-b9d8-2f54d35d7f39">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">garantie d'emprunt</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/1ed9116e-9130-4c15-a1bd-cc99091fafbc">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">placement</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/bd08e632-dcdf-4bde-9c23-c77efbec39b0">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">équipement matériel</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:SimpleNonPreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/802ce071-2274-4761-9f1a-9d59e0fa7f30">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">habillement</xl:literalForm>
+</iso-thes:SimpleNonPreferredTerm>
+<iso-thes:SimpleNonPreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/435f0248-8fb6-4f61-8906-791e0209741d">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">armement</xl:literalForm>
+</iso-thes:SimpleNonPreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/897f48e0-9642-424a-9712-adef969b1de8">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">construction</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:SimpleNonPreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/3bd03f55-8852-4942-9b73-27793e43b752">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">francisation</xl:literalForm>
+</iso-thes:SimpleNonPreferredTerm>
+<iso-thes:SimpleNonPreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/dd77d881-51b9-4e94-a0c3-90bfdae075ee">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">affiliation</xl:literalForm>
+</iso-thes:SimpleNonPreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/90802258-2585-4512-916c-9e1d186cdc55">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">immatriculation</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/2593f77c-cb53-4538-9ddc-3d2c4cca78a8">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">inspection</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/95a7e57b-3b66-47ae-95b8-1c992a3cb2d3">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">adjudication</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:SimpleNonPreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/a7a912a5-b286-4c0f-9ef2-4b394bf85fca">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">abrogation</xl:literalForm>
+</iso-thes:SimpleNonPreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/a1b9e982-7757-4cd9-a628-216444e6a342">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">réglementation</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/18c3be39-41bc-413c-becd-9d4acd197655">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">dissolution</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/92165ac4-f65b-44b7-ad5e-3338cd0c18aa">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">contrôle de légalité</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/c3e95c9f-b6a4-4361-98ff-1980bacd1d07">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">assignation</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/44c60db6-b24c-4230-a25a-3c88bf7da282">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">protection</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/6ae4a370-9115-4d56-b301-0b10432b2af6">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">cession</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:SimpleNonPreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/a3a28045-cf12-46df-8175-daf720ad7afe">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">audit</xl:literalForm>
+</iso-thes:SimpleNonPreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/c04fb7cc-078b-4204-a375-d96e9939d3d0">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">évaluation</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/e34f5fdd-a1c9-4c07-8cbd-6ec4c019a0de">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">fonctionnement</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/7fc5861b-f3ef-4d7a-b68c-72ecce03fe82">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">coopération</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/150a7506-9a86-45bc-902c-5e3464797d10">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">délégation</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/6de3b20e-b770-4e21-a5cb-3563a7a39602">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">contrôle</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/8b77bb90-9dd8-40db-9926-f9063d53680a">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">appel d'offres</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/b8522f66-8cbc-4cbc-84e4-073b196efef8">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">tutelle administrative</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/0290b8d6-f7f6-439b-ac15-d7d427adfab8">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">informatisation</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/79beecdf-8bdc-4fbf-aa62-4a6f8dbcac0d">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">concession</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/7a418f13-0905-4a02-8fb4-33b8540c6f62">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">recrutement</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/67bb9e98-c970-4035-b474-faae9513197a">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">adhésion</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/9c5d8547-514d-43ee-b1dc-d29f9b294992">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">tarification</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/ad6a20a0-a4ba-4a1e-ba45-e9a6b17b71d2">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">enquête</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:SimpleNonPreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/63e57cee-4b60-4eb7-b10d-a7a35cb010cf">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">modernisation</xl:literalForm>
+</iso-thes:SimpleNonPreferredTerm>
+<iso-thes:SimpleNonPreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/04ddc6ce-74c3-4693-b6ec-70d5b52ea9bd">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">réforme administrative</xl:literalForm>
+</iso-thes:SimpleNonPreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/d336b00d-a173-4e0d-a16d-1c38b6c1ce80">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">organisation</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/4a86e67e-8774-49b4-8740-4b3884aae986">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">acquisition</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/ee1368d2-628b-49f7-818b-5eac4c90d847">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">promotion</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/0c9d0959-2fdc-403b-8db8-046696cfd104">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">coordination</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/8a311d1e-3ce0-46d8-aada-38f8effeaf2d">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">financement</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:SimpleNonPreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/fd33d768-8694-4dd5-b760-143082a51379">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">dotation</xl:literalForm>
+</iso-thes:SimpleNonPreferredTerm>
+<iso-thes:SimpleNonPreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/997b9444-d7a1-45cd-8446-752b85230eef">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">subvention</xl:literalForm>
+</iso-thes:SimpleNonPreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/ceab4b72-216e-4779-acba-43be2e575712">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">contrôle de gestion</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/2b83c99b-ad94-48f6-a3d4-f0f0626da0d2">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">destruction</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:SimpleNonPreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/5ddfe557-a231-4173-9fac-3806f09ec17a">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">information</xl:literalForm>
+</iso-thes:SimpleNonPreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/d9df853b-2624-436a-a118-48fac0891ab3">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">communication</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/ba514938-bb47-49cc-89a2-7d22b0f6f4df">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">évacuation</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/f9d1c65e-9f12-4e11-9e2c-e0c9fa61252d">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">contrôle sanitaire</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/dea064c0-2802-4724-966a-0c8996d26301">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">caution</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/92307a1b-8422-438f-b655-65da817cd711">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">indemnisation</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/00b7044c-2e57-420f-967d-f26d2807ec86">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">numérisation</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/4f25f30f-6e45-4738-8267-fc21d435d415">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">prévention</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:SimpleNonPreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/3cce3ba9-6b56-4295-9fc1-4c8921148a08">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">liquidation comptable</xl:literalForm>
+</iso-thes:SimpleNonPreferredTerm>
+<iso-thes:SimpleNonPreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/b4c3e851-34f2-44d6-a93f-fbf277551bcb">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">ordonnancement</xl:literalForm>
+</iso-thes:SimpleNonPreferredTerm>
+<iso-thes:SimpleNonPreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/62486468-3f31-4040-8de9-e0e88075c814">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">mandatement</xl:literalForm>
+</iso-thes:SimpleNonPreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/0b419107-ee4c-472a-af32-0c59f52bbf58">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">gestion comptable</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:SimpleNonPreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/b18697c9-ce6e-4796-8add-df471e3e00f5">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">engagement</xl:literalForm>
+</iso-thes:SimpleNonPreferredTerm>
+<iso-thes:SimpleNonPreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/a64ef3f4-b702-4c86-ad71-954500613b4b">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">paiement</xl:literalForm>
+</iso-thes:SimpleNonPreferredTerm>
+<iso-thes:SimpleNonPreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/5493d3ec-d027-4236-aa15-1000808b34be">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">apurement</xl:literalForm>
+</iso-thes:SimpleNonPreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/0df2a025-9ed8-4288-9e7a-e0ab34fecbaa">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">enquête publique</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/146f1c85-9c79-44f5-868e-fe61944ff53a">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">restauration</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/7df9c043-8fc7-4cf5-9713-f4a3cb86859b">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">tutelle financière</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:SimpleNonPreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/77b408d2-2ca4-4a5d-baaf-063d23c7f9d2">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">rénovation</xl:literalForm>
+</iso-thes:SimpleNonPreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/372f485d-a69f-4669-ad48-c1469d9b0317">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">aménagement</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:SimpleNonPreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/ffbfccdc-ae49-45c8-b41c-a97c777a030a">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">extension</xl:literalForm>
+</iso-thes:SimpleNonPreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/cafa72b2-940f-4078-83d5-448555d0651c">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">recouvrement</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/fb2449d5-8e13-4a11-bf20-5600c24707f5">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">abstention</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/f7a76e19-3f69-46c6-ae86-f45af51728f2">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">commissionnement</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/a0427c1f-7988-40d0-aef5-8a8c51bb0e62">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">exploitation commerciale</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/05d18358-ecec-4d28-bb87-605f872c4608">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">contrôle budgétaire</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/3c97f59d-b86a-4a4f-83df-48eba52d019f">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">contrôle fiscal</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/02a4addf-847a-4dd5-81aa-1cee93bf5a19">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">désignation</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:SimpleNonPreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/d56664fa-5796-4311-9a52-d413523c6bc5">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">dispense</xl:literalForm>
+</iso-thes:SimpleNonPreferredTerm>
+<iso-thes:SimpleNonPreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/bf989eed-38a6-4636-b58b-4055ca7f090e">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">interdiction</xl:literalForm>
+</iso-thes:SimpleNonPreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/685b9879-1ee6-4f6f-a4a5-42ee5c15c71c">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">autorisation</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:SimpleNonPreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/ae8da8b6-7672-4c79-a745-2c34f534ea2f">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">dérogation</xl:literalForm>
+</iso-thes:SimpleNonPreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/ea97a89b-e77a-4c4e-bb12-dec8006d9f5a">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">location</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/34c3bc32-5f54-4763-aa02-0b218cf8ba7d">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">préparation budgétaire</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/b9f0a19c-50cd-4142-98ab-dba7ab9ee1c9">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">gestion du personnel</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:SimpleNonPreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/ac71eed1-46f0-4de2-9a4c-06d84353b3a5">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">mise en disponibilité</xl:literalForm>
+</iso-thes:SimpleNonPreferredTerm>
+<iso-thes:SimpleNonPreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/76e042ed-00bf-4298-8a03-02916f51b411">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">intégration</xl:literalForm>
+</iso-thes:SimpleNonPreferredTerm>
+<iso-thes:SimpleNonPreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/c37735ee-38a9-476d-85a0-d98ffd16a35f">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">destitution</xl:literalForm>
+</iso-thes:SimpleNonPreferredTerm>
+<iso-thes:SimpleNonPreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/09932ab9-d93e-48ee-9f4f-be31eafeaadc">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">affectation</xl:literalForm>
+</iso-thes:SimpleNonPreferredTerm>
+<iso-thes:SimpleNonPreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/c2ee14ec-ff36-4c9f-a081-bfd2d68cc688">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">suspension</xl:literalForm>
+</iso-thes:SimpleNonPreferredTerm>
+<iso-thes:SimpleNonPreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/ef113b7e-05b5-4d14-8e38-74d84c2ea338">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">mise à la retraite</xl:literalForm>
+</iso-thes:SimpleNonPreferredTerm>
+<iso-thes:SimpleNonPreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/c6fcf8c8-d1bc-4e70-924e-de55b3e56f8a">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">détachement</xl:literalForm>
+</iso-thes:SimpleNonPreferredTerm>
+<iso-thes:SimpleNonPreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/11dc59f3-babb-43e1-9bea-eb2d01a16741">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">nomination</xl:literalForm>
+</iso-thes:SimpleNonPreferredTerm>
+<iso-thes:SimpleNonPreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/9b4601b8-d092-4b5f-ab6e-a5da55bbe344">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">promotion professionnelle</xl:literalForm>
+</iso-thes:SimpleNonPreferredTerm>
+<iso-thes:SimpleNonPreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/717d3709-37ca-4cc8-8ee7-f907a1a96ebe">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">licenciement</xl:literalForm>
+</iso-thes:SimpleNonPreferredTerm>
+<iso-thes:SimpleNonPreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/7491e218-d53d-456a-92c2-5cfc0ad356be">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">mise à disposition</xl:literalForm>
+</iso-thes:SimpleNonPreferredTerm>
+<iso-thes:SimpleNonPreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/8c6378d9-d4e0-4b3f-9d75-e7a3f84727db">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">titularisation</xl:literalForm>
+</iso-thes:SimpleNonPreferredTerm>
+<iso-thes:SimpleNonPreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/92c5a14c-ef9a-47aa-be36-99f889dcfcd1">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">notation</xl:literalForm>
+</iso-thes:SimpleNonPreferredTerm>
+<iso-thes:SimpleNonPreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/c91631cc-fd98-4e5e-8ecc-3cd83ae6232a">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">avancement</xl:literalForm>
+</iso-thes:SimpleNonPreferredTerm>
+<iso-thes:SimpleNonPreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/2f005f9a-9cb5-48ba-bdd3-5748a429ce27">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">arbitrage</xl:literalForm>
+</iso-thes:SimpleNonPreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/33094914-62ed-493f-adf6-e0950c8f8a51">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">conciliation</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:SimpleNonPreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/6042c58f-bb26-4f5a-89af-37712037fa5d">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">médiation</xl:literalForm>
+</iso-thes:SimpleNonPreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/ca4e93bd-1e5c-463c-a9c7-6f6381c72a77">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">réquisition</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:SimpleNonPreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/572555be-08cb-41e2-8a5b-81f952721906">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">évaluation fiscale</xl:literalForm>
+</iso-thes:SimpleNonPreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/28250f78-a8f3-4c91-9579-159c6b670a6d">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">assiette</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/c6def73d-4101-46da-9a8e-105b388b4dae">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">entretien</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/8fff5407-db48-45dd-ae46-4f98c9492a69">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">recours hiérarchique</xl:literalForm>
+</iso-thes:PreferredTerm>
+<iso-thes:SimpleNonPreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/6c77f778-97f7-4567-a21f-488f34947c8e">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">homologation</xl:literalForm>
+</iso-thes:SimpleNonPreferredTerm>
+<iso-thes:SimpleNonPreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/62566ad7-e0f8-47d5-9ac3-cd0df6ed16d1">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">approbation</xl:literalForm>
+</iso-thes:SimpleNonPreferredTerm>
+<iso-thes:SimpleNonPreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/c17b5ed7-cfc2-4a58-9703-05cd97837313">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">labellisation</xl:literalForm>
+</iso-thes:SimpleNonPreferredTerm>
+<iso-thes:SimpleNonPreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/cef9ad4d-0dde-41f0-a734-2a5cbb510b11">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">habilitation</xl:literalForm>
+</iso-thes:SimpleNonPreferredTerm>
+<iso-thes:PreferredTerm rdf:about="http://data.culture.fr/thesaurus/resource/ark:/67717/323f39b1-e408-4453-b2f5-17e4e59ea61d">
+	<dct:modified>2011-04-08T00:00:00+0200</dct:modified>
+	<dct:created>2013-07-05T10:06:02+0200</dct:created>
+	<iso-thes:status>1</iso-thes:status>
+	<xl:literalForm xml:lang="fr-fr">agrément</xl:literalForm>
+</iso-thes:PreferredTerm>
+<foaf:Organization rdf:nodeID="node190ksog4sx4">
+	<foaf:name>Service interministériel des Archives de France</foaf:name>
+	<foaf:homepage>http://www.archivesdefrance.culture.gouv.fr</foaf:homepage>
+	<foaf:mbox>archives-de-france@culture.gouv.fr</foaf:mbox>
+</foaf:Organization>
+
+</rdf:RDF>

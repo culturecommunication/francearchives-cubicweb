@@ -1,0 +1,517 @@
+<?xml version="1.0"?>
+<!DOCTYPE ead PUBLIC "+//ISBN 1-931666-00-8//DTD ead.dtd (Encoded Archival Description (EAD) Version 2002)//EN" "ead.dtd">
+<ead>
+    <eadheader findaidstatus="unverified-partial-draft">
+        <eadid> eadid: A required subelement of eadheader that designates a unique code for a
+            particular EAD finding aid document. Two of the attributes, COUNTRYCODE and
+            MAINAGENCYCODE, are required to make the eadid compliant with ISAD(G) element 3.1.1.
+            MAINAGENCYCODE provides the ISO 15511 code for the institution that maintains the
+            finding aid (which may not be the same as the institution that is the custodian of the
+            materials described). COUNTRYCODE supplies the ISO 3166-1 code for the country of the
+            maintenance agency. In addition to these two attributes, it is recommended that
+            repositories also use at least one of the following attributes: URL, PUBLICID, or
+            IDENTIFIER to make the eadid globally unique. PUBLICID should be a Formal Public
+            Identifier, URL an absolute or relative address, and IDENTIFIER a machine-readable
+            unique identifier for the finding aid file. (The proper syntax for PUBLICID is defined
+            in ISO/IEC 9070:1991 Information technology -- SGML support facilities -- Registration
+            procedures for public text owner identifiers.</eadid>
+        <filedesc>
+            <titlestmt>
+                <titleproper>titleproper: The name of the finding aid or finding aid
+                    series.</titleproper>
+                <subtitle>subtitle= sous-titre</subtitle>
+                <!-- non affiché dans IHM -->
+                <author>author : SIAF</author>
+                <!-- non affiché dans IHM -->
+
+            </titlestmt>
+            <editionstmt>
+                <edition>2nd ed.</edition>
+                <!-- non affiché dans IHM -->
+                <p>editionstmt = This edition reflects substantial additions to the collection in
+                    1994.</p>
+                <!-- pas affiché -->
+            </editionstmt>
+            <revisiondesc>
+                <change>
+                    <date normal="19970505">May 5, 1997</date>
+                    <item>This electronic finding aid was updated to current markup
+                        standards by Sarah Taylor using a perl script. Updates included: eadheader,
+                        eadid, arrangement of did elements and their labels.</item>
+                </change> 
+            </revisiondesc>
+            <publicationstmt>
+                <date>2018</date>
+                <publisher>Siaf</publisher>
+                <p>
+                    <address>
+                        <!-- non affiché dans IHM -->
+                        <addressline>Paris</addressline>
+                        <addressline>56 francs bourgeois</addressline>
+                    </address>
+                </p>
+                
+            </publicationstmt>
+        
+        </filedesc>
+        <profiledesc>
+            <!-- non affiché dans IHM -->
+            <creation>Instrument de recherche créé et encodé pour test par cmonnier</creation>
+            <langusage>Français</langusage>
+            <descrules>Cet instrument de recherche a été établi selon la norme ISAD/G et encodé en
+                XML/EAD avec Oxygen.</descrules>
+        </profiledesc>
+    </eadheader>
+    <frontmatter>
+        <!-- page de couverture. Non affiché dans IHM -->
+        <titlepage>
+            <titleproper> (frontmatter/titlepage/titleproper) Inventory of The Arequipa Sanatorium
+                Records, <date>1911-1958</date></titleproper>
+            <subtitle>subtitle <ptr href="https://www.loc.gov/ead/tglib/elements/ptr.html"
+                /></subtitle>
+            <num type="Collection number:">BANC MSS 92/894 c</num>
+            <publisher> publisher: The Bancroft Library<lb/>University of California,
+                Berkeley<lb/>Berkeley, California </publisher>
+            <list type="deflist">
+                <defitem>
+                    <label>Processed by:</label>
+                    <item>Lynn Downey</item>
+                </defitem>
+                <defitem>
+                    <label>Completed by:</label>
+                    <item>Mary Morganti and Katherine Bryant</item>
+                </defitem>
+                <defitem>
+                    <label>Date Completed:</label>
+                    <item><date>May 1994</date></item>
+                </defitem>
+                <defitem>
+                    <label>Encoded by:</label>
+                    <item>Gabriela A. Montoya</item>
+                </defitem>
+            </list>
+            <p> 1996 The Regents of the University of California. All rights reserved.</p>
+        </titlepage>
+        <!-- page de couverture fin -->
+        <div>
+            <p>frontmatter: A wrapper element that bundles prefatory text found before the start of
+                the Archival Description </p>
+        </div>
+    </frontmatter>
+    <archdesc level="otherlevel" otherlevel="partie-de-fonds" id="a011341578589h9PgJh">
+        <did>
+            <unitid></unitid>
+            <unittitle></unittitle><!-- non affiché dans IHM -->
+            <unitdate normal="1867-01-01/1909-12-31" type="inclusive">1867-1909</unitdate>
+            <origination>origination: Information about the individual or organization responsible
+                for the creation, accumulation, or assembly of the described materials before their
+                incorporation into an archival repository. </origination>
+            <repository>repository = The institution or agency responsible for providing
+                intellectual access to the materials being described</repository>
+            <physdesc>physdesc = A wrapper element for bundling information about the appearance or
+                construction of the described materials, such as their dimensions, a count of their
+                quantity or statement about the space they occupy, and terms describing their genre,
+                form, or function, as well as any other aspects of their appearance, such as color,
+                substance, style, and technique or method of creation. <dimensions label="label dimmensions">dimensions
+                    30x50</dimensions><!-- afficher label ou bien "dimmensions : " -->
+                <physfacet label="label physfacet">physfacet = Paper</physfacet><!-- afficher le label ou le type -->
+                <physfacet type="ruling">Ruled in red ink</physfacet>
+                <physfacet type="watermarks">Briquet 1234</physfacet>
+                <physfacet type="binding">Bound in 19th century red leather</physfacet>
+                <extent label="label extent">extent</extent>
+            </physdesc>
+            <physloc> physloc = Information identifying the place where the described materials are
+                stored, such as the name or number of the building, room, stack, shelf, or other
+                tangible area. </physloc>
+            <abstract>
+                <ptr href="https://www.loc.gov/ead/tglib/elements/ptr.html"/>Abstract : Four
+                manuscript survey maps and one plat map depicting areas of Orange County and
+                attributed to the noted surveyor and judge Richard Egan. One map is dated 1878 and
+                1879 by Egan. The other maps are undated and unsigned but it is likely that he drew
+                them during these years. These maps primarily depict subdivisions of non-rancho
+                tracts of land occupying what is now Orange County, with the addition of some
+                topographical details.</abstract>
+            <dao linktype="simple" href="http://imgs.ud.edu/archives/image/f12001_1.jpg"
+                actuate="onrequest" show="new"/>
+            <daogrp linktype="extended">
+                <daodesc>
+                    <p>daogrp, daodesc, Sample digitized image from this file: John Smith graduation
+                        portrait, <date normal="18950528">28 May 1895</date>.</p>
+                </daodesc>
+                <resource linktype="resource" label="start"/>
+                <daoloc/>
+
+            </daogrp>
+        </did>
+        <note><!-- non affiché dans IHM -->
+            <p>For information about Prints and Photographs Division collections and services, see
+                the Prints and Photographs Division's Reading Room Home Page: <extptr
+                    actuate="onrequest"
+                    href="https://francearchives.fr/fr/search?es_publisher=Service%20interminist%C3%A9riel%20des%20archives%20de%20France%20%28SIAF%29"
+                />
+            </p>
+        </note>
+        <bioghist>
+            <head> bioghist (head) </head>
+            <p>bioghist: A concise essay or chronology that places the archival materials in context
+                by providing information about their creator(s). Includes significant information
+                about the life of an individual or family, or the administrative history of a
+                corporate body.</p>
+            <chronlist>
+                <chronitem>
+                    <date normal="18401012">1840</date>
+                    <event>Born Helena Opid in Krakow, Poland on October 12th.</event>
+                </chronitem>
+                <chronitem>
+                    <date normal="1861">1861</date>
+                    <event>Made stage debut as Helena Modrzejewska in charity fair production of
+                            <title>The White Camellia</title>, in Bochnia, Poland.</event>
+                </chronitem>
+            </chronlist>
+
+        </bioghist>
+        <scopecontent encodinganalog="summary">
+            <head> scopcontent (head)</head>
+            <p><abbr expan="Autograph Letter Signed">abbr ALS</abbr> <!-- ajouter un espace après -->
+                A prose statement summarizing
+                the range and topical coverage of the described materials, often mentioning the form
+                and arrangement of the materials and naming significant organizations, individuals,
+                events, places, and subjects represented. </p>
+        </scopecontent>
+        <arrangement>
+            <head>arrangement (head)</head>
+            <p>Information on how the described materials have been subdivided into smaller units,
+                e.g., record groups into series, identifying the logical or physical groupings
+                within a hierarchical structure. Can also be used to express the filing sequence of
+                the described materials, such as the principle characteristics of the internal
+                structure, or the physical or logical ordering of materials, including alphabetical,
+                chronological, geographical, office of origin, and other schemes. Identifying
+                logical groupings and the arrangement pattern may enhance retrieval by
+                researchers.</p>
+        </arrangement>
+        <acqinfo>
+            <head>acquinfo: Acquisition Information (head)</head>
+            <p>The immediate source of the materials being described and the circumstances under
+                which they were received. Includes donations, transfers, purchases, and
+                deposits.</p>
+        </acqinfo>
+        <scopecontent>
+            <head>scopecontent: Scope and Content (head)</head>
+            <p>A prose statement summarizing the range and topical coverage of the described
+                materials, often mentioning the form and arrangement of the materials and naming
+                significant organizations, individuals, events, places, and subjects
+                represented.</p>
+
+        </scopecontent>
+        <accruals>
+            <p>accruals: Information about anticipated additions to the materials being described.
+                Can indicate quantity and frequency. Can also be used to indicate that no additions
+                are expected.</p>
+        </accruals>
+        <appraisal>
+            <p> appraisal: (critère de sélection) Information about the process of determining the
+                archival value and thus the disposition of records based upon their current
+                administrative, legal, and fiscal use; their evidential, intrinsic, and
+                informational value; their arrangement and condition; and their relationship to
+                other records.</p>
+        </appraisal>
+        <acqinfo>
+            <p>acquinfo (Acquisition Information) : The immediate source of the materials being
+                described and the circumstances under which they were received. Includes donations,
+                transfers, purchases, and deposits.</p>
+
+        </acqinfo>
+        <custodhist>
+            <p>Information about the chain of ownership of the materials being described, before
+                they reached the immediate source of acquisition. Both physical possession and
+                intellectual ownership can be described, providing details of changes of ownership
+                and/or custody that may be significant in terms of authority, integrity, and
+                interpretation.</p>
+        </custodhist>
+
+        <accessrestrict>
+            <p>accessrestrict: Information about conditions that affect the availability of the
+                materials being described. May indicate the need for an appointment or the nature of
+                restrictions imposed by the donor, legal statute, repository, or other agency. May
+                also indicate the lack of restrictions.</p>
+            <legalstatus>legalstatus: The statutorily-defined status of the materials being
+                described in the encoded finding aid, as, for example, defined by the Public Records
+                Act of 1958 in the United Kingdom. </legalstatus>
+        </accessrestrict>
+        <userestrict>
+            <p>userestrict: Information about conditions that affect use of the described materials
+                after access has been granted. May indicate limitations, regulations, or special
+                procedures imposed by a repository, donor, legal statute, or other agency regarding
+                reproduction, publication, or quotation of the described materials. May also
+                indicate the absence of restrictions, such as when copyright or literary rights have
+                been dedicated to the public. Do not confuse with Conditions Governing Access
+                accessrestrict which designates information about conditions affecting the
+                availability of the described materials. </p>
+
+        </userestrict>
+        <otherfindaid>
+            <p>Information about additional or alternative guides to the described material, such as
+                card files, dealers' inventories, or lists generated by the creator or compiler of
+                the materials. It is used to indicate the existence of additional finding aids; it
+                is not designed to encode the content of those guides. </p>
+
+            <bibref>The Society has published an expanded guide to this collection: <title>Guide to
+                    the Records of the American Crystal Sugar Company. </title> Compiled by
+                    <persname role="author">David Carmichael; </persname>assisted by <persname
+                    role="author">Lydia A. Lucas </persname>and <persname role="author">Marion E.
+                    Matters. </persname>St. Paul. Division of Archives and Manuscripts. Minnesota
+                Historical Society. 1985. </bibref>
+
+        </otherfindaid>
+        <separatedmaterial>
+            <head>separatedmaterial (head)</head>
+            <p>Information about materials that are associated by provenance to the described
+                materials but that have been physically separated or removed. Items may be separated
+                for various reasons, including the dispersal of special formats to more appropriate
+                custodial units; the outright destruction of duplicate or nonessential material; and
+                the deliberate or unintentional scattering of fonds among different repositories.
+            </p>
+        </separatedmaterial>
+        <relatedmaterial>
+            <head>relatedmaterial (head)</head>
+            <p>Information about materials that are not physically or logically included in the
+                material described in the finding aid but that may be of use to a reader because of
+                an association to the described materials. Materials designated by this element are
+                not related to the described material by provenance, accumulation, or use. </p>
+            <archref><origination><persname>Wigglethorpe, Franklin.</persname></origination>
+                <unittitle>Franklin Wigglethorpe Papers, <unitdate type="inclusive"
+                        >1782-1809.</unitdate></unittitle>
+                <unitid>MSS 00143</unitid>
+            </archref>
+        </relatedmaterial>
+        <bibliography encodinganalog="3.5.4">
+            <head>bibliography (head)</head>
+            <p>Citations to works that are based on, about, or of special value when using the
+                materials being described, or works in which a citation to or brief description of
+                the materials is available. </p>
+            <p><bibref><title render="italic">Affiches americaines</title>. San Domingo: Imprimerie
+                    royale du Cap, 1782. Nos. 30, 35.</bibref></p>
+            <bibref>Ardouin, Charles Nicholas Celigny. <title render="italic">Essais sur l'histoire
+                    d'Haiti</title>. Port-au-Prince, 1865.</bibref>
+            <bibref>Bastien, Remy. <title render="italic">Anthologie du folklore haitien</title>,
+                    <title render="doublequote">Proverbes</title>. Mexico, 1946. pp.83-91.</bibref>
+
+        </bibliography>
+        <odd><!-- non affiché dans IHM -->
+            <list type="simple">
+                <item>odd. item. Department of Economic Affairs: Industrial Policy Group: Registered
+                    Files (1-IG and 2-IG Series) <ref actuate="onrequest" show="new">EW 26</ref>
+                </item>
+                <item>Department of Economic Affairs: Industrial Division and Industrial Policy
+                    Division: Registered Files (IA Series) <ref actuate="onrequest" show="new">EW
+                        27</ref>
+                </item>
+            </list>
+        </odd>
+
+        <dsc>
+            <c id="a011497973827MCtiYb">
+                <did>
+                    <unitid></unitid>
+                    <unittitle></unittitle>
+                    <unitdate normal="1458-01-01/1992-12-31">1458-1992</unitdate>
+                    <physdesc> physdesc : A wrapper element for bundling information about the
+                        appearance or construction of the described materials, such as their
+                        dimensions, a count of their quantity or statement about the space they
+                        occupy, and terms describing their genre, form, or function, as well as any
+                        other aspects of their appearance, such as color, substance, style, and
+                        technique or method of creation.
+                        <extent label="label extent">extent = information about the
+                            quantity of the materials being described or an expression of the
+                            physical space they occupy.</extent>
+                        <dimensions>dimensions: for information about the size of the materials
+                            being described; usually includes numerical data. Measurements may be
+                            expressed in any convenient unit.</dimensions>
+                        <expan>expan: A generic element to designate the full form of a word that
+                            often appears as an abbreviation or acronym. Use the ABBR attribute to o
+                            supply the abbreviated form for indexing or searching purposes. </expan>
+                    </physdesc>
+                    <langmaterial label="Language(s)"> langmaterial: A prose statement enumerating
+                        the language(s) of the archival materials found in the unit being described.
+                            <language langcode="eng">English</language>, <language langcode="fre"
+                            >French</language> and, <language langcode="lat">Latin</language>
+                    </langmaterial>
+                    <materialspec label="Mathematical Data"><!--  -->
+                        <materialspec label="Scale:">1:10000</materialspec>
+                        <materialspec label="Projection:">Universal transverse Mercator
+                            projection</materialspec>
+                    </materialspec>
+
+                </did>
+                <scopecontent>
+                    <p>La consultation des minutes notariales, indispensables à la connaissance de
+                        l'histoire des familles et des propriétés, est très importante pour
+                        l'histoire économique, sociale ou juridique.</p>
+                </scopecontent>
+                <relatedmaterial>
+                    <head>relatedmaterial</head>
+                    <p>Quelques minutiers, fragments de minutier ou collections d'actes notariés
+                        concernant aussi les départements actuels de l'Ain, de l'Isère et de la
+                        Haute-Savoie, ainsi que le Piémont se trouvent dans les archives saisies par
+                        la Chambre des comptes (série SA) et le Sénat de Savoie (sous-série 4B) ou
+                        receuillis par des familles ou des particuliers (série F ; sous-série 1J).
+                        Poisson rouge. </p>
+                    <p> </p>
+                    <p>Par ailleurs, les archives notariales, autres que minutes et répertoires se
+                        trouvent en principe parmi les fonds d'origine privée (sous-série 1J) ; en
+                        effet, si les minutes et les répertoires sont des archives publiques, les
+                        livres de comptabilité ou répertoire de clients sont bien des archives
+                        privées appartenant à l'étude notariale.</p>
+                    <extref
+                        href="https://francearchives.fr/fr/search?es_publisher=Service%20interminist%C3%A9riel%20des%20archives%20de%20France%20%28SIAF%29"
+                        >lien extref</extref>
+
+                </relatedmaterial>
+
+                <controlaccess>
+                    <function>function</function><!-- non affiché -->
+                    <persname>persname</persname>
+                    <famname>famname</famname>
+                    <subject>subject</subject>
+                    <corpname>corpname</corpname>
+                    <geogname>geogname</geogname>
+                    <occupation>occupation</occupation><!-- non affiché -->
+                    <name>name</name>
+                    <genreform>genreform</genreform>
+                    
+                </controlaccess>
+                <odd><!-- non affiché -->
+                    <list type="simple">
+                        <item>odd, item = Department of Economic Affairs: Industrial Policy Group:
+                            Registered Files (1-IG and 2-IG Series) <ref actuate="onrequest"
+                                show="new">EW 26</ref>
+                        </item>
+                        <item>item = Department of Economic Affairs: Industrial Division and
+                            Industrial Policy Division: Registered Files (IA Series) <ref
+                                actuate="onrequest" show="new">EW 27</ref>
+                        </item>
+                    </list>
+                </odd>
+                <originalsloc><!-- non affiché -->
+                    <p>originalsloc = File contains photocopies of original still held by the
+                        donor.</p>
+                </originalsloc>
+
+            </c>
+            <c id="a011497973827OGivqx">
+                <did>
+                    <unitid>6E 1-15863</unitid>
+                    <unittitle>&gt;&gt;&gt; 6E 1-15863 - Minutes notariales. (1561-1957)</unittitle>
+                    <unitdate normal="1561-01-01/1957-12-31">1561-1957</unitdate>
+
+                    <origination>origination</origination>
+
+
+
+
+                </did>
+                <otherfindaid>
+                    <head>otherfindaid</head>
+                    <p>Voir l'inventaire xml (6E 1-15863). Mouche dorée. </p>
+                </otherfindaid>
+
+
+
+            </c>
+
+            <c level="item" id="a0113415785899QTube">
+                <did>
+                    <unitid>1 R 110</unitid>
+                    <unittitle>Classe<unitdate normal="1868"> 1868 </unitdate></unittitle>
+                </did>
+                <scopecontent>
+                    <p>Nos 265-671 (contingent) ; 366-1346 (mobile) (Doubs).<genreform>genreform =
+                            papier</genreform></p>
+                    <p>Nos 520-846 (Haute-Saône).</p>
+                    <p>Nos 1-558 (contingent et mobile) ; 559-1014 (Haut-Rhin).</p>
+                </scopecontent>
+                <daogrp>
+
+                    <daoloc href="medias/r/001_r/1r110_classe-1868/ad09003_anu1101r0110-00001_y.jpg"
+                        role="first_image"/>
+                    <daoloc href="medias/r/001_r/1r110_classe-1868/ad09003_anu1101r0110-00505_y.jpg"
+                        role="last_image"/>
+                </daogrp>
+                <note type="mnesysinternal">
+                    <p/>
+                </note>
+            </c>
+            <c level="item" id="a011341578589DfPjvp">
+                <did>
+                    <unitid>1 R 111</unitid>
+                    <unittitle>Classe <unitdate normal="1869">1869</unitdate>
+                    </unittitle>
+                </did>
+                <scopecontent>
+                    <p>Nos 235-1817 (Doubs).</p>
+                    <p>Nos 459-760 ; 761-1648 (Haute-Saône).</p>
+                    <p>Nos 1-865 avec numéros vacants (Haut-Rhin).</p>
+                    <p>Table lacunaire et en mauvais état.</p>
+                </scopecontent>
+                <daogrp>
+                    <daoloc href="medias/r/001_r/1r111_classe-1869/ad09003_anu1101r0111-00001_y.jpg"
+                        role="first_image" title="Matricules de la classe 1869"/>
+                    <daoloc href="medias/r/001_r/1r111_classe-1869/ad09003_anu1101r0111-00521_y.jpg"
+                        role="last_image"/>
+                </daogrp>
+                <note type="mnesysinternal">
+                    <p/>
+                </note>
+            </c>
+            <c level="item" id="a011341578589WRSVuz">
+                <did>
+                    <unitid>1 R 112</unitid>
+                    <unittitle>Classe <unitdate normal="1870">1870</unitdate>
+                    </unittitle>
+                </did>
+                <scopecontent>
+                    <p>Nos 855-1636 ; 59-944 (Doubs).</p>
+                    <p>Nos 289-359 ; 951-986 ; 341 et numéros vacants, avec table en mauvais état
+                        (Haute-Saône).</p>
+                    <p>Nos 1-995 (Haut-Rhin).</p>
+                </scopecontent>
+
+                <daogrp>
+                    <daoloc href="medias/r/001_r/1r112_classe-1870/ad09003_anu1101r0112-00001_y.jpg"
+                        role="first_image" title="Matricules de la classe 1870"/>
+                    <daoloc href="medias/r/001_r/1r112_classe-1870/ad09003_anu1101r0112-00594_y.jpg"
+                        role="last_image"/>
+                </daogrp>
+                <note type="mnesysinternal">
+                    <p/>
+                </note>
+            </c>
+            <c level="file" id="a0113415785891BxIHa">
+                <did>
+                    <unitid>1 R 113 - 115</unitid>
+                    <unittitle>Classe <unitdate normal="1871">1871</unitdate></unittitle>
+                </did>
+                <c level="item" id="a011341578589VnT0uU">
+                    <did>
+                        <unitid identifier="1R/113">1 R 113</unitid>
+                        <unittitle>Nos 1-598 avec table</unittitle>
+                    </did>
+                    <scopecontent>
+                        <p>Belfort</p>
+                    </scopecontent>
+                    <daogrp>
+                        <daoloc
+                            href="medias/r/001_r/1r113-115_classe-1871/1r113/ad09003_anu1101r0113-00001_y.jpg"
+                            role="first_image" title="Matricules de la classe 1871 de Belfort"/>
+                        <daoloc
+                            href="medias/r/001_r/1r113-115_classe-1871/1r113/ad09003_anu1101r0113-00156_y.jpg"
+                            role="last_image"/>
+                    </daogrp>
+                    <note type="mnesysinternal">
+                        <p/>
+                    </note>
+                </c>
+            </c>
+        </dsc>
+    </archdesc>
+</ead>

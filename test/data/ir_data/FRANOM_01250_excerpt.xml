@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ead PUBLIC "+//ISBN 1-931666-00-8//DTD ead.dtd (Encoded Archival Description (EAD) Version 2002)//EN" "../../../DTD2002/ead.dtd">
+<ead>
+  <eadheader>
+    <eadid>FRANOM_01250</eadid>
+    <filedesc>
+      <titlestmt>
+        <titleproper>
+          <emph>Préfecture d'Alger. - Colonisation (1840-1956)</emph>
+        </titleproper>
+        <subtitle>Répertoire méthodique</subtitle>
+        <author>Marie-Claude BARTOLI, chargée d’études documentaires ; Daniel HICK et Isabelle CHIAVASSA, conservateurs en chef du patrimoine</author>
+      </titlestmt>
+      <publicationstmt>
+        <publisher>Archives nationales d'outre-mer</publisher><address><addressline>29 chemin du Moulin Detesta</addressline><addressline>13090 AIX-EN-PROVENCE</addressline></address>
+        <date>2015</date>
+      </publicationstmt>
+    </filedesc>
+    <profiledesc>
+      <creation>Cet instrument de recherche a été rédigé en 1975 et pour 6 M en 2009, puis révisé et complété en 2015 par Isabelle Chiavassa, conservateur en chef.</creation>
+      <langusage>Instrument de recherche rédigé en français.</langusage>
+      <descrules>Cet instrument de recherche a été rédigé conformément aux règles d'application de la DTD EAD (version 2002) aux Archives nationales d'outre-mer.</descrules>
+    </profiledesc>
+  </eadheader>
+  <archdesc id="ark--61561-kd508rlo" level="fonds">
+    <did>
+      <unitid type="cote d'archives">FR ANOM 91/1M-6M</unitid>
+      <unittitle> Préfecture d'Alger. Colonisation</unittitle>
+      <unitdate normal="1840/1956">1840-1956</unitdate>
+      <physdesc>198 mètres linéaires</physdesc>
+      <origination>Préfecture d'Alger</origination>
+      <repository>
+        <corpname>Archives nationales d'outre-mer</corpname><address><addressline>29 chemin du Moulin de Testa</addressline><addressline>13090 Aix-en-Provence</addressline></address></repository>
+      <langmaterial>français</langmaterial>
+    </did>
+    <bioghist>
+
+      <head>Histoire administrative</head>
+      <p>Le département d'Alger est créé fin 1848.</p>
+      <p>Comme les préfectures d'Oran et de Constantine, celle d'Alger possédait un Service de la colonisation. Le présent instrument de recherche décrit les archives issues de ce service dont la fonction, dès les années 1840, consistait à créer des villages de colonisation et à attribuer des concessions à des colons.</p>
+    </bioghist>
+    <scopecontent>
+
+      <head>Présentation du contenu et intérêt du fonds</head>
+      <p>La série M des archives du département d'Alger est divisée en 6 sous-séries :</p>
+      <list>
+        <item>1 M Transactions et partages (ordonnance de 1846),</item>
+        <item>2 M Titres de propriété,</item>
+        <item>3 M Demandes de concession,</item>
+        <item>4 M Dossiers de villages de colonisation,</item>
+        <item>5 M Affaires générales. Rapports d'ensemble,</item>
+        <item>6 M Registres.</item>
+      </list>
+      <p>Sous-série 91/1 M.</p>
+      <p>Dans la Mitidja, les indigènes des communautés rurales (haouch) se sont mis à vendre leurs propriétés aux Européens tandis que l'État les expropriait pour la colonisation officielle. Il s'ensuivit des conflits entre l'État, les Européens et les indigènes.</p>
+      <p>Pour remédier à cette situation, l'ordonnance royale du 21 juillet 1846 prescrivit à tout propriétaire de la Mitidja et du Sahel d'Alger de déposer ses titres dans un délai de trois mois, faute de quoi, il était frappé de déchéance. En revanche, celui qui avait construit une maison et planté un terrain recevait la concession définitive de la partie du sol cultivé, même s'il n'avait pas de titre régulier
+        <note>
+          <p>(Pour l'histoire de l'ordonnance de 1846, H. Isnard, "La réorganisation de la propriété rurale dans la Mitidja (1846-1867)", dans
+            <emph render="italic">Mélanges d'histoire algérienne</emph>, Alger, 1948 ; Bendjillalli Mimoun, "L'histoire de la propriété foncière en Algérie de 1830 à 1962 : entre les lois musulmanes et françaises", dans
+            <emph render="italic">Revue des sciences humaines</emph>, n° 26, décembre 2006, p.5-20).</p>
+        </note>.</p>
+      <p> Divers arrêtés d'application modifièrent cette ordonnance et la loi du 17 juin 1851 maintint la vérification des titres.</p>
+      <p>L'ordonnance royale de 1846 fut exécutée grâce aux travaux de la Commission des transactions et partages. Ainsi fut délimité le domaine de l'État, ce qui permit de planifier la colonisation officielle de l'Algérie.</p>
+      <p>La sous-série 91/1 M comprend les dossiers de réclamation d'indigènes et d'Européens, les résultats des travaux de la Commission avec expertises, actes de déchéance, état des familles, plans, etc.</p>
+      <p>Sous-série 91/2 M.</p>
+      <p>Les dossiers de colons sont classés par ordre alphabétique des villages de colonisation. Toutefois cet ordre n'était pas très rigoureusement respecté par la préfecture.</p>
+      <p>Ces dossiers des colons contiennent les titres définitifs de propriétés, et divers papiers concernant ces propriétés : minutes de demandes de concessions, concessions provisoires, plans de concessions.</p>
+      <p>L'étude de ces documents peut permettre au chercheur de connaître la répartition de la propriété coloniale, mais aussi l'origine des colons, la composition de leur famille, les difficultés qu'ils ont eues à s'installer et à obtenir des terres. A l'étude proprement dite de la colonisation, on pourrait ajouter une étude sociale.</p>
+      <p>Sous-série 91/3 M.</p>
+      <p>Cette sous-série comprend les dossiers des demandes de concession ; elles sont classées par ordre alphabétique des demandeurs. En préalable, on trouve des états ministériels de demandes de concession de 1842 à 1873 (91/3 M 1 à 91/3 M 3) et des demandes pour certains villages précis de 1900 à 1910 (91/3 M 4 à 3 M 7).</p>
+      <p>Sous-série 91/4 M.</p>
+      <p>La sous-série 4 M avait fait l'objet d'un classement numérique en Algérie, il importait donc de ne pas modifier les cotes que les liasses avaient déjà reçues. Certains documents n'avaient pas été classés, il fallut donc mettre les villages par ordre alphabétique et donner une cotation aux liasses (à partir de 91/4 M 494). Enfin, depuis ce classement fait en 1972, d'autres dossiers ont été retrouvés et classés (à partir de 91/4 M 573).</p>
+      <p>Cette sous-série comporte des dossiers d'intérêt inégal. Si l'origine et le développement de certains centres de colonisation peuvent être facilement étudiés, d'autres dossiers sont d'une indigence étonnante. De toute façon, il convient d'opérer un recoupement avec la série L du Gouvernement général.</p>
+      <p>On trouve plusieurs sortes de dossiers :</p>
+      <list>
+        <item>Création des centres : historique, peuplement, lotissements, acquisitions de propriétés, ventes de gré à gré, déchéances et expropriations, renonciations, demandes de titres définitifs de propriété.</item>
+        <item>Mise en valeur des centres : défrichements, plantations, primes de défrichement, demandes de secours, création de marchés.</item>
+        <item>Travaux de colonisation : construction de bâtiments civils (mairies, écoles, bureaux de poste), travaux publics (routes, chemins, voies ferrées, canalisations, alimentation en eau potable).</item>
+        <item>Organisation des services publics : nomination et traitement d'instituteurs, gardes champêtres, employés de bureau de poste. Organisation de l'assistance et des services médicaux.</item>
+      </list>
+      <p>Sous-série 91/5 M.</p>
+      <p>La sous-série 5 M comprend théoriquement les enquêtes relatives à la colonisation conservées à l'échelon préfectoral.</p>
+      <p>En fait, on y a aussi inséré les dossiers généraux que l'on ne pouvait classer dans les sous-séries précédentes du fait de la multiplicité des centres qu'ils concernaient.</p>
+      <p>Sous-série 91/6 M.</p>
+      <p>La sous-série 6 M regroupe les registres consacrés aux colons concessionnaires (12 registres) et aux centres de colonisation dans leur ensemble (1 registre).</p>
+    </scopecontent>
+    <accessrestrict>
+
+      <head>Conditions d'accès et de reproduction</head>
+      <p>En application des articles L 213.1 et L 213.2 du Code du patrimoine, les documents décrits dans le présent instrument de recherche sont librement communicables.</p>
+    </accessrestrict>
+    <relatedmaterial>
+
+      <head>Sources complémentaires aux Archives nationales d'Outre-Mer</head>
+      <list>
+        <item>Gouvernement général d'Algérie, série L - Colonisation (1832-1842)
+          <list>
+            <item>
+              <extref href="http://anom.archivesnationales.culture.gouv.fr/ark:/61561/wz818njokmj">L-Colonisation (1831-1907)</extref>
+            </item>
+            <item>
+              <extref href="http://anom.archivesnationales.culture.gouv.fr/ark:/61561/wz818jfkgjq">1 L - Centres, villes et villages (1832/1906)</extref>
+            </item>
+            <item>
+              <extref href="http://anom.archivesnationales.culture.gouv.fr/ark:/61561/wz818qmrolv">4-5L, 20 L, 21-22 L - Création de centres de colonisation (1847/1909)</extref>
+            </item>
+            <item>
+              <extref href="http://anom.archivesnationales.culture.gouv.fr/ark:/61561/wz818njomhg">6 L - Projets de colonisation présentés par des particuliers (1833/1889)</extref>
+            </item>
+            <item>
+              <extref href="http://anom.archivesnationales.culture.gouv.fr/ark:/61561/wz818aw1zvx">7 L - Enquêtes sur la colonisation (1875/1905)</extref>
+            </item>
+            <item>
+              <extref href="http://anom.archivesnationales.culture.gouv.fr/ark:/61561/wz818lhmkiz">9 L, 11 L - Villages (1843/1903)</extref>
+            </item>
+            <item>
+              <extref href="http://anom.archivesnationales.culture.gouv.fr/ark:/61561/wz818kgljly">12 L, 50-51 L, 53 L - Demandes de concession ([vers 1840/1940])</extref>
+            </item>
+            <item>
+              <extref href="http://anom.archivesnationales.culture.gouv.fr/ark:/61561/wz818aw102l">23-31 L - Centres de colonisation : projets, agrandissements, travaux ([vers 1840/1940])</extref>
+            </item>
+            <item>
+              <extref href="http://anom.archivesnationales.culture.gouv.fr/ark:/61561/wz818g2780m">32 L - Colonisation, hydraulique, personnel (1830/1928)</extref>
+            </item>
+          </list>
+        </item>
+        <item>Préfecture d'Alger, série N, propriété indigène</item>
+        <item>Préfecture de Constantine - Services antérieurs à la réorganisation de la préfecture en divisions
+          <list>
+            <item>
+              <extref href="http://anom.archivesnationales.culture.gouv.fr/ark:/61561/ff452jiev">Service de la colonisation (Séries 1 à 3 M, 1847-1956)</extref>
+            </item>
+          </list>
+        </item>
+        <item>Préfecture d'Oran
+          <list>
+            <item>
+              <extref href="http://anom.archivesnationales.culture.gouv.fr/ark:/61561/wz818nkomgg">Colonisation (Séries M et MM, 1843-1956)</extref>
+            </item>
+          </list>
+        </item>
+      </list>
+    </relatedmaterial>
+    <scopecontent>
+
+      <head>AVERTISSEMENT</head>
+      <p>Le classement initial que reprend le présent instrument de recherche a cherché à organiser les informations. Mais il n’a pas toujours été possible d’isoler les objets des documents par le biais d’une cotation appropriée. Il est donc conseillé, en cas de recherche d’un nom précis, de procéder à une interrogation sur l’ensemble du répertoire.</p>
+    </scopecontent>
+    <dsc>
+      <c id="ark--61561-kd508pkl" level="recordgrp">
+        <did>
+          <unitid type="cote d'archives">FR ANOM 91 / 1 M</unitid>
+          <unittitle>Commission des transactions et partages</unittitle>
+          <unitdate normal="1845/1932">1845-1932</unitdate>
+        </did>
+        <c id="ark--61561-kd508uqw" level="file">
+          <did>
+            <unitid type="cote d'archives">FR ANOM 91 / 1 M 1</unitid>
+            <unitid type="cote de communication">zone générique =ALG, zone fonds=ALGER, zone cote = 1M/1</unitid>
+            <unittitle>Travaux de la commission</unittitle>
+            <unitdate normal="1852/1866">1852-1866</unitdate>
+          </did>
+          <scopecontent>
+            <p>Nomination à la présidence de M. Walvein, constitution de la commission, état sommaire des affaires à traiter, propositions pour les partages administratifs, cautionnement des indigènes, état des immeubles ruraux disponibles, titres à délivrer aux Arabes, rapport de la commission sur les travaux (1852).</p>
+            <list>
+              <item>Projet de transaction entre l'État et la dame Monni bent Mohamed El Mekaïssi au sujet d'une maison sise à
+                <geogname normal="Alger (Algérie)">Alger</geogname>, 16 rue du Chameau (1865-1866).</item>
+              <item>Questions de propriété sur les territoires des futurs villages de
+                <geogname normal="Rouïba (Algérie)">Rouiba</geogname> et d'
+                <geogname normal="Aïn Taya (Algérie)">Aïn Taya</geogname> (1852).</item>
+            </list>
+          </scopecontent>
+        </c>
+        <c id="ark--61561-kd508snolql" level="subgrp">
+          <did>
+            <unittitle>
+              Trembles, Les</unittitle>
+            <unitdate normal="1845/1898">1845-1898</unitdate>
+          </did>
+          <controlaccess>
+            <geogname normal="Les Trembles (Alger ; Algérie)">Trembles (Les)</geogname>
+          </controlaccess>
+          <c id="ark--61561-kd508auuzxb" level="file">
+            <did>
+              <unitid type="cote d'archives">FR ANOM 91 / 2 M 242 a</unitid>
+              <unitid type="cote de communication">zone générique =ALG, zone fonds=ALGER, zone cote = 2M/242/a</unitid>
+              <unittitle>
+              </unittitle>
+              <unitdate normal="1845/1898">1845-1898</unitdate>
+            </did>
+          </c>
+        </c>
+      </c>
+    </dsc>
+  </archdesc>
+</ead>

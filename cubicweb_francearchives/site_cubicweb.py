@@ -1,0 +1,130 @@
+# -*- coding: utf-8 -*-
+#
+# Copyright © LOGILAB S.A. (Paris, FRANCE) 2016-2019
+# Contact http://www.logilab.fr -- mailto:contact@logilab.fr
+#
+# This software is governed by the CeCILL-C license under French law and
+# abiding by the rules of distribution of free software. You can use,
+# modify and/ or redistribute the software under the terms of the CeCILL-C
+# license as circulated by CEA, CNRS and INRIA at the following URL
+# "http://www.cecill.info".
+#
+# As a counterpart to the access to the source code and rights to copy,
+# modify and redistribute granted by the license, users are provided only
+# with a limited warranty and the software's author, the holder of the
+# economic rights, and the successive licensors have only limited liability.
+#
+# In this respect, the user's attention is drawn to the risks associated
+# with loading, using, modifying and/or developing or reproducing the
+# software by the user in light of its specific status of free software,
+# that may mean that it is complicated to manipulate, and that also
+# therefore means that it is reserved for developers and experienced
+# professionals having in-depth computer knowledge. Users are therefore
+# encouraged to load and test the software's suitability as regards their
+# requirements in conditions enabling the security of their systemsand/or
+# data to be ensured and, more generally, to use and operate it in the
+# same conditions as regards security.
+#
+# The fact that you are presently reading this means that you have had
+# knowledge of the CeCILL-C license and that you accept its terms.
+#
+from six import string_types
+import json
+
+from logilab.common.configuration import REQUIRED
+from logilab.database import FunctionDescr, get_db_helper, AggrFunctionDescr
+from logilab.database.sqlgen import SQLExpression
+
+from rql.utils import register_function
+
+from yams import register_base_type
+
+
+options = (
+    ('contact-email',
+     {'type': 'string',
+      'default': REQUIRED,
+      'help': 'FranceArchive portal email used in the contact form.',
+      'group': 'pnia', 'level': 2,
+      }),
+    ('sitemap-dir',
+     {'type': 'string',
+      'default': '/tmp',
+      'help': 'directory where gen-sitemap will output sitemap files',
+      'group': 'pnia', 'level': 2,
+      }),
+    ('appfiles-dir',
+     {'type': 'string',
+      'default': '/tmp',
+      'help': 'directory where BFSS will store application files',
+      'group': 'pnia', 'level': 2,
+      }),
+    ('ead-services-dir',
+     {'type': 'string',
+      'default': REQUIRED,
+      'help': 'directory containing findinaid  original files',
+      'group': 'ir', 'level': 2,
+      }),
+    ('newsletter-cypher-seed',
+     {'type': 'string',
+      'default': u"this is a newsletter cypher seed",
+      'help': 'seed used to cypher newsletter email in confirmation email link',
+      'group': 'pnia', 'level': 2,
+      }),
+    ('consultation-base-url',
+     {'type': 'string',
+      'default': 'https://francearchives.fr',
+      'help': 'public base url to make link between synchronized entity',
+      'group': 'pnia', 'level': 2,
+      }),
+)
+
+
+class NORMALIZE_ENTRY(FunctionDescr):
+    minargs = maxargs = 1
+    rtype = 'String'
+    supported_backends = ('postgres', 'sqlite')
+
+    def as_sql_sqlite(self, args):
+        # normalize_entry is a noop for sqlite
+        return ', '.join(args)
+
+
+register_function(NORMALIZE_ENTRY)
+
+
+#
+# Json type
+#
+
+class JSON_AGG(AggrFunctionDescr):
+    supported_backends = ('postgres',)
+
+
+register_function(JSON_AGG)
+
+
+def convert_json(x):
+    if isinstance(x, SQLExpression):
+        return x
+    elif isinstance(x, string_types):
+        try:
+            json.loads(x)
+        except (ValueError, TypeError):
+            raise ValueError(u'Invalid JSON value: {0}'.format(x))
+        return SQLExpression('%(json_obj)s::json', json_obj=x)
+    return SQLExpression('%(json_obj)s::json', json_obj=json.dumps(x))
+
+
+# Register the new type
+register_base_type('Json')
+
+# Map the new type with PostgreSQL
+pghelper = get_db_helper('postgres')
+pghelper.TYPE_MAPPING['Json'] = 'json'
+pghelper.TYPE_CONVERTERS['Json'] = convert_json
+
+# Map the new type with SQLite3
+sqlitehelper = get_db_helper('sqlite')
+sqlitehelper.TYPE_MAPPING['Json'] = 'text'
+sqlitehelper.TYPE_CONVERTERS['Json'] = json.dumps

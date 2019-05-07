@@ -1,0 +1,72 @@
+#facet-pniaancestorsfacetrenderer {
+  & .facet__value div {
+    display: flex;
+    align-items: baseline;
+  }
+  & ul {
+    padding-left: 1em;
+  }
+  & ul.children li {
+    & a::before {
+      content: '→ ';
+      margin-left: -1.2em;
+    }
+    &:last-child a {
+      border-bottom: none;
+    }
+  }
+}
+
+
+.facet {
+  margin-bottom: 0.1em;
+  @include if-wider-than(lg) { margin-bottom: 1em; }
+  &:last-child { margin-bottom: 1em; }
+
+  &__title { @include panel-header; }
+
+  &__body {
+    @include panel-body;
+    padding-bottom: 0.5em;
+  }
+
+  &__noitems {
+    padding: 1em 1em 0;
+  }
+
+
+  &__values {
+    list-style-type: none;
+    padding-left: 0px;
+
+    a {
+      padding: 0.25em 1em;
+    }
+
+    span.facet--nolink {
+      padding: 0.5em 1em 0;
+      color: #000000;
+      display: inline-block;
+    }
+  }
+
+
+  &__value--active {
+    background: #e5e5e5 url('../images/selected-facet.png') no-repeat 0.5em 50%;
+    border-top: 1px solid #d5d5d5;
+    border-bottom: 1px solid #d5d5d5;
+
+    a {
+      padding-left: 2em;
+      i {
+        color: $royal-blue;
+      }
+    }
+  }
+
+  &--active {
+    color: $royal-blue;
+  }
+
+  &--deselect { color: $dark-dodger-blue; }
+}

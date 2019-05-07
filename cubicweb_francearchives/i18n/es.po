@@ -1,0 +1,4320 @@
+#
+msgid ""
+msgstr ""
+"PO-Revision-Date: 2017-11-03 10:06+0100\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Generated-By: pygettext.py 1.5\n"
+
+msgid "###Presentation###"
+msgstr "Présentation"
+
+msgid "###Recent Articles###"
+msgstr "Articles récents"
+
+msgid "###Recent News###"
+msgstr "Dernières actualités"
+
+msgid "###ToSearch###"
+msgstr "Buscar"
+
+msgid "###events_blue###"
+msgstr "commémorations"
+
+msgid "###events_grey###"
+msgstr "événements"
+
+msgid "###in all###"
+msgstr "dans tous les documents"
+
+msgid "###in archives###"
+msgstr "dans les documents d'archives"
+
+msgid "###in directory###"
+msgstr "dans l'annuaire"
+
+msgid "###in edito###"
+msgstr "dans toutes les pages web"
+
+msgid "###list_separator###"
+msgstr " ; "
+
+msgid "###ministry_culture###"
+msgstr "Ministère de la Culture"
+
+msgid "###ministry_defense###"
+msgstr "Ministère des Armées"
+
+msgid "###ministry_foreign_affairs###"
+msgstr "Ministère de l'Europe et des Affaires étrangères"
+
+msgid "###new_title_blue###"
+msgstr "d'actualités"
+
+msgid "###news_title__grey###"
+msgstr "fil"
+
+msgid "###site-copyright###"
+msgstr "© Archives de France - Tous droits réservés"
+
+msgid "###stay connected###"
+msgstr "Partager"
+
+msgid "###subscribe to our newsletter###"
+msgstr "Vous souhaitez vous abonner à notre <b>Lettre d'information</b>"
+
+msgid "###subscribe###"
+msgstr "inscrivez-vous"
+
+#, python-format
+msgid ""
+"%(message)s\n"
+"\n"
+"\n"
+"respond to : %(name)s, %(email)s\n"
+msgstr ""
+"%(message)s\n"
+"\n"
+"\n"
+"répondre à : %(name)s, %(email)s\n"
+
+#, python-format
+msgid "%s_label"
+msgstr ""
+
+#, python-format
+msgid "%s_lang"
+msgstr ""
+
+msgid "- New window"
+msgstr "Nueva ventana"
+
+msgid "1 circulaire"
+msgstr ""
+
+msgid "1 document"
+msgstr "1 document"
+
+msgid "1 document in this section"
+msgstr "1 document dans cette rubrique"
+
+msgid "1 result"
+msgstr "1 résultat"
+
+msgid ":"
+msgstr " : "
+
+msgid "A descriptive document created to allow retrieval within an archive."
+msgstr ""
+
+msgid "APE-EAD XML version of the finding aid"
+msgstr ""
+
+msgid "Access to the site"
+msgstr ""
+
+msgid "Accessibility"
+msgstr "Accessibilité"
+
+# schema pot file, generated on 2018-10-25 08:03:40
+#
+# singular and plural forms for each entity type
+msgid "AgentAuthority"
+msgstr ""
+
+msgid "AgentAuthority_plural"
+msgstr ""
+
+msgid "AgentName"
+msgstr ""
+
+msgid "AgentName_plural"
+msgstr ""
+
+msgid "All documents"
+msgstr "Tous les documents"
+
+msgid "Archives"
+msgstr ""
+
+msgid "Archives Departementales"
+msgstr "Archives Départementales"
+
+msgid "Author"
+msgstr "Auteur"
+
+msgid "BaseContent"
+msgstr "Contenu éditorial simple"
+
+msgid "BaseContent_plural"
+msgstr "Contenus éditoriaux simples"
+
+msgid "Blog"
+msgstr "Blog"
+
+msgid "Blog_plural"
+msgstr "Blog"
+
+msgid "CGU"
+msgstr ""
+
+msgid ""
+"CSV file containing \"Code_insee\", \"URL\", \"Couleur\" and \"Legende"
+"\"columns separated by \",\""
+msgstr ""
+"Fichier CSV avec les colonnes \"Code_insee\", \"URL\", \"Couleur\" and "
+"\"Legende\"séparées par \",\""
+
+msgid "Captcha:"
+msgstr "Captcha :"
+
+msgid "Category"
+msgstr "Catégorie"
+
+msgid "Category_plural"
+msgstr "Catégories"
+
+msgid "Change the navigation language"
+msgstr "Cambiar la lengua de navegación"
+
+msgid "Choose search perimeter"
+msgstr ""
+
+msgid "Circular"
+msgstr "Circulaire"
+
+msgid "Circular_plural"
+msgstr "Circulaires"
+
+msgid "Circulars"
+msgstr ""
+
+msgid "CmsObject"
+msgstr ""
+
+msgid "CmsObject_plural"
+msgstr ""
+
+msgid "CommemoCollection"
+msgstr "Recueil"
+
+msgid "CommemoCollection_plural"
+msgstr "Recueils"
+
+msgid "CommemoDate"
+msgstr "Date"
+
+msgid "CommemoDate_plural"
+msgstr "Dates"
+
+msgid "CommemorationItem"
+msgstr "Commémoration"
+
+msgid "CommemorationItem_plural"
+msgstr "Commémorations"
+
+msgid "Commemorations"
+msgstr ""
+
+msgid "Consult the virtual exhibits"
+msgstr ""
+
+msgid "Contact"
+msgstr "contact"
+
+msgid "Contact_label"
+msgstr "Contact"
+
+msgid "Content"
+msgstr "Contenido"
+
+msgid "Contenu"
+msgstr ""
+
+msgid "Cote"
+msgstr "Cote"
+
+msgid "Creation date"
+msgstr ""
+
+msgid "CssImage"
+msgstr ""
+
+msgid "CssImage_plural"
+msgstr ""
+
+msgid "Date :"
+msgstr "Date :"
+
+msgid "Did"
+msgstr ""
+
+msgid "Did_plural"
+msgstr ""
+
+msgid "DigitizedVersion"
+msgstr "Version numérisée"
+
+msgid "DigitizedVersion_plural"
+msgstr "Versions numérisées"
+
+msgid "Display next years"
+msgstr ""
+
+msgid "Display previous years"
+msgstr ""
+
+msgid "Display the section: "
+msgstr ""
+
+msgid "Download shelfmark"
+msgstr "CSV"
+
+msgid "Download the inventory"
+msgstr "Ouvrir le document"
+
+msgid "Email:"
+msgstr "Courriel :"
+
+msgid "EsDocument"
+msgstr ""
+
+msgid "EsDocument_plural"
+msgstr ""
+
+msgid "ExternRef"
+msgstr "Référence externe"
+
+msgid "ExternRef_plural"
+msgstr "Références externes"
+
+msgid "FAComponent"
+msgstr "Document d'archives"
+
+msgid "FAComponent_plural"
+msgstr "Documents d'archives"
+
+msgid "FAHeader"
+msgstr ""
+
+msgid "FAHeader_plural"
+msgstr ""
+
+msgid "FindingAid"
+msgstr "Inventaire d'archives"
+
+msgid "FindingAid_plural"
+msgstr "Inventaires d'archives"
+
+msgid "Follow FranceArchives on Facebook"
+msgstr "Sigue al FranceArchives en Facebook"
+
+msgid "Follow FranceArchives on Twitter"
+msgstr "Sigue al FranceArchives en Twitter"
+
+msgid "Follow FranceArchives on Youtube"
+msgstr "Sigue al FranceArchives en Youtube"
+
+msgid "Fonds"
+msgstr "Fonds"
+
+msgid "Footer content"
+msgstr ""
+
+msgid "For more results, try a fuzzy search"
+msgstr "Pour plus de résultats, essayez la recherche approximative"
+
+msgid "FranceArchives: Portail National des Archives de France"
+msgstr ""
+
+msgid "Geogname"
+msgstr ""
+
+msgid "Geogname_plural"
+msgstr ""
+
+msgid "Go back to page:"
+msgstr "Volver a la página : "
+
+msgid "Go back to the FranceArchives"
+msgstr "Volver al portal FranceArchives"
+
+msgid "Go to FranceArchives page on LinkedIn"
+msgstr "Ir a la página del FranceArchives en LinkedIn"
+
+msgid "Go to Google+"
+msgstr "Consúltese Google+"
+
+#, python-format
+msgid "Go to commemorations %s"
+msgstr ""
+
+msgid "Go to previous the page"
+msgstr ""
+
+msgid "Go to the next page"
+msgstr ""
+
+msgid "Go to the page"
+msgstr "Acceder a la página"
+
+msgid "Go to the section"
+msgstr ""
+
+msgid "Go to the site:"
+msgstr "Ir al sitio web: "
+
+msgid "Go to the top of the page"
+msgstr ""
+
+msgid "Home"
+msgstr "Accueil"
+
+msgid "Hypertext link to the circular"
+msgstr "Lien vers le texte"
+
+msgid "Image"
+msgstr "Image"
+
+msgid "Image_plural"
+msgstr "Images"
+
+msgid "Institution de conservation : "
+msgstr ""
+
+msgid "Invalid subscription data. Please try subscription again."
+msgstr "Données d'inscription incorrectes. Veuillez recommencer l'inscription."
+
+msgid "Inventory"
+msgstr "Inventaire"
+
+msgid "Legal notices"
+msgstr "Mentions légales"
+
+msgid "Less options"
+msgstr ""
+
+msgid "Link the the commemoration full version"
+msgstr ""
+
+msgid "LocationAuthority"
+msgstr ""
+
+msgid "LocationAuthority_plural"
+msgstr ""
+
+msgid "Map"
+msgstr "Carte"
+
+msgid "Map_plural"
+msgstr "Cartes"
+
+msgid "Menu"
+msgstr "Menu"
+
+msgid "Message:"
+msgstr "Message :"
+
+msgid "Metadata"
+msgstr "Métadonnées"
+
+msgid "Metadata_plural"
+msgstr "Métadonnées"
+
+#, python-format
+msgid "More options (%(count)s)"
+msgstr "More options (%(count)s)"
+
+msgid "N/R"
+msgstr "Non renseigné"
+
+msgid "Name:"
+msgstr "Nom :"
+
+msgid "Name: "
+msgstr "Nom :"
+
+msgid "New AgentAuthority"
+msgstr ""
+
+msgid "New AgentName"
+msgstr ""
+
+msgid "New BaseContent"
+msgstr ""
+
+msgid "New Category"
+msgstr ""
+
+msgid "New Circular"
+msgstr ""
+
+msgid "New CmsObject"
+msgstr ""
+
+msgid "New CommemoCollection"
+msgstr ""
+
+msgid "New CommemoDate"
+msgstr ""
+
+msgid "New CommemorationItem"
+msgstr ""
+
+msgid "New CssImage"
+msgstr ""
+
+msgid "New Did"
+msgstr ""
+
+msgid "New DigitizedVersion"
+msgstr ""
+
+msgid "New EsDocument"
+msgstr ""
+
+msgid "New ExternRef"
+msgstr ""
+
+msgid "New FAComponent"
+msgstr ""
+
+msgid "New FAHeader"
+msgstr ""
+
+msgid "New FindingAid"
+msgstr ""
+
+msgid "New Geogname"
+msgstr ""
+
+msgid "New Image"
+msgstr ""
+
+msgid "New LocationAuthority"
+msgstr ""
+
+msgid "New Map"
+msgstr ""
+
+msgid "New Metadata"
+msgstr ""
+
+msgid "New NewsContent"
+msgstr ""
+
+msgid "New NewsLetterSubscriber"
+msgstr ""
+
+msgid "New OAIImportTask"
+msgstr ""
+
+msgid "New OAIRepository"
+msgstr ""
+
+msgid "New OfficialText"
+msgstr ""
+
+msgid "New Person"
+msgstr ""
+
+msgid "New PreviousInfo"
+msgstr ""
+
+msgid "New Section"
+msgstr ""
+
+msgid "New Service"
+msgstr ""
+
+msgid "New SocialNetwork"
+msgstr ""
+
+msgid "New Subject"
+msgstr ""
+
+msgid "New SubjectAuthority"
+msgstr ""
+
+msgid "NewsContent"
+msgstr "Événement"
+
+msgid "NewsContent_plural"
+msgstr "Événements"
+
+msgid "NewsLetterSubscriber"
+msgstr "Abonné à la lettre d'information"
+
+msgid "NewsLetterSubscriber_plural"
+msgstr "Abonnés à la lettre d'information"
+
+msgid "Newsletter"
+msgstr "Lettre d'information"
+
+msgid "Next page"
+msgstr ""
+
+msgid "No documents in this section"
+msgstr "Pas de document dans cette rubrique"
+
+msgid "No result"
+msgstr "Pas de résultat"
+
+msgid "Normalized interministerial system for official tests numbering"
+msgstr ""
+
+msgid "Notice excerpt:"
+msgstr "Extrait de la notice :"
+
+msgid "OAI-PMH ListRecords url"
+msgstr ""
+
+msgid "OAIImportTask"
+msgstr ""
+
+msgid "OAIImportTask_plural"
+msgstr ""
+
+msgid "OAIRepository"
+msgstr ""
+
+msgid "OAIRepository_plural"
+msgstr ""
+
+msgid "Object:"
+msgstr "Objet :"
+
+msgid "OfficialText"
+msgstr ""
+
+msgid "OfficialText_plural"
+msgstr ""
+
+msgid "Open the menu"
+msgstr ""
+
+msgid "Other"
+msgstr "Autre"
+
+msgid "Other_plural"
+msgstr "Autres"
+
+msgid "Pagination"
+msgstr ""
+
+msgid "Period"
+msgstr "Période"
+
+msgid "Person"
+msgstr "Personne"
+
+msgid "Person_plural"
+msgstr "Personnes"
+
+msgid "Plan du site"
+msgstr "Plan du site"
+
+msgid "Please, enter a valid email address"
+msgstr "Veuillez entrer un courriel valide."
+
+msgid "Previous page"
+msgstr ""
+
+msgid "PreviousInfo"
+msgstr ""
+
+msgid "PreviousInfo_plural"
+msgstr ""
+
+msgid "Privacy policy"
+msgstr "Charte de confidentialité"
+
+msgid "Publication"
+msgstr ""
+
+msgid "Publication_plural"
+msgstr "Publications"
+
+msgid "Publisher:"
+msgstr "Institution :"
+
+msgid "Read more"
+msgstr "Meer más"
+
+msgid "Sans date"
+msgstr ""
+
+#, python-format
+msgid "Search all documents for publisher %s"
+msgstr ""
+
+msgid "Search results"
+msgstr "Resultados de búsqueda"
+
+msgid "Section"
+msgstr "Rubrique"
+
+msgid "Section_plural"
+msgstr "Rubriques"
+
+msgid "See all articles"
+msgstr "Voir tous les articles"
+
+msgid "See all news"
+msgstr "Voir toutes les actualités"
+
+msgid "See all virtual exhibits"
+msgstr ""
+
+msgid "See more"
+msgstr ""
+
+msgid "See the timeline"
+msgstr "Voir la frise chronologique"
+
+msgid "Select department"
+msgstr "Sélectionner un département"
+
+msgid "Selected year"
+msgstr ""
+
+msgid "Send your message"
+msgstr "Envoyez votre message"
+
+msgid "Service"
+msgstr "Service"
+
+msgid "Service Directory"
+msgstr "Annuaire des services"
+
+msgid "Service_plural"
+msgstr "Services"
+
+msgid "Share FranceArchives on Facebook"
+msgstr ""
+
+msgid "Share FranceArchives on Google+"
+msgstr ""
+
+msgid "Share FranceArchives on Twitter"
+msgstr ""
+
+msgid "Share FranceArchives on Youtube"
+msgstr ""
+
+msgid "Signing or publication date"
+msgstr "Date de signature ou de publication"
+
+msgid "Signing or publication date (other than DAF or SIAF)"
+msgstr ""
+
+msgid "Site map"
+msgstr "Plan du site"
+
+msgid "Site:"
+msgstr ""
+
+msgid "Skip to content"
+msgstr ""
+
+msgid "Skip to menu"
+msgstr ""
+
+msgid "SocialNetwork"
+msgstr "Réseau social"
+
+msgid "SocialNetwork_plural"
+msgstr "Réseaux sociaux"
+
+msgid "Subject"
+msgstr ""
+
+msgid "SubjectAuthority"
+msgstr ""
+
+msgid "SubjectAuthority_plural"
+msgstr ""
+
+msgid "Subject_plural"
+msgstr ""
+
+msgid "Text author:"
+msgstr "Auteur du texte :"
+
+msgid "Text authors:"
+msgstr "Auteurs du texte :"
+
+msgid "Text identification code (SIAF or DAF)"
+msgstr "Code identifiant du texte (SIAF ou DAF)"
+
+msgid "Text identification code (other than SIAF or DAF)"
+msgstr "Code identifiant du texte (autre que SIAF ou DAF)"
+
+msgid "Text kind (SIAF or DAF)"
+msgstr "Nature du document (SIAF ou DAF)"
+
+msgid "Text kind (other than SIAF or DAF)"
+msgstr "Nature du document (autre que SIAF ou DAF)"
+
+msgid "Text title"
+msgstr "Titre de la circulaire"
+
+msgid "This AgentAuthority"
+msgstr ""
+
+msgid "This AgentAuthority:"
+msgstr ""
+
+msgid "This AgentName"
+msgstr ""
+
+msgid "This AgentName:"
+msgstr ""
+
+msgid "This BaseContent"
+msgstr ""
+
+msgid "This BaseContent:"
+msgstr ""
+
+msgid "This Category"
+msgstr ""
+
+msgid "This Category:"
+msgstr ""
+
+msgid "This Circular"
+msgstr ""
+
+msgid "This Circular:"
+msgstr ""
+
+msgid "This CmsObject"
+msgstr ""
+
+msgid "This CmsObject:"
+msgstr ""
+
+msgid "This CommemoCollection"
+msgstr ""
+
+msgid "This CommemoCollection:"
+msgstr ""
+
+msgid "This CommemoDate"
+msgstr ""
+
+msgid "This CommemoDate:"
+msgstr ""
+
+msgid "This CommemorationItem"
+msgstr ""
+
+msgid "This CommemorationItem:"
+msgstr ""
+
+msgid "This CssImage"
+msgstr ""
+
+msgid "This CssImage:"
+msgstr ""
+
+msgid "This Did"
+msgstr ""
+
+msgid "This Did:"
+msgstr ""
+
+msgid "This DigitizedVersion"
+msgstr ""
+
+msgid "This DigitizedVersion:"
+msgstr ""
+
+msgid "This EsDocument"
+msgstr ""
+
+msgid "This EsDocument:"
+msgstr ""
+
+msgid "This ExternRef"
+msgstr ""
+
+msgid "This ExternRef:"
+msgstr ""
+
+msgid "This FAComponent"
+msgstr ""
+
+msgid "This FAComponent:"
+msgstr ""
+
+msgid "This FAHeader"
+msgstr ""
+
+msgid "This FAHeader:"
+msgstr ""
+
+msgid "This FindingAid"
+msgstr ""
+
+msgid "This FindingAid:"
+msgstr ""
+
+msgid "This Geogname"
+msgstr ""
+
+msgid "This Geogname:"
+msgstr ""
+
+msgid "This Image"
+msgstr ""
+
+msgid "This Image:"
+msgstr ""
+
+msgid "This LocationAuthority"
+msgstr ""
+
+msgid "This LocationAuthority:"
+msgstr ""
+
+msgid "This Map"
+msgstr ""
+
+msgid "This Map:"
+msgstr ""
+
+msgid "This Metadata"
+msgstr ""
+
+msgid "This Metadata:"
+msgstr ""
+
+msgid "This NewsContent"
+msgstr ""
+
+msgid "This NewsContent:"
+msgstr ""
+
+msgid "This NewsLetterSubscriber"
+msgstr ""
+
+msgid "This NewsLetterSubscriber:"
+msgstr ""
+
+msgid "This OAIImportTask"
+msgstr ""
+
+msgid "This OAIImportTask:"
+msgstr ""
+
+msgid "This OAIRepository"
+msgstr ""
+
+msgid "This OAIRepository:"
+msgstr ""
+
+msgid "This OfficialText"
+msgstr ""
+
+msgid "This OfficialText:"
+msgstr ""
+
+msgid "This Person"
+msgstr ""
+
+msgid "This Person:"
+msgstr ""
+
+msgid "This PreviousInfo"
+msgstr ""
+
+msgid "This PreviousInfo:"
+msgstr ""
+
+msgid "This Section"
+msgstr ""
+
+msgid "This Section:"
+msgstr ""
+
+msgid "This Service"
+msgstr ""
+
+msgid "This Service:"
+msgstr ""
+
+msgid "This SocialNetwork"
+msgstr ""
+
+msgid "This SocialNetwork:"
+msgstr ""
+
+msgid "This Subject"
+msgstr ""
+
+msgid "This Subject:"
+msgstr ""
+
+msgid "This SubjectAuthority"
+msgstr ""
+
+msgid "This SubjectAuthority:"
+msgstr ""
+
+msgid "This field is required"
+msgstr ""
+
+#, python-format
+msgid "Timeline for %s"
+msgstr "Frise chronologique : %s"
+
+msgid "Toggle navigation"
+msgstr ""
+
+#, python-format
+msgid "Use %(eadid)s, %(unitid)s or %(unititle)s substitution pattern"
+msgstr ""
+
+#, python-brace-format
+msgid "Use {url} substitution pattern"
+msgstr ""
+
+msgid "Virtual_exhibit"
+msgstr "Exposition virtuelle"
+
+msgid "Virtual_exhibit_plural"
+msgstr "Expositions virtuelles"
+
+msgid ""
+"You search did not find any results, the search has been made with fuzzy "
+"options for more results."
+msgstr ""
+"Votre recherche n'a retourné aucun résultat. L'option 'approximavite' a été "
+"activée pour retourner plus de résultats."
+
+msgid "Your are already subscribed to the newsletter."
+msgstr "Vous êtes déjà inscrit à la lettre d'information."
+
+msgid "Your email has been successfully added."
+msgstr "Votre adresse a bien été ajoutée."
+
+msgid "Your message could not be send. Please try again."
+msgstr ""
+"Votre message n'a pas pu être envoyé. Veuillez réessayer ultérieurement."
+
+msgid "Your message has been send."
+msgstr "Votre message a bien été envoyé."
+
+msgid "Your subscription has failed. Please try subscription again."
+msgstr "Votre inscription a échoué. Veuillez recommencer l'inscription."
+
+# subject and object forms for each relation type
+# (no object form for final or symmetric relation types)
+msgid "abrogation_date"
+msgstr "date d'abrogation"
+
+msgctxt "Circular"
+msgid "abrogation_date"
+msgstr "date d'abrogation"
+
+msgid "abrogation_text"
+msgstr "texte d'abrogation"
+
+msgctxt "Circular"
+msgid "abrogation_text"
+msgstr "texte d'abrogation"
+
+msgid "abstract"
+msgstr "résumé"
+
+msgctxt "Did"
+msgid "abstract"
+msgstr "résumé du contenu"
+
+msgid "abstract_format"
+msgstr "résumé"
+
+msgctxt "Did"
+msgid "abstract_format"
+msgstr ""
+
+msgid "accessrestrict"
+msgstr "conditions d'accès"
+
+msgctxt "FAComponent"
+msgid "accessrestrict"
+msgstr "conditions d'accès"
+
+msgctxt "FindingAid"
+msgid "accessrestrict"
+msgstr ""
+
+msgid "accessrestrict_format"
+msgstr ""
+
+msgctxt "FAComponent"
+msgid "accessrestrict_format"
+msgstr ""
+
+msgctxt "FindingAid"
+msgid "accessrestrict_format"
+msgstr ""
+
+msgid "accessrestrict_label"
+msgstr "Conditions d'accès :"
+
+msgid "accruals_label"
+msgstr "Évolutions :"
+
+msgid "acquisition_info"
+msgstr "informations sur l'acquisition"
+
+msgctxt "FAComponent"
+msgid "acquisition_info"
+msgstr ""
+
+msgctxt "FindingAid"
+msgid "acquisition_info"
+msgstr ""
+
+msgid "acquisition_info_format"
+msgstr ""
+
+msgctxt "FAComponent"
+msgid "acquisition_info_format"
+msgstr ""
+
+msgctxt "FindingAid"
+msgid "acquisition_info_format"
+msgstr ""
+
+msgid "acquisition_info_label"
+msgstr "Informations sur l'acquisition :"
+
+msgid "action"
+msgstr "action"
+
+msgctxt "Circular"
+msgid "action"
+msgstr "action"
+
+msgid "action_object"
+msgstr ""
+
+msgctxt "Concept"
+msgid "action_object"
+msgstr ""
+
+msgid "add BaseContent basecontent_image Image subject"
+msgstr ""
+
+msgid "add Circular additional_attachment File subject"
+msgstr ""
+
+msgid "add CommemoCollection section_image Image subject"
+msgstr ""
+
+msgid "add CommemorationItem collection_top CommemoCollection object"
+msgstr ""
+
+msgid "add CommemorationItem commemoration_image Image subject"
+msgstr ""
+
+msgid "add ExternRef externref_image Image subject"
+msgstr ""
+
+msgid "add FAComponent fa_referenced_files File subject"
+msgstr ""
+
+msgid "add FindingAid fa_referenced_files File subject"
+msgstr ""
+
+msgid "add NewsContent news_image Image subject"
+msgstr ""
+
+msgid "add OAIImportTask oai_repository OAIRepository object"
+msgstr ""
+
+msgid "add Section section_image Image subject"
+msgstr ""
+
+msgid "add Service service_social_network SocialNetwork subject"
+msgstr ""
+
+msgid "add a AgentAuthority"
+msgstr ""
+
+msgid "add a AgentName"
+msgstr ""
+
+msgid "add a BaseContent"
+msgstr ""
+
+msgid "add a Category"
+msgstr ""
+
+msgid "add a Circular"
+msgstr ""
+
+msgid "add a CmsObject"
+msgstr ""
+
+msgid "add a CommemoCollection"
+msgstr ""
+
+msgid "add a CommemoDate"
+msgstr ""
+
+msgid "add a CommemorationItem"
+msgstr ""
+
+msgid "add a CssImage"
+msgstr ""
+
+msgid "add a Did"
+msgstr ""
+
+msgid "add a DigitizedVersion"
+msgstr ""
+
+msgid "add a EsDocument"
+msgstr ""
+
+msgid "add a ExternRef"
+msgstr ""
+
+msgid "add a FAComponent"
+msgstr ""
+
+msgid "add a FAHeader"
+msgstr ""
+
+msgid "add a FindingAid"
+msgstr ""
+
+msgid "add a Geogname"
+msgstr ""
+
+msgid "add a Image"
+msgstr ""
+
+msgid "add a LocationAuthority"
+msgstr ""
+
+msgid "add a Map"
+msgstr ""
+
+msgid "add a Metadata"
+msgstr ""
+
+msgid "add a NewsContent"
+msgstr ""
+
+msgid "add a NewsLetterSubscriber"
+msgstr ""
+
+msgid "add a OAIImportTask"
+msgstr ""
+
+msgid "add a OAIRepository"
+msgstr ""
+
+msgid "add a OfficialText"
+msgstr ""
+
+msgid "add a Person"
+msgstr ""
+
+msgid "add a PreviousInfo"
+msgstr ""
+
+msgid "add a Section"
+msgstr ""
+
+msgid "add a Service"
+msgstr ""
+
+msgid "add a SocialNetwork"
+msgstr ""
+
+msgid "add a Subject"
+msgstr ""
+
+msgid "add a SubjectAuthority"
+msgstr ""
+
+msgid "additional internal file link"
+msgstr ""
+
+msgid "additional_attachment"
+msgstr "Ajouter des annexes en pdf"
+
+msgctxt "Circular"
+msgid "additional_attachment"
+msgstr ""
+
+msgid "additional_attachment_object"
+msgstr ""
+
+msgctxt "File"
+msgid "additional_attachment_object"
+msgstr ""
+
+msgid "additional_link"
+msgstr "lien supplémentaire"
+
+msgctxt "Circular"
+msgid "additional_link"
+msgstr "lien supplémentaire"
+
+msgid "additional_link_object"
+msgstr ""
+
+msgctxt "Link"
+msgid "additional_link_object"
+msgstr ""
+
+msgid "additional_resources"
+msgstr ""
+
+msgctxt "FAComponent"
+msgid "additional_resources"
+msgstr ""
+
+msgctxt "FindingAid"
+msgid "additional_resources"
+msgstr ""
+
+msgid "additional_resources_format"
+msgstr ""
+
+msgctxt "FAComponent"
+msgid "additional_resources_format"
+msgstr ""
+
+msgctxt "FindingAid"
+msgid "additional_resources_format"
+msgstr ""
+
+msgid "additional_resources_label"
+msgstr ""
+
+msgid "address"
+msgstr "address"
+
+msgctxt "Service"
+msgid "address"
+msgstr "adresse"
+
+msgid "aligned_url"
+msgstr "url alignée"
+
+msgid "all ancestors"
+msgstr "Toutes les rubriques"
+
+msgid "all archival_field"
+msgstr "Tous les domaines archivistiques"
+
+msgid "all business_field"
+msgstr "Tous les domaines"
+
+msgid "all circular in a table"
+msgstr "Toutes les circulaires dans un tableau"
+
+msgid "all commemoration_year"
+msgstr "Toutes les périodes chronologiques"
+
+msgid "all creation_date"
+msgstr "Toutes les périodes de publication"
+
+msgid "all cw_etype"
+msgstr "Tous types de ressources"
+
+msgid "all digitized"
+msgstr "Déselectionner"
+
+msgid "all escategory"
+msgstr "Toutes les catégories"
+
+msgid "all originators"
+msgstr "Tous les producteurs"
+
+msgid "all publisher"
+msgstr "Toutes les institutions"
+
+msgid "all siaf_daf_kind"
+msgstr "Toutes les natures"
+
+msgid "all siaf_daf_signing_year"
+msgstr "Toutes les années"
+
+msgid "all status"
+msgstr "Tous les status"
+
+msgid "all unittid"
+msgstr "Tous les identifiants d'unité documentaire"
+
+msgid "all year"
+msgstr "Toutes les périodes chronologiques"
+
+msgid "alphatitle"
+msgstr "titre utilisé pour le classement alphabétique"
+
+msgctxt "CommemorationItem"
+msgid "alphatitle"
+msgstr ""
+
+msgid "ancestors_facet"
+msgstr "Rubriques"
+
+msgid "annex_of"
+msgstr "annexe de"
+
+msgctxt "Service"
+msgid "annex_of"
+msgstr "annexe de"
+
+msgid "annex_of_object"
+msgstr ""
+
+msgctxt "Service"
+msgid "annex_of_object"
+msgstr ""
+
+msgid "annual_closure"
+msgstr "fermeture annuelle"
+
+msgctxt "Service"
+msgid "annual_closure"
+msgstr "fermeture annuelle"
+
+msgid "ape_ead_file"
+msgstr ""
+
+msgctxt "FindingAid"
+msgid "ape_ead_file"
+msgstr ""
+
+msgid "ape_ead_file_object"
+msgstr ""
+
+msgctxt "File"
+msgid "ape_ead_file_object"
+msgstr ""
+
+msgid "appears after the map"
+msgstr "s'affiche après la carte"
+
+msgid "appears before the map"
+msgstr "s'affiche avant la carte"
+
+msgid "appraisal_label"
+msgstr "Critères de sélection :"
+
+msgid "archival_field"
+msgstr "Domaine archivistique"
+
+msgctxt "Circular"
+msgid "archival_field"
+msgstr ""
+
+msgid "archival_field_facet"
+msgstr "Domaine archivistique"
+
+msgid "archive-services-label"
+msgstr "Annuaire"
+
+msgid "archives"
+msgstr "documents d'archives"
+
+msgid "arrangement_label"
+msgstr "Mise en forme :"
+
+msgid "attachment"
+msgstr "ajouter le pdf de la circulaire"
+
+msgctxt "Circular"
+msgid "attachment"
+msgstr ""
+
+msgid "attachment_object"
+msgstr ""
+
+msgctxt "File"
+msgid "attachment_object"
+msgstr ""
+
+msgid "author"
+msgstr "auteur"
+
+msgctxt "FAHeader"
+msgid "author"
+msgstr ""
+
+msgid "author_format"
+msgstr ""
+
+msgctxt "FAHeader"
+msgid "author_format"
+msgstr "auteur de la description"
+
+msgid "authority"
+msgstr "autorité"
+
+msgctxt "AgentName"
+msgid "authority"
+msgstr ""
+
+msgctxt "Geogname"
+msgid "authority"
+msgstr ""
+
+msgctxt "Person"
+msgid "authority"
+msgstr ""
+
+msgctxt "Subject"
+msgid "authority"
+msgstr ""
+
+msgid "authority_object"
+msgstr ""
+
+msgctxt "AgentAuthority"
+msgid "authority_object"
+msgstr ""
+
+msgctxt "LocationAuthority"
+msgid "authority_object"
+msgstr ""
+
+msgctxt "SubjectAuthority"
+msgid "authority_object"
+msgstr ""
+
+msgid "basecontent_image"
+msgstr ""
+
+msgctxt "BaseContent"
+msgid "basecontent_image"
+msgstr ""
+
+msgid "basecontent_image_object"
+msgstr ""
+
+msgctxt "Image"
+msgid "basecontent_image_object"
+msgstr ""
+
+msgid "basecontent_service"
+msgstr "service"
+
+msgctxt "BaseContent"
+msgid "basecontent_service"
+msgstr ""
+
+msgid "basecontent_service_object"
+msgstr ""
+
+msgctxt "Service"
+msgid "basecontent_service_object"
+msgstr ""
+
+msgid "bibliography"
+msgstr "références bibliographiques"
+
+msgctxt "FAComponent"
+msgid "bibliography"
+msgstr "références bibliographiques"
+
+msgctxt "FindingAid"
+msgid "bibliography"
+msgstr "références bibliographiques"
+
+msgid "bibliography_format"
+msgstr ""
+
+msgctxt "FAComponent"
+msgid "bibliography_format"
+msgstr ""
+
+msgctxt "FindingAid"
+msgid "bibliography_format"
+msgstr ""
+
+msgid "bibliography_label"
+msgstr "Références bibliographiques :"
+
+msgid "bibref_label"
+msgstr ""
+
+msgid "bioghist"
+msgstr ""
+
+msgctxt "FAComponent"
+msgid "bioghist"
+msgstr ""
+
+msgctxt "FindingAid"
+msgid "bioghist"
+msgstr ""
+
+msgid "bioghist_format"
+msgstr ""
+
+msgctxt "FAComponent"
+msgid "bioghist_format"
+msgstr ""
+
+msgctxt "FindingAid"
+msgid "bioghist_format"
+msgstr ""
+
+msgid "bioghist_label"
+msgstr "Informations sur le producteur :"
+
+msgid "birthyear"
+msgstr "année de naissance"
+
+msgctxt "AgentAuthority"
+msgid "birthyear"
+msgstr ""
+
+msgid "bottom_content"
+msgstr "contenu après la carte"
+
+msgctxt "Map"
+msgid "bottom_content"
+msgstr ""
+
+msgid "bottom_content_format"
+msgstr ""
+
+msgctxt "Map"
+msgid "bottom_content_format"
+msgstr ""
+
+msgid "browser_url"
+msgstr ""
+
+msgctxt "Service"
+msgid "browser_url"
+msgstr ""
+
+msgid "business_field"
+msgstr "domaine métier"
+
+msgctxt "Circular"
+msgid "business_field"
+msgstr "domaine métier"
+
+msgid "business_field_facet"
+msgstr "Domaine (Thésaurus)"
+
+msgid "business_field_object"
+msgstr ""
+
+msgctxt "Concept"
+msgid "business_field_object"
+msgstr ""
+
+msgid "caption"
+msgstr "légende"
+
+msgctxt "CssImage"
+msgid "caption"
+msgstr ""
+
+msgctxt "Image"
+msgid "caption"
+msgstr "légende"
+
+msgid "caption_format"
+msgstr ""
+
+msgctxt "CssImage"
+msgid "caption_format"
+msgstr ""
+
+msgctxt "Image"
+msgid "caption_format"
+msgstr ""
+
+msgid "category"
+msgstr "catégorie"
+
+msgctxt "Service"
+msgid "category"
+msgstr "catégorie"
+
+msgid "changes"
+msgstr ""
+
+msgctxt "FAHeader"
+msgid "changes"
+msgstr "mises à jour"
+
+msgid "changes_format"
+msgstr ""
+
+msgctxt "FAHeader"
+msgid "changes_format"
+msgstr ""
+
+msgid "changes_label"
+msgstr "Mises à jour :"
+
+msgid "child_components"
+msgstr ""
+
+msgctxt "FAComponent"
+msgid "child_components"
+msgstr ""
+
+msgid "child_components_object"
+msgstr ""
+
+msgctxt "FAComponent"
+msgid "child_components_object"
+msgstr ""
+
+msgid "children"
+msgstr ""
+
+msgctxt "CommemoCollection"
+msgid "children"
+msgstr ""
+
+msgctxt "Section"
+msgid "children"
+msgstr ""
+
+msgid "children_object"
+msgstr ""
+
+msgctxt "BaseContent"
+msgid "children_object"
+msgstr ""
+
+msgctxt "Circular"
+msgid "children_object"
+msgstr ""
+
+msgctxt "CommemoCollection"
+msgid "children_object"
+msgstr ""
+
+msgctxt "CommemorationItem"
+msgid "children_object"
+msgstr ""
+
+msgctxt "ExternRef"
+msgid "children_object"
+msgstr ""
+
+msgctxt "Map"
+msgid "children_object"
+msgstr ""
+
+msgctxt "NewsContent"
+msgid "children_object"
+msgstr ""
+
+msgctxt "Section"
+msgid "children_object"
+msgstr ""
+
+msgid "circ_id"
+msgstr "Circ_id (identifiant unique de la circulaire)"
+
+msgctxt "Circular"
+msgid "circ_id"
+msgstr ""
+
+msgid "circular"
+msgstr ""
+
+msgctxt "OfficialText"
+msgid "circular"
+msgstr ""
+
+msgid "circular_abrogation_date_label"
+msgstr "Date d'abrogation"
+
+msgid "circular_abrogation_text_label"
+msgstr "Texte abrogatoire"
+
+msgid "circular_action_label"
+msgstr "Domaines d'action"
+
+msgid "circular_additional_attachment_label"
+msgstr "Lien vers les annexes"
+
+msgid "circular_additional_link_label"
+msgstr "Lien vers les annexes"
+
+msgid "circular_archival_field_label"
+msgstr "Domaine archivistique"
+
+msgid "circular_attachment_label"
+msgstr "Télécharger le document"
+
+msgid "circular_business_field_label"
+msgstr "Domaines (mots matières)"
+
+msgid "circular_circ_id_label"
+msgstr "Identifiant unique de la circulaire"
+
+msgid "circular_code_label"
+msgstr "Autres Références"
+
+msgid "circular_document_type_label"
+msgstr "Typologie documentaire"
+
+msgid "circular_historical_context_label"
+msgstr "Contexte historique"
+
+msgid "circular_kind_label"
+msgstr "Type de document"
+
+msgid "circular_link_label"
+msgstr "Lien vers le texte"
+
+msgid "circular_modification_date"
+msgstr "Date de modification"
+
+msgctxt "Circular"
+msgid "circular_modification_date"
+msgstr "Modifié"
+
+msgid "circular_modification_date_label"
+msgstr "Date de modification"
+
+msgid "circular_modified_text_label"
+msgstr "Modifie le(s) texte(s) suivant(s)"
+
+msgid "circular_modifying_text_label"
+msgstr "Modifié par les textes suivants"
+
+msgid "circular_nor_label"
+msgstr "Référence"
+
+msgid "circular_object"
+msgstr ""
+
+msgctxt "Circular"
+msgid "circular_object"
+msgstr ""
+
+msgid "circular_producer_acronym_label"
+msgstr "Producteur(s)"
+
+msgid "circular_producer_label"
+msgstr "Services administratifs concernés"
+
+msgid "circular_revoked_text_label"
+msgstr "Abroge le(s) texte(s) suivant(s)"
+
+msgid "circular_siaf_daf_code_label"
+msgstr "Code SIAF"
+
+msgid "circular_siaf_daf_kind_label"
+msgstr "Nature"
+
+msgid "circular_siaf_daf_signing_date_label"
+msgstr "Date de signature ou de publication"
+
+msgid "circular_signing_date_label"
+msgstr "Date de signature"
+
+msgid "circular_status_label"
+msgstr "Statut du texte"
+
+msgid "circular_title_label"
+msgstr "Titre"
+
+msgid "circular_url"
+msgstr "URI de la circulaire"
+
+msgid "circulars"
+msgstr "circulaires"
+
+msgctxt "Service"
+msgid "city"
+msgstr "ville"
+
+msgid "code"
+msgstr "Code"
+
+msgctxt "Circular"
+msgid "code"
+msgstr "Référence"
+
+msgctxt "OfficialText"
+msgid "code"
+msgstr "code"
+
+msgctxt "Service"
+msgid "code"
+msgstr "code"
+
+msgid "collection_top"
+msgstr "recueil"
+
+msgctxt "CommemorationItem"
+msgid "collection_top"
+msgstr "recueil"
+
+msgid "collection_top_object"
+msgstr ""
+
+msgctxt "CommemoCollection"
+msgid "collection_top_object"
+msgstr ""
+
+msgid "comma-separated list of key words"
+msgstr ""
+
+#, python-format
+msgid "commemo-section-title %s"
+msgstr "Recueil des Commémorations nationales %s"
+
+msgid "commemo_dates"
+msgstr "Ajouter les dates pour la frise chrono"
+
+msgctxt "CommemorationItem"
+msgid "commemo_dates"
+msgstr ""
+
+msgid "commemo_dates_object"
+msgstr ""
+
+msgctxt "CommemoDate"
+msgid "commemo_dates_object"
+msgstr ""
+
+msgid "commemoration_category"
+msgstr ""
+
+msgctxt "CommemorationItem"
+msgid "commemoration_category"
+msgstr ""
+
+msgid "commemoration_category_object"
+msgstr ""
+
+msgctxt "Category"
+msgid "commemoration_category_object"
+msgstr ""
+
+msgid "commemoration_image"
+msgstr "Ajouter une image"
+
+msgctxt "CommemorationItem"
+msgid "commemoration_image"
+msgstr ""
+
+msgid "commemoration_image_object"
+msgstr ""
+
+msgctxt "Image"
+msgid "commemoration_image_object"
+msgstr ""
+
+msgid "commemoration_year"
+msgstr "Année de commémoration"
+
+msgctxt "CommemorationItem"
+msgid "commemoration_year"
+msgstr ""
+
+msgid "commemorations"
+msgstr "commémorations"
+
+msgid "component_order"
+msgstr ""
+
+msgctxt "FAComponent"
+msgid "component_order"
+msgstr ""
+
+msgid "consult the digitized version"
+msgstr ""
+
+msgid "consult the virtual exhibits"
+msgstr ""
+
+msgid "contact_name"
+msgstr "contact"
+
+msgctxt "Service"
+msgid "contact_name"
+msgstr "contact"
+
+msgid "contact_object_1"
+msgstr "Accéder aux documents"
+
+msgid "contact_object_2"
+msgstr "Réutilisation et diffusion"
+
+msgid "contact_object_3"
+msgstr "Problème technique"
+
+msgid "contact_object_4"
+msgstr "Contenu du site"
+
+msgid "contact_object_5"
+msgstr "Autres sujets"
+
+msgctxt "BaseContent"
+msgid "content"
+msgstr "contenu"
+
+msgctxt "CmsObject"
+msgid "content"
+msgstr "contenu"
+
+msgctxt "CommemoCollection"
+msgid "content"
+msgstr "contenu"
+
+msgctxt "CommemorationItem"
+msgid "content"
+msgstr "contenu"
+
+msgctxt "ExternRef"
+msgid "content"
+msgstr "contenu"
+
+msgctxt "NewsContent"
+msgid "content"
+msgstr "contenu"
+
+msgctxt "Section"
+msgid "content"
+msgstr "contenu"
+
+msgctxt "BaseContent"
+msgid "content_format"
+msgstr ""
+
+msgctxt "CmsObject"
+msgid "content_format"
+msgstr ""
+
+msgctxt "CommemoCollection"
+msgid "content_format"
+msgstr ""
+
+msgctxt "CommemorationItem"
+msgid "content_format"
+msgstr ""
+
+msgctxt "ExternRef"
+msgid "content_format"
+msgstr ""
+
+msgctxt "NewsContent"
+msgid "content_format"
+msgstr ""
+
+msgctxt "Section"
+msgid "content_format"
+msgstr ""
+
+msgid "contexte de le recherche"
+msgstr ""
+
+msgid "copyright"
+msgstr "copyright"
+
+msgctxt "CssImage"
+msgid "copyright"
+msgstr ""
+
+msgctxt "Image"
+msgid "copyright"
+msgstr "copyright"
+
+msgid "corpname"
+msgstr "Organisation"
+
+msgid "corpname_index_label"
+msgstr "Organisation :"
+
+msgid ""
+"creating CommemorationItem (CommemorationItem collection_top "
+"CommemoCollection %(linkto)s)"
+msgstr ""
+
+msgid "creating File (Circular %(linkto)s additional_attachment File)"
+msgstr ""
+
+msgid "creating File (FAComponent %(linkto)s fa_referenced_files File)"
+msgstr ""
+
+msgid "creating File (FindingAid %(linkto)s fa_referenced_files File)"
+msgstr ""
+
+msgid "creating Image (BaseContent %(linkto)s basecontent_image Image)"
+msgstr ""
+
+msgid "creating Image (CommemoCollection %(linkto)s section_image Image)"
+msgstr ""
+
+msgid "creating Image (CommemorationItem %(linkto)s commemoration_image Image)"
+msgstr ""
+
+msgid "creating Image (ExternRef %(linkto)s externref_image Image)"
+msgstr ""
+
+msgid "creating Image (NewsContent %(linkto)s news_image Image)"
+msgstr ""
+
+msgid "creating Image (Section %(linkto)s section_image Image)"
+msgstr ""
+
+msgid ""
+"creating OAIImportTask (OAIImportTask oai_repository OAIRepository "
+"%(linkto)s)"
+msgstr ""
+
+msgid ""
+"creating SocialNetwork (Service %(linkto)s service_social_network "
+"SocialNetwork)"
+msgstr ""
+
+msgid "creation"
+msgstr ""
+
+msgctxt "FAHeader"
+msgid "creation"
+msgstr ""
+
+msgid "creation_format"
+msgstr ""
+
+msgctxt "FAHeader"
+msgid "creation_format"
+msgstr ""
+
+msgid "creator"
+msgstr ""
+
+msgctxt "Metadata"
+msgid "creator"
+msgstr ""
+
+msgid "cssid"
+msgstr ""
+
+msgctxt "CssImage"
+msgid "cssid"
+msgstr ""
+
+msgid "cssimage_of"
+msgstr ""
+
+msgctxt "CssImage"
+msgid "cssimage_of"
+msgstr ""
+
+msgid "cssimage_of_object"
+msgstr ""
+
+msgctxt "Section"
+msgid "cssimage_of_object"
+msgstr ""
+
+msgid "ctxcomponents_findinaid.tree"
+msgstr ""
+
+msgid "ctxcomponents_findinaid.tree_description"
+msgstr ""
+
+msgid "ctxcomponents_homepage-content-events"
+msgstr ""
+
+msgid "ctxcomponents_homepage-content-events_description"
+msgstr ""
+
+msgid "ctxcomponents_homepage-content-news"
+msgstr ""
+
+msgid "ctxcomponents_homepage-content-news_description"
+msgstr ""
+
+msgid "ctxcomponents_section-title-comp"
+msgstr ""
+
+msgid "ctxcomponents_section-title-comp_description"
+msgstr ""
+
+msgid "custodhist_label"
+msgstr "Historique de conservation :"
+
+msgid "date"
+msgstr ""
+
+msgctxt "CommemoDate"
+msgid "date"
+msgstr ""
+
+msgid "date_is_precise"
+msgstr "Date exacte"
+
+msgctxt "CommemoDate"
+msgid "date_is_precise"
+msgstr ""
+
+msgid "dates"
+msgstr ""
+
+msgid "dates_description"
+msgstr ""
+
+msgctxt "Person"
+msgid "dates_description"
+msgstr ""
+
+msgid "dates_description_format"
+msgstr ""
+
+msgctxt "Person"
+msgid "dates_description_format"
+msgstr ""
+
+msgid "dates_label:"
+msgstr "Dates :"
+
+msgid "de_lang"
+msgstr "Deutsch"
+
+msgid "death_year"
+msgstr "année de décès"
+
+msgctxt "Person"
+msgid "death_year"
+msgstr "année de décès"
+
+msgid "death_year_label:"
+msgstr ""
+
+msgid "deathyear"
+msgstr "année de décès"
+
+msgctxt "AgentAuthority"
+msgid "deathyear"
+msgstr ""
+
+msgid "description"
+msgstr ""
+
+msgctxt "BaseContent"
+msgid "description"
+msgstr "Description des documents"
+
+msgctxt "CssImage"
+msgid "description"
+msgstr ""
+
+msgctxt "FAComponent"
+msgid "description"
+msgstr "Description des documents"
+
+msgctxt "FindingAid"
+msgid "description"
+msgstr "Description des documents"
+
+msgctxt "Image"
+msgid "description"
+msgstr "description"
+
+msgctxt "Metadata"
+msgid "description"
+msgstr "description"
+
+msgctxt "CssImage"
+msgid "description_format"
+msgstr ""
+
+msgctxt "FAComponent"
+msgid "description_format"
+msgstr ""
+
+msgctxt "FindingAid"
+msgid "description_format"
+msgstr ""
+
+msgctxt "Image"
+msgid "description_format"
+msgstr ""
+
+msgid "description_label"
+msgstr "Description :"
+
+msgid "descrules"
+msgstr "règles de description"
+
+msgctxt "FAHeader"
+msgid "descrules"
+msgstr ""
+
+msgid "descrules_format"
+msgstr ""
+
+msgctxt "FAHeader"
+msgid "descrules_format"
+msgstr ""
+
+msgid "deselect"
+msgstr "Déselectionner"
+
+msgid "did"
+msgstr ""
+
+msgctxt "FAComponent"
+msgid "did"
+msgstr ""
+
+msgctxt "FindingAid"
+msgid "did"
+msgstr ""
+
+msgid "did_object"
+msgstr ""
+
+msgctxt "Did"
+msgid "did_object"
+msgstr ""
+
+msgid "digitized_facet"
+msgstr "Numérisé"
+
+msgid "digitized_versions"
+msgstr "versions numérisées"
+
+msgctxt "FAComponent"
+msgid "digitized_versions"
+msgstr "versions numérisées"
+
+msgid "digitized_versions_label"
+msgstr "Versions numérisées :"
+
+msgid "digitized_versions_object"
+msgstr ""
+
+msgctxt "DigitizedVersion"
+msgid "digitized_versions_object"
+msgstr ""
+
+msgid "dimensions_label"
+msgstr "Dimmensions :"
+
+msgid "director"
+msgstr "directeur"
+
+msgid "doc"
+msgstr ""
+
+msgctxt "EsDocument"
+msgid "doc"
+msgstr ""
+
+msgid "document_type"
+msgstr "types de ressources"
+
+msgctxt "Circular"
+msgid "document_type"
+msgstr "type de document"
+
+msgid "document_type_facet"
+msgstr "Types de ressources"
+
+msgid "document_type_object"
+msgstr ""
+
+msgctxt "Concept"
+msgid "document_type_object"
+msgstr ""
+
+msgid "document_uri"
+msgstr ""
+
+msgctxt "Person"
+msgid "document_uri"
+msgstr ""
+
+msgid "documents"
+msgstr ""
+
+msgid "dpt_code"
+msgstr "département"
+
+msgctxt "Service"
+msgid "dpt_code"
+msgstr "département"
+
+msgid "eadid"
+msgstr "identifiant"
+
+msgctxt "FindingAid"
+msgid "eadid"
+msgstr ""
+
+msgid "eadid_label"
+msgstr "Identifiant de l'inventaire d'archives :"
+
+msgid "edito"
+msgstr "Pages Web"
+
+msgid "email"
+msgstr "courriel"
+
+msgctxt "NewsLetterSubscriber"
+msgid "email"
+msgstr ""
+
+msgctxt "Service"
+msgid "email"
+msgstr "courriel"
+
+msgid "empty-commemocollection"
+msgstr ""
+
+msgid "en_lang"
+msgstr "English"
+
+msgid "entity"
+msgstr ""
+
+msgctxt "EsDocument"
+msgid "entity"
+msgstr ""
+
+msgid "entity_object"
+msgstr ""
+
+msgctxt "FAComponent"
+msgid "entity_object"
+msgstr ""
+
+msgctxt "FindingAid"
+msgid "entity_object"
+msgstr ""
+
+msgid "es_lang"
+msgstr "Español"
+
+msgid "exref_service"
+msgstr "service"
+
+msgctxt "ExternRef"
+msgid "exref_service"
+msgstr ""
+
+msgid "exref_service_object"
+msgstr ""
+
+msgctxt "Service"
+msgid "exref_service_object"
+msgstr ""
+
+msgid "extent_label"
+msgstr "Importance matérielle : "
+
+msgid "externref_image"
+msgstr ""
+
+msgctxt "ExternRef"
+msgid "externref_image"
+msgstr ""
+
+msgid "externref_image_object"
+msgstr ""
+
+msgctxt "Image"
+msgid "externref_image_object"
+msgstr ""
+
+msgid "extid"
+msgstr ""
+
+msgid "extptr"
+msgstr ""
+
+msgctxt "Did"
+msgid "extptr"
+msgstr ""
+
+msgid "fa_header"
+msgstr ""
+
+msgctxt "FindingAid"
+msgid "fa_header"
+msgstr ""
+
+msgid "fa_header_object"
+msgstr ""
+
+msgctxt "FAHeader"
+msgid "fa_header_object"
+msgstr ""
+
+msgid "fa_referenced_files"
+msgstr ""
+
+msgctxt "FAComponent"
+msgid "fa_referenced_files"
+msgstr ""
+
+msgctxt "FindingAid"
+msgid "fa_referenced_files"
+msgstr ""
+
+msgid "fa_referenced_files_object"
+msgstr ""
+
+msgctxt "File"
+msgid "fa_referenced_files_object"
+msgstr ""
+
+msgid "failed to connect to elasticsearch"
+msgstr "Erreur de connexion au moteur de recherche"
+
+msgid "famname"
+msgstr "Nom de famille"
+
+msgid "famname_index_label"
+msgstr "Nom de famille :"
+
+msgid "fatype"
+msgstr ""
+
+msgctxt "FindingAid"
+msgid "fatype"
+msgstr ""
+
+msgid "fax"
+msgstr "fax"
+
+msgctxt "Service"
+msgid "fax"
+msgstr "fax"
+
+msgid "file_label"
+msgstr ""
+
+msgid ""
+"files referenced in '[otherfindaid|relatedmaterial|separatedmateri]//..//"
+"archref'"
+msgstr ""
+
+msgid "finding_aid"
+msgstr ""
+
+msgctxt "FAComponent"
+msgid "finding_aid"
+msgstr ""
+
+msgid "finding_aid_object"
+msgstr ""
+
+msgctxt "FindingAid"
+msgid "finding_aid_object"
+msgstr ""
+
+msgid "findingaid_support"
+msgstr ""
+
+msgctxt "FindingAid"
+msgid "findingaid_support"
+msgstr ""
+
+msgid "findingaid_support_object"
+msgstr ""
+
+msgctxt "File"
+msgid "findingaid_support_object"
+msgstr ""
+
+#, python-format
+msgid "for \"%s\""
+msgstr ""
+
+msgid "for the query:"
+msgstr ""
+
+msgid "forenames"
+msgstr "prénoms"
+
+msgctxt "Person"
+msgid "forenames"
+msgstr "prénoms"
+
+msgid "forenames_label:"
+msgstr "Prénoms :"
+
+msgid "fr_lang"
+msgstr "Français"
+
+msgid "fulltext-facet-label"
+msgstr "Rechercher dans ces résultats"
+
+msgid "function"
+msgstr "activités"
+
+msgctxt "FAComponent"
+msgid "function"
+msgstr ""
+
+msgctxt "FindingAid"
+msgid "function"
+msgstr ""
+
+msgid "function_label"
+msgstr "Activités : "
+
+msgid "fuzzy search activation"
+msgstr "activation de la recherche approximative"
+
+msgid "genreform"
+msgstr "type de document"
+
+msgctxt "FAComponent"
+msgid "genreform"
+msgstr ""
+
+msgctxt "FindingAid"
+msgid "genreform"
+msgstr ""
+
+msgid "genreform_label"
+msgstr "Type de document : "
+
+msgid "geo_indexes_label"
+msgstr "Nom de lieu :"
+
+msgid "geogname"
+msgstr "Lieu"
+
+msgid "geoname"
+msgstr "GeoNames"
+
+msgid "www.geonames.org"
+msgstr "GeoNames"
+
+msgid "grouped_with"
+msgstr ""
+
+msgctxt "AgentAuthority"
+msgid "grouped_with"
+msgstr ""
+
+msgctxt "LocationAuthority"
+msgid "grouped_with"
+msgstr ""
+
+msgctxt "SubjectAuthority"
+msgid "grouped_with"
+msgstr ""
+
+msgid "grouped_with_object"
+msgstr ""
+
+msgctxt "AgentAuthority"
+msgid "grouped_with_object"
+msgstr ""
+
+msgctxt "LocationAuthority"
+msgid "grouped_with_object"
+msgstr ""
+
+msgctxt "SubjectAuthority"
+msgid "grouped_with_object"
+msgstr ""
+
+msgid "header"
+msgstr "chapo"
+
+msgctxt "NewsContent"
+msgid "header"
+msgstr "chapo"
+
+msgid "historical_context"
+msgstr "Contexte historique"
+
+msgctxt "Circular"
+msgid "historical_context"
+msgstr ""
+
+msgid "historical_context_object"
+msgstr ""
+
+msgctxt "Concept"
+msgid "historical_context_object"
+msgstr ""
+
+msgid "human-readable name for the repository"
+msgstr ""
+
+msgid "illustration_url"
+msgstr ""
+
+msgctxt "DigitizedVersion"
+msgid "illustration_url"
+msgstr ""
+
+msgid "image_file"
+msgstr "fichier image"
+
+msgctxt "CssImage"
+msgid "image_file"
+msgstr "fichier image"
+
+msgctxt "Image"
+msgid "image_file"
+msgstr "fichier image"
+
+msgid "image_file_object"
+msgstr ""
+
+msgctxt "File"
+msgid "image_file_object"
+msgstr ""
+
+msgid "in-effect"
+msgstr "en vigueur"
+
+msgid "in-effect-partially"
+msgstr "en vigueur (partiellement abrogée / modifiée)"
+
+msgid "index"
+msgstr ""
+
+msgctxt "AgentName"
+msgid "index"
+msgstr ""
+
+msgctxt "Geogname"
+msgid "index"
+msgstr ""
+
+msgctxt "Subject"
+msgid "index"
+msgstr ""
+
+msgid "index_entry"
+msgstr "entrée d'index"
+
+msgid "index_object"
+msgstr ""
+
+msgctxt "FAComponent"
+msgid "index_object"
+msgstr ""
+
+msgctxt "FindingAid"
+msgid "index_object"
+msgstr ""
+
+msgid "index_type"
+msgstr "type d'index"
+
+msgid "index_url"
+msgstr "url d'index"
+
+msgid "internal file link"
+msgstr ""
+
+msgid "inventory"
+msgstr "inventaire"
+
+msgid "json_values"
+msgstr ""
+
+msgctxt "Circular"
+msgid "json_values"
+msgstr ""
+
+msgid "keywords"
+msgstr "Mots clés"
+
+msgctxt "BaseContent"
+msgid "keywords"
+msgstr ""
+
+msgctxt "FindingAid"
+msgid "keywords"
+msgstr ""
+
+msgctxt "Metadata"
+msgid "keywords"
+msgstr ""
+
+msgctxt "Circular"
+msgid "kind"
+msgstr ""
+
+msgid "label"
+msgstr ""
+
+msgctxt "AgentAuthority"
+msgid "label"
+msgstr ""
+
+msgctxt "AgentName"
+msgid "label"
+msgstr ""
+
+msgctxt "Geogname"
+msgid "label"
+msgstr ""
+
+msgctxt "LocationAuthority"
+msgid "label"
+msgstr ""
+
+msgctxt "Subject"
+msgid "label"
+msgstr ""
+
+msgctxt "SubjectAuthority"
+msgid "label"
+msgstr ""
+
+msgid "lang_code"
+msgstr ""
+
+msgctxt "Did"
+msgid "lang_code"
+msgstr ""
+
+msgctxt "FAHeader"
+msgid "lang_code"
+msgstr ""
+
+msgid "lang_description"
+msgstr "Langage du document"
+
+msgctxt "Did"
+msgid "lang_description"
+msgstr ""
+
+msgctxt "FAHeader"
+msgid "lang_description"
+msgstr ""
+
+msgid "lang_description_format"
+msgstr ""
+
+msgctxt "Did"
+msgid "lang_description_format"
+msgstr ""
+
+msgctxt "FAHeader"
+msgid "lang_description_format"
+msgstr ""
+
+msgid "languages_label"
+msgstr "Langues:"
+
+msgctxt "LocationAuthority"
+msgid "latitude"
+msgstr ""
+
+msgid "level"
+msgstr ""
+
+msgctxt "Service"
+msgid "level"
+msgstr ""
+
+msgid "level-C"
+msgstr "Communes"
+
+msgid "level-D"
+msgstr "Archives départementales"
+
+msgid "level-E"
+msgstr "Entreprises"
+
+msgid "level-F"
+msgstr "Autres services d'archives"
+
+msgid "level-H"
+msgstr "Établissements hospitaliers et de santé"
+
+msgid "level-I"
+msgstr "Institutions, établissements ou associations"
+
+msgid "level-M"
+msgstr "Présidence de la République et Ministères"
+
+msgid "level-N"
+msgstr "Services à compétence nationale"
+
+msgid "level-O"
+msgstr "Organismes liés aux archives ou organismes internationaux"
+
+msgid "level-P"
+msgstr "Assemblées parlementaires ou hautes juridictions"
+
+msgid "level-R"
+msgstr "Conseils régionaux"
+
+msgid "level-U"
+msgstr "Rectorats, universités ou établissements d'enseignement supérieur"
+
+msgid "level-Y"
+msgstr "Conseillers archives en DRAC"
+
+msgid "level-Z"
+msgstr "Service interministériel"
+
+msgid "link"
+msgstr "Lien"
+
+msgctxt "Circular"
+msgid "link"
+msgstr ""
+
+msgid "locations"
+msgstr "lieux"
+
+msgid "locations_description"
+msgstr ""
+
+msgctxt "Person"
+msgid "locations_description"
+msgstr ""
+
+msgid "locations_description_format"
+msgstr ""
+
+msgctxt "Person"
+msgid "locations_description_format"
+msgstr ""
+
+msgid "locations_label:"
+msgstr "Lieux :"
+
+msgid "long name"
+msgstr "Nom long"
+
+msgctxt "LocationAuthority"
+msgid "longitude"
+msgstr ""
+
+msgid "mailing_address"
+msgstr "adresse postale"
+
+msgctxt "Service"
+msgid "mailing_address"
+msgstr ""
+
+msgid "main_service"
+msgstr "service relié à"
+
+msgid "manif_prog"
+msgstr "Ajouter des manifestations"
+
+msgctxt "CommemorationItem"
+msgid "manif_prog"
+msgstr ""
+
+msgid "manif_prog_object"
+msgstr ""
+
+msgctxt "BaseContent"
+msgid "manif_prog_object"
+msgstr ""
+
+msgid "map_file"
+msgstr "carte"
+
+msgctxt "Map"
+msgid "map_file"
+msgstr ""
+
+msgid "map_image"
+msgstr ""
+
+msgctxt "Map"
+msgid "map_image"
+msgstr ""
+
+msgid "map_image_object"
+msgstr ""
+
+msgctxt "Image"
+msgid "map_image_object"
+msgstr ""
+
+msgid "map_title"
+msgstr "titre de la carte"
+
+msgctxt "Map"
+msgid "map_title"
+msgstr ""
+
+msgid "materialspec"
+msgstr "précisions matérielles"
+
+msgctxt "Did"
+msgid "materialspec"
+msgstr ""
+
+msgid "materialspec_format"
+msgstr ""
+
+msgctxt "Did"
+msgid "materialspec_format"
+msgstr ""
+
+msgid "materialspec_label"
+msgstr "Précisions matérielles :"
+
+msgid "metadata"
+msgstr "métadonnées"
+
+msgctxt "BaseContent"
+msgid "metadata"
+msgstr "métadonnées"
+
+msgctxt "CmsObject"
+msgid "metadata"
+msgstr "métadonnées"
+
+msgctxt "CommemoCollection"
+msgid "metadata"
+msgstr "métadonnées"
+
+msgctxt "CommemorationItem"
+msgid "metadata"
+msgstr "métadonnées"
+
+msgctxt "ExternRef"
+msgid "metadata"
+msgstr "métadonnées"
+
+msgctxt "Map"
+msgid "metadata"
+msgstr "métadonnées"
+
+msgctxt "NewsContent"
+msgid "metadata"
+msgstr "métadonnées"
+
+msgctxt "Section"
+msgid "metadata"
+msgstr "métadonnées"
+
+msgid "metadata_object"
+msgstr ""
+
+msgctxt "Metadata"
+msgid "metadata_object"
+msgstr ""
+
+msgid "modified_text"
+msgstr "Texte(s) modifié(s) par cette circulaire"
+
+msgctxt "Circular"
+msgid "modified_text"
+msgstr ""
+
+msgid "modified_text_object"
+msgstr ""
+
+msgctxt "OfficialText"
+msgid "modified_text_object"
+msgstr ""
+
+msgid "modifying_text"
+msgstr "Texte qui modifie cette circulaire"
+
+msgctxt "Circular"
+msgid "modifying_text"
+msgstr ""
+
+msgid "modifying_text_object"
+msgstr ""
+
+msgctxt "OfficialText"
+msgid "modifying_text_object"
+msgstr ""
+
+msgid "name"
+msgstr "Nom"
+
+msgctxt "Category"
+msgid "name"
+msgstr "nom"
+
+msgctxt "CommemoCollection"
+msgid "name"
+msgstr "nom"
+
+msgctxt "FindingAid"
+msgid "name"
+msgstr "nom"
+
+msgctxt "OAIRepository"
+msgid "name"
+msgstr ""
+
+msgctxt "OfficialText"
+msgid "name"
+msgstr "nom"
+
+msgctxt "Person"
+msgid "name"
+msgstr "nom"
+
+msgctxt "Section"
+msgid "name"
+msgstr "nom"
+
+msgctxt "Service"
+msgid "name"
+msgstr "nom"
+
+msgctxt "SocialNetwork"
+msgid "name"
+msgstr "nom"
+
+msgid "name2"
+msgstr ""
+
+msgctxt "Service"
+msgid "name2"
+msgstr ""
+
+msgid "name_index_label"
+msgstr "Personne ou Organisation :"
+
+msgid "name_label:"
+msgstr "Nom :"
+
+msgid "news_image"
+msgstr "illustration"
+
+msgctxt "NewsContent"
+msgid "news_image"
+msgstr "illustration de l'actualité"
+
+msgid "news_image_object"
+msgstr ""
+
+msgctxt "Image"
+msgid "news_image_object"
+msgstr ""
+
+msgid "no"
+msgstr "non"
+
+msgid "no label"
+msgstr ""
+
+msgid "nor"
+msgstr "N° NOR"
+
+msgctxt "Circular"
+msgid "nor"
+msgstr ""
+
+msgctxt "Did"
+msgid "note"
+msgstr ""
+
+msgctxt "Did"
+msgid "note_format"
+msgstr ""
+
+msgid "note_label"
+msgstr "Note :"
+
+msgid "notes"
+msgstr "observations"
+
+msgctxt "FAComponent"
+msgid "notes"
+msgstr ""
+
+msgctxt "FindingAid"
+msgid "notes"
+msgstr ""
+
+msgid "notes_format"
+msgstr ""
+
+msgctxt "FAComponent"
+msgid "notes_format"
+msgstr ""
+
+msgctxt "FindingAid"
+msgid "notes_format"
+msgstr ""
+
+msgid "notes_label"
+msgstr "Observations : "
+
+msgid "notfound-msg"
+msgstr "Document non trouvé."
+
+msgid "oai-origin-website"
+msgstr "Consulter le document sur le site d'origine"
+
+msgid "oai_repository"
+msgstr ""
+
+msgctxt "OAIImportTask"
+msgid "oai_repository"
+msgstr ""
+
+msgid "oai_repository_object"
+msgstr ""
+
+msgctxt "OAIRepository"
+msgid "oai_repository_object"
+msgstr ""
+
+msgid "obsolete"
+msgstr "caduc"
+
+msgid "occupation"
+msgstr "fonction"
+
+msgctxt "FAComponent"
+msgid "occupation"
+msgstr ""
+
+msgctxt "FindingAid"
+msgid "occupation"
+msgstr ""
+
+msgid "occupation_label"
+msgstr "Fonction : "
+
+#, python-format
+msgid "on %s "
+msgstr "le %s"
+
+#, python-format
+msgid "on term \"%s\""
+msgstr ""
+
+msgid "on_homepage"
+msgstr "sur la page d'accueil"
+
+msgctxt "CommemorationItem"
+msgid "on_homepage"
+msgstr "sur la page d'accueil"
+
+msgctxt "NewsContent"
+msgid "on_homepage"
+msgstr "sur la page d'accueil"
+
+msgid "on_homepage_order"
+msgstr ""
+
+msgctxt "CommemorationItem"
+msgid "on_homepage_order"
+msgstr ""
+
+msgid "opening_period"
+msgstr "horaires d'ouverture"
+
+msgctxt "Service"
+msgid "opening_period"
+msgstr "horaires d'ouverture"
+
+msgid "order"
+msgstr "ordre"
+
+msgctxt "BaseContent"
+msgid "order"
+msgstr ""
+
+msgctxt "Circular"
+msgid "order"
+msgstr ""
+
+msgctxt "CmsObject"
+msgid "order"
+msgstr ""
+
+msgctxt "CommemoCollection"
+msgid "order"
+msgstr ""
+
+msgctxt "CommemorationItem"
+msgid "order"
+msgstr ""
+
+msgctxt "CssImage"
+msgid "order"
+msgstr ""
+
+msgctxt "ExternRef"
+msgid "order"
+msgstr ""
+
+msgctxt "Map"
+msgid "order"
+msgstr ""
+
+msgctxt "NewsContent"
+msgid "order"
+msgstr ""
+
+msgctxt "Section"
+msgid "order"
+msgstr ""
+
+msgid "organization_chart"
+msgstr ""
+
+msgctxt "Service"
+msgid "organization_chart"
+msgstr ""
+
+msgid "originalsloc_label"
+msgstr "Conservation des originaux :"
+
+msgid "origination"
+msgstr "origine"
+
+msgctxt "Did"
+msgid "origination"
+msgstr ""
+
+msgid "origination_format"
+msgstr ""
+
+msgctxt "Did"
+msgid "origination_format"
+msgstr ""
+
+msgid "originators_facet"
+msgstr "Producteurs"
+
+msgid "other"
+msgstr "autre"
+
+msgctxt "Service"
+msgid "other"
+msgstr ""
+
+msgid "other_format"
+msgstr ""
+
+msgctxt "Service"
+msgid "other_format"
+msgstr ""
+
+#, python-format
+msgid "page %s on %s"
+msgstr ""
+
+msgid "parent_component"
+msgstr ""
+
+msgctxt "FAComponent"
+msgid "parent_component"
+msgstr ""
+
+msgid "parent_component_object"
+msgstr ""
+
+msgctxt "FAComponent"
+msgid "parent_component_object"
+msgstr ""
+
+msgid "period"
+msgstr "période"
+
+msgid "period_label"
+msgstr ""
+
+msgid "persname"
+msgstr "Personne"
+
+msgid "persname_index_label"
+msgstr "Personne :"
+
+msgid "phone_number"
+msgstr "numéro de téléphone"
+
+msgctxt "Service"
+msgid "phone_number"
+msgstr "numéro de téléphone"
+
+msgid "physdesc"
+msgstr "description physique"
+
+msgctxt "Did"
+msgid "physdesc"
+msgstr ""
+
+msgid "physdesc_format"
+msgstr ""
+
+msgctxt "Did"
+msgid "physdesc_format"
+msgstr ""
+
+msgid "physdesc_label"
+msgstr "Description physique :"
+
+msgid "physfacet_label"
+msgstr "Information matérielles : "
+
+msgid "physloc"
+msgstr "Localisation physique"
+
+msgctxt "Did"
+msgid "physloc"
+msgstr ""
+
+msgid "physloc_format"
+msgstr ""
+
+msgctxt "Did"
+msgid "physloc_format"
+msgstr ""
+
+msgid "physloc_label"
+msgstr "Localisation physique :"
+
+msgid "previous_info"
+msgstr ""
+
+msgctxt "BaseContent"
+msgid "previous_info"
+msgstr ""
+
+msgctxt "Circular"
+msgid "previous_info"
+msgstr ""
+
+msgctxt "CommemoCollection"
+msgid "previous_info"
+msgstr ""
+
+msgctxt "CommemorationItem"
+msgid "previous_info"
+msgstr ""
+
+msgctxt "ExternRef"
+msgid "previous_info"
+msgstr ""
+
+msgctxt "Map"
+msgid "previous_info"
+msgstr ""
+
+msgctxt "NewsContent"
+msgid "previous_info"
+msgstr ""
+
+msgctxt "Section"
+msgid "previous_info"
+msgstr ""
+
+msgid "previous_info_object"
+msgstr ""
+
+msgctxt "PreviousInfo"
+msgid "previous_info_object"
+msgstr ""
+
+msgid "producer"
+msgstr "producteur"
+
+msgctxt "Circular"
+msgid "producer"
+msgstr "Services administratifs concernés"
+
+msgid "producer_acronym"
+msgstr "Acronyme du/des producteur(s)"
+
+msgctxt "Circular"
+msgid "producer_acronym"
+msgstr ""
+
+msgid "producers name"
+msgstr "Nom du/des producteur(s)"
+
+msgid "publicationstmt"
+msgstr "publication"
+
+msgctxt "FAHeader"
+msgid "publicationstmt"
+msgstr ""
+
+msgid "publicationstmt_format"
+msgstr ""
+
+msgctxt "FAHeader"
+msgid "publicationstmt_format"
+msgstr ""
+
+msgid "publicationstmt_label"
+msgstr "Publication :"
+
+msgid "publisher"
+msgstr "Institution"
+
+msgctxt "FindingAid"
+msgid "publisher"
+msgstr ""
+
+msgctxt "Person"
+msgid "publisher"
+msgstr ""
+
+msgid "publisher_label"
+msgstr "Institution :"
+
+msgid "publishers"
+msgstr "Institutions"
+
+msgid "publishers_facet"
+msgstr "Institutions"
+
+msgid "punctual"
+msgstr "ponctuel"
+
+msgid "reftype"
+msgstr "type de référence"
+
+msgctxt "ExternRef"
+msgid "reftype"
+msgstr ""
+
+msgid "related_authority"
+msgstr ""
+
+msgctxt "CommemorationItem"
+msgid "related_authority"
+msgstr ""
+
+msgctxt "ExternRef"
+msgid "related_authority"
+msgstr ""
+
+msgid "related_authority_object"
+msgstr ""
+
+msgctxt "AgentAuthority"
+msgid "related_authority_object"
+msgstr ""
+
+msgctxt "LocationAuthority"
+msgid "related_authority_object"
+msgstr ""
+
+msgctxt "SubjectAuthority"
+msgid "related_authority_object"
+msgstr ""
+
+msgid "related_finding_aid_label"
+msgstr "Inventaire d'archives :"
+
+msgid "repository"
+msgstr "Organisme responsable de l’accès intellectuel"
+
+msgctxt "Did"
+msgid "repository"
+msgstr "Organisme responsable de l’accès intellectuel"
+
+msgid "repository_format"
+msgstr ""
+
+msgctxt "Did"
+msgid "repository_format"
+msgstr ""
+
+msgid "repository_label"
+msgstr "Organisme responsable de l’accès intellectuel"
+
+msgid "revoked"
+msgstr "abrogée"
+
+msgid "revoked_text"
+msgstr "texte abrogé"
+
+msgctxt "Circular"
+msgid "revoked_text"
+msgstr "texte abrogé"
+
+msgid "revoked_text_object"
+msgstr ""
+
+msgctxt "OfficialText"
+msgid "revoked_text_object"
+msgstr ""
+
+msgctxt "AgentName"
+msgid "role"
+msgstr ""
+
+msgctxt "DigitizedVersion"
+msgid "role"
+msgstr ""
+
+msgctxt "Geogname"
+msgid "role"
+msgstr ""
+
+msgctxt "Subject"
+msgid "role"
+msgstr ""
+
+msgid "same_as"
+msgstr ""
+
+msgctxt "AgentAuthority"
+msgid "same_as"
+msgstr ""
+
+msgctxt "AuthorityRecord"
+msgid "same_as"
+msgstr ""
+
+msgctxt "Concept"
+msgid "same_as"
+msgstr ""
+
+msgctxt "ExternalUri"
+msgid "same_as"
+msgstr ""
+
+msgctxt "LocationAuthority"
+msgid "same_as"
+msgstr ""
+
+msgctxt "SubjectAuthority"
+msgid "same_as"
+msgstr ""
+
+msgid "scopecontent"
+msgstr "contenu"
+
+msgctxt "FAComponent"
+msgid "scopecontent"
+msgstr ""
+
+msgctxt "FindingAid"
+msgid "scopecontent"
+msgstr ""
+
+msgid "scopecontent_format"
+msgstr ""
+
+msgctxt "FAComponent"
+msgid "scopecontent_format"
+msgstr ""
+
+msgctxt "FindingAid"
+msgid "scopecontent_format"
+msgstr ""
+
+msgid "scopecontent_label"
+msgstr "Contenu :"
+
+msgid "search-breadcrumb-label"
+msgstr "Recherche"
+
+msgid "search_form_url"
+msgstr "Url du formulaire de recherche "
+
+msgctxt "Service"
+msgid "search_form_url"
+msgstr ""
+
+msgid "section_image"
+msgstr ""
+
+msgctxt "CommemoCollection"
+msgid "section_image"
+msgstr ""
+
+msgctxt "Section"
+msgid "section_image"
+msgstr ""
+
+msgid "section_image_object"
+msgstr ""
+
+msgctxt "Image"
+msgid "section_image_object"
+msgstr ""
+
+msgid "see service related documents"
+msgstr "Voir les références des documents d'archives"
+
+msgid "select"
+msgstr "Sélectionner"
+
+msgid "service"
+msgstr ""
+
+msgctxt "FindingAid"
+msgid "service"
+msgstr ""
+
+msgctxt "OAIRepository"
+msgid "service"
+msgstr ""
+
+msgctxt "Person"
+msgid "service"
+msgstr ""
+
+msgid "service_image"
+msgstr ""
+
+msgctxt "Service"
+msgid "service_image"
+msgstr ""
+
+msgid "service_image_object"
+msgstr ""
+
+msgctxt "Image"
+msgid "service_image_object"
+msgstr ""
+
+msgid "service_label"
+msgstr "Service :"
+
+msgid "service_level_facet"
+msgstr "Type de service"
+
+msgid "service_object"
+msgstr ""
+
+msgctxt "Service"
+msgid "service_object"
+msgstr ""
+
+msgid "service_social_network"
+msgstr "réseaux sociaux"
+
+msgctxt "Service"
+msgid "service_social_network"
+msgstr ""
+
+msgid "service_social_network_object"
+msgstr ""
+
+msgctxt "SocialNetwork"
+msgid "service_social_network_object"
+msgstr ""
+
+msgid "services"
+msgstr ""
+
+msgid "short name"
+msgstr "Nom court"
+
+msgid "short_description"
+msgstr ""
+
+msgctxt "CommemoCollection"
+msgid "short_description"
+msgstr ""
+
+msgctxt "Section"
+msgid "short_description"
+msgstr ""
+
+msgid "short_name"
+msgstr ""
+
+msgctxt "Service"
+msgid "short_name"
+msgstr ""
+
+msgid "siaf_daf_code"
+msgstr ""
+
+msgctxt "Circular"
+msgid "siaf_daf_code"
+msgstr ""
+
+msgid "siaf_daf_kind"
+msgstr "Nature"
+
+msgctxt "Circular"
+msgid "siaf_daf_kind"
+msgstr "Nature"
+
+msgid "siaf_daf_signing_date"
+msgstr "Date de signature ou de publication"
+
+msgctxt "Circular"
+msgid "siaf_daf_signing_date"
+msgstr "Date de signature ou de publication"
+
+msgid "siaf_daf_signing_year"
+msgstr "Date"
+
+msgid "signing_date"
+msgstr "Date de signature"
+
+msgctxt "Circular"
+msgid "signing_date"
+msgstr "Date de signature"
+
+msgid "source"
+msgstr ""
+
+msgid "stable_id"
+msgstr ""
+
+msgctxt "FAComponent"
+msgid "stable_id"
+msgstr ""
+
+msgctxt "FindingAid"
+msgid "stable_id"
+msgstr ""
+
+msgctxt "NewsContent"
+msgid "start_date"
+msgstr ""
+
+msgid "start_year"
+msgstr "date de début"
+
+msgctxt "ExternRef"
+msgid "start_year"
+msgstr ""
+
+msgid "startyear"
+msgstr ""
+
+msgctxt "Did"
+msgid "startyear"
+msgstr ""
+
+msgid "status"
+msgstr "Statut"
+
+msgctxt "Circular"
+msgid "status"
+msgstr "Statut du texte"
+
+msgid "status_facet"
+msgstr "Statut"
+
+msgid "stop_date"
+msgstr "date de fin"
+
+msgctxt "NewsContent"
+msgid "stop_date"
+msgstr "date de fin"
+
+msgid "stop_year"
+msgstr "date de fin"
+
+msgctxt "ExternRef"
+msgid "stop_year"
+msgstr ""
+
+msgid "stopyear"
+msgstr ""
+
+msgctxt "Did"
+msgid "stopyear"
+msgstr ""
+
+msgid "subject"
+msgstr "Thème catalogué"
+
+msgctxt "Metadata"
+msgid "subject"
+msgstr ""
+
+msgid "subject_indexes_label"
+msgstr "Sujet : "
+
+msgid "subtitle"
+msgstr "sous-titre"
+
+msgctxt "CommemoCollection"
+msgid "subtitle"
+msgstr ""
+
+msgctxt "CommemorationItem"
+msgid "subtitle"
+msgstr ""
+
+msgctxt "Section"
+msgid "subtitle"
+msgstr ""
+
+msgid "support document for a finding aid"
+msgstr ""
+
+msgid "there was a problem with the elasticsearch request"
+msgstr ""
+
+msgid "thumbnail_dest"
+msgstr ""
+
+msgctxt "Service"
+msgid "thumbnail_dest"
+msgstr ""
+
+msgid "thumbnail_url"
+msgstr ""
+
+msgctxt "Service"
+msgid "thumbnail_url"
+msgstr ""
+
+msgid "time_period_facet"
+msgstr "Période chronologique"
+
+msgctxt "BaseContent"
+msgid "title"
+msgstr "titre"
+
+msgctxt "Circular"
+msgid "title"
+msgstr "titre"
+
+msgctxt "CmsObject"
+msgid "title"
+msgstr "titre"
+
+msgctxt "CommemoCollection"
+msgid "title"
+msgstr "titre"
+
+msgctxt "CommemorationItem"
+msgid "title"
+msgstr "titre"
+
+msgctxt "ExternRef"
+msgid "title"
+msgstr ""
+
+msgctxt "Map"
+msgid "title"
+msgstr ""
+
+msgctxt "Metadata"
+msgid "title"
+msgstr "titre"
+
+msgctxt "NewsContent"
+msgid "title"
+msgstr "titre"
+
+msgctxt "Section"
+msgid "title"
+msgstr "titre"
+
+msgid "title_label"
+msgstr ""
+
+msgid "titleproper"
+msgstr ""
+
+msgctxt "FAHeader"
+msgid "titleproper"
+msgstr ""
+
+msgid "titlestmt"
+msgstr "titre"
+
+msgctxt "FAHeader"
+msgid "titlestmt"
+msgstr ""
+
+msgid "titlestmt_format"
+msgstr ""
+
+msgctxt "FAHeader"
+msgid "titlestmt_format"
+msgstr ""
+
+msgid "top_components"
+msgstr "contenu à afficher avant la carte"
+
+msgctxt "FindingAid"
+msgid "top_components"
+msgstr ""
+
+msgid "top_components_object"
+msgstr ""
+
+msgctxt "FAComponent"
+msgid "top_components_object"
+msgstr ""
+
+msgid "top_content"
+msgstr "contenu avant la carte"
+
+msgctxt "Map"
+msgid "top_content"
+msgstr ""
+
+msgid "top_content_format"
+msgstr ""
+
+msgctxt "Map"
+msgid "top_content_format"
+msgstr ""
+
+msgctxt "AgentName"
+msgid "type"
+msgstr ""
+
+msgctxt "CommemoDate"
+msgid "type"
+msgstr ""
+
+msgctxt "Metadata"
+msgid "type"
+msgstr "type"
+
+msgid "unique identifier"
+msgstr ""
+
+msgid "unitdate"
+msgstr "date"
+
+msgctxt "Did"
+msgid "unitdate"
+msgstr "date"
+
+msgid "unitid"
+msgstr "Identifiant de l'unité documentaire"
+
+msgctxt "Did"
+msgid "unitid"
+msgstr "Identifiant de l'unité documentaire"
+
+msgid "unitid_label"
+msgstr "Identifiant de l'unité documentaire :"
+
+msgid "unittitle"
+msgstr "Titre"
+
+msgctxt "Did"
+msgid "unittitle"
+msgstr "Titre"
+
+msgctxt "DigitizedVersion"
+msgid "url"
+msgstr ""
+
+msgctxt "ExternRef"
+msgid "url"
+msgstr ""
+
+msgctxt "OAIRepository"
+msgid "url"
+msgstr ""
+
+msgctxt "PreviousInfo"
+msgid "url"
+msgstr ""
+
+msgctxt "SocialNetwork"
+msgid "url"
+msgstr ""
+
+msgid "userestrict"
+msgstr "restrictions d'utilisation"
+
+msgctxt "FAComponent"
+msgid "userestrict"
+msgstr ""
+
+msgctxt "FindingAid"
+msgid "userestrict"
+msgstr ""
+
+msgid "userestrict_format"
+msgstr ""
+
+msgctxt "FAComponent"
+msgid "userestrict_format"
+msgstr ""
+
+msgctxt "FindingAid"
+msgid "userestrict_format"
+msgstr ""
+
+msgid "userestrict_label"
+msgstr "Restrictions d'utilisation :"
+
+msgctxt "BaseContent"
+msgid "uuid"
+msgstr ""
+
+msgctxt "Category"
+msgid "uuid"
+msgstr ""
+
+msgctxt "Circular"
+msgid "uuid"
+msgstr ""
+
+msgctxt "CmsObject"
+msgid "uuid"
+msgstr ""
+
+msgctxt "CommemoCollection"
+msgid "uuid"
+msgstr ""
+
+msgctxt "CommemoDate"
+msgid "uuid"
+msgstr ""
+
+msgctxt "CommemorationItem"
+msgid "uuid"
+msgstr ""
+
+msgctxt "CssImage"
+msgid "uuid"
+msgstr ""
+
+msgctxt "ExternRef"
+msgid "uuid"
+msgstr ""
+
+msgctxt "Image"
+msgid "uuid"
+msgstr ""
+
+msgctxt "Map"
+msgid "uuid"
+msgstr ""
+
+msgctxt "Metadata"
+msgid "uuid"
+msgstr ""
+
+msgctxt "NewsContent"
+msgid "uuid"
+msgstr ""
+
+msgctxt "OfficialText"
+msgid "uuid"
+msgstr ""
+
+msgctxt "Section"
+msgid "uuid"
+msgstr ""
+
+msgctxt "Service"
+msgid "uuid"
+msgstr ""
+
+msgctxt "SocialNetwork"
+msgid "uuid"
+msgstr ""
+
+msgid "validating..."
+msgstr ""
+
+msgid "website_label:"
+msgstr "Site web :"
+
+msgid "website_url"
+msgstr "site web"
+
+msgctxt "Service"
+msgid "website_url"
+msgstr "site web"
+
+msgid "wfs_oaiimport_completed"
+msgstr ""
+
+msgid "wfs_oaiimport_running"
+msgstr ""
+
+msgid "wfs_oaimport_failed"
+msgstr ""
+
+msgid "wft_faimport_complete"
+msgstr ""
+
+msgid "wft_faimport_fail"
+msgstr ""
+
+msgid "write to us"
+msgstr "nous écrire"
+
+msgid "year"
+msgstr "année"
+
+msgctxt "CommemoCollection"
+msgid "year"
+msgstr "titre"
+
+msgctxt "CommemorationItem"
+msgid "year"
+msgstr "titre"
+
+msgid "yes"
+msgstr "oui"
+
+msgid "zip_code"
+msgstr "code postal"
+
+msgctxt "Service"
+msgid "zip_code"
+msgstr "code postal"
+
+#, python-brace-format
+msgid "{count} circulaires"
+msgstr "{count} circulaires"
+
+#, python-brace-format
+msgid "{count} documents"
+msgstr "{count} documents"
+
+#, python-brace-format
+msgid "{count} documents in this section"
+msgstr "{count} documents dans cette rubrique"
+
+#, python-brace-format
+msgid "{count} results"
+msgstr "{count} résultats"
+
+#~ msgid ""
+#~ "\n"
+#~ "Hello,\n"
+#~ "\n"
+#~ "Your subscription to the francearchives.fr newsletter has been taken into "
+#~ "account.\n"
+#~ "Please click on the link below to activate your account:\n"
+#~ "%(url)s\n"
+#~ msgstr ""
+#~ "\n"
+#~ "Votre inscription à la lettre d'information de francearchives.fr a bien "
+#~ "été enregistrée.\n"
+#~ "Merci de cliquer sur ce lien pour l'activer :\n"
+#~ "%(url)s\n"
+
+#~ msgid "###home-description-meta###"
+#~ msgstr "Portail National des Archives de France"
+
+#~ msgid "###home-title-meta###"
+#~ msgstr "FranceArchives.fr"
+
+#~ msgid "- Read more"
+#~ msgstr "- Leer más"
+
+#~ msgid "Confirm your subscription on %(base_url)s"
+#~ msgstr "Confirmez votre inscription sur %(base_url)s"
+
+#~ msgid "Current language"
+#~ msgstr "Lengua actual"
+
+#~ msgid "IndexEntry"
+#~ msgstr "Entrée d'index"
+
+#~ msgid "IndexEntry_plural"
+#~ msgstr "Entrées d'index"
+
+#~ msgid "Newsletter subscription"
+#~ msgstr "Inscription à la lettre d'information"
+
+#~ msgid "PniaAgent"
+#~ msgstr "Personne"
+
+#~ msgid "PniaLocation"
+#~ msgstr "Lieu"
+
+#~ msgid "PniaSubject"
+#~ msgstr "Thème"
+
+#~ msgid "Read more on:"
+#~ msgstr "Leer más sobre: "
+
+#~ msgid "RelatedFindingAid"
+#~ msgstr "Inventaire d'archives associé"
+
+#~ msgid "RelatedFindingAid_plural"
+#~ msgstr "Inventaires d'archives associés"
+
+#~ msgid "See more..."
+#~ msgstr "Voir plus..."
+
+#~ msgid "Subscribe to newsletter"
+#~ msgstr "Inscrivez-vous"
+
+#~ msgid "Your subscription email has been sent. Follow instructions in there."
+#~ msgstr ""
+#~ "Un email d'activation de l'inscription vous a été envoyé. Veuillez suivre "
+#~ "les instructions dans ce courrier."
+
+#~ msgid "abstract_label"
+#~ msgstr "Résumé du contenu :"
+
+#~ msgid "acqinfo_label"
+#~ msgstr "Informations sur l'acquisition :"
+
+#~ msgid "author_label"
+#~ msgstr "Auteur de la description :"
+
+#~ msgid "bounce-label"
+#~ msgstr "site web d'origine"
+
+#~ msgid "collectivity"
+#~ msgstr "collectivité"
+
+#~ msgid "creation_label"
+#~ msgstr "Création :"
+
+#~ msgctxt "FAChange"
+#~ msgid "description"
+#~ msgstr "description"
+
+#~ msgid "descrules_label"
+#~ msgstr "Règles de description :"
+
+#~ msgid "fatype_label"
+#~ msgstr "Type :"
+
+#~ msgid "location"
+#~ msgstr "lieux"
+
+#~ msgid "origination_label"
+#~ msgstr "Origine :"
+
+#~ msgid "person"
+#~ msgstr "personnalités"
+
+#~ msgid "preflabel"
+#~ msgstr "libellé"
+
+#~ msgid "service directory"
+#~ msgstr "annuaire du service"
+
+#~ msgid "titlestmt_label"
+#~ msgstr "Titre :"
+
+#~ msgctxt "Alignment"
+#~ msgid "type"
+#~ msgstr "type"
+
+#~ msgctxt "IndexEntry"
+#~ msgid "type"
+#~ msgstr "type"

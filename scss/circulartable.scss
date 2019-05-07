@@ -1,0 +1,15 @@
+#bs-table-container table td {
+  white-space: normal;
+}
+
+.circulartable_caret {
+    color: #ccc;
+    margin-left: 0.5em;
+    font-size: 1.2em;
+    & > .fa {
+        padding: 0.1em;
+    }
+    &-selected {
+        color: #000;
+    }
+}
