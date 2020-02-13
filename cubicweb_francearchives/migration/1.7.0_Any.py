@@ -29,6 +29,6 @@
 # The fact that you are presently reading this means that you have had
 # knowledge of the CeCILL-C license and that you accept its terms.
 #
-add_relation_type('index_subject')
-add_relation_type('index_location')
-add_relation_type('index_agent')
+add_relation_type("index_subject")
+add_relation_type("index_location")
+add_relation_type("index_agent")

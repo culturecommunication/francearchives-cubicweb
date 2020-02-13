@@ -38,10 +38,14 @@ from cubicweb.web import httpcache
 from cubicweb.web.views import idownloadable
 
 
-from cubes.oaipmh.entities import (ETypeOAISetSpec, RelatedEntityOAISetSpec,
-                                   NoRecordsMatch, OAIPMHRecordAdapter)
-from cubes.oaipmh import MetadataFormat
-from cubes.oaipmh.views import OAIView, OAIResponse
+from cubicweb_oaipmh.entities import (
+    ETypeOAISetSpec,
+    RelatedEntityOAISetSpec,
+    NoRecordsMatch,
+    OAIPMHRecordAdapter,
+)
+from cubicweb_oaipmh import MetadataFormat
+from cubicweb_oaipmh.views import OAIView, OAIResponse
 
 from logilab.common.decorators import monkeypatch
 
@@ -61,8 +65,8 @@ def __call__(self):
     the xml record string into wrapper.
     """  # noqa
     encoding = self._cw.encoding
-    assert encoding == 'UTF-8', 'unexpected encoding {0}'.format(encoding)
-    content = '<?xml version="1.0" encoding="%s"?>\n' % encoding
+    assert encoding == "UTF-8", "unexpected encoding {0}".format(encoding)
+    content = b'<?xml version="1.0" encoding="%s"?>\n' % encoding.encode("utf-8")
     oai_response = OAIResponse(self.oai_request)
     # combine errors coming from view selection with those of request
     # processing.
@@ -70,28 +74,26 @@ def __call__(self):
     verb_content = self.verb_content() if not errors else None
     errors.update(self.oai_request.errors)
     response_elem = oai_response.to_xml(verb_content, errors=errors)
-    for ead in response_elem.xpath('..//s:ead',
-                                   namespaces={'s': 'urn:isbn:1-931666-22-9'}):
-        ead.attrib['S'] = '#'
-    content += etree.tostring(response_elem, encoding='utf-8')
+    for ead in response_elem.xpath("..//s:ead", namespaces={"s": "urn:isbn:1-931666-22-9"}):
+        ead.attrib["S"] = "#"
+    content += etree.tostring(response_elem, encoding="utf-8")
     # realy ugly stuff
-    content = content.replace('S="#"', 'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"')
-    return Response(content, content_type='text/xml')
+    content = content.replace(b'S="#"', b'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"')
+    return Response(content, content_type="text/xml")
 
 
 METADATA_FORMATS = {
-    'ape_ead': (
-        MetadataFormat('http://www.loc.gov/ead/ead.xsd',
-                       'urn:isbn:1-931666-22-9'),
-        'oai_ead.export',
+    "ape_ead": (
+        MetadataFormat("http://www.loc.gov/ead/ead.xsd", "urn:isbn:1-931666-22-9"),
+        "oai_ead.export",
     ),
 }
 
 
 class FindingAidStableIdFARecordAdapter(OAIPMHRecordAdapter):
-    __select__ = OAIPMHRecordAdapter.__select__ & is_instance('FindingAid')
+    __select__ = OAIPMHRecordAdapter.__select__ & is_instance("FindingAid")
     metadata_formats = METADATA_FORMATS.copy()
-    etype = 'FindingAid'
+    etype = "FindingAid"
 
     @classmethod
     def set_definition(cls):
@@ -104,14 +106,19 @@ class FindingAidStableIdFARecordAdapter(OAIPMHRecordAdapter):
 
 class AbstractOAIDownloadView(idownloadable.DownloadView):
     """oai download view"""
+
     __select__ = one_line_rset()
     http_cache_manager = httpcache.NoHTTPCacheManager
 
     def set_request_content_type(self):
         entity = self.cw_rset.get_entity(self.cw_row or 0, self.cw_col or 0)
         adapter = entity.cw_adapt_to(self.adapter_id)
-        self._cw.set_content_type(adapter.content_type, filename=adapter.file_name,
-                                  encoding=adapter.encoding, disposition='attachment')
+        self._cw.set_content_type(
+            adapter.content_type,
+            filename=adapter.file_name,
+            encoding=adapter.encoding,
+            disposition="attachment",
+        )
 
     def call(self):
         entity = self.cw_rset.get_entity(self.cw_row or 0, self.cw_col or 0)
@@ -129,36 +136,38 @@ class FindingAidSetSpec(ETypeOAISetSpec):
     """
 
     def __init__(self):
-        super(FindingAidSetSpec, self).__init__('FindingAid', 'stable_id')
+        super(FindingAidSetSpec, self).__init__("FindingAid", "stable_id")
 
     def setspec_restrictions(self, value=None):
         if value is not None:
-            raise NoRecordsMatch('unexpected setspec')
-        return 'X is FindingAid', {}
+            raise NoRecordsMatch("unexpected setspec")
+        return "X is FindingAid", {}
 
     def all_services(self, cnx):
-        return list(cnx.execute(
-            'Any S,SC,SN,SSN,SN2 WHERE S is Service, S code SC, '
-            'S name SN, S short_name SSN, S name2 SN2, '
-            'S level "level-D", NOT S code NULL, '
-            'EXISTS(X is FindingAid, X service S)'
-        ).entities())
+        return list(
+            cnx.execute(
+                "Any S,SC,SN,SSN,SN2 WHERE S is Service, S code SC, "
+                "S name SN, S short_name SSN, S name2 SN2, "
+                'S level "level-D", NOT S code NULL, '
+                "EXISTS(X is FindingAid, X service S)"
+            ).entities()
+        )
 
     def setspecs(self, cnx):
-        yield u'findingaid', cnx._('FindingAid')  # main set
+        yield "findingaid", cnx._("FindingAid")  # main set
         # + list of all services that have provided some findingaids
         for service in self.all_services(cnx):
-            yield (u'findingaid:service:{}'.format(service.code), service.publisher())
+            yield ("findingaid:service:{}".format(service.code), service.publisher())
 
     def __getitem__(self, key):
-        assert key == 'service', "other relations than 'service' are not tested yet"
-        specifier = RelatedEntityOAISetSpec('service', 'Service', 'code')
+        assert key == "service", "other relations than 'service' are not tested yet"
+        specifier = RelatedEntityOAISetSpec("service", "Service", "code")
         specifier.__parent__ = self
         return specifier
 
 
 class OAIRepository(AnyEntity):
-    __regid__ = 'OAIRepository'
+    __regid__ = "OAIRepository"
 
     @property
     def tasks(self):
@@ -166,18 +175,18 @@ class OAIRepository(AnyEntity):
 
         The returned tasks are sorted by their creation date.
         """
-        return sorted(self.reverse_oai_repository,
-                      key=lambda t: t.creation_date)
+        return sorted(self.reverse_oai_repository, key=lambda t: t.creation_date)
 
     @property
     def last_successful_import(self):
         rset = self._cw.execute(
-            'Any OIT ORDERBY OIT DESC LIMIT 1 '
-            'WHERE OIT oai_repository X, X eid %(x)s, '
+            "Any OIT ORDERBY OIT DESC LIMIT 1 "
+            "WHERE OIT oai_repository X, X eid %(x)s, "
             'OIT in_state S, S name "wfs_oaiimport_completed"',
-            {'x': self.eid})
+            {"x": self.eid},
+        )
         if rset:
             oai_import = rset.one()
-            wf = oai_import.cw_adapt_to('IWorkflowable')
+            wf = oai_import.cw_adapt_to("IWorkflowable")
             return wf.latest_trinfo().creation_date
         return None

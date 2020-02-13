@@ -39,56 +39,59 @@ from cubicweb import Binary
 
 from cubicweb_francearchives.dataimport.ead import compute_ape_relpath
 
-add_cube('oaipmh')
-add_attribute('FindingAid', 'ape_ead_file')
+add_cube("oaipmh")
+add_attribute("FindingAid", "ape_ead_file")
 
 
 def generate_ape_ead(cnx):
-    appfiles_dir = cnx.vreg.config['appfiles-dir']
+    appfiles_dir = cnx.vreg.config["appfiles-dir"]
     batch_arguments = []
     fa2apepath = {}
     for fa_eid, fspath, service_code in cnx.execute(
-            'Any X, FSPATH(D), SC WHERE X findingaid_support F, F data D, '
-            'F data_format "application/xml", X service S, S code SC'):
+        "Any X, FSPATH(D), SC WHERE X findingaid_support F, F data D, "
+        'F data_format "application/xml", X service S, S code SC'
+    ):
         input_path = fspath.getvalue()
-        output_path = osp.join(appfiles_dir,
-                               compute_ape_relpath(input_path, {'code': service_code}))
+        output_path = osp.join(
+            appfiles_dir, compute_ape_relpath(input_path, {"code": service_code})
+        )
         fa2apepath[fa_eid] = output_path
         batch_arguments.append((input_path, output_path))
     batch_ead2_to_ape(batch_arguments)
     # now generate ape-XML for PDF, dc_based and OAI based finding aids
-    other_fas = cnx.execute('''
+    other_fas = cnx.execute(
+        """
       (Any X, XID WHERE X eadid XID, NOT EXISTS(X findingaid_support F))
     UNION
       (Any X, XID WHERE X eadid XID, X findingaid_support F, NOT F data_format "application/xml")
-    ''')
+    """
+    )
     for fa in other_fas.entities():
         service_code = fa.service[0].code
-        output_path = osp.join(appfiles_dir,
-                               compute_ape_relpath(fa.eadid, {'code': service_code}))
-        xml_dumper = fa.cw_adapt_to('OAI_EAD')
+        output_path = osp.join(appfiles_dir, compute_ape_relpath(fa.eadid, {"code": service_code}))
+        xml_dumper = fa.cw_adapt_to("OAI_EAD")
         if xml_dumper is not None:
             ape_xml = xml_dumper.dump()
             output_dir = osp.dirname(output_path)
             if not osp.isdir(output_dir):
                 os.makedirs(output_dir)
-            with open(output_path, 'w') as outf:
+            with open(output_path, "w") as outf:
                 outf.write(ape_xml)
             fa2apepath[fa.eid] = output_path
 
-    cnx.transaction_data['fs_importing'] = True
+    cnx.transaction_data["fs_importing"] = True
     # File must exist on disk, even if fs_importing is True because
     # ``source.storages.BFSS.entity_added()`` will try to read file from
     # disk to build the Binary object.
     with cnx.deny_all_hooks_but():
         _now = datetime.now()
-        admin = cnx.find('CWUser', login=u'admin').one()
-        for fa_eid, output_path in fa2apepath.items():
+        admin = cnx.find("CWUser", login="admin").one()
+        for fa_eid, output_path in list(fa2apepath.items()):
             cnx.drop_entity_cache()
             if osp.isfile(output_path):
-                uuid = unicode(uuid4().hex)
+                uuid = str(uuid4().hex)
                 ape_file = cnx.create_entity(
-                    'File',
+                    "File",
                     cwuri=uuid,
                     modification_date=_now,
                     creation_date=_now,
@@ -96,12 +99,12 @@ def generate_ape_ead(cnx):
                     owned_by=admin,
                     data=Binary(output_path),
                     uuid=uuid,
-                    data_format=u'application/xml',
-                    data_name=osp.basename(output_path).decode('utf-8'),
-                    reverse_ape_ead_file=fa_eid)
+                    data_format="application/xml",
+                    data_name=osp.basename(output_path).decode("utf-8"),
+                    reverse_ape_ead_file=fa_eid,
+                )
     cnx.commit()
 
 
-
-if confirm('generate ape ead files ?'):
+if confirm("generate ape ead files ?"):
     generate_ape_ead(cnx)

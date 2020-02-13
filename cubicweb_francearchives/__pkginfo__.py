@@ -30,50 +30,51 @@
 #
 """cubicweb-francearchives application packaging information"""
 
-modname = 'francearchives'
-distname = 'cubicweb-francearchives'
+modname = "francearchives"
+distname = "cubicweb-francearchives"
 
-numversion = (1, 21, 1)
-version = '.'.join(str(num) for num in numversion)
+numversion = (2, 3, 3)
+version = ".".join(str(num) for num in numversion)
 
-license = 'CeCILL-C'
-author = 'LOGILAB S.A. (Paris, FRANCE)'
-author_email = 'contact@logilab.fr'
-description = 'FranceArchives'
-web = 'https://github.com/culturecommunication/francearchives-cubicweb-edition'
+license = "CeCILL-C"
+author = "LOGILAB S.A. (Paris, FRANCE)"
+author_email = "contact@logilab.fr"
+description = "FranceArchives"
+web = "https://github.com/culturecommunication/francearchives-cubicweb-edition"
 
 __depends__ = {
-    'pyramid': '< 1.10',
-    'cubicweb[pyramid,crypto]': '>= 3.24.0,<3.25.0',
-    'six': '>= 1.4.0',
-    'cubicweb-file': '>= 1.19.0,<2.1.0',
-    'cubicweb-link': '>= 1.8.0',
-    'cubicweb-eac': '== 0.2.0',
-    'cubicweb-prov': '== 0.2.0',
-    'cubicweb-skos': None,
-    'cubicweb-elasticsearch': '>= 0.7.6',
-    'cubicweb-varnish': '>= 0.4.0',
-    'cubicweb-card': '>= 0.5.8',
-    'cubicweb-sentry': None,
-    'glamconv': '>= 0.1.5',
-    'cubicweb-oaipmh': '>= 0.5.0',
-    'cwtags': '>= 1.1.0',
-    'rdflib': '>= 4.2.0',
-    'rdflib-jsonld': None,
-    'jinja2': None,
-    'babel': None,
-    'pyoai': None,
-    'PyYAML': None,
-    'pillow': None,
-    'requests': None,
-    'psycopg2': None,
-    'vobject': '< 0.9.0',
+    "pyramid": "< 1.10",
+    "cubicweb[pyramid,crypto]": ">= 3.26.0,<3.27.0",
+    "cubicweb-file": ">= 2.3.0",
+    "cubicweb-link": ">= 1.8.0",
+    "cubicweb-eac": ">= 0.9.1",
+    "cubicweb-prov": ">= 0.4.0",
+    "cubicweb-skos": None,
+    "cubicweb-elasticsearch": ">= 0.8.0",
+    "cubicweb-varnish": ">= 0.5.1",
+    "cubicweb-card": ">= 1.1.2",
+    "cubicweb-sentry": None,
+    "sentry-sdk": None,
+    "sickle": ">= 0.6.4",
+    "glamconv": ">= 0.1.8",
+    "cubicweb-oaipmh": ">= 0.6.0",
+    "cwtags": ">= 1.1.0",
+    "rdflib": ">= 4.2.0",
+    "rdflib-jsonld": None,
+    "jinja2": None,
+    "babel": None,
+    "PyYAML": None,
+    "pillow": None,
+    "requests": None,
+    "urllib3": "> 1.21.1,<1.25",
+    "psycopg2": "< 2.8.0",
+    "vobject": ">= 0.9.3",
 }
 
 classifiers = [
-    'Environment :: Web Environment',
-    'Framework :: CubicWeb',
-    'Programming Language :: Python',
-    'Programming Language :: JavaScript',
-    'License :: CeCILL-C Free Software License Agreement (CECILL-C)',
+    "Environment :: Web Environment",
+    "Framework :: CubicWeb",
+    "Programming Language :: Python",
+    "Programming Language :: JavaScript",
+    "License :: CeCILL-C Free Software License Agreement (CECILL-C)",
 ]

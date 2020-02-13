@@ -35,14 +35,15 @@ from lxml.html import clean
 from cubicweb.uilib import REM_ROOT_HTML_TAGS, ALLOWED_TAGS
 
 # allow the style attribute
-SAFE_ATTRS = html.defs.safe_attrs | {'style', 'frameborder', 'allowfullscreen'}
+SAFE_ATTRS = html.defs.safe_attrs | {"style", "frameborder", "allowfullscreen"}
 
 
 CLEANER = clean.Cleaner(
-    allow_tags=ALLOWED_TAGS | {'iframe'},
+    allow_tags=ALLOWED_TAGS | {"iframe"},
     remove_unknown_tags=False,
-    safe_attrs=SAFE_ATTRS, add_nofollow=False,
-    embedded=False
+    safe_attrs=SAFE_ATTRS,
+    add_nofollow=False,
+    embedded=False,
 )
 
 
@@ -51,8 +52,8 @@ def soup2xhtml(data, encoding):
     """
     # remove spurious </body> and </html> tags, then normalize line break
     # (see http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.7.1)
-    data = REM_ROOT_HTML_TAGS.sub('', u'\n'.join(data.splitlines()))
-    xmltree = etree.HTML(CLEANER.clean_html('<div>%s</div>' % data))
+    data = REM_ROOT_HTML_TAGS.sub("", "\n".join(data.splitlines()))
+    xmltree = etree.HTML(CLEANER.clean_html("<div>%s</div>" % data))
     # NOTE: lxml 2.0 does support encoding='unicode', but last time I (syt)
     # tried I got weird results (lxml 2.2.8)
     body = etree.tostring(xmltree[0], encoding=encoding, method="html")
@@ -61,6 +62,6 @@ def soup2xhtml(data, encoding):
     # take care to bad xhtml (for instance starting with </div>) which
     # may mess with the <div> we added below. Only remove it if it's
     # still there...
-    if snippet.startswith('<div>') and snippet.endswith('</div>'):
+    if snippet.startswith("<div>") and snippet.endswith("</div>"):
         snippet = snippet[5:-6]
     return snippet

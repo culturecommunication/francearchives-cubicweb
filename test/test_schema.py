@@ -37,43 +37,46 @@ from pgfixtures import setup_module, teardown_module  # noqa
 
 
 class IndexSchemaTC(PostgresTextMixin, CubicWebTC):
-
     def test_delete_index_target(self):
         """Remove the Index taget """
         with self.admin_access.repo_cnx() as cnx:
             ce = cnx.create_entity
-            agent = ce('AgentAuthority', label=u'Jean Jean')
-            ce('Person', name=u'Jean', forenames=u'Jean', publisher=u'nomina', authority=agent)
+            agent = ce("AgentAuthority", label="Jean Jean")
+            ce("Person", name="Jean", forenames="Jean", publisher="nomina", authority=agent)
             externref = ce(
-                'ExternRef', reftype=u'Virtual_exhibit', url=u'http://toto', title=u'toto',
-                related_authority=agent
+                "ExternRef",
+                reftype="Virtual_exhibit",
+                url="http://toto",
+                title="toto",
+                related_authority=agent,
             )
             cnx.commit()
-            cnx.execute('DELETE ExternRef X')
+            cnx.execute("DELETE ExternRef X")
             cnx.commit()
-            self.assertTrue(cnx.find('AgentAuthority', eid=agent.eid))
-            self.assertFalse(cnx.find('ExternRef', eid=externref.eid))
+            self.assertTrue(cnx.find("AgentAuthority", eid=agent.eid))
+            self.assertFalse(cnx.find("ExternRef", eid=externref.eid))
 
     def test_delete_index_authority(self):
         """Remove  Index authority"""
         with self.admin_access.repo_cnx() as cnx:
             ce = cnx.create_entity
-            agent = ce('AgentAuthority', label=u'Jean Jean')
-            ce('Person', name=u'Jean', forenames=u'Jean', publisher=u'nomina', authority=agent)
+            agent = ce("AgentAuthority", label="Jean Jean")
+            ce("Person", name="Jean", forenames="Jean", publisher="nomina", authority=agent)
             externref = ce(
-                'ExternRef',
-                reftype=u'Virtual_exhibit',
-                url=u'http://toto',
-                title=u'toto',
-                related_authority=agent
+                "ExternRef",
+                reftype="Virtual_exhibit",
+                url="http://toto",
+                title="toto",
+                related_authority=agent,
             )
             cnx.commit()
-            cnx.execute('DELETE AgentAuthority X')
+            cnx.execute("DELETE AgentAuthority X")
             cnx.commit()
-            self.assertFalse(cnx.find('AgentAuthority', eid=agent.eid))
-            self.assertTrue(cnx.find('ExternRef', eid=externref.eid))
+            self.assertFalse(cnx.find("AgentAuthority", eid=agent.eid))
+            self.assertTrue(cnx.find("ExternRef", eid=externref.eid))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import unittest
+
     unittest.main()

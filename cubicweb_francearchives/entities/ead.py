@@ -34,8 +34,7 @@ import os.path as osp
 import json
 from collections import defaultdict
 
-from six import text_type
-from six.moves.urllib.parse import urlparse
+from urllib.parse import urlparse
 
 from logilab.common.decorators import cachedproperty
 
@@ -45,12 +44,12 @@ from cubicweb.entities import AnyEntity, fetch_config
 
 from cubicweb_elasticsearch.entities import IFullTextIndexSerializable
 
+from cubicweb_francearchives.utils import is_absolute_url
 from cubicweb_francearchives.entities import systemsource_entity
 
 
 class FAComponentIFTIAdapter(IFullTextIndexSerializable):
-    __select__ = (IFullTextIndexSerializable.__select__
-                  & is_instance('FAComponent', 'FindingAid'))
+    __select__ = IFullTextIndexSerializable.__select__ & is_instance("FAComponent", "FindingAid")
 
     @property
     def es_id(self):
@@ -59,21 +58,25 @@ class FAComponentIFTIAdapter(IFullTextIndexSerializable):
     def serialize(self, complete=True, es_doc=None):
         entity = self.entity
         if es_doc is None:
-            if 'EsDocument' in entity.cw_rset.description[entity.cw_row]:
+            if "EsDocument" in entity.cw_rset.description[entity.cw_row]:
                 # if an EsDocument is on the same row we assume it is the related es document
-                doc_col = entity.cw_rset.description[entity.cw_row].index('EsDocument')
+                doc_col = entity.cw_rset.description[entity.cw_row].index("EsDocument")
                 esdoc = entity.cw_rset.get_entity(entity.cw_row, doc_col)
                 es_doc = esdoc.doc
+                if es_doc is None:
+                    return {}
             else:
                 es_doc = entity.reverse_entity
                 if not es_doc:
                     return {}
                 es_doc = es_doc[0].doc
+                if es_doc is None:
+                    return {}
         data = {
-            'eid': entity.eid,
-            'cwuri': entity.cwuri,
+            "eid": entity.eid,
+            "cwuri": entity.cwuri,
         }
-        if isinstance(es_doc, text_type):
+        if isinstance(es_doc, str):
             # sqlite return unicode instead of dict
             es_doc = json.loads(es_doc)
         es_doc.update(data)
@@ -81,13 +84,12 @@ class FAComponentIFTIAdapter(IFullTextIndexSerializable):
 
 
 class RecordITreeAdapter(ITreeAdapter):
-    __regid__ = 'ITree'
-    __select__ = ITreeAdapter.__select__ & is_instance('FAComponent')
-    tree_relation = 'parent_component'
+    __regid__ = "ITree"
+    __select__ = ITreeAdapter.__select__ & is_instance("FAComponent")
+    tree_relation = "parent_component"
 
 
 class IndexableMixin(object):
-
     def index_by_types(self):
         by_types = defaultdict(list)
         for index in self.index_entries:
@@ -97,72 +99,78 @@ class IndexableMixin(object):
     @cachedproperty
     def indices(self):
         return {
-            'agents': self.agent_indexes().entities(),
-            'subjects': self.subject_indexes().entities(),
-            'locations': self.geo_indexes().entities(),
+            "agents": self.agent_indexes().entities(),
+            "subjects": self.subject_indexes().entities(),
+            "locations": self.geo_indexes().entities(),
         }
 
     def main_indexes(self, itype):
         return self._cw.execute(
-            'DISTINCT Any X, XP WHERE E eid %(e)s, '
-            'X is AgentName, X index E, '
-            'X label XP, X type %(t)s',
-            {'t': itype, 'e': self.eid})
+            "DISTINCT Any X, XP WHERE E eid %(e)s, "
+            "X is AgentName, X index E, "
+            "X label XP, X type %(t)s",
+            {"t": itype, "e": self.eid},
+        )
 
     def agent_indexes(self):
         return self._cw.execute(
-            'DISTINCT Any X, XP, XT WHERE E eid %(e)s, '
-            'X is AgentName, X index E, '
-            'X label XP, X type XT',
-            {'e': self.eid}
+            "DISTINCT Any X, XP, XT ORDERBY XP WHERE E eid %(e)s, "
+            "X is AgentName, X index E, "
+            "X label XP, X type XT",
+            {"e": self.eid},
         )
 
     def subject_indexes(self):
         return self._cw.execute(
-            'DISTINCT Any X, XP WHERE E eid %(e)s, '
-            'X is Subject, X index E, '
-            'X label XP',
-            {'e': self.eid}
+            "DISTINCT Any X, XP, XT ORDERBY XP WHERE E eid %(e)s, "
+            "X is Subject, X index E, "
+            "X label XP, X type XT",
+            {"e": self.eid},
         )
 
     def geo_indexes(self):
         return self._cw.execute(
-            'DISTINCT Any X, XP WHERE E eid %(e)s, '
-            'X is Geogname, X index E, '
-            'X label XP',
-            {'e': self.eid}
+            "DISTINCT Any X, XP WHERE E eid %(e)s, " "X is Geogname, X index E, " "X label XP",
+            {"e": self.eid},
         )
 
 
 class FindingAidBaseMixin(object):
-
     def get_extptr_for_bounce_url(self, eadid, did):
         if did.extptr:
             # special handling for ANOM arks, we have to rebuild the full URL
-            if did.extptr.startswith('ark:/'):
-                if eadid.startswith('FRANOM'):
-                    return 'http://anom.archivesnationales.culture.gouv.fr/' + did.extptr
+            if did.extptr.startswith("ark:/"):
+                if eadid.startswith("FRANOM"):
+                    return "http://anom.archivesnationales.culture.gouv.fr/" + did.extptr
             else:
                 return did.extptr
 
     @cachedproperty
     def bounce_url(self):
+        """URL of the website the FindingAid originates from
+        (cf. https://extranet.logilab.fr/ticket/64667749)
+        """
         eadid = self.finding_aid[0].eadid
         did = self.did[0]
         extptr = self.get_extptr_for_bounce_url(eadid, did)
         if extptr:
             return extptr
-        if self.cw_etype == 'FindingAid' and self.website_url:
+        if self.cw_etype == "FindingAid" and self.website_url:
             return self.website_url
-        if self.cw_etype == 'FAComponent':
-            return self.finding_aid[0].bounce_url
+        if self.cw_etype == "FAComponent":
+            fa = self.finding_aid[0]
+            extptr = self.get_extptr_for_bounce_url(eadid, fa.did[0])
+            if extptr:
+                return extptr
+            if fa.website_url:
+                return fa.website_url
         if self.related_service:
-            attrs = {'unittitle': did.unittitle,
-                     'unitid': did.unitid, 'eadid': eadid}
+            attrs = {"unittitle": did.unittitle, "unitid": did.unitid, "eadid": eadid}
             return self.related_service.bounce_url(attrs)
 
     @cachedproperty
     def digitized_urls(self):
+        """List of URLs of related dao tags whose role is neither 'image' or 'thumbnail'."""
         urls = []
         for dv in self.digitized_versions:
             if dv.url:
@@ -171,124 +179,138 @@ class FindingAidBaseMixin(object):
                     urls.append(dv.url)
                 else:
                     fa = self.finding_aid[0]
-                    if fa.eadid.startswith('FRAD015'):
-                        path = dv.url.replace('\\', '/')
-                        urls.append(u'http://archives.cantal.fr/'
-                                    u'accounts/mnesys_ad15/datas/medias'
-                                    u'/{}'.format(path))
+                    if fa.eadid.startswith("FRAD015"):
+                        path = dv.url.replace("\\", "/")
+                        urls.append(
+                            "http://archives.cantal.fr/"
+                            "accounts/mnesys_ad15/datas/medias"
+                            "/{}".format(path)
+                        )
         return urls
 
 
 @systemsource_entity
 class Did(AnyEntity):
-    __regid__ = 'Did'
-    fetch_attrs, cw_fetch_order = fetch_config(['unitid', 'unittitle', 'startyear', 'stopyear'])
+    __regid__ = "Did"
+    fetch_attrs, cw_fetch_order = fetch_config(["unitid", "unittitle", "startyear", "stopyear"])
 
     def dc_title(self):
-        return self.unittitle or self.unitid or u'???'
+        return self.unittitle or self.unitid or "???"
 
     @property
     def period(self):
         period = []
         if self.startyear:
-            period.append(text_type(self.startyear))
+            period.append(str(self.startyear))
         if self.stopyear:
-            period.append(text_type(self.stopyear))
-        return ' - '.join(period)
+            period.append(str(self.stopyear))
+        return " - ".join(period)
 
 
 @systemsource_entity
 class FAComponent(IndexableMixin, FindingAidBaseMixin, AnyEntity):
-    __regid__ = 'FAComponent'
-    fetch_attrs, cw_fetch_order = fetch_config(['component_order', 'stable_id', 'description',
-                                                'description_format', 'did'],
-                                               pclass=None)
-    rest_attr = 'stable_id'
+    __regid__ = "FAComponent"
+    fetch_attrs, cw_fetch_order = fetch_config(
+        ["component_order", "stable_id", "description", "description_format", "did"], pclass=None
+    )
+    rest_attr = "stable_id"
 
     def dc_title(self):
         return self.did[0].dc_title()
 
-    @property
-    def thumbnail_dest(self):
-        """Thumbnail target URL."""
-        # TODO refactor duplicated code
-        target = self.bounce_url
-        if self.related_service and self.related_service.thumbnail_dest:
-            illustration_url = None
-            if self.digitized_versions:
-                for digitized_version in self.digitized_versions:
-                    if digitized_version.role in {'image', 'thumbnail'}:
-                        illustration_url = digitized_version.illustration_url
-                        break
-            if illustration_url:
-                target = self.related_service.thumbnail_dest.format(url=illustration_url)
-        return target
-
-    @property
-    def illustration_url(self):
+    def unprocessed_illustration_url(self):
         dvs = self.digitized_versions
         if not dvs:
             return None
-        url = role = None
         # take first url with role 'thumbnail' or 'image'. Otherwise, take
         # any non null illustration url
+        url = None
         for dv in dvs:
             if dv.illustration_url:
                 url = dv.illustration_url
-                role = dv.role
-                if role in {'thumbnail', 'image'}:
+                if dv.role in {"thumbnail", "image"}:
                     break
+        return url
+
+    @property
+    def thumbnail_dest(self):
+        """Thumbnail target URL.
+
+        The URI the user will be redirected to when clicking on the thumbnail.
+        """
+        illustration_url = self.unprocessed_illustration_url()
+        if not illustration_url:
+            return self.bounce_url
+        if is_absolute_url(illustration_url):
+            return illustration_url
+        thumbnail_dest = self.related_service.thumbnail_dest if self.related_service else ""
+        if thumbnail_dest:
+            return thumbnail_dest.format(url=illustration_url)
+        return self.bounce_url
+
+    @property
+    def illustration_url(self):
+        """Illustration URL.
+
+        The URL shown as the illustration's source. If there are related dao tags whose role
+        is either 'image' or 'thumbnail', one of these tags' URL will be used. If no such dao
+        tag exists, either one of the other associated dao tags' URL is returned (BnF) if there
+        is any, or illustration_url is not set.
+        If thumbnail_url is defined on the service, the URL will be formatted
+        accordingly.
+        """
+        url = self.unprocessed_illustration_url()
+        if url and is_absolute_url(url):
+            return url
         service_code = self.related_service.code if self.related_service else None
-        if not url and service_code == 'FRBNF':
+        if not url and service_code == "FRBNF":
             # special case for BnF
-            urls = [d.url for d in dvs if d.url]
+            urls = [d.url for d in self.digitized_versions if d.url]
             url = urls[0] if urls else None
         if not url:
             return None
-        service_code = self.related_service.code if self.related_service else None
         # not service and not url is a relative URL (root or path unknown)
         if not urlparse(url).netloc and not self.related_service:
             return None
-        if url.startswith('/'):
+        if url.startswith("/"):
             url = url[1:]
-        if service_code == 'FRAD001':
+        if service_code == "FRAD001":
             return (
-                u'http://hatch3.vtech.fr/cgi-bin/iipsrv.fcgi?'
-                u'FIF=/home/httpd/ad01/data/files/images'
-                u'/{eadid}/{url}&HEI=375&QLT=80&CVT=JPG&SIZE=1045163'.format(
+                "http://hatch3.vtech.fr/cgi-bin/iipsrv.fcgi?"
+                "FIF=/home/httpd/ad01/data/files/images"
+                "/{eadid}/{url}&HEI=375&QLT=80&CVT=JPG&SIZE=1045163".format(
                     eadid=self.finding_aid[0].eadid.upper(), url=url
                 )
             )
-        elif service_code == 'FRAD015':
+        elif service_code == "FRAD015":
             basepath, ext = osp.splitext(url)
             return (
-                u'http://archives.cantal.fr/accounts/mnesys_ad15/'
-                u'datas/medias/{}_{}_/0_0{}'.format(
-                    basepath.replace('\\', '/'), ext[1:], ext
-                )
+                "http://archives.cantal.fr/accounts/mnesys_ad15/"
+                "datas/medias/{}_{}_/0_0{}".format(basepath.replace("\\", "/"), ext[1:], ext)
             )
-        elif service_code == 'QUAIBR75':
+        elif service_code == "QUAIBR75":
             basepath, ext = osp.splitext(url)
             return (
-                u'http://archives.quaibranly.fr:8990/accounts/'
-                u'mnesys_quaibranly/datas/{}_{}_/0_0{}'.format(
-                    basepath.replace('\\', '/'), ext[1:], ext
+                "http://archives.quaibranly.fr:8990/accounts/"
+                "mnesys_quaibranly/datas/{}_{}_/0_0{}".format(
+                    basepath.replace("\\", "/"), ext[1:], ext
                 )
             )
         else:
-            if service_code == 'FRAD085' and not url.isdigit():
-                url = url.replace('\\', '/')
+            if service_code == "FRAD085" and not url.isdigit():
+                url = url.replace("\\", "/")
             if self.related_service and self.related_service.thumbnail_url:
                 url = self.related_service.thumbnail_url.format(url=url)
         # relative URL (root or path unknown)
-        if not url.startswith(u'http'):
+        if not url.startswith("http"):
             return None
         return url
 
     @cachedproperty
     def publisher(self):
-        rset = self._cw.execute('Any P WHERE X finding_aid FA, FA publisher P, '
-                                'X eid %(x)s', {'x': self.eid})
+        rset = self._cw.execute(
+            "Any P WHERE X finding_aid FA, FA publisher P, " "X eid %(x)s", {"x": self.eid}
+        )
         return rset[0][0]
 
     @cachedproperty
@@ -304,20 +326,20 @@ class FAComponent(IndexableMixin, FindingAidBaseMixin, AnyEntity):
 
 
 class FAHeader(AnyEntity):
-    __regid__ = 'FAHeader'
+    __regid__ = "FAHeader"
 
     def dc_title(self):
         if self.titlestmt:
             return self.titlestmt
-        return u'FAHeader #{}'.format(self.eid)
+        return "FAHeader #{}".format(self.eid)
 
 
 @systemsource_entity
 class FindingAid(IndexableMixin, FindingAidBaseMixin, AnyEntity):
-    __regid__ = 'FindingAid'
-    fetch_attrs, cw_fetch_order = fetch_config(['stable_id', 'did'])
+    __regid__ = "FindingAid"
+    fetch_attrs, cw_fetch_order = fetch_config(["stable_id", "did"])
 
-    rest_attr = 'stable_id'
+    rest_attr = "stable_id"
 
     def dc_title(self):
         return self.fa_header[0].titleproper or self.did[0].dc_title()
@@ -332,11 +354,11 @@ class FindingAid(IndexableMixin, FindingAidBaseMixin, AnyEntity):
         if self.service and self.service[0].code:
             return self.service[0].code
         else:
-            return self.eadid.split('_')[0]
+            return self.eadid.split("_")[0]
 
     @cachedproperty
     def related_service(self):
-        if hasattr(self, 'service') and self.service:
+        if hasattr(self, "service") and self.service:
             return self.service[0]
 
     @cachedproperty
@@ -348,5 +370,5 @@ class FindingAid(IndexableMixin, FindingAidBaseMixin, AnyEntity):
 
 
 class DigitizedVersion(AnyEntity):
-    __regid__ = 'DigitizedVersion'
-    fetch_attrs, cw_fetch_order = fetch_config(['url', 'illustration_url', 'role'])
+    __regid__ = "DigitizedVersion"
+    fetch_attrs, cw_fetch_order = fetch_config(["url", "illustration_url", "role"])

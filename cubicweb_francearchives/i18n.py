@@ -29,7 +29,7 @@
 # knowledge of the CeCILL-C license and that you accept its terms.
 #
 import os.path as osp
-from itertools import chain, izip
+from itertools import chain
 from glob import glob
 import re
 import csv
@@ -40,8 +40,8 @@ from cubicweb.devtools import devctl
 import cubicweb_francearchives as cwfa
 
 
-PO_DIR = osp.join(osp.abspath(osp.dirname(cwfa.__file__)), 'i18n')
-NAMED_SUBST_RGX = re.compile(r'%\((.*?)\)s')
+PO_DIR = osp.join(osp.abspath(osp.dirname(cwfa.__file__)), "i18n")
+NAMED_SUBST_RGX = re.compile(r"%\((.*?)\)s")
 
 
 def is_application_entry(entry, skip_msgctxt=True):
@@ -56,11 +56,11 @@ def is_application_entry(entry, skip_msgctxt=True):
         return False
     # XXX load schema and check for etype instead of this
     #     stupid 2-words heuristic
-    if entry.msgid.startswith('New ') and len(entry.msgid.split()) == 2:
+    if entry.msgid.startswith("New ") and len(entry.msgid.split()) == 2:
         return False
-    if entry.msgid.startswith('This ') and len(entry.msgid.split()) == 2:
+    if entry.msgid.startswith("This ") and len(entry.msgid.split()) == 2:
         return False
-    if entry.msgid.startswith('add a ') and len(entry.msgid.split()) == 3:
+    if entry.msgid.startswith("add a ") and len(entry.msgid.split()) == 3:
         return False
     return True
 
@@ -68,8 +68,9 @@ def is_application_entry(entry, skip_msgctxt=True):
 def po_entries(po, skip_msgctxt=True):
     """return all entries in ``po`` sorted by msgids"""
     all_entries = chain(po.translated_entries(), po.untranslated_entries())
-    application_entries = (entry for entry in all_entries
-                           if is_application_entry(entry, skip_msgctxt))
+    application_entries = (
+        entry for entry in all_entries if is_application_entry(entry, skip_msgctxt)
+    )
     return sorted(application_entries, key=lambda e: e.msgid)
 
 
@@ -79,7 +80,7 @@ def all_pofiles():
     return the corresponding 'lang' -> 'pofile' dictionary
     """
     pofiles = {}
-    for filepath in glob(osp.join(PO_DIR, '*.po')):
+    for filepath in glob(osp.join(PO_DIR, "*.po")):
         pofiles[osp.splitext(osp.basename(filepath))[0]] = polib.pofile(filepath)
     return pofiles
 
@@ -93,10 +94,10 @@ def pofiles_as_dicts(po_files, skip_msgctxt=True):
                          with different msgctxts
     """
     po_dicts = {}
-    for lang, pofile in po_files.iteritems():
+    for lang, pofile in po_files.items():
         lang_translations = {}
         for entry in po_entries(pofile, skip_msgctxt):
-            lang_translations[(entry.msgctxt or u'', entry.msgid)] = entry
+            lang_translations[(entry.msgctxt or "", entry.msgid)] = entry
         po_dicts[lang] = lang_translations
     return po_dicts
 
@@ -108,16 +109,16 @@ def dump_csv(po_files, output_filename):
     :param output_filename: the CSV output filename
     """
     langs = list(cwfa.SUPPORTED_LANGS)
-    with open(output_filename, 'wb') as outf:
+    with open(output_filename, "wb") as outf:
         writer = csv.writer(outf)
-        headers = ['msgctxt', 'msgid'] + langs
+        headers = ["msgctxt", "msgid"] + langs
         writer.writerow(headers)
         all_po_entries = [po_entries(po_files[lang]) for lang in langs]
         csv_rows = []
-        for entries in izip(*all_po_entries):
+        for entries in zip(*all_po_entries):
             csv_row = []
-            for lang, entry in izip(langs, entries):
-                csv_row.append(entry.msgstr.encode('utf-8'))
+            for lang, entry in zip(langs, entries):
+                csv_row.append(entry.msgstr.encode("utf-8"))
                 substitutions_consistent(entry.msgid, entry.msgstr)
             csv_row = [entry.msgctxt, entry.msgid] + csv_row
             csv_rows.append(csv_row)
@@ -126,17 +127,18 @@ def dump_csv(po_files, output_filename):
 
 def translations_iterator(reader):
     first_row = next(reader)
-    assert first_row[:5] == ['msgctxt', 'msgid', 'fr', 'en', 'de'], \
-        'invalid header row: %s' % (first_row,)
+    assert first_row[:5] == ["msgctxt", "msgid", "fr", "en", "de"], "invalid header row: %s" % (
+        first_row,
+    )
     row_length = len(first_row)
     for row in reader:
-        values = tuple((cell.decode('utf-8') or u'') for cell in row)
+        values = tuple((cell or "") for cell in row)
         # if current row is shorter than the header one, it means that
         # we don't have translations for all languages, then pad with u''
         if len(values) < row_length:
-            values += [u''] * (row_length - len(values))
+            values += [""] * (row_length - len(values))
         msgctxt, msgid = values[:2]
-        yield (msgctxt, msgid, dict(zip(first_row[2:], values[2:])))
+        yield (msgctxt, msgid, dict(list(zip(first_row[2:], values[2:]))))
 
 
 def load_translations_from_csv(filepath):
@@ -170,26 +172,34 @@ def substitutions_consistent(msgid, msgstr):
     if not msgstr:
         return True
     if unknown_substs:
-        logging.error('got substs %s in msgid (%r), %s in msgstr (%r)',
-                      msgid_substs, msgid, msgstr_substs, msgstr)
+        logging.error(
+            "got substs %s in msgid (%r), %s in msgstr (%r)",
+            msgid_substs,
+            msgid,
+            msgstr_substs,
+            msgstr,
+        )
         return False
     # for unnamed substs, just count number of '%', this should cover most cases
-    if not msgid_substs and msgid.count('%') != msgstr.count('%'):
-        logging.error('got %s substs in msgid (%r), %s in msgstr (%r)',
-                      msgid.count('%'), msgid, msgstr.count('%'), msgstr)
+    if not msgid_substs and msgid.count("%") != msgstr.count("%"):
+        logging.error(
+            "got %s substs in msgid (%r), %s in msgstr (%r)",
+            msgid.count("%"),
+            msgid,
+            msgstr.count("%"),
+            msgstr,
+        )
         return False
     return True
 
 
-def update_i18n_catalogs(po_files, csv_filename, autosave=True,
-                         skip_msgctxt=True):
+def update_i18n_catalogs(po_files, csv_filename, autosave=True, skip_msgctxt=True):
     fa_translations = load_translations_from_csv(csv_filename)
     po_dicts = pofiles_as_dicts(po_files, skip_msgctxt)
-    for msgid_key, lang_translations in fa_translations.iteritems():
+    for msgid_key, lang_translations in fa_translations.items():
         # make sure we process 'fr' at first
         sorteditems = sorted(
-            lang_translations.items(),
-            key=lambda k: 0 if k[0] == u'fr' else 1
+            list(lang_translations.items()), key=lambda k: 0 if k[0] == "fr" else 1
         )
         for lang, label in sorteditems:
             if msgid_key in po_dicts[lang]:
@@ -198,43 +208,46 @@ def update_i18n_catalogs(po_files, csv_filename, autosave=True,
                 if label:
                     # set translation if not empty
                     po_dicts[lang][msgid_key].msgstr = label
-                elif po_dicts['fr'][msgid_key].msgstr:
+                elif po_dicts["fr"][msgid_key].msgstr:
                     # default to fr translation if not empty
-                    po_dicts[lang][msgid_key].msgstr = po_dicts['fr'][msgid_key].msgstr
+                    po_dicts[lang][msgid_key].msgstr = po_dicts["fr"][msgid_key].msgstr
             else:
-                logging.info('skipping %s', (msgid_key,))
+                logging.info("skipping %s", (msgid_key,))
                 break
     if autosave:
-        for pofile in po_files.values():
+        for pofile in list(po_files.values()):
             pofile.save()
     return po_dicts
 
 
 class FranceArchivesMessageExtractor(devctl.I18nCubeMessageExtractor):
 
-    formats = devctl.I18nCubeMessageExtractor.formats + ['jinja2']
+    formats = devctl.I18nCubeMessageExtractor.formats + ["jinja2"]
 
     def collect_jinja2(self):
-        return self.find('.jinja2')
+        return self.find(".jinja2")
 
     def extract_jinja2(self, files):
-        return self._xgettext(files, output='jinja.pot',
-                              extraopts='-L python --from-code=utf-8')
+        return self._xgettext(files, output="jinja.pot", extraopts="-L python --from-code=utf-8")
 
 
 try:
     import polib
 except ImportError:  # polib is only required in dev mode
+
     def register_cwctl_commands():
         pass
+
+
 else:
     from cubicweb.cwctl import CWCTL
     from cubicweb.toolsutils import Command
 
     class I18nDumpCSV(Command):
         """extract msgids from pofiles and dump a CSV file."""
-        arguments = '<output-csv>'
-        name = 'fa-i18n-dump'
+
+        arguments = "<output-csv>"
+        name = "fa-i18n-dump"
         min_args = max_args = 1
 
         def run(self, args):
@@ -244,8 +257,9 @@ else:
 
     class I18nLoadCSV(Command):
         """load a CSV file generated by fa-i18n-dump and update po files."""
-        arguments = '<input-csv>'
-        name = 'fa-i18n-load'
+
+        arguments = "<input-csv>"
+        name = "fa-i18n-load"
         min_args = max_args = 1
 
         def run(self, args):

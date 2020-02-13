@@ -38,15 +38,15 @@ from cubicweb import Binary
 
 # sizes from css
 HERO_SIZES = (
-    ({'w': 544}, 'xs'),
-    ({'w': 768}, 'sm'),
-    ({'w': 922}, 'md'),
-    ({'w': 1200}, 'lg'),
-    ({'w': None, 'q': 5}, 'lr'),
-    ({'w': None}, 'xl'),
+    ({"w": 544}, "xs"),
+    ({"w": 768}, "sm"),
+    ({"w": 922}, "md"),
+    ({"w": 1200}, "lg"),
+    ({"w": None, "q": 5}, "lr"),
+    ({"w": None}, "xl"),
 )
 
-STATIC_CSS_DIRECTORY = 'css'
+STATIC_CSS_DIRECTORY = "css"
 
 
 def static_css_dir(static_directory):
@@ -54,7 +54,7 @@ def static_css_dir(static_directory):
 
 
 def thumbnail_name(basename, suffix, ext):
-    return u'{}-{}{}'.format(basename, suffix, ext)
+    return "{}-{}{}".format(basename, suffix, ext)
 
 
 def generate_thumbnails(cnx, image_file, image_path, sizes):
@@ -64,16 +64,20 @@ def generate_thumbnails(cnx, image_file, image_path, sizes):
         image_file.seek(0)
         thumb = Image.open(image_file)
         orig_width, orig_height = thumb.size
-        width = size.get('w', orig_width) or orig_width
-        height = size.get('h', orig_height) or orig_height
-        quality = size.get('q', 100)
+        width = size.get("w", orig_width) or orig_width
+        height = size.get("h", orig_height) or orig_height
+        quality = size.get("q", 100)
         thumb.thumbnail((width, height), Image.ANTIALIAS)
         basename, ext = osp.splitext(image_path)
         thumb_name = thumbnail_name(basename, suffix, ext)
         thumbpath = osp.join(static_dir, thumb_name)
         thumb.save(thumbpath, quality=quality)
-        with open(thumbpath, 'rb') as thumbfile:
-            cnx.create_entity('File',
-                              **{'data': Binary(thumbfile.read()),
-                                 'data_format': image_file.data_format,
-                                 'data_name': thumb_name})
+        with open(thumbpath, "rb") as thumbfile:
+            cnx.create_entity(
+                "File",
+                **{
+                    "data": Binary(thumbfile.read()),
+                    "data_format": image_file.data_format,
+                    "data_name": thumb_name,
+                }
+            )

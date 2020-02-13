@@ -44,30 +44,35 @@ from cubicweb.utils import json_dumps
 
 
 class ISyncAdapter(EntityAdapter):
-    __regid__ = 'ISync'
+    __regid__ = "ISync"
 
     def build_put_body(self, done=None, skip_relations=None):
         return {}
 
 
-class ISyncUuidAttrAdapter(ISyncAdapter):
-    # __select__ = score_entity(lambda e: hasattr(e, 'uuid_attr'))
-    __select__ = is_instance('Concept')
-
-    def build_put_body(self, done=None, skip_relations=None):
-        return {'cw_etype': self.entity.cw_etype,
-                self.entity.uuid_attr: self.entity.uuid_value}
-
-
 class ISyncUuidAdapter(ISyncAdapter):
-    __select__ = relation_possible('uuid')
+    __select__ = relation_possible("uuid")
 
     skipped_relations = {
-        'workflow', 'workflow_of', 'default_workflow', 'custom_workflow',
-        'allowed_transition', 'in_state', 'transition_of',
-        'is', 'is_instance_of', 'specializes', 'identity',
-        'add_permission', 'update_permission', 'eid',
-        'created_by', 'owned_by', 'cw_source', 'previous_info', 'has_text',
+        "workflow",
+        "workflow_of",
+        "default_workflow",
+        "custom_workflow",
+        "allowed_transition",
+        "in_state",
+        "transition_of",
+        "is",
+        "is_instance_of",
+        "specializes",
+        "identity",
+        "add_permission",
+        "update_permission",
+        "eid",
+        "created_by",
+        "owned_by",
+        "cw_source",
+        "previous_info",
+        "has_text",
     }
 
     def build_put_body(self, done=None, skip_relations=None):
@@ -79,12 +84,11 @@ class ISyncUuidAdapter(ISyncAdapter):
         done.add(entity.eid)
         eschema = entity.e_schema
         entity_data = {}
-        entity_data['cw_etype'] = entity.cw_etype
+        entity_data["cw_etype"] = entity.cw_etype
         entity.complete()
         for rschema in eschema.ordered_relations():
             relname = rschema.type
-            skipped = (self.skipped_relations
-                       if skip_relations is None else skip_relations)
+            skipped = self.skipped_relations if skip_relations is None else skip_relations
             if relname in skipped:
                 continue
             value = getattr(entity, relname)
@@ -92,7 +96,7 @@ class ISyncUuidAdapter(ISyncAdapter):
                 continue
             if rschema.final:
                 entity_data[relname] = value
-            elif not rschema.meta and rschema.type not in ('has_text',):
+            elif not rschema.meta and rschema.type not in ("has_text",):
                 entity_data[relname] = []
                 for target in value:
                     body = self.build_target_put_body(target, done)
@@ -102,55 +106,67 @@ class ISyncUuidAdapter(ISyncAdapter):
 
     @property
     def uuid_attr(self):
-        return 'uuid'
+        return "uuid"
 
     @property
     def uuid_value(self):
         return self.entity.uuid
 
     def build_target_put_body(self, target, done=None):
-        isync = target.cw_adapt_to('ISync')
+        isync = target.cw_adapt_to("ISync")
         if isync is not None:
             return isync.build_put_body(done)
 
     def delete_entity(self):
-        sync_url = self._cw.vreg.config.get('consultation-sync-url')
+        sync_url = self._cw.vreg.config.get("consultation-sync-url")
         if sync_url:
             entity = self.entity
             try:
-                url = '{}/_update/{}/{}'.format(sync_url, entity.cw_etype, self.uuid_value)
-                self.debug('will delete %s', url)
+                url = "{}/_update/{}/{}".format(sync_url, entity.cw_etype, self.uuid_value)
+                self.debug("will delete %s", url)
                 res = requests.delete(url)
                 if res.status_code == 400:
                     # in ``edit.get_by_uuid`` we raise ``HTTPBadRequest`` if no entity found for
                     # this uuid
-                    self.debug('%s with %s: %s does not exists on %s', entity.cw_etype,
-                               self.uuid_attr, self.uuid_value, sync_url)
+                    self.debug(
+                        "%s with %s: %s does not exists on %s",
+                        entity.cw_etype,
+                        self.uuid_attr,
+                        self.uuid_value,
+                        sync_url,
+                    )
                     return
                 res.raise_for_status()
             except Exception:
-                self.exception('failed to sync %s with %s %s', entity.cw_etype, self.uuid_attr,
-                               self.uuid_value)
+                self.exception(
+                    "failed to sync %s with %s %s", entity.cw_etype, self.uuid_attr, self.uuid_value
+                )
 
     def put_entity(self, body=None):
-        sync_url = self._cw.vreg.config.get('consultation-sync-url')
+        sync_url = self._cw.vreg.config.get("consultation-sync-url")
         if sync_url:
             entity = self.entity
             try:
                 body = body or self.build_put_body()
-                url = '{}/_update/{}/{}'.format(sync_url,
-                                                entity.cw_etype,
-                                                self.uuid_value)
-                self.debug('will put %s on %s', body.keys(), url)
+                url = "{}/_update/{}/{}".format(sync_url, entity.cw_etype, self.uuid_value)
+                self.debug("will put %s on %s", list(body.keys()), url)
                 res = requests.put(url, data=json_dumps(body))
                 res.raise_for_status()
             except Exception:
-                self.exception('failed to sync %s with %s %s', entity.cw_etype, self.uuid_attr,
-                               self.uuid_value)
+                self.exception(
+                    "failed to sync %s with %s %s", entity.cw_etype, self.uuid_attr, self.uuid_value
+                )
+
+
+class ISyncUuidAttrAdapter(ISyncUuidAdapter):
+    __select__ = is_instance("Concept")
+
+    def build_put_body(self, done=None, skip_relations=None):
+        return {"cw_etype": self.entity.cw_etype, self.entity.uuid_attr: self.entity.uuid_value}
 
 
 class ISyncCarddAdapter(ISyncUuidAdapter):
-    __select__ = is_instance('Card')
+    __select__ = is_instance("Card")
 
     @property
     def uuid_attr(self):
@@ -163,13 +179,14 @@ class ISyncCarddAdapter(ISyncUuidAdapter):
 
 class ISyncSectionAdapter(ISyncUuidAdapter):
     """custom ISync adapter that prevent children sections to recurse"""
-    __select__ = ISyncUuidAdapter.__select__ & is_instance('Section', 'CommemoCollection')
+
+    __select__ = ISyncUuidAdapter.__select__ & is_instance("Section", "CommemoCollection")
 
     def build_target_put_body(self, target, done=None):
-        if target.cw_etype in {'Section', 'CommemoCollection'}:
+        if target.cw_etype in {"Section", "CommemoCollection"}:
             # don't recurse on children for subsections
-            skip_relations = self.skipped_relations | {'children'}
-            return target.cw_adapt_to('ISync').build_put_body(done, skip_relations=skip_relations)
+            skip_relations = self.skipped_relations | {"children"}
+            return target.cw_adapt_to("ISync").build_put_body(done, skip_relations=skip_relations)
         else:
             return super(ISyncSectionAdapter, self).build_target_put_body(target, done)
 
@@ -178,11 +195,13 @@ class ISyncCommemorationItemAdapter(ISyncUuidAdapter):
     """custom ISync adapter that prevent recursion on parent collection
     through ``collection_top`` relation.
     """
-    __select__ = ISyncUuidAdapter.__select__ & is_instance('CommemorationItem')
-    skipped_relations = ISyncUuidAdapter.skipped_relations | {'collection_top'}
+
+    __select__ = ISyncUuidAdapter.__select__ & is_instance("CommemorationItem")
+    skipped_relations = ISyncUuidAdapter.skipped_relations | {"collection_top"}
 
     def build_put_body(self, done=None, skip_relations=None):
         r = super(ISyncCommemorationItemAdapter, self).build_put_body()
-        r['collection_top'] = [{'uuid': self.entity.collection_top[0].uuid,
-                                'cw_etype': 'CommemoCollection'}]
+        r["collection_top"] = [
+            {"uuid": self.entity.collection_top[0].uuid, "cw_etype": "CommemoCollection"}
+        ]
         return r

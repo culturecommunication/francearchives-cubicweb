@@ -40,9 +40,7 @@ from cubicweb_francearchives.migration.utils import alter_published_table
 
 add_attribute("Service", "thumbnail_dest")
 query = "SET S thumbnail_dest %(url)s WHERE S is Service, S code %(code)s"
-thumbnail_dests = [
-    {"url": u"http://v-earchives.vaucluse.fr/viewer/{url}", "code": "FRAD084"}
-]
+thumbnail_dests = [{"url": "http://v-earchives.vaucluse.fr/viewer/{url}", "code": "FRAD084"}]
 
 with cnx.deny_all_hooks_but():
     for thumbnail_dest in thumbnail_dests:
@@ -51,9 +49,9 @@ with cnx.deny_all_hooks_but():
 with sqlutil.sudocnx(cnx, interactive=False) as su_cnx:
     foreign_key_tables = ead_foreign_key_tables(cnx.vreg.schema)
     sqlutil.disable_triggers(su_cnx, foreign_key_tables)
-    etype = 'FindingAid'
-    attr = 'website_url'
+    etype = "FindingAid"
+    attr = "website_url"
     add_attribute(etype, attr)
-    alter_published_table(cnx, etype, attr, 'text')
+    alter_published_table(cnx, etype, attr, "text")
     cnx.commit()
     sqlutil.enable_triggers(su_cnx, foreign_key_tables)

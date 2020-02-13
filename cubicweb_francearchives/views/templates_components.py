@@ -32,8 +32,7 @@
 """pnia_content views/templates_components"""
 
 from cubicweb.view import Component
-from cubicweb.web.views.basecomponents import (ApplicationName,
-                                               CookieLoginComponent)
+from cubicweb.web.views.basecomponents import ApplicationName, CookieLoginComponent
 from cubicweb.web.views.boxes import SearchBox
 
 ApplicationName.context = None
@@ -41,20 +40,20 @@ SearchBox.context = None
 
 
 class PniaLangSwitchComponent(Component):
-    __regid__ = 'pnia.langswitch.component'
+    __regid__ = "pnia.langswitch.component"
     order = 1
 
     def url(self, cur_lang, lang):
         base_url = self._cw.base_url()
         path = self._cw.url(includeparams=True)
-        path = path[len(base_url):]
+        path = path[len(base_url) :]
         if cur_lang and path.startswith(cur_lang):
-            path = path[len(cur_lang):]
-        return '%s%s/%s' % (base_url, lang, path)
+            path = path[len(cur_lang) :]
+        return "%s%s/%s" % (base_url, lang, path)
 
     def get_lang_info(self, cur_lang, lang):
-        title = self._cw._('%s_lang' % lang)
-        icon_url = self._cw.uiprops['FLAG_%s' % lang.upper()]
+        title = self._cw._("%s_lang" % lang)
+        icon_url = self._cw.uiprops["FLAG_%s" % lang.upper()]
         url = self.url(cur_lang, lang)
         return (title, icon_url, url, lang)
 
@@ -69,4 +68,4 @@ class PniaLangSwitchComponent(Component):
 
 def registration_callback(vreg):
     vreg.unregister(CookieLoginComponent)
-    vreg.register_all(globals().values(), __name__)
+    vreg.register_all(list(globals().values()), __name__)

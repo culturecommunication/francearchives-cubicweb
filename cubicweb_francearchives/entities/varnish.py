@@ -35,19 +35,18 @@ from cubicweb.predicates import is_instance
 
 from cubicweb_varnish.entities import IVarnishAdapter
 
-from cubicweb_francearchives import SUPPORTED_LANGS
+from cubicweb_francearchives import SUPPORTED_LANGS, FIRST_LEVEL_SECTIONS
 from cubicweb_francearchives.schema import cms as schema_cms
 from cubicweb_francearchives.pviews.catch_all import ApplicationSchema
 from cubicweb_francearchives.entities.cms import get_ancestors
 
 
 reverse_application_schema_translations = defaultdict(list)
-for url, etype in ApplicationSchema.translations.items():
-    reverse_application_schema_translations[etype].append('/' + url)
+for url, etype in list(ApplicationSchema.translations.items()):
+    reverse_application_schema_translations[etype].append("/" + url)
 
 
 def extend_with_lang_prefixes(purgefunc):
-
     def wrapped_method(self):
         urls = purgefunc(self)
         extended_urls = []
@@ -55,36 +54,36 @@ def extend_with_lang_prefixes(purgefunc):
         for url in urls:
             # during db-init base_url seems to be None
             if base_url and url.startswith(base_url):
-                path = url[len(base_url):]
+                path = url[len(base_url) :]
             else:
                 path = url
             if not path:
                 continue  # safety belt only, we should not have an empty path
-            if path[0] != '/':
-                path = u'/' + path
+            if path[0] != "/":
+                path = "/" + path
             # XXX
             for prefix in SUPPORTED_LANGS:
                 if path.startswith(prefix):
-                    path = path[len(prefix):]
+                    path = path[len(prefix) :]
                     break
             extended_urls.append(path)
             for prefix in SUPPORTED_LANGS:
-                extended_urls.append(u'/{}{}'.format(prefix, path))
+                extended_urls.append("/{}{}".format(prefix, path))
         return extended_urls
+
     return wrapped_method
 
 
 class FAVarnishMixin(object):
-
     def etype_urls(self):
         return reverse_application_schema_translations.get(self.entity.cw_etype, [])
 
     def sitemap(self):
-        return ['/sitemap']
+        return ["/sitemap"]
 
 
 class BasicVarnish(FAVarnishMixin, IVarnishAdapter):
-    __select__ = IVarnishAdapter.__select__ & is_instance('Service')
+    __select__ = IVarnishAdapter.__select__ & is_instance("Service")
 
     @extend_with_lang_prefixes
     def urls_to_purge(self):
@@ -92,7 +91,7 @@ class BasicVarnish(FAVarnishMixin, IVarnishAdapter):
 
 
 class CircularVarnish(FAVarnishMixin, IVarnishAdapter):
-    __select__ = IVarnishAdapter.__select__ & is_instance('Circular')
+    __select__ = IVarnishAdapter.__select__ & is_instance("Circular")
 
     @extend_with_lang_prefixes
     def urls_to_purge(self):
@@ -101,12 +100,14 @@ class CircularVarnish(FAVarnishMixin, IVarnishAdapter):
 
 class CmsObjectsVarnish(FAVarnishMixin, IVarnishAdapter):
     __select__ = IVarnishAdapter.__select__ & is_instance(
-        *(set(schema_cms.CMS_OBJECTS) - {
-            'CommemorationItem', 'Section', 'Service', 'Circular', 'NewsContent',
-        }))
+        *(
+            set(schema_cms.CMS_OBJECTS)
+            - {"CommemorationItem", "Section", "Service", "Circular", "NewsContent",}
+        )
+    )
 
     def ancestors_urls(self):
-        return ['/section/%s' % eid for eid in get_ancestors(self.entity)]
+        return ["/section/%s" % eid for eid in get_ancestors(self.entity)]
 
     @extend_with_lang_prefixes
     def urls_to_purge(self):
@@ -115,30 +116,30 @@ class CmsObjectsVarnish(FAVarnishMixin, IVarnishAdapter):
 
 
 class SectionVarnish(CmsObjectsVarnish):
-    __select__ = IVarnishAdapter.__select__ & is_instance('Section')
+    __select__ = IVarnishAdapter.__select__ & is_instance("Section")
 
     @extend_with_lang_prefixes
     def urls_to_purge(self):
         urls = [self.entity.rest_path()]
-        if self.entity.name in {'decouvrir', 'comprendre', 'gerer'}:
-            urls.append('/' + self.entity.name)
+        if self.entity.name in FIRST_LEVEL_SECTIONS:
+            urls.append("/" + self.entity.name)
         return urls + self.ancestors_urls() + self.sitemap()
 
 
 def handle_on_homepage(entity, urls):
     if entity.on_homepage:
-        urls.append('/')
-    elif hasattr(entity, 'cw_edited') and not entity.cw_edited.saved:
-        old, new = entity.cw_edited.oldnewvalue('on_homepage')
+        urls.append("/")
+    elif hasattr(entity, "cw_edited") and not entity.cw_edited.saved:
+        old, new = entity.cw_edited.oldnewvalue("on_homepage")
         if old:
             # if this entity was on homepage we should purge homepage
-            urls.append('/')
-    elif hasattr(entity, 'cw_edited') and entity.cw_edited.get('on_homepage') is False:
-        urls.append('/')
+            urls.append("/")
+    elif hasattr(entity, "cw_edited") and entity.cw_edited.get("on_homepage") is False:
+        urls.append("/")
 
 
 class NewsVarnish(CmsObjectsVarnish):
-    __select__ = IVarnishAdapter.__select__ & is_instance('NewsContent')
+    __select__ = IVarnishAdapter.__select__ & is_instance("NewsContent")
 
     @extend_with_lang_prefixes
     def urls_to_purge(self):
@@ -148,7 +149,7 @@ class NewsVarnish(CmsObjectsVarnish):
 
 
 class CommemoVarnish(CmsObjectsVarnish):
-    __select__ = IVarnishAdapter.__select__ & is_instance('CommemorationItem')
+    __select__ = IVarnishAdapter.__select__ & is_instance("CommemorationItem")
 
     @extend_with_lang_prefixes
     def urls_to_purge(self):
@@ -156,16 +157,20 @@ class CommemoVarnish(CmsObjectsVarnish):
         handle_on_homepage(self.entity, urls)
         if self.entity.collection_top:
             collection = self.entity.collection_top[0].rest_path()
-            index = '%s/index' % collection
-            timeline = '%s/timeline' % collection
-            timeline_json = '%s.json' % timeline
-            return (urls + [collection, index, timeline, timeline_json]
-                    + self.etype_urls() + self.ancestors_urls())
+            index = "%s/index" % collection
+            timeline = "%s/timeline" % collection
+            timeline_json = "%s.json" % timeline
+            return (
+                urls
+                + [collection, index, timeline, timeline_json]
+                + self.etype_urls()
+                + self.ancestors_urls()
+            )
         return urls
 
 
 class FindingAidVarnish(FAVarnishMixin, IVarnishAdapter):
-    __select__ = IVarnishAdapter.__select__ & is_instance('FindingAid')
+    __select__ = IVarnishAdapter.__select__ & is_instance("FindingAid")
 
     def service_urls(self):
         return self._service_urls(self.entity)
@@ -179,8 +184,7 @@ class FindingAidVarnish(FAVarnishMixin, IVarnishAdapter):
     def index_urls(self):
         urls = []
         authorities_rset = self._cw.execute(
-            'DISTINCT Any A WHERE I index X, X eid %(x)s, I authority A',
-            {'x': self.entity.eid}
+            "DISTINCT Any A WHERE I index X, X eid %(x)s, I authority A", {"x": self.entity.eid}
         )
         for authority in authorities_rset.entities():
             urls.append(authority.absolute_url())
@@ -189,13 +193,14 @@ class FindingAidVarnish(FAVarnishMixin, IVarnishAdapter):
     @extend_with_lang_prefixes
     def urls_to_purge(self):
         return (
-            ['search/', self.entity.rest_path(), 'inventaires/'] + self.service_urls()
+            ["search/", self.entity.rest_path(), "inventaires/"]
+            + self.service_urls()
             + self.index_urls()
         )
 
 
 class FAComponentVarnish(FindingAidVarnish):
-    __select__ = IVarnishAdapter.__select__ & is_instance('FAComponent')
+    __select__ = IVarnishAdapter.__select__ & is_instance("FAComponent")
 
     def service_urls(self):
         if self.entity.finding_aid:
@@ -204,37 +209,35 @@ class FAComponentVarnish(FindingAidVarnish):
 
 
 class CardVarnishAdapter(IVarnishAdapter):
-    __select__ = is_instance('Card')
+    __select__ = is_instance("Card")
 
     @extend_with_lang_prefixes
     def urls_to_purge(self):
         entity = self.entity
         urls = [entity.rest_path()]
-        if entity.wikiid and entity.wikiid.startswith('alert'):
-            urls.append('/')
+        if entity.wikiid and entity.wikiid.startswith("alert"):
+            urls.append("/")
         return urls
 
 
 class CssImageVarnishAdapter(IVarnishAdapter):
-    __select__ = is_instance('CssImage')
+    __select__ = is_instance("CssImage")
 
     @extend_with_lang_prefixes
     def urls_to_purge(self):
-        return [self.entity.rest_path(), '/']
+        return [self.entity.rest_path(), "/"]
 
 
 class FileImageVarnishAdapter(IVarnishAdapter):
-    __select__ = is_instance('File')
+    __select__ = is_instance("File")
 
     @extend_with_lang_prefixes
     def urls_to_purge(self):
-        return [self.entity.rest_path(), '/']
+        return [self.entity.rest_path(), "/"]
 
 
 class AuthorityImageVarnishAdapter(IVarnishAdapter):
-    __select__ = is_instance('LocationAuthority',
-                             'SubjectAuthority',
-                             'AgentAuthority')
+    __select__ = is_instance("LocationAuthority", "SubjectAuthority", "AgentAuthority")
 
     @extend_with_lang_prefixes
     def urls_to_purge(self):

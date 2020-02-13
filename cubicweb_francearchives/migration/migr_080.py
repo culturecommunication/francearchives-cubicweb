@@ -29,31 +29,34 @@
 # The fact that you are presently reading this means that you have had
 # knowledge of the CeCILL-C license and that you accept its terms.
 #
-from __future__ import print_function
+
 import os.path as osp
 import re
 
 from cubicweb_francearchives import CMS_OBJECTS
 
-STATIC_RGX = re.compile('(/file/(static_\d+)/raw)')
+STATIC_RGX = re.compile("(/file/(static_\d+)/raw)")
 
 
 def fix_illustration_urls(cnx, sql):
     """fix illustration_url vs. url attribution"""
     try:
-        sql("UPDATE cw_digitizedversion "
+        sql(
+            "UPDATE cw_digitizedversion "
             "SET cw_illustration_url=cw_url, cw_url='' "
-            "WHERE cw_url ILIKE '%.JPG'")
+            "WHERE cw_url ILIKE '%.JPG'"
+        )
     except Exception as exc:
-        import traceback; traceback.print_exc()
+        import traceback
+
+        traceback.print_exc()
         cnx.rollback()
     else:
         cnx.commit()
 
 
 def cms_file_properties(cnx):
-    q = ('Any F,FDN,FH WHERE F data_name FDN, F data_sha1hex FH, '
-         'NOT EXISTS(X findingaid_support F)')
+    q = "Any F,FDN,FH WHERE F data_name FDN, F data_hash FH, " "NOT EXISTS(X findingaid_support F)"
     return {osp.splitext(f.data_name)[0]: f for f in cnx.execute(q).entities()}
 
 
@@ -65,34 +68,36 @@ def rewrite_cms_content_urls(cnx):
         data_name = match.group(2)
         if data_name in file_props:
             props = file_props[data_name]
-            return '/file/%s/%s' % (props.data_sha1hex,
-                                    props.data_name)
+            return "/file/%s/%s" % (props.data_hash, props.data_name)
         return match.group(0)  # data_name not found, leave it unchanged
+
     try:
         cu = cnx.cnxset.cu
         for etype in CMS_OBJECTS:
             # those types actually don't have content
-            if etype in {'Circular', 'Map'}:
+            if etype in {"Circular", "Map"}:
                 continue
             sqldata = []
             # cu.execute('DROP TABLE IF EXISTS backup_cw_{etype}'.format(etype=etype))
-            cu.execute('CREATE TABLE backup_cw_{etype} AS SELECT * from cw_{etype}'.format(
-                etype=etype))
-            for eid, content in cnx.execute('Any X,C WHERE X is {}, X content C, '
-                                            'NOT X content NULL'.format(etype)):
+            cu.execute(
+                "CREATE TABLE backup_cw_{etype} AS SELECT * from cw_{etype}".format(etype=etype)
+            )
+            for eid, content in cnx.execute(
+                "Any X,C WHERE X is {}, X content C, " "NOT X content NULL".format(etype)
+            ):
                 orig_content = content
-                content = content.replace('preprod.francearchives.fr',
-                                          'francearchives.fr')
+                content = content.replace("preprod.francearchives.fr", "francearchives.fr")
                 content = STATIC_RGX.sub(oldurl2newurl, content)
                 if content != orig_content:
                     sqldata.append((content, eid))
             if sqldata:
-                cu.executemany('UPDATE cw_{} SET cw_content=%s WHERE cw_eid=%s'.format(etype),
-                               sqldata)
+                cu.executemany(
+                    "UPDATE cw_{} SET cw_content=%s WHERE cw_eid=%s".format(etype), sqldata
+                )
     except Exception as exc:
         import traceback
+
         traceback.print_exc()
         cnx.rollback()
     else:
         cnx.commit()
-

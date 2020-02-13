@@ -30,77 +30,84 @@
 #
 import unittest
 import os.path as osp
+import urllib.request
+import urllib.parse
+import urllib.error
 
 from cubicweb import Binary
 from cubicweb.devtools.testlib import CubicWebTC
 
+from cubicweb_francearchives.testutils import HashMixIn
 
-class BfssTests(CubicWebTC):
+
+class BfssTests(HashMixIn, CubicWebTC):
     def setUp(self):
         super(BfssTests, self).setUp()
-        self.bfss_dir = osp.join(self.config.appdatahome, 'bfss')
+        self.bfss_dir = osp.join(self.config.appdatahome, "bfss")
         # at this point, storage is already created, we have to get it
         # to update its default output directory
-        ssource = self.repo.sources_by_uri['system']
-        storage = ssource.storage('File', 'data')
+        ssource = self.repo.sources_by_uri["system"]
+        storage = ssource.storage("File", "data")
         storage.default_directory = self.bfss_dir
-        self.config.global_set_option('compute-sha1hex', True)
 
     def expected_path(self, entity):
-        return osp.join(
-            self.bfss_dir,
-            '{}_{}'.format(entity.compute_sha1hex(), entity.data_name))
+        return osp.join(self.bfss_dir, "{}_{}".format(entity.compute_hash(), entity.data_name))
+
+    def expected_download_url(self, entity):
+        return "http://" + urllib.parse.quote(
+            "testing.fr/cubicweb/file/{}/{}".format(entity.data_hash, entity.data_name)
+        )
 
     def test_basic_storage_basename(self):
         with self.admin_access.cnx() as cnx:
-            f = cnx.create_entity('File',
-                                  data=Binary('foo'),
-                                  data_format=u'image/jpeg',
-                                  data_name=u'foo.jpg')
+            f = cnx.create_entity(
+                "File", data=Binary(b"foo"), data_format="image/jpeg", data_name="foo.jpg"
+            )
             # test the file is saved correctly
             expected_path = self.expected_path(f)
             self.assertTrue(osp.isfile(self.expected_path(f)))
             with open(expected_path) as inputf:
                 content = inputf.read()
-                self.assertEqual(content, 'foo')
+                self.assertEqual(content, "foo")
             self.assertEqual(
-                f.cw_adapt_to('IDownloadable').download_url(),
-                'http://testing.fr/cubicweb/file/0beec7b5ea3f0fdbc95d0dd47f3c5bc275da8a33/foo.jpg')  # noqa
+                f.cw_adapt_to("IDownloadable").download_url(), self.expected_download_url(f)
+            )
             # test that rollback will remove the file from disk
             cnx.rollback()
             self.assertFalse(osp.isfile(expected_path))
 
     def test_update_storage(self):
         with self.admin_access.cnx() as cnx:
-            f = cnx.create_entity('File',
-                                  data=Binary('foo-foo'),
-                                  data_format=u'imag/jpeg',
-                                  data_name=u'foo.jpg')
+            f = cnx.create_entity(
+                "File", data=Binary(b"foo-foo"), data_format="imag/jpeg", data_name="foo.jpg"
+            )
 
             expected_path = self.expected_path(f)
-            self.assertTrue(expected_path.endswith(
-                'de67f401c7068b01ed85ef5f7247f0d018ffa0f3_foo.jpg'))
+            self.assertTrue(
+                expected_path.endswith("de67f401c7068b01ed85ef5f7247f0d018ffa0f3_foo.jpg")
+            )
             # test the file is saved correctly
             self.assertTrue(osp.isfile(expected_path))
             with open(expected_path) as inputf:
                 content = inputf.read()
-                self.assertEqual(content, 'foo-foo')
+                self.assertEqual(content, "foo-foo")
             self.assertEqual(
-                f.cw_adapt_to('IDownloadable').download_url(),
-                'http://testing.fr/cubicweb/file/de67f401c7068b01ed85ef5f7247f0d018ffa0f3/foo.jpg')  # noqa
+                f.cw_adapt_to("IDownloadable").download_url(), self.expected_download_url(f)
+            )
             cnx.commit()
 
             # modify file content and ensure new hash is handled properly
-            f.cw_set(data=Binary('bar'))
+            f.cw_set(data=Binary(b"bar"))
             expected_path2 = self.expected_path(f)
-            self.assertTrue(expected_path2.endswith(
-                '62cdb7020ff920e5aa642c3d4066950dd1f01f4d_foo.jpg'))
+            self.assertTrue(
+                expected_path2.endswith("62cdb7020ff920e5aa642c3d4066950dd1f01f4d_foo.jpg")
+            )
             with open(expected_path2) as inputf:
                 content = inputf.read()
-                self.assertEqual(content, 'bar')
+                self.assertEqual(content, "bar")
             self.assertEqual(
-                f.cw_adapt_to('IDownloadable').download_url(),
-                'http://testing.fr/cubicweb/file/62cdb7020ff920e5aa642c3d4066950dd1f01f4d/foo.jpg')  # noqa
+                f.cw_adapt_to("IDownloadable").download_url(), self.expected_download_url(f)
+            )
 
             # test that rollback will remove the second file (only) from disk
             cnx.rollback()
@@ -108,5 +115,5 @@ class BfssTests(CubicWebTC):
             self.assertFalse(osp.isfile(expected_path2))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

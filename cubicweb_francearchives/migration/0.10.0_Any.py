@@ -34,35 +34,164 @@ from cubicweb_francearchives.dataimport.directories import get_dpt_code
 
 print("import FRSHD annexes")
 
-headers = ["code", "page", "category", "annex_of", "name", "level", "name2", "address", "zip_code", "city", "mailing_address", "website_url", "contact_name", "phone_number", "fax", "email", "annual_closure", "opening_period", "rss", "daylmotion", "scoop it", "pinterest", "vimeo", "twitter", "storify", "foursquare", "facebook", "youtube", "wikimédia", "flickr", "blogs", "instagram"]
-
-annexes = [
-['', '', "Présidence de la République et Ministères", "Ministère de la Défense - SHD", '', "M", "Centre historique des archives", "Château de Vincennes, avenue de Paris", '94300', "Vincennes", "Château de Vincennes, avenue de Paris, 94306 Vincennes Cedex", '', "Thierry Sarmant", "01.41.93.23.57", "01.41.93.43.00", '', '', '', '', '', '', '', '', '', '', '', '', '', '', '',],
-['', '', "Présidence de la République et Ministères", "Ministère de la Défense - SHD", '', "M", "Centre des archives de l'armement et du personnel", '', '', '', "211 Grande Rue de Châteauneuf, CS 50650, 86106 Châtellerault Cedex", '', "Commissaire en chef Nicolas Jacob", "05.49.20.01.20", "05.49.20.22.39", "dmpa-shd-caapc.recherches.fct@intradef.gouv.fr", '', '', '', '', '', '', '', '', '', '', '', '', '', '', '',],
-['', '', "Présidence de la République et Ministères", "Ministère de la Défense - SHD", '', "M", "Centre des archives du personnel militaire", '', '', '', "Caserne Bernadotte, place de Verdun, 64023 Pau Cedex", '', "Lieutenant-colonel Patrick Rongier", "05.59.40.46.92", "05.49.40.45.53", "capm-pau.courrier.fct@intradef.gouv.fr", '', '', '', '', '', '', '', '', '', '', '', '', '', '', '']
+headers = [
+    "code",
+    "page",
+    "category",
+    "annex_of",
+    "name",
+    "level",
+    "name2",
+    "address",
+    "zip_code",
+    "city",
+    "mailing_address",
+    "website_url",
+    "contact_name",
+    "phone_number",
+    "fax",
+    "email",
+    "annual_closure",
+    "opening_period",
+    "rss",
+    "daylmotion",
+    "scoop it",
+    "pinterest",
+    "vimeo",
+    "twitter",
+    "storify",
+    "foursquare",
+    "facebook",
+    "youtube",
+    "wikimédia",
+    "flickr",
+    "blogs",
+    "instagram",
 ]
 
-shd_service = cnx.find('Service', code=u"FRSHD").one()
+annexes = [
+    [
+        "",
+        "",
+        "Présidence de la République et Ministères",
+        "Ministère de la Défense - SHD",
+        "",
+        "M",
+        "Centre historique des archives",
+        "Château de Vincennes, avenue de Paris",
+        "94300",
+        "Vincennes",
+        "Château de Vincennes, avenue de Paris, 94306 Vincennes Cedex",
+        "",
+        "Thierry Sarmant",
+        "01.41.93.23.57",
+        "01.41.93.43.00",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+    ],
+    [
+        "",
+        "",
+        "Présidence de la République et Ministères",
+        "Ministère de la Défense - SHD",
+        "",
+        "M",
+        "Centre des archives de l'armement et du personnel",
+        "",
+        "",
+        "",
+        "211 Grande Rue de Châteauneuf, CS 50650, 86106 Châtellerault Cedex",
+        "",
+        "Commissaire en chef Nicolas Jacob",
+        "05.49.20.01.20",
+        "05.49.20.22.39",
+        "dmpa-shd-caapc.recherches.fct@intradef.gouv.fr",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+    ],
+    [
+        "",
+        "",
+        "Présidence de la République et Ministères",
+        "Ministère de la Défense - SHD",
+        "",
+        "M",
+        "Centre des archives du personnel militaire",
+        "",
+        "",
+        "",
+        "Caserne Bernadotte, place de Verdun, 64023 Pau Cedex",
+        "",
+        "Lieutenant-colonel Patrick Rongier",
+        "05.59.40.46.92",
+        "05.49.40.45.53",
+        "capm-pau.courrier.fct@intradef.gouv.fr",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+    ],
+]
+
+shd_service = cnx.find("Service", code="FRSHD").one()
 
 for row in annexes:
-    data = dict((k, v.decode('utf-8').strip()) for k, v in zip(headers, row) if v)
-    data['annex_of'] = shd_service.eid
-    if 'zip_code' in data:
-        zip_code = data.pop('zip_code')
+    data = dict((k, v.decode("utf-8").strip()) for k, v in zip(headers, row) if v)
+    data["annex_of"] = shd_service.eid
+    if "zip_code" in data:
+        zip_code = data.pop("zip_code")
         dpt_code = get_dpt_code(zip_code)
-        data['dpt_code'] = dpt_code
-    level = data['level']
+        data["dpt_code"] = dpt_code
+    level = data["level"]
     if level:
-        data['level'] = u'level-%s' % level
-    cnx.create_entity('Service', **data)
+        data["level"] = "level-%s" % level
+    cnx.create_entity("Service", **data)
 
 
-for wikiid, title in (('open_data', u"Open data"),
-                      ('emplois', u"Offres d'emplois"),
-                      ('about', u"A propos")):
+for wikiid, title in (
+    ("open_data", "Open data"),
+    ("emplois", "Offres d'emplois"),
+    ("about", "A propos"),
+):
     for lang in SUPPORTED_LANGS:
-        create_entity('Card', wikiid=u'%s-%s' % (wikiid, lang),
-                      title=title,
-                      content_format=u'text/html')
+        create_entity(
+            "Card", wikiid="%s-%s" % (wikiid, lang), title=title, content_format="text/html"
+        )
 commit()
-

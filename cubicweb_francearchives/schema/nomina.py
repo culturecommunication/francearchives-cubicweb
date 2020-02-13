@@ -28,17 +28,16 @@
 # The fact that you are presently reading this means that you have had
 # knowledge of the CeCILL-C license and that you accept its terms.
 #
-from yams.buildobjs import (EntityType, String, Int, RichString,
-                            SubjectRelation)
+from yams.buildobjs import EntityType, String, Int, RichString, SubjectRelation
 
 
 class Person(EntityType):
     name = String(maxsize=64, fulltextindexed=True)
     forenames = String(maxsize=64)
     death_year = Int()
-    dates_description = RichString(fulltextindexed=True, default_format='text/html')
-    locations_description = RichString(fulltextindexed=True, default_format='text/html')
+    dates_description = RichString(fulltextindexed=True, default_format="text/html")
+    locations_description = RichString(fulltextindexed=True, default_format="text/html")
     document_uri = String(maxsize=512)
-    service = SubjectRelation('Service', cardinality='?*', inlined=True)
+    service = SubjectRelation("Service", cardinality="?*", inlined=True)
     publisher = String(required=True, fulltextindexed=True, indexed=True)
-    authority = SubjectRelation('AgentAuthority', cardinality='?*', inlined=True)
+    authority = SubjectRelation("AgentAuthority", cardinality="?*", inlined=True)

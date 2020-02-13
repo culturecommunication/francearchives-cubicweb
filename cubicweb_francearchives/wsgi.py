@@ -38,29 +38,30 @@ from cubicweb.pyramid import wsgi_application_from_cwconfig
 def with_proxy(app):
     # copied and adapted from http://flask.pocoo.org/snippets/35/
     def proxy_decorator(environ, start_response):
-        script_name = environ.get('HTTP_X_SCRIPT_NAME', '')
+        script_name = environ.get("HTTP_X_SCRIPT_NAME", "")
         if script_name:
-            environ['SCRIPT_NAME'] = script_name
-            path_info = environ['PATH_INFO']
+            environ["SCRIPT_NAME"] = script_name
+            path_info = environ["PATH_INFO"]
             if path_info.startswith(script_name):
-                environ['PATH_INFO'] = path_info[len(script_name):]
-        scheme = environ.get('HTTP_X_SCHEME', '')
+                environ["PATH_INFO"] = path_info[len(script_name) :]
+        scheme = environ.get("HTTP_X_SCHEME", "")
         if scheme:
-            environ['wsgi.url_scheme'] = scheme
+            environ["wsgi.url_scheme"] = scheme
         return app(environ, start_response)
+
     return proxy_decorator
 
 
 def wsgi_application(instance_name=None, debug=None):
     if instance_name is None:
-        instance_name = os.environ['CW_INSTANCE']
+        instance_name = os.environ["CW_INSTANCE"]
     if debug is None:
-        debug = 'CW_DEBUG' in os.environ
+        debug = "CW_DEBUG" in os.environ
 
     cwconfig = cwcfg.config_for(instance_name, debugmode=debug)
 
     app = wsgi_application_from_cwconfig(cwconfig)
-    repo = app.application.registry['cubicweb.repository']
+    repo = app.application.registry["cubicweb.repository"]
     # repo.start_looping_tasks()
-    repo.hm.call_hooks('server_startup', repo=repo)
+    repo.hm.call_hooks("server_startup", repo=repo)
     return with_proxy(app)

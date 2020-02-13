@@ -39,19 +39,15 @@ from pgfixtures import setup_module, teardown_module  # noqa
 
 
 class ImportNLSubscribersTC(PostgresTextMixin, testlib.CubicWebTC):
-
     def test_import(self):
-        filepath = self.datapath('subscribers.csv')
+        filepath = self.datapath("subscribers.csv")
         with self.admin_access.cnx() as cnx:
             import_subscribers(cnx, filepath)
             cnx.commit()
-            subscribers = cnx.execute(
-                'Any E ORDERBY E WHERE X is NewsLetterSubscriber, X email E')
-            expected = [[u'0001ad@mouans-sartoux.net'],
-                        [u'001@gmx.fr'],
-                        [u'12mvero@gmail.com']]
+            subscribers = cnx.execute("Any E ORDERBY E WHERE X is NewsLetterSubscriber, X email E")
+            expected = [["0001ad@mouans-sartoux.net"], ["001@gmx.fr"], ["12mvero@gmail.com"]]
             self.assertEqual(expected, subscribers.rows)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

@@ -34,7 +34,7 @@ from lxml import etree
 
 # importing devtools ensures CW's adjust_sys_path is called
 # before importing cube
-from cubicweb import devtools
+from cubicweb import devtools  # noqa
 
 from cubicweb_francearchives.dataimport import eadreader
 
@@ -44,7 +44,6 @@ def xmlparse(text, parser=etree.XMLParser(remove_blank_text=True)):
 
 
 class FormatterMixin(object):
-
     def assertNodeEqual(self, node1, node2):
         actual_output = etree.tostring(node1)
         expected_output = etree.tostring(node2)
@@ -52,60 +51,67 @@ class FormatterMixin(object):
 
 
 class FormatterTests(FormatterMixin, unittest.TestCase):
-
     def assertTransformEqual(self, expected_output, input_text):
         output = eadreader.html_formatter(xmlparse(input_text))
         self.assertNodeEqual(xmlparse(expected_output), output)
 
     def test_html_formatting(self):
-        ead_source = '''<list>
+        ead_source = """<list>
 <item>item1</item>
 <item>item2</item>
 <item>item3</item>
-</list>'''
-        expected_output = u'''<div class="ead-wrapper">
+</list>"""
+        expected_output = """<div class="ead-wrapper">
 <ul class="ead-list-unmarked">
 <li>item1</li>
 <li>item2</li>
 <li>item3</li>
 </ul>
-</div>'''
+</div>"""
         self.assertTransformEqual(expected_output, ead_source)
 
     def test_html_formatting_with_head(self):
-        ead_source = '''<list>
+        ead_source = """<list>
 <head>Hello</head>
 <item>item1</item>
 <item>item2</item>
 <item>item3</item>
-</list>'''
-        expected_output = u'''<div class="ead-wrapper">
+</list>"""
+        expected_output = """<div class="ead-wrapper">
 <span class="ead-title">Hello</span>
 <ul class="ead-list-unmarked">
 <li>item1</li>
 <li>item2</li>
 <li>item3</li>
 </ul>
-</div>'''
+</div>"""
         self.assertTransformEqual(expected_output, ead_source)
 
     def test_html_formatting_abbr(self):
-        ead_source = u'<p>Hello <abbr expan="cubicweb.org">cwo</abbr> !</p>'
-        expected_output = '<div class="ead-wrapper"><div class="ead-p">Hello <abbr title="cubicweb.org">cwo</abbr> !</div></div>'
+        ead_source = '<p>Hello <abbr expan="cubicweb.org">cwo</abbr> !</p>'
+        expected_output = (
+            '<div class="ead-wrapper"><div class="ead-p">Hello '
+            '<abbr title="cubicweb.org">cwo</abbr> !</div></div>'
+        )
         self.assertTransformEqual(expected_output, ead_source)
 
     def test_html_formatting_expan(self):
-        ead_source = u'<p>Hello <expan abbr="cwo">cubicweb.org</expan> !</p>'
-        expected_output = '<div class="ead-wrapper"><div class="ead-p">Hello <span title="cwo">cubicweb.org</span> !</div></div>'
+        ead_source = '<p>Hello <expan abbr="cwo">cubicweb.org</expan> !</p>'
+        expected_output = (
+            '<div class="ead-wrapper"><div class="ead-p">Hello '
+            '<span title="cwo">cubicweb.org</span> !</div></div>'
+        )
         self.assertTransformEqual(expected_output, ead_source)
 
     def test_html_formatting_lb(self):
-        ead_source = u'<p>Hello <lb/> world !</p>'
-        expected_output = '<div class="ead-wrapper"><div class="ead-p">Hello <br /> world !</div></div>'
+        ead_source = "<p>Hello <lb/> world !</p>"
+        expected_output = (
+            '<div class="ead-wrapper"><div class="ead-p">Hello ' "<br /> world !</div></div>"
+        )
         self.assertTransformEqual(expected_output, ead_source)
 
     def test_html_formatting_table(self):
-        ead_source = u'''
+        ead_source = """
 <table>
   <tgroup cols="4">
     <colspec colnum="1" align="center" colwidth="4cm" colsep="1" colname="anciennecote1"/>
@@ -135,8 +141,8 @@ class FormatterTests(FormatterMixin, unittest.TestCase):
       </row>
     </tbody>
   </tgroup>
-</table>'''
-        expected_output = u'''
+</table>"""
+        expected_output = """
 <div class="ead-wrapper">
     <table>
         <colgroup>
@@ -168,36 +174,35 @@ class FormatterTests(FormatterMixin, unittest.TestCase):
             </tr>
         </tbody>
     </table>
-</div>'''
+</div>"""
         self.assertTransformEqual(expected_output, ead_source)
 
 
 class XMLReformatTests(FormatterMixin, unittest.TestCase):
-
     def assertUnnest(self, input_text, expected_output):
         node = xmlparse(input_text)
         eadreader.unnest(node)
         self.assertNodeEqual(xmlparse(expected_output), node)
 
     def test_unnest_noop(self):
-        ead_source = u'''
+        ead_source = """
 <accessrestrict>
   <p>Il n'y a pas de restriction juridique à la consultation de ces
 documents, qui se fait selon les modalités matérielles en vigueur au
 CHAN.</p>
 </accessrestrict>
-'''
-        expected_output = u'''
+"""
+        expected_output = """
 <accessrestrict>
   <p>Il n'y a pas de restriction juridique à la consultation de ces
 documents, qui se fait selon les modalités matérielles en vigueur au
 CHAN.</p>
 </accessrestrict>
-        '''
+        """
         self.assertUnnest(ead_source, expected_output)
 
     def test_unnest(self):
-        ead_source = u'''
+        ead_source = """
 <accessrestrict>
   <head>Modalités d'accès</head>
   <accessrestrict>
@@ -211,8 +216,8 @@ CHAN.</p>
     <p>Librement consultable pour les actes de plus de 75 ans, sur dérogation pour les actes de moins de 75, publication restreinte aux actes de plus de 100 ans.</p>
   </accessrestrict>
 </accessrestrict>
-'''
-        expected_output = u'''
+"""  # noqa
+        expected_output = """
 <accessrestrict>
   <head>Modalités d'accès</head>
   <p class="ead-accessrestrict">
@@ -226,11 +231,11 @@ CHAN.</p>
     <p>Librement consultable pour les actes de plus de 75 ans, sur dérogation pour les actes de moins de 75, publication restreinte aux actes de plus de 100 ans.</p>
   </p>
 </accessrestrict>
-'''
+"""  # noqa
         self.assertUnnest(ead_source, expected_output)
 
     def test_unnest_accruals(self):
-        ead_source = u'''
+        ead_source = """
 <accruals>
   <head>Modalités d'accès</head>
   <accruals>
@@ -244,8 +249,8 @@ CHAN.</p>
     <p>Librement consultable pour les actes de plus de 75 ans, sur dérogation pour les actes de moins de 75, publication restreinte aux actes de plus de 100 ans.</p>
   </accruals>
 </accruals>
-'''
-        expected_output = u'''
+"""  # noqa
+        expected_output = """
 <accruals>
   <head>Modalités d'accès</head>
   <p class="ead-accruals">
@@ -259,9 +264,9 @@ CHAN.</p>
     <p>Librement consultable pour les actes de plus de 75 ans, sur dérogation pour les actes de moins de 75, publication restreinte aux actes de plus de 100 ans.</p>
   </p>
 </accruals>
-'''
+"""  # noqa
         self.assertUnnest(ead_source, expected_output)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

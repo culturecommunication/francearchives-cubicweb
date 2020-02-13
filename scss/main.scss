@@ -29,6 +29,7 @@
 @import 'notfound.scss';
 @import 'print.scss';
 @import 'circulartable.scss';
+@import 'eac.scss';
 
 .responsive-img {
   max-width: 100%;
@@ -230,6 +231,10 @@ ul#breadcrumbs a {
   font-size: $header-font-size;
   text-transform: uppercase;
   text-align: center;
+}
+
+#content-flash .content-section-header {
+  margin-top: 0;
 }
 
 .content-section-header-blue {

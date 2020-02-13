@@ -1,0 +1,525 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ead PUBLIC "+//ISBN 1-931666-00-8//DTD ead.dtd (Encoded Archival Description (EAD) Version 2002)//EN" "ead.dtd">
+<ead>
+    <eadheader>
+        <eadid url="https://www.monde-diplomatique.fr/">FRAD040_000020FI__fiche__img</eadid>
+        <filedesc>
+            <titlestmt>
+                <titleproper>Ensemble de dessins de la famille Dépruneaux (20 FI)</titleproper>
+                <subtitle>Inventaire analytique</subtitle>
+                <author>par Stéphane Delbès ; sous la direction d'Alice Motte et Marjolaine
+                    Pérez</author>
+            </titlestmt>
+            <publicationstmt>
+                <publisher>Archives départementales des Landes</publisher>
+                <address>
+                    <addressline>Mont-de-Marsan</addressline>
+                </address>
+                <date>2017</date>
+            </publicationstmt>
+        </filedesc>
+        <profiledesc>
+            <creation>Instrument de recherche produit au moyen du logiciel Arkhéïa Aide au
+                classement de la société Anaphore sarl, version 8-4.5 du <date calendar="gregorian"
+                    era="ce" normal="2017-02-16">jeudi 16 février 2017</date>. Date de l'export :
+                    <date calendar="gregorian" era="ce" normal="2018-01-04">jeudi 4 janvier
+                    2018</date> (17:33 h)</creation>
+            <langusage>Instrument de recherche rédigé en <language>Français</language>
+            </langusage>
+        </profiledesc>
+    </eadheader>
+    <archdesc level="item">
+        <did>
+            <unitid label="Cotes extrêmes">20 FI 1-9</unitid>
+            <unittitle label="Intitulé de l'unité documentaire">Ensemble de dessins de la famille
+                Dépruneaux</unittitle>
+            <unitdate label="Date de l'unité documentaire" normal="1960/1978">Sans
+                date-1978</unitdate>
+            <physdesc label="Description physique">
+                <genreform source="liste-typedocAC">Document iconographique</genreform> 9 dessins<lb/>
+                <extent type="nombre elements" label="Nombre d'éléments">9 pièces</extent>
+                <lb/>
+                <physfacet type="support" label="Support">Papier</physfacet>
+                <lb/>
+            </physdesc>
+            <container label="Conditionnement">Pochette dans meuble à tiroir</container>
+            <repository>Archives départementales des Landes</repository>
+            <origination label="Origine">
+                <persname role="producteur" altrender="personne physique">Claude Dépruneaux.
+                    Madeleine Dépruneaux</persname>
+            </origination>
+        </did>
+        <bioghist>
+            <head>Biographie ou histoire</head>
+            <p>Né à Mont-de-Marsan le 14 juillet 1897 et décédé à Mont-de-Marsan le 9 novembre 1987,
+                Claude Dépruneaux se passionna pour sa ville natale dont il connaissait les moindres
+                aspects. Très doué pour le dessin, il imagina et évoqua l'histoire des principaux
+                monuments de Mont-de-Marsan et leur consacra plusieurs articles dans le "Bulletin de
+                la Société de Borda". Son action fut particulièrement importante pour la sauvegarde
+                et la mise en valeur de plusieurs édifices du chef-lieu des Landes. D'après
+                "Dictionnaire biographique : mémoire des Landes publié sous la direction de
+                Bernadette Suau", 1991.</p>
+        </bioghist>
+        <acqinfo>
+            <head>Informations sur les modalités d'entrée</head>
+            <p>Don durant les années 1975 -1978 .</p>
+        </acqinfo>
+        <scopecontent>
+            <head>Présentation du contenu</head>
+            <p>Cette ensemble est composé exclusivement de dessins élaborés par des membres de la
+                famille Dépruneaux, relatifs à des monuments anciens des communes de
+                Bretagne-de-Marsan et de Mont-de-Marsan.</p>
+        </scopecontent>
+        <arrangement>
+            <head>Mode de classement</head>
+            <p>En 2016, le service des Archives départementales des Landes s'est lancé dans un vaste
+                chantier de réorganisation du cadre de classement des documents iconographiques,
+                avec plusieurs objectifs, à savoir, une meilleure cohérence et un respect des
+                principes de la circulaire AD 98-8 sur le classement et la cotation dans les
+                services d'archives départementales, mais aussi une prise en compte des attentes du
+                public avec les nouvelles formes de communication.</p>
+            <p>Ancienne cotation : éléments précédemment cotés dans les sous-séries 6 Fi, 8 Fi, 9
+                Fi. Se reporter à la table de concordance.</p>
+        </arrangement>
+        <accessrestrict>
+            <head>Statut juridique</head>
+            <legalstatus> Archives privées </legalstatus>
+        </accessrestrict>
+        <accessrestrict>
+            <head>Communicabilité</head>
+            <p>Consultation libre.</p>
+            <p>Documents numérisés et mis en ligne sur le site des archives du service.</p>
+        </accessrestrict>
+        <userestrict>
+            <head>Conditions d'utilisation</head>
+            <p>Reproduction possible en application de l'arrêté portant règlement de la salle de
+                lecture des Archives départementales des Landes.</p>
+        </userestrict>
+        <daogrp>
+            <daoloc href="http://www.archives.landes.fr/ark:/35227/e005b4f52e58ebf1/5b4f52e5907f1"
+                role="image:first"/>
+            <daoloc href="http://www.archives.landes.fr/ark:/35227/e005b4f52e58ebf1/5b4f52e59571b"
+                role="image:last"/>
+        </daogrp>
+        <bibliography>
+            <head>Bibliographie</head>
+            <p>Dictionnaire biographique : Mémoire des Landes publié sous la direction de Bernadette
+                Suau, cote : Pt 4° 373.</p>
+        </bibliography>
+        <processinfo>
+            <processinfo type="rédacteur description">
+                <head>Rédacteur de la description</head>
+                <p>
+                    <persname role="auteur_description">Stéphane Delbès</persname>
+                </p>
+            </processinfo>
+        </processinfo>
+        <controlaccess>
+            <head>Descripteurs</head>
+            <genreform>document graphique</genreform>
+            <geogname>Mont-de-Marsan (Landes, France)</geogname>
+            <geogname>Bretagne-de-Marsan (Landes, France)</geogname>
+            <geogname>Landes (France; département)</geogname>
+            <name role="auteur">Dépruneaux, Claude</name>
+            <name role="auteur">Dépruneaux, Madeleine</name>
+            <genreform type="typir">Recherche détaillée</genreform>
+            <function>funciton</function>
+            <occupation>iccupation</occupation>
+        </controlaccess>
+        <dsc type="othertype">
+            <c id="FRAD040_000020FI_tt1-1">
+                <!--titre niveau 1-->
+                <did>
+                    <unittitle type="titre" label="Intitulé de l'unité documentaire">Dessins
+                        Dépruneaux</unittitle>
+                    <unitid><extptr href="https://www.monde-diplomatique.fr/2019/09/MIELCAREK/60365"/>cote</unitid>
+                    <physdesc label="Description physique"> </physdesc>
+                </did>
+                <c id="FRAD040_000020FI_de-1" level="item">
+                    <did altrender="isbd-nbm-fr-imagefixe">
+                        <unitid label="Cotes extrêmes">20 FI 1</unitid>
+                        <unittitle label="Intitulé de l'unité documentaire">Montemarsan XVIIe
+                            siècle : enceintes de la ville sur plan Brun 1808 / C. dépruneaux. <imprint>
+                                <date type="publication" normal="1970">[ca 1970]</date>
+                            </imprint>
+                        </unittitle>
+                        <unitdate label="Date de l'unité documentaire" normal="1970">[ca
+                            1970]</unitdate>
+                        <physdesc label="Description physique">
+                            <genreform source="liste-typedocAC">Document iconographique</genreform>
+                            <extent type="collation" label="Collation">1 dessin sur papier Canson
+                                (illustration)</extent>
+                            <lb/>
+                            <physfacet type="technique" label="Données techniques">mine de plomb et
+                                bille</physfacet>
+                            <lb/>
+                            <dimensions label="Dimensions">50 × 65 cm (feuille)</dimensions>
+                            <lb/>
+                            <physfacet type="noir et blanc ou couleur"
+                                label="Noir et blanc ou couleur">en noir</physfacet>
+                            <lb/>
+                        </physdesc>
+                        <dao href="http://www.archives.landes.fr/ark:/35227/e005a4f8373d023d"
+                            title="Lien vers la fiche"/>
+                    </did>
+                    <controlaccess>
+                        <head>Descripteurs</head>
+                        <genreform>document graphique</genreform>
+                        <geogname>Mont-de-Marsan (Landes, France)</geogname>
+                        <name role="auteur">Dépruneaux, Claude</name>
+                    </controlaccess>
+                    <daogrp> </daogrp>
+                </c>
+                <c id="FRAD040_000020FI_de-2" level="item">
+                    <did altrender="isbd-nbm-fr-imagefixe">
+                        <unitid label="Cotes extrêmes">20 FI 2</unitid>
+                        <unittitle label="Intitulé de l'unité documentaire">Mont-de-Marsan : maison
+                            crénelée / C[laude] D[épruneaux]. <imprint>
+                                <date type="publication" normal="1970">[ca 1970]</date>
+                            </imprint>
+                        </unittitle>
+                        <unitdate label="Date de l'unité documentaire" normal="1970">[ca
+                            1970]</unitdate>
+                        <physdesc label="Description physique">
+                            <genreform source="liste-typedocAC">Document iconographique</genreform>
+                            <extent type="collation" label="Collation">1 dessin sur papier Canson
+                                (illustration)</extent>
+                            <lb/>
+                            <physfacet type="technique" label="Données techniques">mine de
+                                plomb</physfacet>
+                            <lb/>
+                            <dimensions label="Dimensions">65 × 50 cm (feuille)</dimensions>
+                            <lb/>
+                            <physfacet type="noir et blanc ou couleur"
+                                label="Noir et blanc ou couleur">en noir</physfacet>
+                            <lb/>
+                        </physdesc>
+                        <dao href="http://www.archives.landes.fr/ark:/35227/e005a4e62d8b8759"
+                            title="Lien vers la fiche"/>
+                    </did>
+                    <bioghist>
+                        <head>Biographie ou histoire</head>
+                        <p>.</p>
+                    </bioghist>
+                    <controlaccess>
+                        <head>Descripteurs</head>
+                        <genreform>document graphique</genreform>
+                        <geogname>Mont-de-Marsan (Landes, France)</geogname>
+                        <name role="auteur">Dépruneaux, Claude</name>
+                        <geogname role="batiment">Mont-de-Marsan (Landes, France) -- Couvent des
+                            Clarisses</geogname>
+                    </controlaccess>
+                    <daogrp>
+                        <daoloc
+                            href="http://www.archives.landes.fr/ark:/35227/e005a4e62d8b8759/5a4e62d8bf8b7"
+                            role="image"/>
+                    </daogrp>
+                </c>
+                <c id="FRAD040_000020FI_de-3" level="item">
+                    <did altrender="isbd-nbm-fr-imagefixe">
+                        <unitid label="Cotes extrêmes">20 FI 3</unitid>
+                        <unittitle label="Intitulé de l'unité documentaire">Mont-de-Marsan : château
+                            de "Nolibos" 1343 / C[laude] D[épruneaux]. <imprint>
+                                <date type="publication" normal="1970">[ca 1970]</date>
+                            </imprint>
+                        </unittitle>
+                        <unitdate label="Date de l'unité documentaire" normal="1970">[ca
+                            1970]</unitdate>
+                        <physdesc label="Description physique">
+                            <genreform source="liste-typedocAC">Document iconographique</genreform>
+                            <extent type="collation" label="Collation">1 dessin sur papier Canson
+                                (illustration)</extent>
+                            <lb/>
+                            <physfacet type="technique" label="Données techniques">mine de
+                                plomb</physfacet>
+                            <lb/>
+                            <physfacet type="support" label="Support">papier Canson</physfacet>
+                            <lb/>
+                            <dimensions label="Dimensions">50 x 65 cm (feuille)</dimensions>
+                            <lb/>
+                            <physfacet type="noir et blanc ou couleur"
+                                label="Noir et blanc ou couleur">en noir</physfacet>
+                            <lb/>
+                        </physdesc>
+                        <dao href="http://www.archives.landes.fr/ark:/35227/e005b4f41422022e"
+                            title="Lien vers la fiche"/>
+                    </did>
+                    <scopecontent>
+                        <head>Présentation du contenu</head>
+                        <p>Au verso : reconstitution du château de Gaston Phébus.</p>
+                    </scopecontent>
+                    <controlaccess>
+                        <head>Descripteurs</head>
+                        <subject>château</subject>
+                        <genreform>document graphique</genreform>
+                        <geogname>Mont-de-Marsan (Landes, France)</geogname>
+                        <name role="auteur">Dépruneaux, Claude</name>
+                        <geogname role="batiment">Nolibos, Château de (Mont-de-Marsan)</geogname>
+                    </controlaccess>
+                    <daogrp>
+                        <daoloc
+                            href="http://www.archives.landes.fr/ark:/35227/e005b4f41422022e/5b4f4142206b3"
+                            role="image"/>
+                    </daogrp>
+                </c>
+                <c id="FRAD040_000020FI_de-11" level="item">
+                    <did altrender="isbd-nbm-fr-imagefixe">
+                        <unitid label="Cotes extrêmes">20 FI 4</unitid>
+                        <unittitle label="Intitulé de l'unité documentaire">Mont-de-Marsan : le
+                            Bourg-Neuf [vers]1845 / Claude Dépruneaux. <imprint>
+                                <date type="publication" normal="1975">[ca 1975]</date>
+                            </imprint>
+                        </unittitle>
+                        <unitdate label="Date de l'unité documentaire" normal="1975">[ca
+                            1975]</unitdate>
+                        <physdesc label="Description physique">
+                            <genreform source="liste-typedocAC">Document iconographique</genreform>
+                            <extent type="collation" label="Collation">1 plan</extent>
+                            <lb/>
+                            <physfacet type="technique" label="Données techniques">plume, papier
+                                calque</physfacet>
+                            <lb/>
+                            <dimensions label="Dimensions">65,5 × 50 cm (feuille)</dimensions>
+                            <lb/>
+                        </physdesc>
+                        <dao href="http://www.archives.landes.fr/ark:/35227/e005a4e64c83a1e0"
+                            title="Lien vers la fiche"/>
+                    </did>
+                    <controlaccess>
+                        <head>Descripteurs</head>
+                        <genreform>plan</genreform>
+                        <geogname>Mont-de-Marsan (Landes, France)</geogname>
+                        <name role="auteur">Dépruneaux, Claude</name>
+                    </controlaccess>
+
+                    <daogrp>
+                        <daoloc
+                            href="http://www.archives.landes.fr/ark:/35227/e005a4e64c83a1e0/5a4e65f763e16"
+                            role="image"/>
+                    </daogrp>
+                </c>
+                <c id="FRAD040_000020FI_de-5" level="item">
+                    <did altrender="isbd-nbm-fr-imagefixe">
+                        <unitid label="Cotes extrêmes">20 FI 5</unitid>
+                        <unittitle label="Intitulé de l'unité documentaire">Mont-de-Marsan : [Donjon
+                            Lacataye] / [Claude Dépruneaux]. <imprint>
+                                <geogname>- [S.l.]</geogname>
+                                <date type="publication" normal="1975">[ca 1975]</date>
+                            </imprint>
+                        </unittitle>
+                        <unitdate label="Date de l'unité documentaire" normal="1975">[ca
+                            1975]</unitdate>
+                        <physdesc label="Description physique">
+                            <genreform source="liste-typedocAC">Document iconographique</genreform>
+                            <extent type="collation" label="Collation">1 dessin sur papier
+                                (illustration)</extent>
+                            <lb/>
+                            <physfacet type="technique" label="Données techniques">mine de
+                                plomb</physfacet>
+                            <lb/>
+                            <physfacet type="support" label="Support">papier</physfacet>
+                            <lb/>
+                            <dimensions label="Dimensions">43,5 × 32,5 cm (feuille)</dimensions>
+                            <lb/>
+                            <physfacet type="noir et blanc ou couleur"
+                                label="Noir et blanc ou couleur">en noir</physfacet>
+                            <lb/>
+                        </physdesc>
+                        <dao href="http://www.archives.landes.fr/ark:/35227/e005b4f4185515ba"
+                            title="Lien vers la fiche"/>
+                    </did>
+                    <controlaccess>
+                        <head>Descripteurs</head>
+                        <genreform>document graphique</genreform>
+                        <geogname>Mont-de-Marsan (Landes, France)</geogname>
+                        <name role="auteur">Dépruneaux, Claude</name>
+                        <geogname role="batiment">Mont-de-Marsan (Landes, France)-- Donjon
+                            Lacataye</geogname>
+                    </controlaccess>
+                    <daogrp>
+                        <daoloc
+                            href="http://www.archives.landes.fr/ark:/35227/e005b4f4185515ba/5b4f418551912"
+                            role="image"/>
+                    </daogrp>
+                </c>
+                <c id="FRAD040_000020FI_de-6" level="item">
+                    <did altrender="isbd-nbm-fr-imagefixe">
+                        <unitid label="Cotes extrêmes">20 FI 6</unitid>
+                        <unittitle label="Intitulé de l'unité documentaire">MonteMarsan XVIIe Siècle
+                            / C[laude] D[épruneaux]. <imprint>
+                                <geogname>- [S.l.]</geogname>
+                                <date type="publication" normal="1978">1978</date>
+                            </imprint>
+                        </unittitle>
+                        <unitdate label="Date de l'unité documentaire" normal="1978">1978</unitdate>
+                        <physdesc label="Description physique">
+                            <genreform source="liste-typedocAC">Document iconographique</genreform>
+                            <extent type="collation" label="Collation">1 dessin sur papier
+                                (illustration)</extent>
+                            <lb/>
+                            <physfacet type="technique" label="Données techniques">mine de plomb et
+                                bille</physfacet>
+                            <lb/>
+                            <physfacet type="support" label="Support">papier</physfacet>
+                            <lb/>
+                            <dimensions label="Dimensions">32,5 × 50,5 cm (feuille)</dimensions>
+                            <lb/>
+                            <physfacet type="noir et blanc ou couleur"
+                                label="Noir et blanc ou couleur">en noir</physfacet>
+                            <lb/>
+                        </physdesc>
+                        <dao href="http://www.archives.landes.fr/ark:/35227/e005a4f837e301bd"
+                            title="Lien vers la fiche"/>
+                    </did>
+                    <scopecontent>
+                        <head>Présentation du contenu</head>
+                        <p>Au verso : "Reconstitution de Mont-de-Marsan faite par M. Dépruneaux en
+                            1978 de la vue panoramique de Joachim de Weerth de 1612."</p>
+                    </scopecontent>
+                    <controlaccess>
+                        <head>Descripteurs</head>
+                        <genreform>document graphique</genreform>
+                        <geogname>Mont-de-Marsan (Landes, France)</geogname>
+                        <name role="auteur">Dépruneaux, Claude</name>
+                    </controlaccess>
+                    <daogrp>
+                        <daoloc
+                            href="http://www.archives.landes.fr/ark:/35227/e005a4f837e301bd/5a55d2979d77c"
+                            role="image"/>
+                        <daoloc
+                            href="http://www.archives.landes.fr/ark:/35227/e005a4f837e301bd/5a4f837e30618"
+                            role="image"/>
+                    </daogrp>
+                </c>
+                <c id="FRAD040_000020FI_de-8" level="item">
+                    <did altrender="isbd-nbm-fr-imagefixe">
+                        <unitid label="Cotes extrêmes">20 FI 7</unitid>
+                        <unittitle label="Intitulé de l'unité documentaire">Mont-de-Marsan : Couvent
+                            des Clarisses, sarcophage de pierre XIIè-XIIIè siècles / C[laude]
+                            D[épruneaux]. <imprint>
+                                <geogname>- [S.l.]</geogname>
+                                <date type="publication" normal="1960/1978">Sans date</date>
+                            </imprint>
+                        </unittitle>
+                        <unitdate label="Date de l'unité documentaire" normal="1960/1978">Sans
+                            date</unitdate>
+                        <physdesc label="Description physique">
+                            <genreform source="liste-typedocAC">Document iconographique</genreform>
+                            <extent type="collation" label="Collation">1 photocopie sur papier
+                                thermique (illustration)</extent>
+                            <lb/>
+                        </physdesc>
+                        <dao href="http://www.archives.landes.fr/ark:/35227/e005b4f41db9f0df"
+                            title="Lien vers la fiche"/>
+                    </did>
+                    <acqinfo>
+                        <head>Informations sur les modalités d'entrée</head>
+                        <p>Don datant des années 1975 -1978.</p>
+                    </acqinfo>
+                    <scopecontent>
+                        <head>Présentation du contenu</head>
+                        <p>Joint au document : notes dactylographiées concernant Marguerite de
+                            Moncade.</p>
+                    </scopecontent>
+                    <accessrestrict>
+                        <head>Statut juridique</head>
+                        <legalstatus> Archives privées </legalstatus>
+                    </accessrestrict>
+                    <controlaccess>
+                        <head>Descripteurs</head>
+                        <subject>sarcophage</subject>
+                        <genreform>document graphique</genreform>
+                        <geogname>Mont-de-Marsan (Landes, France)</geogname>
+                        <name role="auteur">Dépruneaux, Claude</name>
+                        <geogname role="batiment">Mont-de-Marsan (Landes, France) -- Couvent des
+                            Clarisses</geogname>
+                    </controlaccess>
+                    <daogrp>
+                        <daoloc
+                            href="http://www.archives.landes.fr/ark:/35227/e005b4f41db9f0df/5b4f41db9f43e"
+                            role="image"/>
+                        <daoloc
+                            href="http://www.archives.landes.fr/ark:/35227/e005b4f41db9f0df/5b4f4203d3c98"
+                            role="image"/>
+                    </daogrp>
+                </c>
+                <c id="FRAD040_000020FI_de-7" level="item">
+                    <did altrender="isbd-nbm-fr-imagefixe">
+                        <unitid label="Cotes extrêmes">20 FI 8</unitid>
+                        <unittitle label="Intitulé de l'unité documentaire">Mont-de-Marsan : Couvent
+                            des Clarisses, sarcophage de pierre XIIè-XIIIè siècles / C[laude]
+                            D[épruneaux]. <imprint>
+                                <geogname>- [S.l.]</geogname>
+                                <date type="publication" normal="1960/1978">Sans date</date>
+                            </imprint>
+                        </unittitle>
+                        <unitdate label="Date de l'unité documentaire" normal="1960/1978">Sans
+                            date</unitdate>
+                        <physdesc label="Description physique">
+                            <genreform source="liste-typedocAC">Document iconographique</genreform>
+                            <extent type="collation" label="Collation">1 photocopie sur papier
+                                thermique (illustration)</extent>
+                            <lb/>
+                        </physdesc>
+                        <dao href="http://www.archives.landes.fr/ark:/35227/e005a4f8a0373f95"
+                            title="Lien vers la fiche"/>
+                    </did>
+                    <scopecontent>
+                        <head>Présentation du contenu</head>
+                        <p>Joint au document : notes dactylographiées concernant Charles IX et
+                            Catherine de Médicis.</p>
+                    </scopecontent>
+                    <odd type="nombre exemplaires">
+                        <head>Nombre d'exemplaires</head>
+                        <p>Autre exemplaire coté en 20 FI 7</p>
+                    </odd>
+                    <controlaccess>
+                        <head>Descripteurs</head>
+                        <subject>sarcophage</subject>
+                        <genreform>document graphique</genreform>
+                        <geogname>Mont-de-Marsan (Landes, France)</geogname>
+                        <name role="auteur">Dépruneaux, Claude</name>
+                        <geogname role="batiment">Mont-de-Marsan (Landes, France) -- Couvent des
+                            Clarisses</geogname>
+                    </controlaccess>
+                    <daogrp>
+                        <daoloc
+                            href="http://www.archives.landes.fr/ark:/35227/e005a4f8a0373f95/5a4f8a0374283"
+                            role="image"/>
+                        <daoloc
+                            href="http://www.archives.landes.fr/ark:/35227/e005a4f8a0373f95/5a58d70e21efc"
+                            role="image"/>
+                    </daogrp>
+                </c>
+                <c id="FRAD040_000020FI_de-9" level="item">
+                    <did altrender="isbd-nbm-fr-imagefixe">
+                        <unitid label="Cotes extrêmes">20 FI 9</unitid>
+                        <unittitle label="Intitulé de l'unité documentaire">Bretagne-de-Marsan 1900
+                            / [Madeleine Dépruneaux]. <imprint>
+                                <geogname>- [S.l.]</geogname>
+                                <date type="publication" normal="1960/1978">Sans date</date>
+                            </imprint>
+                        </unittitle>
+                        <unitdate label="Date de l'unité documentaire" normal="1960/1978">Sans
+                            date</unitdate>
+                        <physdesc label="Description physique">
+                            <genreform source="liste-typedocAC">Document iconographique</genreform>
+                            <extent type="collation" label="Collation">1 photocopie sur papier
+                                thermique (illustration)</extent>
+                            <lb/>
+                        </physdesc>
+                        <dao href="example.com" role='image'
+                            title="Lien vers la fiche"/>
+                    </did>
+                    <controlaccess>
+                        <head>Descripteurs</head>
+                        <genreform>document graphique</genreform>
+                        <geogname>Bretagne-de-Marsan (Landes, France)</geogname>
+                        <name role="auteur">Dépruneaux, Madeleine</name>
+                    </controlaccess>
+                    <daogrp> </daogrp>
+                </c>
+            </c>
+        </dsc>
+    </archdesc>
+</ead>

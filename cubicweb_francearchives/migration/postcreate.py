@@ -43,28 +43,33 @@ HERE = osp.join(osp.abspath(osp.dirname(__file__)))
 
 workflows.oai_import_task_workflow(add_workflow)
 
+
 def datapath(relpath):
-    return osp.join(HERE, 'initialdata', relpath)
-
-set_property('ui.site-title', 'FranceArchives')  # noqa
-set_property(u'ui.language', u'fr')  # noqa
+    return osp.join(HERE, "initialdata", relpath)
 
 
-create_entity('ConceptScheme', title=u'siaf')
+set_property("ui.site-title", "FranceArchives")  # noqa
+set_property("ui.language", "fr")  # noqa
 
-cnx.system_sql('DROP TABLE IF EXISTS executed_command')
-cnx.system_sql('CREATE TABLE executed_command ('
-               # name of executed command
-               'name varchar(50),'
-               # datetime when command started
-               'start TIMESTAMP WITH TIME ZONE DEFAULT current_timestamp,'
-               # datetime when command ended
-               'stop TIMESTAMP WITH TIME ZONE,'
-               # RAM used by process at the end of command
-               'memory varchar(20))')
 
-if cnx.vreg.config.system_source_config['db-driver'].lower() == 'postgres':
-    cnx.system_sql("""
+create_entity("ConceptScheme", title="siaf")
+
+cnx.system_sql("DROP TABLE IF EXISTS executed_command")
+cnx.system_sql(
+    "CREATE TABLE executed_command ("
+    # name of executed command
+    "name varchar(50),"
+    # datetime when command started
+    "start TIMESTAMP WITH TIME ZONE DEFAULT current_timestamp,"
+    # datetime when command ended
+    "stop TIMESTAMP WITH TIME ZONE,"
+    # RAM used by process at the end of command
+    "memory varchar(20))"
+)
+
+if cnx.vreg.config.system_source_config["db-driver"].lower() == "postgres":
+    cnx.system_sql(
+        """
     CREATE OR REPLACE FUNCTION create_entities(etype varchar,
                                                from_table varchar,
                                                update_cweid boolean)
@@ -109,9 +114,11 @@ if cnx.vreg.config.system_source_config['db-driver'].lower() == 'postgres':
 
     END;
     $$ LANGUAGE plpgsql;
-    """)
+    """
+    )
 
-    cnx.system_sql("""
+    cnx.system_sql(
+        """
 CREATE OR REPLACE FUNCTION push_entities(etype varchar,
                                          colnames varchar,
                                          query varchar)
@@ -142,9 +149,11 @@ BEGIN
 
 END;
 $$ LANGUAGE plpgsql;
-    """)
+    """
+    )
 
-    cnx.system_sql(r"""
+    cnx.system_sql(
+        r"""
 CREATE OR REPLACE FUNCTION normalize_entry(entry varchar)
 RETURNS varchar AS $$
 DECLARE
@@ -152,6 +161,7 @@ DECLARE
 BEGIN
  normalized := regexp_replace(entry, '\(\s*[\d.]+\s*-\s*[\d.]+\s*\)', '');
  normalized := translate(normalized, E'!"#$%&()*+,-./:;<=>?@[\\]^_`{|}~\'', '');
+ normalized := translate(normalized, E'\xc2\xa0\xc2\xb0\u2026\u0300\u0301', ' _.__');
  normalized := btrim(unaccent(lower(normalized)));
 
  SELECT string_agg(T.word, ' ') INTO normalized
@@ -160,9 +170,11 @@ BEGIN
  RETURN btrim(normalized);
 END;
 $$ LANGUAGE plpgsql;
-    """)
+    """
+    )
 
-    cnx.system_sql('''
+    cnx.system_sql(
+        """
 CREATE OR REPLACE FUNCTION delete_entities(etype varchar, from_table varchar)
 RETURNS void AS $$
 DECLARE
@@ -174,9 +186,11 @@ BEGIN
   EXECUTE format('DELETE FROM %s USING %s WHERE cw_eid = %s.eid', etype, from_table, from_table);
   EXECUTE format('DELETE FROM entities USING %s WHERE entities.eid = %s.eid', from_table, from_table);
 END;
-$$ LANGUAGE plpgsql;''')  # noqa
+$$ LANGUAGE plpgsql;"""
+    )  # noqa
 
-    cnx.system_sql('''
+    cnx.system_sql(
+        """
     CREATE OR REPLACE FUNCTION update_index_entries(index_entries json, oldauth int, newauth int)
     RETURNS jsonb as $$
     DECLARE
@@ -198,66 +212,70 @@ $$ LANGUAGE plpgsql;''')  # noqa
       RETURN result;
     END;
     $$ language plpgsql;
-    ''')
+    """
+    )
 
 
-for wikiid, title in (('faq', u'Foire aux questions'),
-                      ('cgu', u"Conditions générales d'utilisation"),
-                      ('privacy_policy', u"Politique de confidentialité"),
-                      ('legal_notices', u"Mentions légales"),
-                      ('open_data', u"Open data"),
-                      ('emplois', u"Offres d'emplois"),
-                      ('about', u"A propos"),
-                      ('tableau-circulaires', u"Tableau des circulaires"),
-                      ('accessibility', u"Accessibilité")):
+for wikiid, title in (
+    ("faq", "Foire aux questions"),
+    ("cgu", "Conditions générales d'utilisation"),
+    ("privacy_policy", "Politique de confidentialité"),
+    ("legal_notices", "Mentions légales"),
+    ("open_data", "Open data"),
+    ("emplois", "Offres d'emplois"),
+    ("about", "A propos"),
+    ("tableau-circulaires", "Tableau des circulaires"),
+    ("accessibility", "Accessibilité"),
+):
     for lang in SUPPORTED_LANGS:
-        create_entity('Card', wikiid=u'%s-%s' % (wikiid, lang),
-                      title=title,
-                      content_format=u'text/html')
+        create_entity(
+            "Card", wikiid="%s-%s" % (wikiid, lang), title=title, content_format="text/html"
+        )
 
 
 # create cards
-cards = ((u'alert', u'Alert', False),
-         (u'contact', u'Contact', True),
-         (u'newsletter', (u"Lettre d'information"), True)
-         )
+cards = (
+    ("alert", "Alert", False),
+    ("contact", "Contact", True),
+    ("newsletter", ("Lettre d'information"), True),
+)
 
 for cid, title, has_content in cards:
     content = None
     if has_content:
         try:
-            stream = open(datapath('%s.html' % cid), 'r')
+            stream = open(datapath("%s.html" % cid), "rb")
             content = stream.read()
-            content = content.decode('utf8')
-        except Exception, err:
-            print (u'\n [info] no content file "%s.html" '
-                   u'found or the content file is unreadible') % cid
-    create_entity('Card', title=title, content=content,
-                  wikiid=cid, content_format=u'text/html')
+            content = content.decode("utf8")
+        except Exception as err:
+            print(
+                '\n [info] no content file "%s.html" ' "found or the content file is unreadible"
+            ) % cid
+    create_entity("Card", title=title, content=content, wikiid=cid, content_format="text/html")
 
 create_homepage_metadata(cnx)
 commit()
 try:
-    sql('create extension unaccent')
+    sql("create extension unaccent")
     commit()
 except Exception as e:
-    print('cannot create extension unaccent (%s)' % e)
+    print("cannot create extension unaccent (%s)" % e)
 
 sql(
-    'CREATE TABLE authority_history ( '
-    '  fa_stable_id varchar(64),'
-    '  type varchar(20),'
-    '  indexrole varchar(2048),'
-    '  label varchar(2048),'
-    '  autheid int,'
-    '  UNIQUE (fa_stable_id, type, label, indexrole)'
-    ')'
+    "CREATE TABLE authority_history ( "
+    "  fa_stable_id varchar(64),"
+    "  type varchar(20),"
+    "  indexrole varchar(2048),"
+    "  label varchar(2048),"
+    "  autheid int,"
+    "  UNIQUE (fa_stable_id, type, label, indexrole)"
+    ")"
 )
 commit()
 
 # create geonames table
 cnx.system_sql(
-    '''
+    """
     CREATE TABLE geonames (
     geonameid integer not null,
     name varchar(200),
@@ -279,6 +297,29 @@ cnx.system_sql(
     timezone varchar(40),
     moddate date
     );
-    '''
+    """
+)
+commit()
+
+# create a cache for geomap
+cnx.create_entity("Caches", name="geomap", values=[], instance_type="cms")
+cnx.create_entity("Caches", name="geomap", values=[], instance_type="consultation")
+
+# create fa_redirects table to store findingaid and facomponent redirections
+# issued from oai, csv and pdf doubles.
+#
+# later "from_stable_id" and "to_stable_id" columns data must be moved to nginx
+# config.
+
+cnx.system_sql(
+    """
+    CREATE TABLE fa_redirects (
+    old_ir_name character varying(512),
+    from_stable_id character varying(64) PRIMARY KEY NOT NULL,
+    to_stable_id character varying(64) not null,
+    date date,
+    UNIQUE (from_stable_id, to_stable_id)
+    );
+    """
 )
 commit()

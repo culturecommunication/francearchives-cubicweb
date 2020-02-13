@@ -30,7 +30,7 @@
 #
 import datetime
 
-from StringIO import StringIO
+from io import StringIO
 
 from pyramid.renderers import JSON
 from cubicweb.uilib import UnicodeCSVWriter
@@ -43,52 +43,49 @@ class CSVRenderer(object):
         if csv_options:
             self.csv_options = csv_options
         else:
-            self.csv_options = {'delimiter': ',',
-                                'quotechar': '"',
-                                'lineterminator': '\n'}
+            self.csv_options = {"delimiter": ",", "quotechar": '"', "lineterminator": "\n"}
 
     def __call__(self, info):
         def _render(value, system):
             """CSV-encoded string with content-type ``text/csv``."""
-            request = system.get('request')
+            request = system.get("request")
             if request is not None:
                 if self.encoding is None:
                     self.encoding = request.cw_request.encoding
                 response = request.response
                 ct = response.content_type
                 if ct == response.default_content_type:
-                    response.content_type = 'text/comma-separated-values;charset=%s' % self.encoding
+                    response.content_type = "text/comma-separated-values;charset=%s" % self.encoding
             stream = StringIO()
-            writer = UnicodeCSVWriter(stream.write,
-                                      encoding=self.encoding,
-                                      **self.csv_options)
-            headers = value.get('headers')
+            writer = UnicodeCSVWriter(stream.write, encoding=self.encoding, **self.csv_options)
+            headers = value.get("headers")
             if headers:
                 writer.writerow(headers)
-            writer.writerows(value.get('rows', []))
+            writer.writerows(value.get("rows", []))
             return stream.getvalue()
 
         return _render
 
 
 class PrettyJSON(JSON):
-
     def __call__(self, info):
         """ Returns a pretty JSON-encoded string if ``pretty``
         is present in ``request.params``"""
+
         def _render(value, system):
-            request = system.get('request')
+            request = system.get("request")
             if request is not None:
                 response = request.response
                 ct = response.content_type
                 if ct == response.default_content_type:
-                    response.content_type = 'application/json'
-                if 'pretty' in request.params:
-                    self.kw['indent'] = 2
+                    response.content_type = "application/json"
+                if "pretty" in request.params:
+                    self.kw["indent"] = 2
             default = self._make_default(request)
             result = self.serializer(value, default=default, **self.kw)
-            self.kw.pop('indent', None)
+            self.kw.pop("indent", None)
             return result
+
         return _render
 
 
@@ -105,5 +102,5 @@ def includeme(config):
     csv_renderer = CSVRenderer()
     json_renderer.add_adapter(datetime.datetime, datetime_isoformat)
     json_renderer.add_adapter(datetime.date, date_isoformat)
-    config.add_renderer('json', json_renderer)
-    config.add_renderer('csv', csv_renderer)
+    config.add_renderer("json", json_renderer)
+    config.add_renderer("csv", csv_renderer)

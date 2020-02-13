@@ -61,10 +61,13 @@
       <subject>poisson</subject>
       <subject>pisciculture</subject>
       <subject>aquaculture</subject>
+      <subject>unicode  ‫control	character</subject>
       <geogname>garonne (cours d'eau)</geogname>
       <persname>Jean-Michel</persname>
       <genreform>étude</genreform>
-      <function>étude</function>
+      <function>poisson</function>
+      <function>function</function>
+      <occupation>notaire</occupation>
     </controlaccess>
     <dsc type="othertype">
       <c encodinganalog="3.1.4" id="d_1">
@@ -76,6 +79,9 @@
                     era="ce"
                     calendar="gregorian"
                     normal="1922-01-01/1998-12-31">1922-1998</unitdate>
+          <origination encodinganalog="3.2.1">
+            <corpname authfilenumber="FRAN_NP_006122">Direction de l'eau</corpname>
+          </origination>
         </did>
         <controlaccess>
           <subject>Poisson</subject>
@@ -83,6 +89,9 @@
           <geogname>Garonne (cours d'eau)</geogname>
           <persname>jean-Michel</persname>
           <persname>Jean-Paul</persname>
+          <genreform>plan</genreform>
+          <function>médecin</function>
+          <occupation>avocat</occupation>
         </controlaccess>
         <accruals>Coucou <b>tout le monde</b></accruals>
       </c>

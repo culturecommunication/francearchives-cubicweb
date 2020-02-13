@@ -37,21 +37,20 @@ def main(cnx, metadata_filepaths):
     result = {}
     for metadata_file in metadata_filepaths:
         allmetadata = load_metadata_file(metadata_file)
-        for identifier, metadata in allmetadata.items():
-            descr = metadata.get('dc_description ', '').strip()
+        for identifier, metadata in list(allmetadata.items()):
+            descr = metadata.get("dc_description ", "").strip()
             if descr:
-                identifier = remove_extension(metadata['dc_identifier'])
+                identifier = remove_extension(metadata["dc_identifier"])
                 result[identifier] = descr
     pg_cwcnx = cnx.repo.system_source.get_connection()
     pg_cwcu = pg_cwcnx.cursor()
 
-    print('start executing sql')
+    print("start executing sql")
     pg_cwcu.executemany(
-        'UPDATE cw_findingaid SET cw_description = %s FROM cw_did where cw_did.cw_eid = cw_findingaid.cw_did AND cw_did.cw_unitid = %s',
-        [(descr, identifier) for identifier, descr in result.items()]
+        "UPDATE cw_findingaid SET cw_description = %s FROM cw_did where cw_did.cw_eid = cw_findingaid.cw_did AND cw_did.cw_unitid = %s",
+        [(descr, identifier) for identifier, descr in list(result.items())],
     )
     pg_cwcnx.commit()
-
 
 
 main(cnx, __args__)  # noqa

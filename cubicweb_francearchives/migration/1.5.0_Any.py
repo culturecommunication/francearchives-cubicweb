@@ -34,30 +34,35 @@ from pwd import getpwnam
 
 
 def chown(filepath):
-    www_data_infos = getpwnam('www-data')
+    www_data_infos = getpwnam("www-data")
     try:
         os.chown(filepath, www_data_infos.pw_uid, www_data_infos.pw_gid)
     except OSError:
-        print('failed to chown', repr(filepath))
+        print("failed to chown", repr(filepath))
 
 
 def fix_files_with_no_bfss(cnx):
     """dump to filesystem files created without bfss properly initialized"""
     cursor = cnx.cnxset.cu
-    cursor.execute('SELECT cw_eid, cw_data_name, cw_data_format, cw_data_sha1hex, cw_data '
-                   'FROM cw_file WHERE length(cw_data) > 200')
+    cursor.execute(
+        "SELECT cw_eid, cw_data_name, cw_data_format, cw_data_hash, cw_data "
+        "FROM cw_file WHERE length(cw_data) > 200"
+    )
 
-    output_dir = cnx.vreg.config['appfiles-dir']
+    output_dir = cnx.vreg.config["appfiles-dir"]
     for eid, basename, fmt, sha1, data in cursor.fetchall():
-        print('processing', repr(basename))
-        output_filepath = osp.join(output_dir, '{}_{}'.format(sha1, basename))
-        with open(output_filepath, 'w') as out:
+        print("processing", repr(basename))
+        output_filepath = osp.join(output_dir, "{}_{}".format(sha1, basename))
+        with open(output_filepath, "w") as out:
             out.write(str(data))
         chown(output_filepath)
-        cursor.execute('UPDATE cw_file SET cw_data=%(data)s WHERE cw_eid=%(eid)s',
-                       {'data': output_filepath, 'eid': eid})
+        cursor.execute(
+            "UPDATE cw_file SET cw_data=%(data)s WHERE cw_eid=%(eid)s",
+            {"data": output_filepath, "eid": eid},
+        )
 
     cnx.commit()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     fix_files_with_no_bfss(cnx)

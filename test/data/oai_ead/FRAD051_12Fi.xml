@@ -1,0 +1,1116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
+  <responseDate>2016-12-12T10:03:53Z</responseDate>
+  <request verb="ListRecords" metadataPrefix="ead">http://archives.marne.fr/oai_pmh.cgi</request>
+  <ListRecords>
+    <record>
+
+      <header>
+        <identifier>FRAD051_12Fi</identifier>
+        <datestamp>2011-06-24</datestamp>
+      </header>
+      <metadata>
+<ead xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:isbn:1-931666-22-9" xmlns:xlink="http://www.w3.org/1999/xlink" xsi:schemaLocation="urn:isbn:1-931666-22-9 http://www.loc.gov/ead/ead.xsd http://www.w3.org/1999/xlink http://www.loc.gov/standards/xlink/xlink.xsd">
+<eadheader>
+<eadid>FRAD051_12Fi</eadid>
+<filedesc>
+<titlestmt>
+<titleproper>12 Fi - Albums de photographies</titleproper>
+</titlestmt>
+<publicationstmt>
+<publisher>Archives départementales de la Marne</publisher>
+<address><addressline>Châlons-en-Champagne</addressline></address>
+<date normal="2012">2012</date>
+</publicationstmt>
+</filedesc>
+<profiledesc>
+<creation>Instrument de recherche produit au moyen du logiciel Arkhéïa Aide au classement de la société Anaphore sarl, version 3-9.3 du <date normal="2011-06-24">vendredi 24 juin 2011</date>.
+Date de l'export : <date normal="2017-10-17">mardi 17 octobre 2017</date> (15:57 h)</creation>
+<langusage>Instrument de recherche rédigé en <language langcode="fre">français</language></langusage>
+</profiledesc>
+</eadheader>
+<archdesc level="recordgrp" id="a011508248824CSiGqd" audience="external">
+<did><unitid label="Cotes extrêmes" identifier="12FI/1-12FI/37">12 Fi 1-37</unitid>
+<unittitle label="">Albums de photographies (12 Fi)</unittitle>
+
+<physdesc label="Description physique"><genreform source="liste-typedocAC">Document iconographique</genreform><lb/>
+Albums de photographies<lb/>
+<extent type="unités description" label="Nombre d'unités de niveau bas">13</extent><lb/>
+</physdesc>
+<repository label="Organisme responsable de laccès intellectuel">Archives départementales de la Marne</repository>
+<origination label="Origine"><persname role="producteur">Producteurs multiples</persname>
+</origination>
+</did>
+<acqinfo><head>Informations sur les modalités d'entrée</head>
+<p>Achat, don</p>
+</acqinfo>
+<accessrestrict><head>Modalités d'accès</head>
+<accessrestrict>
+<head>Statut juridique</head>
+<legalstatus>
+Archives privées
+</legalstatus>
+</accessrestrict>
+<accessrestrict>
+<head>Communicabilité</head>
+<p>Communicabilité immédiate. Pour les albums numérisés de la première guerre mondiale, cotés 12 Fi 1, 3, 6 et 11 : images en ligne sur le site internet des Archives.</p>
+</accessrestrict>
+</accessrestrict>
+<userestrict><head>Conditions d'utilisation</head>
+<p>Reproduction à usage privé uniquement dans le respect du droit des auteurs (Cf. Code de la propriété intellectuelle)</p>
+</userestrict>
+<phystech><head>Caractéristiques matérielles et contraintes techniques</head>
+<p>Les albums qui sont à consulter en salle de lecture (ceux qui ne sont pas en ligne sur le site internet des Archives) doivent être manipulés avec beaucoup de précaution en prenant soin de ne pas poser les doigts sur les clichés. En cas de besoin, utiliser des gants de coton</p>
+</phystech>
+<controlaccess>
+<head>Descripteurs</head>
+<genreform>ALBUM</genreform>
+<genreform>DOCUMENT PHOTOGRAPHIQUE</genreform>
+<genreform type="typir">Recherche détaillée</genreform>
+</controlaccess><note type="mnesysinternal"><p/></note>
+<dsc type="in-depth">
+<c id="a011508248824H4RaFz" level="fonds">
+<did>
+<unitid label="Cotes extrêmes">12 Fi 1</unitid>
+<unittitle label="Intitulé de l'unité documentaire">Destruction de Reims</unittitle>
+<unitdate label="Date de l'unité documentaire" normal="1918-01-01/1918-12-31" certainty="approximative">[vers 1918]</unitdate>
+<physdesc label="Description physique">
+<genreform source="liste-typedocAC">Document iconographique</genreform><lb/>
+Album couleur grenat format à l'italienne 22 X 30 cm composé de 12 pages cartonnées à tranche doré. Chaque page  comprend quatre fenêtres où sont insérées les photographies en noir et blanc<lb/>
+<extent type="collation" label="Collation">1 album comprenant 89 photographies</extent><lb/>
+<dimensions label="Dimensions">22 x 30 cm</dimensions><lb/>
+</physdesc>
+<origination label="Origine">
+<persname role="producteur">Non identifié</persname>
+</origination>
+</did>
+<acqinfo>
+<head>Informations sur les modalités d'entrée</head>
+<p>Achat 2006. Entrée n°3644</p>
+</acqinfo>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>89 photographies noir et blanc des destructions de la première guerre mondiale de Reims et ses environs : paysages de guerre, population civile dans Reims en ruines. Quelques clichés familiaux. Format 7 X 11,4 cm.</p>
+</scopecontent>
+<accessrestrict>
+<head>Statut juridique</head>
+<legalstatus>
+Archives privées
+</legalstatus>
+</accessrestrict>
+<accessrestrict type="modalites-acces">
+<head>Communicabilité</head>
+<p>Images en ligne sur le site internet des Archives</p>
+</accessrestrict>
+<userestrict>
+<head>Conditions d'utilisation</head>
+<p>Reproduction à usage privé uniquement (cf Code de la propriété intellectuelle)</p>
+</userestrict>
+<controlaccess>
+<head>Descripteurs</head>
+<genreform>ALBUM</genreform>
+<genreform>DOCUMENT PHOTOGRAPHIQUE</genreform>
+<subject source="contexte-historique">GUERRE 1914-1918</subject>
+<subject>ruines</subject>
+<subject>armement</subject>
+<subject>population civile</subject>
+<subject>fortification</subject>
+<subject>paysage de guerre</subject>
+<geogname>Reims (Marne, Champagne-Ardenne, France)</geogname>
+<geogname>Reims -- cathédrale</geogname>
+<geogname>Reims -- place royale</geogname>
+</controlaccess>
+<daogrp>
+<daoloc href="medias/06_fonds_icono/12Fi/12Fi1/FRAD051_12Fi1_001.jpg" role="first_image"/>
+<daoloc href="medias/06_fonds_icono/12Fi/12Fi1/FRAD051_12Fi1_023.jpg" role="last_image"/>
+</daogrp>
+</c>
+<c id="a011508248824Z84bDb" level="item">
+<did>
+<unitid label="Cotes extrêmes">12 Fi 2</unitid>
+<unittitle label="Intitulé de l'unité documentaire">Recueil de photographies originales d'objets gallo-romains découverts lors de fouilles faites à Conflans dans la Marne / Valentin, photographe à Reims</unittitle>
+<unitdate label="Date de l'unité documentaire" normal="1876-01-01/1876-12-31" certainty="approximative">[vers 1876]</unitdate>
+<physdesc label="Description physique">
+<genreform source="liste-typedocAC">Document iconographique</genreform><lb/>
+Recueil in-folio monté sur onglets, demi-maroquin à coins olives de l'époque de format  54 x 46 cm, composé de 28 photographies originales fixées sur carton en tirage albuminé 32 X 29,3 cm<lb/>
+<dimensions label="Dimensions">54 x 46 cm</dimensions><lb/>
+</physdesc>
+</did>
+<acqinfo>
+<head>Informations sur les modalités d'entrée</head>
+<p>Achat 2008. Entrée n° 3670</p>
+</acqinfo>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Portrait photographique du Comte Alfred Werlé célèbre amateur bibliophile et à l'occasion archéologue et dédicace autographe du Comte de Werlé sous son portrait à "son cher maître" Monsieur Poinsignon ,1876, et 28 photographies en noir et blanc dont deux objets issus du cimetière gallo-romain de Conflans-sur-Marne, 1872. Ex-libris et mention manuscrite de Stoll.</p>
+</scopecontent>
+<accessrestrict>
+<head>Statut juridique</head>
+<legalstatus>
+Archives privées
+</legalstatus>
+</accessrestrict>
+<accessrestrict type="modalites-acces">
+<head>Communicabilité</head>
+<p>Consultation libre</p>
+</accessrestrict>
+<userestrict>
+<head>Conditions d'utilisation</head>
+<p>Reproduction à usage privé uniquement (cf Code de la propriété intellectuelle)</p>
+</userestrict>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>Archéologie, fouille</subject>
+<persname>Werlé, Alfred</persname>
+<geogname>Conflans-sur-Seine (Marne, Champagne-Ardenne, France)</geogname>
+<name role="auteur">Valentin</name>
+</controlaccess>
+</c>
+<c id="a0115082488248n3y95" level="item">
+<did>
+<unitid label="Cotes extrêmes" identifier="12FI/3">12 Fi 3</unitid>
+<unittitle label="Intitulé de l'unité documentaire">Album de photographies  : Armée. Les éclopés, Vitry-le-François</unittitle>
+<unitdate label="Date de l'unité documentaire" normal="1916-01-01/1916-12-31">1916</unitdate>
+<physdesc label="Description physique"><genreform source="liste-typedocAC">Document iconographique</genreform><lb/>
+Album, (ouverture à l'italienne) composé de 25 photographies en noir et blanc collées sur des planches cartonnées<lb/>
+<extent type="collation" label="Collation">25 photographies positives (tirage) en 1 album</extent><lb/>
+<dimensions label="Dimensions">12 x 17 cm (image), 18 x 25 cm (support)</dimensions><lb/>
+<physfacet type="noir et blanc ou couleur" label="Noir et blanc ou couleur">noir et blanc</physfacet><lb/>
+</physdesc>
+<origination label="Origine"><persname role="producteur">Auteur anonyme</persname>
+</origination>
+</did>
+<acqinfo><head>Informations sur les modalités d'entrée</head>
+<p>Achat, entrée 2009 n° 3715</p>
+</acqinfo>
+<scopecontent><head>Présentation du contenu</head>
+<p>25 photographies en noir et blanc : 1 - Dédicace du médecin en chef à son adjudant : "A l'adjudant, souvenir de bonne amitié en témoignage de reconnaissance pour son travail et son dévouement, septembre 1916", 2 - Entrée de l'hôpital, 3 - Dans l'enceinte de l'hôpital, 4 - Dortoir, 5 - Atelier de prothèse, 6 - Cuisine, 7 - Réfectoire, 8 - Pharmacie, 9 - Pharmacie, 10 - Salle de soin, 11 - Douches, 12 - Salle de repos, 13 - Dortoir intérieur (bâtiment en bois), 14 - Dortoir extérieur (bâtiment en bois), 15 - Couloir, 16 - Réfectoire, 17 - Dortoir intérieur (bâtiment en bois), 18 - Cuisine (bâtiment en bois), 19 - Moment de détente : jeux de boules et de cricket, 20 - Hôpital extérieur, 21 - Séance de cinéma, 22 - Bar, 23 - Etang, 24 - Jardin, 25 - Groupe de soldats dans le jardin</p>
+</scopecontent>
+<accessrestrict><head>Statut juridique</head>
+<legalstatus>
+Archives privées
+</legalstatus>
+</accessrestrict>
+<accessrestrict type="modalites-acces"><head>Communicabilité</head>
+<p>Images en ligne sur le site internet des Archives</p>
+</accessrestrict>
+<userestrict><head>Conditions d'utilisation</head>
+<p>Reproduction à usage privé uniquement (cf Code de la propriété intellectuelle)</p>
+</userestrict>
+<phystech><head>Caractéristiques matérielles et contraintes techniques</head>
+<p>Dos de reliure usé</p>
+</phystech>
+<odd type="note isbd"><head>Notes ISBD</head>
+<p>Dédicace du Médecin en chef à son adjudant&#160;: A l'adjudant, souvenir de bonne amitié en témoignage de reconnaissance pour son travail et son dévouement. En toute sympathie", septembre 1916.</p>
+</odd>
+<controlaccess>
+<head>Descripteurs</head>
+<genreform>ALBUM</genreform>
+<genreform>DOCUMENT PHOTOGRAPHIQUE</genreform>
+<subject source="contexte-historique">GUERRE 1914-1918</subject>
+<subject>soins médicaux</subject>
+<subject>vie du soldat</subject>
+<subject>alimentation</subject>
+<geogname>Vitry-le-François (Marne, Champagne-Ardenne, France)</geogname>
+</controlaccess>
+<daogrp audience="external">
+<daoloc href="medias/06_fonds_icono/12Fi/12Fi3/FRAD051_12Fi3_001.jpg" role="first_image"/>
+<daoloc href="medias/06_fonds_icono/12Fi/12Fi3/FRAD051_12Fi3_025.jpg" role="last_image"/>
+</daogrp><note type="mnesysinternal"><p/></note>
+</c>
+<c id="a011508248824B0JoSb" level="item">
+<did altrender="isbd-nbm-fr-imagefixe">
+<unitid label="Cotes extrêmes">12 Fi 4</unitid>
+<unittitle label="Intitulé de l'unité documentaire">
+Album de 89 photographies sur le travail de la vigne à Dizy.</unittitle>
+<unitdate label="Date de l'unité documentaire" normal="1890-01-01/1890-12-31">1890</unitdate>
+<physdesc label="Description physique">
+<genreform source="liste-typedocAC">Document iconographique</genreform><lb/>
+<extent type="collation" label="Collation">89 photographies positives (tirages) en 1 album</extent><lb/>
+<dimensions label="Dimensions">23 × 29 cm (support)</dimensions><lb/>
+<physfacet type="noir et blanc ou couleur" label="Noir et blanc ou couleur">noir et blanc</physfacet><lb/>
+</physdesc>
+</did>
+<acqinfo>
+<head>Informations sur les modalités d'entrée</head>
+<p>Achat 2010, entrée n°3768</p>
+</acqinfo>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Les 89 photographies (86 de format 12 x 17 et 3 de format 17 x 24) représentent les différentes étapes du travail de la vigne : de la récolte, conservation, greffage et stratification des bois jusqu'au palissage, traitement et vendanges.</p>
+</scopecontent>
+<accessrestrict>
+<head>Statut juridique</head>
+<legalstatus>
+Archives privées
+</legalstatus>
+</accessrestrict>
+<accessrestrict type="modalites-acces">
+<head>Communicabilité</head>
+<p>Immédiatement communicable</p>
+</accessrestrict>
+<userestrict>
+<head>Conditions d'utilisation</head>
+<p>Reproduction à usage privé uniquement (cf Code de la propriété intellectuelle)</p>
+</userestrict>
+<phystech>
+<head>Caractéristiques matérielles et contraintes techniques</head>
+<p>89 photographies positives collées sur 24 feuilles cartonnées dans un album de format italien comprenant 50 feuilles cartonnées</p>
+</phystech>
+<relatedmaterial>
+<head>Sources complémentaires</head>
+<relatedmaterial type="sources-internes">
+<head>Sources internes</head>
+<p>Les albums cotés Ic Met 5 et 6 rassemblent des photographies relatives à la viticulture et au vin de champagne. Les albums cotés Ic Met 6 et 7 concernent les maisons de champagne et le travail du vin de champagne.</p>
+</relatedmaterial>
+</relatedmaterial>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>Vin de champagne</subject>
+<subject>Vigne, culture</subject>
+<geogname>Dizy (Marne, Champagne-Ardenne, France)</geogname>
+</controlaccess>
+</c>
+<c id="a011508248824Z7URf6" level="item">
+<did altrender="isbd-nbm-fr-imagefixe">
+<unitid label="Cotes extrêmes">12 Fi 5</unitid>
+<unittitle label="Intitulé de l'unité documentaire">
+2ème grande semaine d'aviation de Champagne / H. G. Laignier ; photographies de Mich.</unittitle>
+<unitdate label="Date de l'unité documentaire" normal="1910-01-01/1910-12-31">1910</unitdate>
+<physdesc label="Description physique">
+<genreform source="liste-typedocAC">Document iconographique</genreform><lb/>
+</physdesc>
+</did>
+<acqinfo>
+<head>Informations sur les modalités d'entrée</head>
+<p>Achat 2010, entrée n° 3792</p>
+</acqinfo>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>80 pages de texte (les appareils, les résultats sportifs et la revue photographique) illustrées par des dessins humoristiques de Mitch suivies de 38 photographies montées sur 19 feuillets.</p>
+</scopecontent>
+<phystech>
+<head>Caractéristiques matérielles et contraintes techniques</head>
+<p>Un volume oblong in-4, cartonnage d'éditeur. Les photographies sont collées sur carton. Le plat de la couverture comporte deux éraflures. Tâches d'humidité dans coin inférieur droit.</p>
+</phystech>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>Aviation, Reims, 1910</subject>
+<geogname>Reims (Marne, Champagne-Ardenne, France)</geogname>
+<name role="auteur">Mich. Photog.</name>
+<name role="auteur">Laignier, H. G.</name>
+</controlaccess>
+</c>
+<c id="a01150824882429PqIV" level="file">
+<did altrender="isbd-nbm-fr-imagefixe">
+<unitid label="Cotes extrêmes">12 Fi 6</unitid>
+<unittitle label="Intitulé de l'unité documentaire">
+Souvenir de la guerre <unitdate label="Date de l'unité documentaire" normal="1914/1915">1914-1915</unitdate> / [Raymond Cobrat].
+</unittitle>
+<unitdate label="Date de l'unité documentaire" normal="1914-01-01/1915-12-31" type="inclusive">1914-1915</unitdate>
+<physdesc label="Description physique">
+<genreform source="liste-typedocAC">Document iconographique</genreform><lb/>
+<extent type="collation" label="Collation">1 photographie positive (tirage)</extent><lb/>
+<dimensions label="Dimensions">33 × 26 cm (album)</dimensions><lb/>
+<physfacet type="noir et blanc ou couleur" label="Noir et blanc ou couleur">noir et blanc</physfacet><lb/>
+</physdesc>
+</did>
+<acqinfo>
+<head>Informations sur les modalités d'entrée</head>
+<p>Achat 2011, entrée n°3826</p>
+</acqinfo>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Album de photographies de la guerre 1914-1918 composé de 375 photographies originales (300 de format 6x 4 cm, 40 de format 10 x 8 cm et 35 de format 8 x 5) montées (collées) sur 25 feuillets et légendées par Raymond Cobrat. On relève plusieurs photographies d'officiers avec l'indication des noms et grades.</p><p>Les photographies ont vraisemblablement été prises par l'officier d'artillerie Raymond Cobrat, il y est photographié plusieurs fois et les légendes ont été écrites par sa femme qui était infirmière de la Croix Rouge.</p><p>Page 1 - Le château à Suippes après le passage des boches [sic]. La capture d'un avion. Après la bataille. Une grande avenue à Sapeuville. La tente des réservistes.</p><p>Page 2 - à 150 m des Allemands. Le téléphoniste est dans la tranchée qui écoute les ordres donnés par le quartier général. Canon 120. Canon 105. [Groupe de 4 soldats]. Aux tranchées</p><p>Page 3 - Un poilu. Les ruines à Suippes. L'enterrement du lieutenant [Dernos?]. [Sans légende : l'enterrement du lieutenant [Dernos?]. Un bûcheron. Le coiffeur. Ce qui reste de l'église de Suippes</p><p>Page 4 - Un ami. Canon. Une pièce d'artillerie. Sur le front. Un cimetière. Geffroy Charrière. Après le bombardement ce qui reste d'un bois. Le départ. La marche en avant</p><p>Page 5 - Un cimetière sur le champ de bataille. [Capitaine Henriet Lieutenant Marbon]. Rassemblement d'infanterie. [Capitaine Henriet Lieutenant Marbon]</p><p>Page 6 - La pièce attend. L'état- major du 3e groupe</p><p>Page 7 - La messe au front. Un poste d'observation. Projecteur portatif pris aux boches [sic] à Hurlus le 24 février. Ceux qui resteront</p><p>Page 8 - Un bon lit pour passer la nuit. Morse du canon Rimailho. Un poste d'observation à 40 m de l'ennemi le lieutenant Rey-Herme est au périscope (côte 200)</p><p>Page 9 - [Sans légende : groupe de soldats devant une église]. [Sans légende : un soldat [Raymond ?] assis sur un porte canon]. [Capitaine Soubirou Lieutenant Rey Herme : groupe de soldats dans une tranchée]. [Commandant Sei. Lieutenant Rey Herme. Capitaine Soubirou : groupe de soldats dans une tranchée]</p><p>Page 10 - On ne s'ennuie pas sous la cagna. Après les boches [sic]. Restaurant Poilard</p><p>Page 11 - Vers le soir un 75 part prendre position. Mrs Legrand-Ledoux. L'installation del Papeta 7e batterie. L'écurie. Les régiments d'artillerie de tranchée. On monte la maison de Raymond. La chasse est ouverte. A l'abreuvoir. La jument Fanny attend son maître Raymond qui est sous terre. La forge</p><p>Page 12 - Canon de V. La Kultür allemande : sur le devant, l'hélice ; cette hélice fait marcher la girouette. Prisonniers boches [sic] quels sales types. Le président du tribunal de [?]. Raymond pose pour sa femme. La visite des chevaux. Un passe-temps. Une habitation rustique. Canons pour aéros</p><p>Page 13 - Un cimetière. Celui où est enterré [Feré]. Le champ de bataille est à l'horizon. Deux frères. Plaque commémorative en l'honneur de nos morts. Sous le feu à 30 m des boches [sic]. Arrivée de prisonniers. Un fantassin tué en montant à l'assaut. Éclatement de marmite</p><p>Page 14 - Pasteur protestant. Le bivouac de mon Raymond. Un cimetière à Somme-Suippe. Une cagna. Trois Figeacois. Une cuisine à Somme-Suippe. Un convoi de boches [sic]. Un enterrement</p><p>Page 15 - Mon [doux] rêveur [Raymond fume la pipe]. Raymond à sa toilette. Pujet ami de Raymond. Une maison visitée par les obus. Une mitrailleuse aux avant-postes. Un officier ami. Préparatifs de construction. La tombe du lieutenant Perés. Les enfants s'amusent</p><p>Page 16 - Pris sur le vif. Un horloger de St Céré. La Suippes. Une maison à Sapeuville. Une autre. La case des officiers. Sous la neige. Toujours Sapeuville. Notre bivouac. la rue d'Alsace à Sapeuville</p><p>Page 17 - Mon époux dans un trou de marmite. On construit. La toilette. Le jeune Bouquic auprès de son canon éclaté. Le vétérinaire Ledoux. Confidences. L'armée territoriale au travail. Un gâte-sauce. Une tombe</p><p>Page 18 - Aux tranchées. Le repas des fauves. Une habitation rustique. Le chanoine Morel. Dr de Labarthe devant. l'interprète professeur à Cahors. Un cimetière. Dans un boyau. Mon bien-aimé mari. Deux braves dormeurs. Un arbre coupé par un éclat d'obus</p><p>Page 19 - Les enfants s'amusent. Un camarade. Le lieutenant et la nièce de mon Raymond. Monsieur Cobrat</p><p>Page 20 - Au repos. On attend. Les rapes-routes. Les ruines de Saint-Jean</p><p>Page 21 - Le ravitaillement. Des boches [sic]. [Sans légende : groupe de soldats]. [Sans légende : groupe de soldats]. Groupe sympathique. Douelles après le tir. Prisonniers boches [sic]. Prisonniers boches [sic]</p><p>Page 22 - Campement provisoire. On pense à la soupe. Raymond accroupi. Raymond à cheval. Entre deux averses</p><p>Page 23 - La popote de Raymond. Officiers et soldats. Obusiers de 220 côte 203</p><p>Page 24 - Madame Cobrat et quelques-uns de ses malades. [Sans légende : Madame Cobrat et quelques- uns de ses malades]. Les cuisines</p><p>Page 25 - La corvée. Un enterrement. Un poilu. Le président de Vérac. Un poilu. Un figeacois du Pont du Pin. Le lieutenant Rey-Herme. Le capitaine Hariel. Mon mari se fait beau. La distribution aux avants postes. Madame Cobrat en tenue d'infirmière. Un cas grave est-ce un trou de balle</p><p>Page 26 - Le château de Mr Cobrat à Sapeuville. Les gens du nord. Les zouaves. Le ballon captif. L'ordonnance sort du bois. Les cuisines. Le camp d'aviation. L'entracte</p><p>Page 27 - Raymond et son hôtel des postes. Raymond dans les bois. Château de Mesnil près Carruy. Raymond et sa jument Fanny. Mr Bounet Raymond. La source du camp. [Sans légende : Raymond]. [Sans légende : fortification et cours d'eau]. Raymond parait soucieux. [Sans légende : Raymond]. Un coin du château près Verdun</p><p>Page 28 - La distraction dans les bois. La barre fixe. La Kûltur. Nos poilus blanchisseurs. La soupe. La forge. [Sans légende : un soldat]. La forge. Cour du camp. La bidoche au Voeïre. Le camp de Raymond. Autre vue du camp. Cimetière dans le camp du Château d'H.. [Sans légende : deux chevaux]. [Sans légende : Raymond parait soucieux]. Les régiments d'artillerie de tranchée à Révigny</p><p>Page 29 - [Sans légende : Le château d'Ile à gauche le toit crevé par un obus]. Notre campement. Un coin de bois au Voeïre. [Sans légende : groupe de soldats sur un porte canon]. En Champagne. En Champagne à la batterie. [Sans légende : groupe de soldats au terrassement]. La distribution de la viande. [Sans légende : une vue du camp]. La maison des officiers et la jument Fanny. Notre camp. [Sans légende : groupe de soldats]. Camp d'aviation en Champagne. [Sans légende : chevaux]. [Sans légende]</p><p>Page 30 - Le pansage à Fanny. Raymond perché sur le canon. Dans les bois. [Sans légende]. Meuse 1915. [Sans légende]. Le noble jeu de bouchons. 1914 Champagne décembre. Un homme heureux Lieutenant Lecomte. Notre proprio Artois juin1915. Maréchal des logis Naheul Champagne 1914. Le général Del[?] . Raymond en admiration devant l'étang du château</p><p>Page 31 - Photographies prises par Raymond lorsqu'il vint en permission 23-28 juillet 1915 : </p><p>Madame Cobrat dans le jardin. Mme Cobrat devant un rocher à la cascade d'Autoire. Mr Cobrat photographié par sa femme à Nuzac. Madame Cobrat à la pêche aux écrevisses à Valeyrac. Mme Cobrat attend le départ. Devant le salon. La cascade d'Autoire. Le docteur Delprat. Madame Cobrat à Nuzac </p><p>Page 32 - En Champagne notre jardin. Docteur Pierre. Un boche [sic] en Champagne 1914. La tombe du Maréchal des logis Blanc. Docteur Pierre. En Champagne 1914. L'heure de la soupe</p><p>Page 33 - Meuse 1915 [13 photographies sans légende : destruction]</p><p>Page 34 - [Sans légende : un abri]. [Sans légende : destruction]. [Sans légende : voie ferrée]. [Sans légende : le camp]. [Sans légende : groupe de soldats]. [Sans légende : camp]. [Sans légende : camp]. [Sans légende : canon]. [Sans légende : camp]. [Sans légende : camp]. [Sans légende : camp]. [Sans légende : camp]. [Sans légende : camp]. [Sans légende : Raymond et son hôtel des postes]. [Sans légende : camp]</p><p>Page 35 - [Sans légende : Raymond lit un journal]. [Sans légende : Raymond]. [Sans légende : Raymond à cheval]. [Sans légende : ville fortifiée]. [Sans légende : Raymond fume la pipe]. [Sans légende : Raymond adossé à un arbre]. [Sans légende : ruines]. [Sans légende : Raymond à cheval]. [Sans légende : ruines]</p><p>Page 36 - [Sans légende : canon]. [Sans légende : vue sur le camp]. [Sans légende : vue sur le camp]. [Sans légende : vue sur le camp. les écuries]. [Sans légende : vue sur le camp. abreuvoir pour les chevaux]. [Sans légende : canons]. [Sans légende : barbelés]. [Sans légende : vue sur le camp. écuries]. [Sans légende : ruines]. [Sans légende : vue sur le camp ]. [Sans légende : un soldat à cheval]. [Sans légende : ruines]. [Sans légende : ruines]. [Sans légende : travaux de terrassement]. [Sans légende : canon]</p><p>Page 37 - [Sans légende : ruines]. [Sans légende : ruines]. [Sans légende : ruines]. [Sans légende : une rue]. [Sans légende : deux personnes présentent une pièce [débris d'artillerie?]. [Sans légende : ruines]. [Sans légende : ruines]. [Sans légende : ruines]. [Sans légende : ruines]</p><p>Page 38 - [Sans légende : un abri]. [Sans légende : un soldat avec un chien et un rapace]. [Sans légende : un abri]. [Sans légende : canon dans un abri]. [Sans légende : groupe de soldats attablé]</p><p>Page 39 - [Sans légende : 2 motards dans une rue]. [Sans légende : canon]. [Sans légende : canon]. [Sans légende : deux soldats cuisinent]. [Sans légende : vue sur le camp]</p><p>Page 40 - [Sans légende : deux soldats attablés dans une pièce]. [Sans légende : vue sur le camp]. [Sans légende : une habitation]. [Sans légende : canons]. [Sans légende : un abri]. [Sans légende : vue sur le camp]. [Sans légende : vue sur le camp]. [Sans légende : cours d'eau dans une ville]</p><p>Page 41 - L'allée de l'échelon. Ruines de Perthes. Un abri à la batterie</p><p>Page 42 - Un sous-bois notre échelon de combat. On s'installe + Raymond. La forge. Le pansage à Fanny. Nos poilus + Raymond. La base des officiers aux positions. Au fond un téléphoniste pose son fil</p><p>Page 43 - [Sans légende : le camp]. Ledoux et Jaime. [Sans légende : chevaux]. [Sans légende : groupes de soldats]. La forge 2. Le président J[?]. La clique du 207e. En Artois, le drapeau du 207e. Sur R P d'Alexandrie. Le Commandant Gèze. La toilette. Les gars du nord. Meuse 1915. Dans les bois. La revue du Commandant</p><p>Page 44 - Fanny et le cuisinier de Raymond. Aubigny [?]. Dans les bois. La revue du Commandant. [Sans légende : château]. Une cabane en Champagne. Les réservistes de la territoriale. Nos poilus se construisent un abri. La distribution des effets. Notre pâtissier. Le défilé. A Loupy-le Château. Le Lieutenant Benedette</p><p>Page 45 - Le cuisinier des officiers. leur chien. l'ordonnance de Raymond. L'abreuvoir. La soupe est bonne. La distribution. Le château de Raymond. Le curé Brémond aumônier au 26e artillerie. Un abri dans les bois. La toilette des poilus. A Fains avril 1915. Champagne un abri à 11 m sous terre</p><p>Page 46 - [Sans légende : une rue]. Une maison rustique. Cimetière de Somme-Suippe. Sous les sapins janvier 1915. Dans les bois</p><p>Page 47 - Le camp. Le coiffeur. En champagne février 1915. La fontaine du château. Le château d'Ile à gauche le toit crevé par un obus. Dans les bois. 4 officiers. [Sans légende : une tente]. L'effet d'un obus</p>
+</scopecontent>
+<accessrestrict type="modalites-acces">
+<head>Communicabilité</head>
+<p>Images en ligne sur le site internet des Archives</p>
+</accessrestrict>
+<phystech>
+<head>Caractéristiques matérielles et contraintes techniques</head>
+<p>Album recouvert de tissu crème dont le premier plat est orné de 5 fleurs brodées et de l'inscription, également brodée, "Souvenir de la Guerre de 1914 - 1915". Le tissu est abimé, avec des manques au dos, sur les plats et sur les bords. Les photographies sont collées sur les feuillets</p>
+</phystech>
+<odd type="note isbd">
+<head>Notes ISBD</head>
+<p>Les photographies ont vraisemblablement été prises par l'officier d'artillerie Raymond Cobrat, il y est photographié plusieurs fois et les légendes ont été écrites par sa femme qui était infirmière de la Croix Rouge.</p>
+</odd>
+<controlaccess>
+<head>Descripteurs</head>
+<genreform>ALBUM</genreform>
+<genreform>DOCUMENT PHOTOGRAPHIQUE</genreform>
+<subject source="contexte-historique">GUERRE 1914-1918</subject>
+<subject>aviation</subject>
+<subject>armement</subject>
+<subject>animal</subject>
+<subject>vie du soldat</subject>
+<subject>hygiène</subject>
+<subject>tombe</subject>
+<subject>religion</subject>
+<subject>prisonnier de guerre</subject>
+<subject>soins médicaux</subject>
+<geogname>Suippes (Marne, Champagne-Ardenne, France)</geogname>
+<geogname>Souain-Perthes-lès-Hurlus (Marne, Champagne-Ardenne, France)</geogname>
+<geogname>Somme-Suippe (Marne, Champagne-Ardenne, France)</geogname>
+<geogname>Verdun (Meuse, Lorraine, France)</geogname>
+<geogname>Louppy-le-Château (Meuse, Lorraine, France)</geogname>
+<geogname>Autoire (Lot, Midi-Pyrénées, France)</geogname>
+<name role="auteur">Cobrat, Raymond. Photog.</name>
+</controlaccess>
+<daogrp>
+<daoloc href="medias/06_fonds_icono/12Fi/12Fi6/FRAD051_12Fi6_001.jpg" role="first_image"/>
+<daoloc href="medias/06_fonds_icono/12Fi/12Fi6/FRAD051_12Fi6_047.jpg" role="last_image"/>
+</daogrp>
+</c>
+<c id="a011508248824fReUmu" level="item" altrender="isbd">
+<did altrender="isbd-nbm-fr-imagefixe">
+<unitid label="Cotes extrêmes" identifier="12FI/7">12 Fi 7</unitid>
+<unittitle label="Intitulé de l'unité documentaire">Ville de Reims. Album du concours régional <unitdate label="Date de l'unité documentaire" normal="1876">1876</unitdate>. Exposition industrielle . Exposition rétrospective / Trompette, J.
+</unittitle>
+<unitdate label="Date de l'unité documentaire" normal="1876-01-01/1876-12-31">1876</unitdate>
+<physdesc label="Description physique"><genreform source="liste-typedocAC">Document iconographique</genreform><lb/>
+<extent type="collation" label="Collation">photographies positives (tirage) en 2 albums sur Demi-chagrin rouge maroquiné, dos à nerfs</extent><lb/>
+<physfacet type="support" label="Support">Demi-chagrin rouge maroquiné, dos à nerfs</physfacet><lb/>
+<dimensions label="Dimensions">17,5 × 24,7 cm (image), 31,5 × 45 cm (support)</dimensions><lb/>
+<physfacet type="noir et blanc ou couleur" label="Noir et blanc ou couleur">noir et blanc</physfacet><lb/>
+</physdesc>
+</did>
+<acqinfo><head>Informations sur les modalités d'entrée</head>
+<p>Achat 2013, entrée n° 3941</p>
+</acqinfo>
+<scopecontent><head>Présentation du contenu</head>
+<p>Album 1 - Exposition industrielle : 38 photographies</p><p>Album 2 - Exposition rétrospective : photographies</p>
+</scopecontent>
+<phystech><head>Caractéristiques matérielles et contraintes techniques</head>
+<p>Les photographies sont montées sur onglet</p>
+</phystech>
+<odd type="note isbd"><head>Notes ISBD</head>
+<p>Ex libris armoiré n°1899 ([de la bibliothèque Alfred Werlé].</p>
+</odd>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>Industrie</subject>
+<subject>Concours</subject>
+<subject>Exposition</subject>
+<geogname>Reims (Marne, Champagne-Ardenne, France)</geogname>
+<name role="auteur">Trompette, J. Photog.</name>
+</controlaccess><note type="mnesysinternal"><p>editmask=isbd</p></note>
+</c>
+<c id="a011508248824romf7Y" level="item">
+<did altrender="isbd-nbm-fr-imagefixe">
+<unitid label="Cotes extrêmes">12 Fi 8</unitid>
+<unittitle label="Intitulé de l'unité documentaire">
+Ville de Reims. Album du concours régional <unitdate label="Date de l'unité documentaire" normal="1876">1876</unitdate>. Exposition industrielle / Trompette, J.
+</unittitle>
+<unitdate label="Date de l'unité documentaire" normal="1876-01-01/1876-12-31">1876</unitdate>
+<physdesc label="Description physique">
+<genreform source="liste-typedocAC">Document iconographique</genreform><lb/>
+</physdesc>
+</did>
+<custodhist>
+<head>Historique de la conservation</head>
+<p>Cet album était conservé en bibliothèque sous la cote Ch 20034 et a réintégré les collections iconographiques en juin 2013</p>
+</custodhist>
+<odd type="note isbd">
+<head>Notes ISBD</head>
+<p>Ex libris armoiré n°1899 ([de la bibliothèque Alfred Werlé].</p>
+</odd>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>Industrie</subject>
+<subject>Concours</subject>
+<subject>Exposition</subject>
+<geogname>Reims (Marne, Champagne-Ardenne, France)</geogname>
+</controlaccess>
+</c>
+<c id="a011508248824xezoBc" level="item">
+<did altrender="isbd-nbm-fr-imagefixe">
+<unitid label="Cotes extrêmes">12 Fi 9</unitid>
+<unittitle label="Intitulé de l'unité documentaire">
+Maison Poullot. Ateliers de filature et tissage.</unittitle>
+<unitdate label="Date de l'unité documentaire" normal="1801-01-01/1900-12-31" type="inclusive" certainty="exact">début [19e s.]</unitdate>
+<physdesc label="Description physique">
+<genreform source="liste-typedocAC">Document iconographique</genreform><lb/>
+<extent type="collation" label="Collation">1 album</extent><lb/>
+<dimensions label="Dimensions">24 × 31 cm (image), 35,5 × 43,5 cm (support)</dimensions><lb/>
+<physfacet type="noir et blanc ou couleur" label="Noir et blanc ou couleur">noir et blanc</physfacet><lb/>
+</physdesc>
+</did>
+<custodhist>
+<head>Historique de la conservation</head>
+<p>Cet album était conservé en bibliothèque sous la cote Ch 20034 et a réintégré les collections iconographiques en juin 2013</p>
+</custodhist>
+<acqinfo>
+<head>Informations sur les modalités d'entrée</head>
+<p>Don en 1977, entrée n° 2891</p>
+</acqinfo>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>4 pièces jointes</p><p>- 1 photocopie d'un plan de Reims situant le "Peignage Saint-Thomas"</p><p>- 2 photocopies rassemblant 9 cartes postales représentant les destructions de la Maison Poullot pendant la guerre 1914-1918</p><p>- 1 photocopie d'un article sur la Maison Poullot et Cie de Reims tiré du Monde Illustré du 25 septembre 1920</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>Filature</subject>
+<subject>Industrie</subject>
+<subject>Tissage</subject>
+<persname>Poullot, Jules</persname>
+<name>Maison Poullot et Cie</name>
+<geogname>Reims (Marne, Champagne-Ardenne, France)</geogname>
+</controlaccess>
+</c>
+<c id="a011508248824zrLoYL" level="item">
+<did altrender="isbd-nbm-fr-imagefixe">
+<unitid label="Cotes extrêmes">12 Fi 10</unitid>
+<unittitle label="Intitulé de l'unité documentaire">
+École nationale des arts et métiers, <unitdate label="Date de l'unité documentaire" normal="1895/1900">1895-1900</unitdate> / Durand, G.
+</unittitle>
+<unitdate label="Date de l'unité documentaire" normal="1895-01-01/1900-12-31" type="inclusive">1895-1900</unitdate>
+<physdesc label="Description physique">
+<genreform source="liste-typedocAC">Document iconographique</genreform><lb/>
+1 album comprenant 12 photographies en noir et blanc et 1 programme de concert (1896) montés sur onglet, 1 menu (1896) et un poème (1893-1896) collés<lb/>
+<extent type="collation" label="Collation">1 album de 12 photographies positives (tirage)</extent><lb/>
+<dimensions label="Dimensions">22 × 30 cm (support)</dimensions><lb/>
+<physfacet type="noir et blanc ou couleur" label="Noir et blanc ou couleur">noir et blanc</physfacet><lb/>
+</physdesc>
+<origination label="Origine">
+<persname role="producteur">Durand, G. Photographe à Châlons-en-Champagne</persname>
+</origination>
+</did>
+<custodhist>
+<head>Historique de la conservation</head>
+<p>Cet album était conservé sous le cote J 5377 et a intégré la collection Fi (12 Fi 10) en 2013</p>
+</custodhist>
+<acqinfo>
+<head>Informations sur les modalités d'entrée</head>
+<p>Achat 1994, entrée n° 2852</p>
+</acqinfo>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>4 photographies du bâtiment détruit par l'incendie de 1895 (format 17,5 x 23,4 cm)</p><p>5 photographies d'étudiants en uniforme (format 16,2 x 11,4 cm)</p><p>3 photographies de promotions (format 11,8 x 16,6)</p><p>1 programme de la "Fête des Fignos 19 janvier 1896" dédicacé par M. Pommery à Maurice Gilbert (feuille A4 pliée)</p><p>1 menu du Banquet des commissaires de 326 janvier 1896 (format 17,4 x 11,4 cm, couleur)</p><p>1 poème dactylogtraphié "Souvenirs d'un Gad'zarts à l'occasion du banquet du 15e anniversaire de sortie de la promotion de Châlons 93-96" (format 25 x 30,4 cm)</p>
+</scopecontent>
+<accessrestrict>
+<head>Statut juridique</head>
+<legalstatus>
+Archives privées
+</legalstatus>
+</accessrestrict>
+<accessrestrict type="modalites-acces">
+<head>Communicabilité</head>
+<p>Communication libre</p>
+</accessrestrict>
+<userestrict>
+<head>Conditions d'utilisation</head>
+<p>Reproduction à usage privé uniquement (cf Code de la propriété intellectuelle)</p>
+</userestrict>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>Enseignement technique supérieur</subject>
+<subject>Incendie</subject>
+<name>École nationale des arts et métiers</name>
+<geogname>Châlons-en-Champagne (Marne, Champagne-Ardenne, France)</geogname>
+<name role="auteur">Durand, G.</name>
+</controlaccess>
+</c>
+<c id="a011508248824CWSa7g" level="item">
+<did altrender="isbd-nbm-fr-imagefixe">
+<unitid label="Cotes extrêmes">12 Fi 11</unitid>
+<unittitle label="Intitulé de l'unité documentaire">
+Première guerre mondiale.</unittitle>
+<unitdate label="Date de l'unité documentaire" normal="1914-01-01/1915-12-31" type="inclusive">1914-1915</unitdate>
+<physdesc label="Description physique">
+<genreform source="liste-typedocAC">Document iconographique</genreform><lb/>
+<extent type="collation" label="Collation">82 photographies positives (tirages) en 1 album</extent><lb/>
+<dimensions label="Dimensions">25,5 × 17,5 cm (support)</dimensions><lb/>
+<physfacet type="noir et blanc ou couleur" label="Noir et blanc ou couleur">noir et blanc</physfacet><lb/>
+</physdesc>
+</did>
+<acqinfo>
+<head>Informations sur les modalités d'entrée</head>
+<p>Achat 2014, entrée n° 4066</p>
+</acqinfo>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>Album de photographies sans auteur mais J. de Lafarge est représenté à plusieurs reprises et pourrait être l'auteur des clichés. Cet album comprend 82 photographies en majorité non légendées. La première date relevée est octobre 1914, la dernière date relevée est juillet 1915. Les photographies représentent la vie du soldat : groupe de militaires, dortoir dans une église, tranchées, chevaux à l'abreuvoir, canon.</p>
+</scopecontent>
+<accessrestrict type="modalites-acces">
+<head>Communicabilité</head>
+<p>Images en ligne sur le site internet des Archives</p>
+</accessrestrict>
+<controlaccess>
+<head>Descripteurs</head>
+<genreform>ALBUM</genreform>
+<genreform>DOCUMENT PHOTOGRAPHIQUE</genreform>
+<subject source="contexte-historique">GUERRE 1914-1918</subject>
+<subject>ruines</subject>
+<subject>tranchée</subject>
+<subject>religion</subject>
+<subject>armement</subject>
+<subject>tombe</subject>
+<name>Lafarge, J. de</name>
+<geogname>Jonchery-sur-Vesle (Marne, Champagne-Ardenne, France)</geogname>
+<geogname>Saint-Hilaire-le-Grand (Marne, Champagne-Ardenne, France)</geogname>
+<geogname>Souain-Perthes-lès-Hurlus (Marne, Champagne-Ardenne, France)</geogname>
+<geogname>Barbazan (Haute-Garonne, Midi-Pyrénées, France)</geogname>
+<geogname>Thézy-Glimont (Somme, Picardie, France)</geogname>
+<geogname>Amiens (Somme, Picardie, France)</geogname>
+<geogname>Aubigny-en-Artois (Pas-de-Calais, Nord-Pas-de-Calais, France)</geogname>
+<geogname>Pas-en-Artois (Pas-de-Calais, Nord-Pas-de-Calais, France)</geogname>
+<geogname>Ferme des Wacques (Souain-Perthes-lès-Hurlus) -- lieu-dit</geogname>
+</controlaccess>
+<daogrp>
+<daoloc href="medias/06_fonds_icono/12Fi/12Fi11/FRAD051_12Fi11_001.jpg" role="first_image"/>
+<daoloc href="medias/06_fonds_icono/12Fi/FRAD051-12Fi11_020.jpg" role="last_image"/>
+</daogrp>
+</c>
+<c id="a011508248824emGAnP" level="file">
+<did>
+<unitid label="Cotes extrêmes" identifier="12FI/12">12 Fi 12</unitid>
+<unittitle label="Intitulé de l'unité documentaire">Album Emile Francar, guerre 1914-1918</unittitle>
+<unitdate label="Date de l'unité documentaire" normal="1915-01-01/1915-12-31">1915</unitdate>
+<physdesc label="Description physique"><genreform source="liste-typedocAC">Document iconographique</genreform><lb/>
+1 album entoilé  15 x 25 cm comprenant 139 de photographies noir et blanc collées. Les photographies sont parfois légendées<lb/>
+<extent type="collation" label="Collation">1 photographie positive (tirage) en 1 album</extent><lb/>
+<dimensions label="Dimensions">15 x 25 cm</dimensions><lb/>
+</physdesc>
+</did>
+<bioghist><head>Biographie ou histoire</head>
+<p>Emile Francar a été président des Anciens Combattants.</p>
+</bioghist>
+<acqinfo><head>Informations sur les modalités d'entrée</head>
+<p>Don 2014, entrée n° 4159</p>
+</acqinfo>
+<scopecontent><head>Présentation du contenu</head><p>Album de 139 photographies positives en noir et blanc collées dont certaines sont légendées, format moyen 6,5 x 10 ou 5 x 6 cm</p>
+
+<p>Page 1 : Église de Rembercourt-aux-Pots, juillet 1915 (4 pièces)</p>
+
+<p>Page 2 : [Régiment de cavalerie], sans date (2 pièces)</p>
+
+<p>Page 3 : Sortie de la messe à Chaumont-sur-Aire, officiers, cavaliers, avril 1915 (4 pièces)</p>
+
+<p>Page 4 : Sous-lieutenant de la Contrie 23 ans, de la promotion des Marie-Louise dans la région des Éparges,26 avril 1915 (1 pièce)</p>
+
+<p>Page 5 : [Cavaliers, soldats au repos] (3 pièces)</p>
+
+<p>Page 6 : [Régiment de cavalerie] (2 pièces)</p>
+
+<p>Page 7 : [Cavalier, banquet] (3 pièces)</p>
+
+<p>Page 8 : [Régiment de cavalerie : remise de décoration] (2 pièces)</p>
+
+<p>Page 9 : [Régiment de cavalerie : manoeuvre] (4 pièces)</p>
+
+<p>Page 10 : [Régiment de cavalerie, vol d'oiseaux] (2 pièces)</p>
+
+<p>Page 11 : [Régiment de cavalerie, soldats au garde-à-vous, pont] (3 pièces)</p>
+
+<p>Page 12 vierge</p>
+
+<p>Page 13 : [Femme en amazone sur un cheval, déjeuner sur l'herbe de personnes civiles en compagnie d'un militaire (famille d'Emile Francar?)] (4 pièces)</p>
+
+<p>Page 14 vierge</p>
+
+<p>Page 15 : [Scène champêtre et personnes civiles] (3 pièces)</p>
+
+<p>Page 16 : [Rencontre d'un groupe de soldats et du groupe de personnes civiles] (1 pièce)</p>
+
+<p>Page 17 : [Déjeuner sur l'herbe des personnes civiles en compagnie d'un militaire (famille d'Emile Francar?)] (3 pièces)</p>
+
+<p>Page 18 : [Cavalier] (1 pièce)</p>
+
+<p>Page 19 : [Chevaux] (4 pièces)</p>
+
+<p>Page 20 : Capitaine de la Laurencie, capitaine Martin, lieutenant de la Brosse, sous-lieutenant Brosset-Heckel (5 pièces)</p>
+
+<p>Page 21 : [Déplacement de troupe, déplacement de canon] (3 pièces)</p>
+
+<p>Page 22 : Bivouac du 3e escadron, 24 septembre 1915, les cuisines roulantes du 3e escadron, popote du 3e escadron dans les bois de la Noblette (3 pièces)</p>
+
+<p>Page 23 : Bivouac du 3e escadron dans les bois de la Noblette, lieutenant de la Brosse, capitaine de la Forest, commandant Lebée, capitaine Détante, bois de la Noblette de Monffort à cheval, 25 septembre 1915 (3 pièces)</p>
+
+<p>Page 24 : L'avant-garde de la brigade des Spahis près de Souain, les spahis partant de Navarin et traversant des tranchées par des ponts, 25 septembre 1815 quelques cadavres français devant la 1ère ligne boche [sic] (3 pièces)</p>
+
+<p>Page 25 : Colonel Cochin et quelques officiers du 12e, l'artillerie passant devant les bois de la ferme de Piemont, éclatement vu de loin au dessus de Souain (3 pièces)</p>
+
+<p>Page 26 : Un convoi de prisonniers sortant de Souain, convoi de prisonniers, éclatement au-dessus de Souain, 25 septembre (3 pièces)</p>
+
+<p>Page 27 : Le 12e au bois des cuisines, départ de la 5e division de cavalerie pour la ferme des Wacques, bivouac du 12e au bois des cuisines (3 pièces)</p>
+
+<p>Page 28 : Bivouac d'une compagnie de génie, un blessé au boyau Dakar , perspective du boyau Dakar (3 pièces)</p>
+
+<p>Page 29 : Jour de la trouée : l'infanterie se prépare à partir vers Sommepy le 29 septembre 1915. Au nord de la ferme des Wacques l'infanterie se porte en avant blancs se recouvrant de cadavres. L'infanterie s'avance le long de la route de Souain à Sommepy, 29 septembre 1915 (3 pièces)</p>
+
+<p>Page 30 : Le colonel Pochet de Tenan suivi de son escorte, le colonel Pochet de Tenan et à l'horizon les anciennes tranchées allemandes, le colonel Pochet de Tenant et les officiers du 12e chasseurs (3 pièces)</p>
+
+<p>Page 31 : Un 270 tirant sur la butte de Souain au Bois de Suippes, le même vu de 3/4, bivouac du 3e escadron et capitaine Martin, septembre 1915 (3 pièces)</p>
+
+<p>Page 32 : Le 12e Chasseurs attendant le cantonnement à l'entrée de Suippes, bombardement de Suippes un 383 autrichien, des prisonniers creusant des tombes au cimetière de Suippes, 30 septembre 1915 (3 pièces)</p>
+
+<p>Page 33 : Commandants de la Taille et Gabol à Saint-Germain-la-Ville, Commandant Bouffet à Saint-Germain-la-Ville, avion du commandant Bouffet, 16 octobre 1915 (3 pièces)</p>
+
+<p>Page 34 : Sortie de la Grande messe à Saint-Germain-la-Ville (3 pièces)</p>
+
+<p>Page 35 : Un mortier de 220 à Cernon, cantonnement du 3e escadron à Cernon, 24 octobre 1915 (3 pièces)</p>
+
+<p>Page 36 : Le 12e Chasseurs avant d'entrée [sic] à Ecury-sur-Coole, un 155, le lieutenant de la Brosse (3 pièces)</p>
+
+<p>Page 37 : Le 29e Chasseurs à pied dans les baraquements des bois de la Noblette, officiers du 29e chasseurs à pied, commandant de la Laurencie et Bied-Chareton lieutenant de la Brosse, octobre 1915 (3 pièces)</p>
+
+<p>Page 38 : Barrières de Saint-Germain-la-Ville (3 pièces)</p>
+
+<p>Page 39 : Spahis à l'exercice à Sarry, octobre 1915 (3 pièces)</p>
+
+<p>Page 40 : Embarquement des blessés à Bussy-le-Château, expérience de liquides enflammés, octobre 1915 (4 pièces)</p>
+
+<p>Page 41 : Officiers du 12e Chasseurs à Écury-sur-Coole, Legler Miquel Berguet Gaume De Préaula à Ecury-sur-Coole, La mairie [d' Écury-sur-Coole], l'aviateur Martin, novembre 1915 (4 pièces)</p>
+
+<p>Page 42 : Général Gouraud à Suippes, église de Suippes, bombardement de Suippes (4 pièces)</p>
+
+<p>Page 43 : [Paysage de guerre, soldats dans une tranchée] (7 pièces)</p>
+
+<p>Page 44 : [Soldats] (5 pièces)</p>
+
+<p>Page 45 : [Matériel détruit] (5 pièces)</p>
+
+<p>Page 46 : [Tombes] (2 pièces)</p>
+</scopecontent>
+<accessrestrict><head>Statut juridique</head>
+<legalstatus>
+Archives privées
+</legalstatus>
+</accessrestrict>
+<userestrict><head>Conditions d'utilisation</head>
+<p>Reproduction à usage privé (cf. Code de la propriété intellectuelle)</p>
+</userestrict>
+<controlaccess>
+<head>Descripteurs</head>
+<genreform>ALBUM</genreform>
+<subject source="contexte-historique">GUERRE 1914-1918</subject>
+<subject>troupe coloniale</subject>
+<subject>cadavre</subject>
+<subject>prisonnier de guerre</subject>
+<subject>ruines</subject>
+<subject>tranchée</subject>
+<subject>tombe</subject>
+<subject>paysage de guerre</subject>
+<subject>soins médicaux</subject>
+<geogname>Rembercourt-Sommaisne (Meuse, Lorraine, France)</geogname>
+<geogname>Rembercourt-aux-Pots (Rembercourt-Sommaisne ; ancienne commune)</geogname>
+<geogname>Chaumont-sur-Aisne (Meuse, Lorraine, France)</geogname>
+<geogname>Souain-Perthes-les-Hurlus (Marne, Champagne-Ardenne, France)</geogname>
+<geogname>Suippes (Marne, Champagne-Ardenne, France)</geogname>
+<geogname>Saint-Germain-la-Ville (Marne, Champagne-Ardenne, France)</geogname>
+<geogname>Cernon (Marne, Champagne-Ardenne, France)</geogname>
+<geogname>Écury-sur-Coole (Marne, Champagne-Ardenne, France)</geogname>
+<geogname>Sarry (Marne, Champagne-Ardenne, France)</geogname>
+<geogname>Bussy-le-Château (Marne, Champagne-Ardenne, France)</geogname><genreform>DOCUMENT PHOTOGRAPHIQUE</genreform>
+</controlaccess>
+<note type="mnesysinternal"><p/></note><daogrp><daoloc href="06_fonds_icono/12Fi/12Fi12/FRAD051_12Fi12_001.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi12/FRAD051_12Fi12_002.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi12/FRAD051_12Fi12_003.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi12/FRAD051_12Fi12_004.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi12/FRAD051_12Fi12_005.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi12/FRAD051_12Fi12_006.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi12/FRAD051_12Fi12_007.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi12/FRAD051_12Fi12_008.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi12/FRAD051_12Fi12_009.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi12/FRAD051_12Fi12_010.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi12/FRAD051_12Fi12_011.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi12/FRAD051_12Fi12_012.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi12/FRAD051_12Fi12_013.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi12/FRAD051_12Fi12_014.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi12/FRAD051_12Fi12_015.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi12/FRAD051_12Fi12_016.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi12/FRAD051_12Fi12_017.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi12/FRAD051_12Fi12_018.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi12/FRAD051_12Fi12_019.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi12/FRAD051_12Fi12_020.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi12/FRAD051_12Fi12_021.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi12/FRAD051_12Fi12_022.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi12/FRAD051_12Fi12_023.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi12/FRAD051_12Fi12_024.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi12/FRAD051_12Fi12_025.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi12/FRAD051_12Fi12_026.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi12/FRAD051_12Fi12_027.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi12/FRAD051_12Fi12_028.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi12/FRAD051_12Fi12_029.jpg"/></daogrp><accessrestrict type="formate"><p>Communicable (Documents numérisés consultables sur le site des archives)</p></accessrestrict>
+</c>
+<c id="a011508248824nbC1P1" level="item">
+<did altrender="isbd-nbm-fr-imagefixe">
+<unitid label="Cotes extrêmes" identifier="12FI/13">12 Fi 13</unitid>
+<unittitle label="Intitulé de l'unité documentaire">Construction de la ligne de chemin de fer de Saint-Rémy-sur-Bussy à Coolus.</unittitle>
+<unitdate label="Date de l'unité documentaire" normal="1915-01-01/1915-12-31">1915</unitdate>
+<physdesc label="Description physique"><genreform source="liste-typedocAC">Document iconographique</genreform><lb/>
+<extent type="collation" label="Collation">50 photographies positives (tirages) en 1 album</extent><lb/>
+<physfacet type="technique" label="Données techniques">albuminé</physfacet><lb/>
+<dimensions label="Dimensions">8 × 11 cm (image), 16 × 22 cm (support)</dimensions><lb/>
+<physfacet type="noir et blanc ou couleur" label="Noir et blanc ou couleur">noir et blanc</physfacet><lb/>
+</physdesc>
+</did>
+<acqinfo><head>Informations sur les modalités d'entrée</head>
+<p>Entrée 2015 n° 4343</p>
+</acqinfo>
+<scopecontent><head>Présentation du contenu</head>
+<p>35 photographies datées légendées suivies de 15 photographies non datées et non légendées : </p><p>- 16 août 2015. Pose de la voie et exécution de la gare de Saint-Remy;</p><p>- 16 août 2015. Gare de Bussy-le-Château pendant l'exécution;</p><p>- 16 août 2015. Même sujet. Gare de Saint-Remy;</p><p>- 20 août 2015. Exécution de la gare de La Cheppe;</p><p>-20 août 2015. Train de pose à Saint-Remy;</p><p>- 20 août 2015. Confection de talus;</p><p>- 20 août 2015. Montage d'un appareil à Bussy;</p><p>- 20 et 21 août 2015. Montage de la cuve d'alimentation en eau à Bussy (3 photographies);</p><p>- 7 et 8 septembre 1915. Pose de voie à l'avancement (5 photographies);</p><p>- 9 septembre 1915. Exécution du terrassement au col entre Saint-Remy et Auve;</p><p>- 9 septembre 1915. Pose de la voie et arrivée au terminus (5 photographies)</p><p>- 12 septembre 1915. Chantier de ravitaillement à Saint-Remy;</p><p>- 15 septembre 1915. Chantier de ravitaillement à Bussy;</p><p>- 18 septembre 1915. Vue générale de la gare de Saint-Remy (2 photographies);</p><p>- 23 octobre 1915. Chantier de Coolus. Préparation du terrain par décapage;</p><p>- 25 octobre 1915. Exécution du terrassement du chantier d'accès;</p><p>- 27 octobre 1915. Préparation du terrain. Enlèvement des herbes;</p><p>- 27 octobre 1915. Enlèvement du déblai et transport par brouettes pour constituer le remblai de la cour du chantier;</p><p>- 27 octobre. Mise en place d'un appareil à l'entrée du côté de Coolus (vue vers Coolus et vue vers Sens). (2 photographies);</p><p>- 28 octobre 1915. Pose de la voie du chantier;</p><p>- 28 ocotbre 1915. Mise en place d'un appareil à l'entrée du côté Sens;</p><p>- 30 octobre 1915. Déchargement du ballast sur la voie et cylindrage de la cour du chantier;</p><p>- 3 novembre 1915. Enlèvement du déblai de la grande plateforme;</p><p/>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>Transport ferroviaire</subject>
+<subject>Chemin de fer</subject>
+<subject>Ouvrier</subject>
+<geogname>Bussy-le-Château (Marne, Champagne-Ardenne, France)</geogname>
+<geogname>Saint-Remy-sur-Bussy (Marne, Champagne-Ardenne, France)</geogname>
+<geogname>Cheppe (La) (Marne, Champagne-Ardenne, France)</geogname>
+<geogname>Coolus (Marne, Champagne-Ardenne, France)</geogname><subject>Travaux Publics</subject>
+</controlaccess><note type="mnesysinternal"><p/></note>
+</c><c id="a011510674224cTh0C3" level="item"><did><unittitle>Album de photographies de la famille Abelé</unittitle><unitid identifier="12FI/14">12 Fi 14</unitid><unitdate normal="1907-01-01/1910-12-31" type="inclusive">1907-1910</unitdate><physdesc><dimensions>27,2 x 36,7 cm (album), 17 x 23,5 (photographies)</dimensions><physfacet type="couleur">Noir et bllanc</physfacet>33 photographies en noir et blanc. </physdesc></did><note type="mnesysinternal"><p/></note><custodhist><p>Ancienne cote : Album n°14</p>
+</custodhist><scopecontent><p>33 photographies de paysages français, suisses et allemands : promenade en barque sur le lac de Pierefonds (Oise), scène de pêche dans l'étang de L'Aigle près de Compiègne, jour de marché à Fribourg, bâteau à voile sur la lec Léman, cour de ferme à Passy (Aisne), passage du bac à Menneville (Aisne), scierie vosgienne.</p>
+</scopecontent><accessrestrict type="formate"><p>Communicable (Consultation avec gants)</p></accessrestrict><acqinfo><p>Don 1957</p>
+</acqinfo><controlaccess><subject>Bateau</subject><subject>Animal</subject><subject>Château</subject><subject>Pêche</subject><geogname>Allemagne</geogname><geogname>Suisse</geogname><genreform>ALBUM</genreform><genreform>DOCUMENT PHOTOGRAPHIQUE</genreform></controlaccess><relatedmaterial><p>12 Fi 15 et 16</p>
+</relatedmaterial><phystech><p>Manque le dos</p>
+</phystech><userestrict><head>Reproduction à usage privé uniquement (Cf. Code de la propriété intellectuelle)</head></userestrict></c><c id="a011510822744lTmYc4" level="" audience="internal"><did><unittitle>Album de photographies de la famille Abélé</unittitle><unitdate normal="1904-01-01/1907-12-31" type="inclusive">1904-1907</unitdate><physdesc>Album de 26 photographies en noir et blanc de format 27,4 x 36,3 cm (album) 16,5 x 23 cm (photographies)</physdesc><unitid identifier="12FI/15">12 Fi 15</unitid></did><note type="mnesysinternal"><p/></note><custodhist><p>Ancienne cote : Album 15</p>
+</custodhist><acqinfo><p>Don 1957</p>
+</acqinfo><scopecontent><p>Paysages français et hollandais : concours de pêche à Etival (Vosges), fête de la gymnastique à Senones (Vosges), port de Rotterdam et scène de rue (Hollande), récolte du foin (Vosges), château</p>
+</scopecontent><accessrestrict type="formate"><p>Communicable (Consultation avec gants)</p></accessrestrict><relatedmaterial><p>12 Fi 14 et 17</p>
+</relatedmaterial><controlaccess><subject>Pêche</subject><subject>Gymnastique</subject><subject>Église</subject><subject>Bateau</subject><subject>Moulin</subject><subject>Tramway</subject><subject>Agriculture</subject><subject>Animal</subject><subject>Château</subject><persname>Abelé</persname><geogname>Hollande</geogname><genreform>ALBUM</genreform><genreform>DOCUMENT PHOTOGRAPHIQUE</genreform><persname role="auteur">Abelé</persname><famname>Abelé</famname></controlaccess><phystech><p>Manque le dos</p>
+</phystech><userestrict><p>Reproduction à usage privé uniquement (Cf. Code de la propriété intellectuelle)</p>
+</userestrict></c><c id="a011510824412vnRvaM" level="" audience="internal"><did><unittitle>Album de photographies de la famille Abelé</unittitle><unitdate normal="1909-01-01/1909-12-31">1909</unitdate><physdesc>98 photographies en noir et blanc 26 x 35,3 cm (album) (8 x 12cm (photographies) collées sur 21 pages cartonnées montées sur onglet</physdesc><unitid identifier="12FI/16">12 Fi 16</unitid></did><note type="mnesysinternal"><p/></note><custodhist><p>Ancienne cote : Album 16</p>
+</custodhist><acqinfo><p>Don 1957</p>
+</acqinfo><scopecontent><p>Photographies de la famille Abelé en voyage aux lacs italiens mais aussi les fêtes de Jeanne d'Arc à Senones, un contre torpilleurs à Cannes, le port de Monté-Carlo</p>
+</scopecontent><accessrestrict type="formate"><p>Communicable (Consutation avec gants)</p></accessrestrict><relatedmaterial><p>12 Fi 14 et 17</p>
+</relatedmaterial><controlaccess><geogname>Italie</geogname><geogname>Monaco</geogname><subject>Bateau</subject><subject>Armée</subject><subject>Port</subject><subject>Lac</subject><genreform>ALBUM</genreform><genreform>DOCUMENT PHOTOGRAPHIQUE</genreform><persname role="auteur">Abelé</persname><famname>Abelé</famname></controlaccess><userestrict><head>Reproduction à usage privé uniquement (Cf. Code de la propriété intellectuelle)</head></userestrict></c><c id="a011510828469FGnYDt" level="" audience="internal"><did><unittitle>Album de photographies de la famille Abelé</unittitle><unitdate normal="1908-01-01/1908-12-31">1908</unitdate><physdesc>Album de 131 photographies en noir et blanc 26 x 34,7 cm (album), 8 x 11 cm (photographies) collées sur 30 pages cartonnées montées sur onglet</physdesc><unitid identifier="12FI/17">12 Fi 17</unitid></did><note type="mnesysinternal"><p/></note><custodhist><head>Ancienne cote : Album 17</head></custodhist><acqinfo><head>Don 1957</head></acqinfo><scopecontent><p>Photographies de voyage de la famille Abelé en France, Allemagne, Suisse et Grande-Bretagne (paysages ruraux et urbains, travaux des champs à La Chapelle (Vosges), manifestation soprtive et défilé des anciens combattants de1870 à Senones (Vosges).</p>
+</scopecontent><accessrestrict type="formate"><p>Communicable (Consultation avec gants)</p></accessrestrict><relatedmaterial><head>12 Fi 14 à 16</head></relatedmaterial><controlaccess><subject>Animal</subject><subject>Bateau</subject><subject>Voiture à cheval</subject><subject>Lac</subject><subject>Agriculture</subject><subject>Sport</subject><persname>Abelé</persname><famname>Abelé</famname><persname role="auteur">Abelé</persname><genreform>ALBUM</genreform><genreform>DOCUMENT PHOTOGRAPHIQUE</genreform></controlaccess><userestrict><head>Reproduction à usage privé uniquement (Cf. Code de la propriété intellectuelle)</head></userestrict></c><c id="a011510904472FrY3hJ" level="" audience="internal"><did><unittitle>Album de cartes postales</unittitle><physdesc>Cartes postales collées ou enchâssées dans 61 pages cartonnées en recto verso. Dimension 28 x 37, 2 cm (Album), 9 x 14 cm (carte postale) en noir et blanc et en couleur</physdesc><unitid identifier="12FI/18">12 Fi 18</unitid></did><note type="mnesysinternal"><p/></note><custodhist><head>Ancienne cote : album 18</head></custodhist><acqinfo><head>Don</head></acqinfo><scopecontent><head>Les cartes postales représentent dans une très grande majorité les églises de villes françaises (quelques vues du Luxembourg). Quelques cartes postales d'églises marnaises (Saint-Amand-sur-Fion (verso p.1), l'Épine (verso p.3, 7à 8, 11 à 14 ), le Châtelier (verso p.44), Giffaumont (verso p.44 et recto 47) et Florent-en-argonne (recto p.53) et du Camp de Châlons (verso p.38)</head></scopecontent><accessrestrict type="formate"><p>Communicable (Consultation avec des gants)</p></accessrestrict><userestrict><head>Reproduction à usage privé (cf. au Code de la propriété intellectuelle)</head></userestrict><phystech><head>couverture en toile (4è de couverture tachée, une page détachée)</head></phystech><controlaccess><geogname>Saint-Amand-sur-Fion (Marne, Champagne-Ardenne, France)</geogname><geogname>Épine (L') (Marne, Champagne-Ardenne, France)</geogname><geogname>Châtelier (Le) (Marne, Champagne-Ardenne, France)</geogname><geogname>Giffaumont-Champaubert (Marne, Champagne-Ardenne, France)</geogname><geogname>Giffaumont (Marne ; ancienne commune)</geogname><geogname>Florent-en-Argonne (Marne, Champagne-Ardenne, France)</geogname><geogname>Mourmelon-le-Grand (Marne) -- Camp de Moumelon</geogname><genreform>CARTE POSTALE</genreform><genreform>ALBUM</genreform></controlaccess></c><c id="a011510908027FMrplf" level="" audience="internal"><did><unittitle>Patronage des Écoles Laïques de Châlons-sur-Marne, 1946-1947</unittitle><unitdate normal="1946-01-01/1947-12-31" type="inclusive">1946-1947</unitdate><physdesc><physfacet type="couleur">Noir et blanc</physfacet><dimensions>33,6 x 26,7 cm (album), 13 x 18 cm et 9 x 12 cm</dimensions><genreform type="forme">Sports<lb/>
+Photographies 1 et 2 : Au stade Mermoz.<lb/>
+Photographies 3 et 4 : Le portique a leur préférence.<lb/>
+Photographie 5 : Trois copains (cliché de la section photographique).<lb/>
+Photographie 6 : Après le sport, la préparation des tartines par les élèves-maîtres.<lb/>
+Photographie 7 : Les dos sont bien un peu meurtris, mais ils gardent néanmoins le sourire (cliché de la section photographique).<lb/>
+Photographie 8 : L'acrobate a manqué son coup, mais le jeune reporter photographe a réussi un beau cliché (cliché de la section photographique).<lb/>
+Photographie 9 : Les jeux ont ouvert l'appétit...(cliché de la section photographique).<lb/>
+Photographie 10 : Et la boite de confiture est minutieusement "raclée" (cliché de la section photographique).<lb/>
+Photographie 11 : Parfois, le goûter est distribué à l'École Nationale et certaines fois on reçoit un "soda" individuel.<lb/>
+Activités dirigées : menuiserie (jouets de Noël) par Mr Malglaine, modèle réduits par Mr Lebas, reliure et photographie par Mr Voiville<lb/>
+Photographies 12 et 13 : "Activer la fabrication" : tel est le mot d'ordre, car c'est par centaines de jouets que le Père Noêl a passé commande au Patronage.<lb/>
+Photographie 14 : Il travaille de la main gauche... mais il y met tant d'action...<lb/>
+Photographie 15 : Peu à peu les jouets s'amassent sur la table du peintre animalier.<lb/>
+Photographie 16 : Les "modélistes d'aviation" ont l'air grave des chercheurs.<lb/>
+Photographie 17 : Un relieur (cliché de la section photographique).<lb/>
+Photographies 18 et 19 : La reliure demande beaucoup de soins, du&#160; coup d'oeil, de la minutie, de la patience : elle a cependant ses fervents.<lb/>
+Photographies 20 et 21 : Les outils sont rudimentaires mais les résultats satisfaisants.<lb/>
+Photographie 22 : Pour coudre un livre, il faut déjà enfiler l'aiguille et les garçons s'y montreront toujours un peu gauches.<lb/>
+Photographie 23 : Un relieur de 11 ans, enseigne "la couture sur ganses" à un camarade.<lb/>
+Photographies 24 et 25 : L'équipe "Photographie" (par elle-même).<lb/>
+Avec les fillettes (groupe Duruy)<lb/>
+Photographie 26 : En été, le goûter en plein air.<lb/>
+Photographie 27 : Des rondes, des chants à l'ombre des grands arbres du parc.<lb/>
+Photographie 28 : Le goûter en plein air, devant la salle de cinéma.<lb/>
+Photographies 29 et 30 : Les jours maussades, on se réfugie pour jouer, tricoter ou coudre dans les coquettes salles du cours ménager où affluent air et lumière.<lb/>
+Photographie 31 : Le clou du "Patronage", la grande salle de Cinéma.<lb/>
+Avec les tout petits (école maternelle, rue Saint-Dominique)<lb/>
+Photographies 32 et 33 : Tenir son sérieux, plusieurs secondes pour permettre au photographe de présenter des enfants bien sages, ce n'est pas chose si facile.<lb/>
+Photographies 34 et 35 : Les rondes et les chants alternent avec les jeux.<lb/>
+Photographies 36 et 37 : Puis un bon goûter arrosé d'un bon soda termine le jeudi. Voyez leur bonne mine!<lb/>
+Le voyage à Paris (pour récompenser les plus assidus)<lb/>
+Photographie 38 : Arrêt sur la place du Panthéon<lb/>
+Photographie 39 : Après une longue promenade à pied on est heureux de prendre l'auto-car.<lb/>
+Photographie 40 : au Zoo de Vincennes.<lb/>
+Photographie 41 : La Tour Eiffel, l'ascenseur montera à pleine charge.<lb/>
+&#160;</genreform>Album de photographies en noir et blanc collées sur support papier (41 pages), dimension 33,6 x 26,7 cm (album) 9 x 12 cm et 13 x 18 cm (photographies)</physdesc><unitid identifier="12FI/19">12 Fi 19</unitid></did><note type="mnesysinternal"><p/></note><custodhist><head>Ancienne cote : album 22</head></custodhist><acqinfo><head>Don</head></acqinfo><accessrestrict type="formate"><p>Communicable (Consultation avec des gants)</p></accessrestrict><userestrict><head>Reproduction à usage privé (cf. au Code de la propriété intellectuelle)</head></userestrict><controlaccess><geogname>Châlons-en-Champagne (Marne, Champagne-Ardenne, France)</geogname><geogname>Châlons-sur-Marne (Marne ; ancienne commune)</geogname><genreform>PHOTOGRAPHIE</genreform><genreform>ALBUM</genreform><persname role="auteur">Voiville</persname><subject>Enfant</subject><subject>Loisir</subject><subject>Oeuvre sociale</subject><subject>Enseignement</subject></controlaccess><odd type="note_contenu"><p>Dédicace de Mr Gonnet, adjoint de l'inpecteur primaire pour les oeuvres post-scolaires : J'ai voulu en composant cet album, fournir sans prétention, la preuve tangible de l'activité du Patronage de nos écoles laïques, au cours de l'année scolaire 1946-1947. Ces clichés, exécutés et présentés par Mr Voiville, moniteur de la section revue et photo et par quelques élèves du Patronage montreront à qui pourrait en douter que les oeuvres laïques peuvent être, grâce à la bonne volonté et l'esprit de solidarité des membres du corps enseignants aussi prospères que certaines autres oeuvres privées.</p>
+</odd></c><c id="a011512393199UUV4iA" level="" audience="internal"><did><unittitle>Guerre 14-18 et monuments aux morts</unittitle><unitdate normal="1907-01-01/1941-12-31" type="inclusive">1907-1941</unitdate><physdesc><physfacet type="couleur">Noir et blanc</physfacet><dimensions>26,3 x 21,2 cm</dimensions>Album de photographies et de cartes postales en noir et blanc collées sur 58 pages représentant les anciennes communes de Souain, Perthes-les-Hurlus, Hurlus et Tahure avant et après la guerre. Sont aussi représentés des monuments aux morts (Navarin) ainsi que des cérémonies commémoratives.</physdesc><unitid identifier="12FI/20">12 Fi 20</unitid></did><note type="mnesysinternal"><p/></note><acqinfo><head>Don</head></acqinfo><accessrestrict type="formate"><p>Communicable (Consultation avec des gants)</p></accessrestrict><phystech><head>Un dessin à l'encre sur feuille volante</head></phystech><custodhist><p>Ancienne cote : album 23</p>
+</custodhist><controlaccess><genreform>ALBUM</genreform><genreform>PHOTOGRAPHIE</genreform><geogname>Hurlus (Marne ; ancienne commune)</geogname><genreform>CARTE POSTALE</genreform><geogname>Wargemoulin-Hurlus (Marne, Champagne-Ardenne, France)</geogname><geogname>Souain-Perthes-lès-Hurlus (Marne, Champagne-Ardenne, France)</geogname><geogname>Souain (Marne ; ancienne commune)</geogname><geogname>Perthes-lès-Hurlus (Marne ; ancienne commune)</geogname><geogname>Sommepy-Tahure (Marne, Champagne-Ardenne, France)</geogname><geogname>Tahure (Marne ; ancienne commune)</geogname><geogname>Minaucourt-le-Mesnil-lès-Hurlus (Marne, Champagne-Ardenne, France)</geogname><geogname>Mesnil-lès-Hurlus (Le) (Marne ; ancienne commune)</geogname><subject>Carte topographique</subject><subject>ruines</subject><subject>paysage de guerre</subject><subject>Religion</subject><subject>population civile</subject><subject>tombe</subject><subject>armée étrangère</subject><subject>Moulin à vent</subject><subject>Monument</subject><persname>Tissier (Évêque)</persname><persname>Malmy, Étienne</persname><geogname>Ferme des Wacques (Souain-Perthes-lès-Hurlus) -- lieu-dit</geogname></controlaccess><userestrict><head>Reproduction à usage privé (cf. Code de la propriété intellectuelle)</head></userestrict><scopecontent><p>Page 1 : Carte de la Champagne par Blain, 1620 (reproduction)</p>
+
+<p>Page 2 : Carte de la Champagne, 1692 (reproduction)</p>
+
+<p>Page 3 : Carte de la Champagne partie septentrionale du Gouvernement Général de Champagne, 1752 (reproduction)</p>
+
+<p>Page 4 : Carte de la Champagne partie méridionale du Gouvernement Général de Champagne, 1752 (reproduction)</p>
+
+<p>Page 5 : Carte de Champagne, 1771 (reproduction)</p>
+
+<p>Page 6 : Christ de la Porte Saint-Laurent, ancien chemin de Sommepy (photographie)</p>
+
+<p>Page 7 : Place et église de Souain, Marne, 1907 (reproduction de carte postale), Rue de la Maire, Souain (reproduction de carte postale)</p>
+
+<p>Page 8 : Rue du Camp de Châlons, Souain (reproduction de carte postale), Route de Sommepy-l'École, Souain (reproduction de carte postale)</p>
+
+<p>Page 9 :Route de Châlons, Souain (reproduction de carte postale), Route de Suippe-La Plaine, Souain (reproduction de carte postale)</p>
+
+<p>Page 10 : Rue de la Chapelle, Souain Marne, dont une en 1907 (2 reproductions de carte postale)</p>
+
+<p>Page 11 : Rue de la Damont, Souain (reproduction de carte postale), Vue générale-Route de Tahure, Souain (reproduction de carte postale)</p>
+
+<p>Page 12 : Ferme de Navarin (photographie), La Maison forestière (photographie)</p>
+
+<p>Page 13 : La Grande guerre 1914-1915 : L'Église de Souain (Marne) après le bombardement (carte postale), La Grande Guerre 1914-1915 : Intérieur de l'église de Souain, bombardée et incendiée par les Allemands (carte postale), l'Église de Souain, Marne (carte postale)</p>
+
+<p>Page 14 : La Grande guerre 1914-15 : Vue de l'église de Souain, en Champagne (carte postale), Intérieur de l'Église bombardée par les Allemands, Souain, Marne (carte postale), La Grande guerre 1914-15-16 : Le moulin à vent après le bombardement, Souain, Marne (carte postale)</p>
+
+<p>Page 15 : La Grande guerre 1914-15 : Vue de l'Église de Souain totalement détruite, en Champagne (carte postale), La Guerre 1914-15 : Tranchées à l'entrée du village, Souain (carte postale)</p>
+
+<p>Page 16 : La Grande guerre 1914-15 : La barricade route de Sommepy, Souain, en Champagne (carte postale), Ruines de Souain-vue de la Plaine septembre 1914 (photographie), Ruines de Souain 1915 (photographie), Ferme des Wacques, 1916 (photographie)</p>
+
+<p>Page 17 : Ruines de l'église, 1919 (2 photographies)</p>
+
+<p>Page 18 : La Grande guerre : Route de Suippes, tout le village n'est plus que ruines, Souain (carte postale), Maison Thiéry-Porte Saint-Laurent, Souain, 1915 (photographie), Église de Souain, septembre 1915 (photographie)</p>
+
+<p>Page 19 : Première bénédiction des Tombes au Cimetière National (photographie), Bénédiction du Monument aux morts de la Paroisse (3 photographies)</p>
+
+<p>Page 20 : Conférence du Général Gouraud sur le terrain de Navarin, septembre 1925 (2 photogaphies)</p>
+
+<p>Page 21 : Monseigneur Tissier au Pont de Marson, Minaucourt (2 photographies)</p>
+
+<p>Page 22 : Cérémonie du 27 septembre 1936 (2 photographies)</p>
+
+<p>Page 23 : Cérémonie du 27 septembre 1936 (2 photographies), Cimetière de la 28è Brigade les Wacques (photographie)</p>
+
+<p>Page 24 : Cérémonie du 26 septembre 1937 (2 photographies)</p>
+
+<p>Page 25 : Cérémonie du 26 septembre 1937 (3 photographies)</p>
+
+<p>Page 26 : Cérémonie du 26 septembre 1937 (2 photographies)</p>
+
+<p>Page 27 : Église provisoire, Souain, Marne (carte postale), Église, souain-Navarin (carte postale), Église, Souain (carte postale)</p>
+
+<p>Page 28 : Intérieur de l'église de Souain (photographie), Enfants de choeur, 1939 (photographie), Église, 1941 (photographie)</p>
+
+<p>Page 29 : Pitié (Pierre peinte), Souain (reproduction), Presbytère de Souain (2 photographies)</p>
+
+<p>Page 30 : Photo tirée (sur papier) à l'envers (photographie), La mairie et l'église en construction, Souain, Marne</p>
+
+<p>Page 31 : Monuments aux morts-Cimetière Paroissial dont une en 1940 (2 photographies), Route de Saint-Hilaire, Souain, Marne (carte postale)</p>
+
+<p>Page 32 : Cimetière National (photographie), Cimetière National (44 000 tombes) près de Navarin, Souain, en Champagne (carte postale)</p>
+
+<p>Page 33 : Le Groupe du Monument, Navarin, en Champagne (carte postale), Aux morts des Armées de Champagne, 1914-1918 (carte postale), Monuments aux morts des Armées de Champagne, Navarin, en Champagne (carte postale)</p>
+
+<p>Page 34 : Monument aux morts des Armées de Champagne, la Chapelle, Navarin, en Champagne, 1914-1918 (carte postale), Monument de Navarin aux morts des Armées de Champagne, en Champagne, 1914-1918</p>
+
+<p>Page 35 : Vue des champs de bataille-soleil couchant prise du sommet du monument, Navarin,en Champagne (carte postale), Monument aux morts des Armées de Champagne-la Crypte-Ossuaire National, Navarin, en Champagne, 1914-1918 (carte postale)</p>
+
+<p>Page 36 : Cimetière militaire-l' Opéra, Souain-Navarin (carte postale), Monument Américain, Souain, Marne (carte postale)</p>
+
+<p>Page 37 : La Grande guerre 1914-17 : Vue d'ensemble des ruines de Souain, Marne, en Champagne (reproduction de carte postale), La Grande guerre&#160; 1914-15 : Une rue de Souain-Spahis marocains, en Champagne (reporoduction de carte postale)</p>
+
+<p>Page 38 : Jeanne d'Arc du monuments aux Morts de l'église de Souain (reproduction), La Vierge en chêne qui a été restaurée et replavée sur l'autel de l'église de Souain (4 photographies)</p>
+
+<p>Page 39 : La guerre 1914-15-16 : Bataille de champagne, Souain, Marne, la ferme des Vacques où se livrèrent de terribles combats (reproduction de carte postale), Moulin de Souain après la journée du 25 septembre 1915 (reproduction)</p>
+
+<p>Page 40 : Entonnoir du moulin à vent à Souain après les combats de septembre 1915 (photographie), l'Aumônier Doncoeur prononce l'oraison funèbre des morts glorieux de la 28è Brigade (reproduction)</p>
+
+<p>Page 41 : Cérémonie du 25 septembre 1919 (photographie), le général Petit, commandant la 28è Brigade, salue l'épée le monument, 25 septembre 1919 (reproduction)</p>
+
+<p>Page 42 : l'Aumônier Doncoeur dont l'inlassable dévouement la permis de donner des sépultures à de nombreux héros tombés en Champagne (reproduction), Costumes des femmes de Champagne avant 1914 (photographie)</p>
+
+<p>Page 43 : Monseigneur Tissier, évêque de Châlons-sur-Marne, bénit le monument de la 28è Brigade, 25 septembre 1919 (reproduction)</p>
+
+<p>Page 44 : Église de Souain, Champagne, 1917 (dessin à l'encre)</p>
+
+<p>Page 45 : Église côté nord, Perthes-les-Hurlus,Marne (reproduction de carte postale), La Grande guerre 1914-15-16 : le cimetière et l'église de Perthes-les-Hurlus, en Champagne (reproduction de carte postale)</p>
+
+<p>Page 46 : Ruines de l'église de Perthes, 1915 (photographie), Ruines de Perthes, vue prise de chez Auguste Haimart, au fond le portail de l'église (photographie)</p>
+
+<p>Page 47 : Grande rue, Perthes-les-Hurlus (reproduction de carte postale), Ruines de l'église et route de Suippes, Perthes, Marne (reproduction de carte postale)</p>
+
+<p>Page 48 : La guerre 1914-15-16 : Un coin de Perthes après le bombardement, Perthes-les-Hurlus, Marne, en Champagne (reproduction de carte postale)</p>
+
+<p>Page 49 : La guerre 1914-15-16 : L'entrée du village, après les terribles bombardements, Perthes-les-Hurlus, Marne (reproduction de carte postale)</p>
+
+<p>Page 50 : Maison d'Auguste Haimart (reproduction d'une photographie), Entrée, Route de Tahure, Perthes-les-Hurlus, Marne (reproduction de carte postale)</p>
+
+<p>Page 51 : La Grande guerre 1914-15 : La maison forestière de Perthes en avant de laquelle se livrèrent de furieux et célèbres combats, Marne (reproducion de carte postale), Maison forestière et cimetière (Est), Perthes, Marne, 1919 (reproduction)</p>
+
+<p>Page 52 : Le moulin, Perthes-les-Hurlus, Marne ( 2 reproductions de carte postale)</p>
+
+<p>Page 53 : Portrait du Révérendissime Père Dom Etienne Malmy (reproduction)</p>
+
+<p>Page 54 : La Grande guerre 1914-17 : Intérieur de l'église, Les Hurlus, en Champagne (reproduction de carte postale), Ruine de l'église d'Hurlus (photographie)</p>
+
+<p>Page 55 : La Grande guerre 1914-1915 : Les ruines du village dans la direction du fortin de Beauséjour - vue prise par la brèche d'un mur de l'église, Mesnil-les-Hurlus, Marne (photographie)</p>
+
+<p>Page 56 : L'église de Tahure, en 1915 (reproduction d'après une photographie allemande)</p>
+</scopecontent><daogrp><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_01.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_02.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_03.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_04.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_05.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_06.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_07.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_08.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_09.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_10.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_11.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_12.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_13.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_14.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_15.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_16.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_17.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_18.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_19.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_20.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_21.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_22.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_23.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_24.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_25.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_26.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_27.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_28.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_29.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_30.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_31.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_32.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_33.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_34.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_35.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_36.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_37.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_38.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_39.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_40.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_41.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_42.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_43.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_44.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_45.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_46.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_47.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_48.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_49.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_50.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_51.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_52.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_53.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_54.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_55.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_56.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_57.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_58.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi20/FRAD051_12Fi20_59.jpg"/></daogrp></c><c id="a011512396190LRzeBx" level="" audience="external"><did><unittitle>Vitraux de la Cathédrale de Reims</unittitle><unitid identifier="12FI/21">12 Fi 21</unitid><unitdate normal="1920-01-01/1923-12-31" type="inclusive">1920-1923</unitdate><physdesc><physfacet type="couleur">Noir et blanc</physfacet><dimensions>24 x 32 cm</dimensions>162 photographies en noir et blanc, principalement des vitraux de la Cathédrale de Reims mais aussi de Châlons-en-Champagne, légendées et numérotées, issues de la Direction de l'Architecture.</physdesc></did><note type="mnesysinternal"><p/></note><custodhist><head>Ancienne cote : album 23</head></custodhist><accessrestrict type="formate"><p>Communicable (Consultation avec des gants)</p></accessrestrict><userestrict><head>Reproduction à usage privé (cf. au Code de la propriété intellectuelle)</head></userestrict><controlaccess><geogname>Reims (Marne, Champagne-Ardenne, France)</geogname><persname role="auteur">Direction de l'Architecture</persname><genreform>PHOTOGRAPHIE</genreform><subject>Art religieux</subject><subject>Vitrail</subject><geogname>Reims (Marne) -- Cathédrale</geogname><geogname>Châlons-en-Champagne (Marne, Champagne-Ardenne, France)</geogname><subject>Tapisserie</subject><subject>Cheminée</subject></controlaccess><scopecontent><p>Pièces 1 à 3. Nef, fenêtre 4, côté Nord, baie 2, débris (n°68941 à 68943), 1920 à 1923</p>
+
+<p>Pièce 4. Nef, fenêtre 3, côté Sud, baie 2, débris (n°69031), 1922.</p>
+
+<p>Pièce 5. Abside, côté Nord, fenêtre (n°75434), 1922.</p>
+
+<p>Pièces 6 à 18. Nef, fenêtre 10 au Nord, baie 1 (n°61345 à 61356 et 61378), 1922.</p>
+
+<p>Pièces 19 à 33. Nef, fenêtre 10 au Nord, rose (n°61379 à 61380, 61382 à 61384, 61386 à 61395), 1922.</p>
+
+<p>Pièce 34. Carrelage XIIIe 5 rue du Cardinal de Lorraine&#160; (n°61607), 1921.</p>
+
+<p>Pièce 35. Sans légende (n°61636), sans date.</p>
+
+<p>Pièce 36. Nef, fenêtre 8 au Sud, baie 1 (n°62780), sans date.</p>
+
+<p>Pièce 37. Socle de la statue adossée à l'ébrasement entre la porte centrale et la porte de gauche, façade Ouest (n°64157), sans date.</p>
+
+<p>Pièce 38. Taques de cheminées (n°65663),</p>
+
+<p>Pièces 39 à 47. Nef, fenêtre 6 au Nord, baie 2, débris (n°66883 et 68900 à 68906), 1922-1923.</p>
+
+<p>Pièces 48 à 56. Nef, fenêtre 7 au Nord, débris (n°68908 à 68916), 1923.</p>
+
+<p>Pièces 57 à 69. Nef, fenêtre 4 au Nord, baie 1 débris (n°68918) 68930), 1923.</p>
+
+<p>Pièce 70. Fenêtre 4, côté Nord (n°68931), 1923.</p>
+
+<p>Pièce 71 à 79. Nef, fenêtre 4 au Nord, baie 1 débris (n°68932 à 68940), 1923.</p>
+
+<p>Pièce 80 à 81. Sans légende (n°15948 à 15949), sans date.</p>
+
+<p>Pièce 82. Châlons-sur-Marne. Cathédrale, vitrail (n°15262), sans date.</p>
+
+<p>Pièce 83. Châlons-sur-Marne. (n°15252), sans date.</p>
+
+<p>Pièce 84. Tapisserie. Vie de la Vierge (détail) (n°23774), sans date.</p>
+
+<p>Pièce 85. Tapisserie. Les noces de Cana (n°23776), sans date.</p>
+
+<p>Pièce 86. Tapisserie. Histoire de Clovis (n°23781), sans date.</p>
+
+<p>Pièce 87. Tapisserie. Histoire de Clovis (n°23782), sans date.</p>
+
+<p>Pièces 88 à 93. Tenture de Pépersack (n°23783 à 23788), sans date.</p>
+
+<p>Pièces 94 à 98. Tapisserie. Vie de Saint-Remy (n°23789 à 23794), sans date.</p>
+
+<p>Pièces 99 à 100. Nef, fenêtre 10 au Sud, baie 1, vitrail photographié pendant la dépose (n°61280 et 61282), 1922.</p>
+
+<p>Pièces 101 à 118. Nef, fenêtre 10 au Sud, baie 1 (n°61283 à 61300), 1922.</p>
+
+<p>Pièces 119 à 139. Nef, fenêtre 10 au Sud, baie 2 (n°61301 à 61321), 1922.</p>
+
+<p>Pièces 140 à 152. Nef, fenêtre 10 au Sud, rose (n°61322 à 61334), 1922.</p>
+
+<p>Pièce 153. Nef, fenêtre 10 au Sud, rose et écoinçons (n°61335), sans date.</p>
+
+<p>Pièce 154. Nef, fenêtre 10, Nord, face 1 (n°61336), sans date.</p>
+
+<p>Pièces 155 à 162. Nef, fenêtre 10 au Nord, baie 1 (n°61337 à 61344), 1922.</p>
+</scopecontent><daogrp audience="internal"><daoloc href="06_fonds_icono/12Fi/12Fi21/FRAD051_12Fi21_001_01.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi21/FRAD051_12Fi21_001_02.jpg"/></daogrp><daogrp><daoloc href="06_fonds_icono/12Fi/12Fi21/FRAD051_12Fi21_002_01.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi21/FRAD051_12Fi21_002_02.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi21/FRAD051_12Fi21_003_01.jpg"/><daoloc href="06_fonds_icono/12Fi/12Fi21/FRAD051_12Fi21_003_02.jpg"/></daogrp></c><c id="a011512399621nqqEuU" level="" audience="internal"><did><unittitle>Reproduction de peintures des musées et églises de Belgique</unittitle><physdesc><physfacet type="couleur">Noir et blanc</physfacet><dimensions>Album 31,1 x 41,5 cm, photographie 28,4 x 21,5 cm</dimensions></physdesc><unitdate>sans date</unitdate><unitid identifier="12FI/22">12 Fi 22</unitid></did>
+<note type="mnesysinternal"><p/></note><custodhist><head>Ancienne cote : album 25</head></custodhist><scopecontent><p>42 reproductions de tableaux provenant des musées de Bruxelles, Bruges et Malines (Belgique)</p>
+</scopecontent><accessrestrict type="formate"><p>Communicable (Consultation avec gants)</p></accessrestrict><userestrict><head>Reproduction à usage privé uniquement (Cf. Code de la propriété intellectuelle)</head></userestrict><controlaccess><geogname>Belgique</geogname><genreform>ALBUM</genreform><genreform>PHOTOGRAPHIE</genreform></controlaccess>
+</c><c id="a0115127242505zGuYc" level="" audience="internal"><did><unittitle>Reproduction de peintures du musée et de la cathédrale d'Anvers</unittitle><physdesc><physfacet type="couleur">Noir et blanc</physfacet><dimensions>33,8 x 41,8 cm (album), 21,5 x 28,5 cm (image)</dimensions><extent>Album de 10 photographies enchâssées ou collées sur page montée sur onglet</extent></physdesc><unitid identifier="12FI/23">12 Fi 23</unitid></did><note type="mnesysinternal"><p/></note><userestrict><p>Reproduction à usage privé (cf. Code de la propriété intellectuelle)</p>
+</userestrict><accessrestrict type="formate"><p>Communicable (Consultation avec des gants)</p></accessrestrict><custodhist><p>Ancienne cote : album 26</p>
+</custodhist><controlaccess><geogname>Belgique</geogname><genreform>ALBUM</genreform><genreform>PHOTOGRAPHIE</genreform></controlaccess></c><c id="a0115127272043CWvd8" level="" audience="internal"><did><unittitle>Monuments et reproductions de peintures à Rome</unittitle><physdesc><extent>Album de 100 photographies enchâssées ou collées sur page montée sur onglet</extent><physfacet type="couleur">Noir et blanc</physfacet><dimensions>32,8 x 42,5 cm (album), 19,5 x 25,5 cm (image)</dimensions></physdesc><unitid identifier="12FI/24">12 Fi 24</unitid></did>
+<note type="mnesysinternal"><p/></note><userestrict><p>Reproduction à usage privé (cf. Code de la propriété intellectuelle)</p>
+</userestrict><accessrestrict type="formate"><p>Communicable (Consultation avec des gants)</p></accessrestrict><custodhist><p>Ancienne cote : album 27</p>
+</custodhist><controlaccess><geogname>Italie</geogname><genreform>ALBUM</genreform><genreform>PHOTOGRAPHIE</genreform></controlaccess>
+</c><c id="a011512727994FcFBUb" level="" audience="internal"><did><unittitle>Monuments et reproduction de peintures d'Italie</unittitle><physdesc><extent>Album de 50 photographies enchâssées ou collées sur page montée sur onglet</extent><physfacet type="couleur">Noir et blanc</physfacet><dimensions>33,2 x 42 cm (album), 26 x 19,5 cm (image)</dimensions></physdesc><unitid identifier="12FI/25">12 Fi 25</unitid></did>
+<note type="mnesysinternal"><p/></note><userestrict><p>Reproduction à usage privé (cf. Code de la propriété intellectuelle)</p>
+</userestrict><accessrestrict type="formate"><p>Communicable (Consultation avec des gants)</p></accessrestrict><custodhist><p>Ancienne cote : album 28</p>
+</custodhist><controlaccess><geogname>Italie</geogname><genreform>ALBUM</genreform><genreform>PHOTOGRAPHIE</genreform></controlaccess>
+</c><c id="a011512728526jt7Rru" level="" audience="internal"><did><unittitle>Monuments et détails d'architecture en Italie</unittitle><physdesc><extent>Album de cartes postales enchâssées sur 91 pages avec décor</extent><physfacet type="couleur">En noir et en couleur</physfacet><dimensions>28,7 x 39,8 cm (album), 9 x 14 cm (image)</dimensions></physdesc><unitid identifier="12FI/26">12 Fi 26</unitid></did>
+<note type="mnesysinternal"><p/></note><userestrict><p>Reproduction à usage privé (cf. Code de la propriété intellectuelle)</p>
+</userestrict><accessrestrict type="formate"><p>Communicable (Consultation avec des gants)</p></accessrestrict><custodhist><p>Ancienne cote : album 29</p>
+</custodhist><odd type="note_exemplaire"><p>Nombreuses pages détachées</p>
+</odd><controlaccess><geogname>Italie</geogname><genreform>ALBUM</genreform><genreform>CARTE POSTALE</genreform></controlaccess>
+</c><c id="a011512729152XZlnXv" level="" audience="internal"><did><unittitle>Marine : bateaux de guerre à Toulon</unittitle><unitdate normal="1900-01-01/1900-12-31">1900</unitdate><physdesc><extent>16 photographies légendées collées sur support en carton</extent><physfacet type="couleur">Noir et blanc</physfacet><dimensions>24 x 31,5 cm (support), 21 x 28 cm (image)</dimensions><genreform type="forme">Planche 1 : navire Courbet<lb/>
+Planche 2 : navire Marceau<lb/>
+Planche 3 : navire Couronne<lb/>
+Planche 4 : navire Vauban<lb/>
+Planche 5 : navire Redoutable<lb/>
+Planche 6 : navire Dévastation<lb/>
+Planche 7 : navire Terrible<lb/>
+Planche 8 : navire Algésiras<lb/>
+Planche 9 : navire Nive<lb/>
+Planche 10 : navire Vautour<lb/>
+Planche 11 : navire Formidable<lb/>
+Planche 12 : navire Troude<lb/>
+Planche 13 : sous-marin<lb/>
+Planche 14 : navire sans nom<lb/>
+Planche 15 : artillerie (canon)<lb/>
+Planche 16 : lancement de torpille</genreform></physdesc><unitid identifier="12FI/27">12 Fi 27</unitid></did>
+<note type="mnesysinternal"><p/></note><userestrict><p>Reproduction à usage privé (cf. Code de la propriété intellectuelle)</p>
+</userestrict><accessrestrict type="formate"><p>Communicable (Consultation avec des gants)</p></accessrestrict><custodhist><p>Ancienne cote : album 30</p>
+</custodhist><odd type="note_exemplaire"><p>Une planche très sale</p>
+</odd><controlaccess><geogname>Toulon</geogname><genreform>PHOTOGRAPHIE</genreform></controlaccess>
+</c><c id="a011513083515eYSSZM" level="" audience="internal"><did><unittitle>Jumelage Châlons et Ilkheston</unittitle><physdesc><extent>4 photographies légendées en français et en anglais, collées sur  planche de bois</extent><physfacet type="couleur">Noir et blanc</physfacet><dimensions>60 x 45,3 cm (support), 30 x 40 cm (image)</dimensions><genreform type="forme">"Syndicat d'initiative" de Châlons-sur-Marne<lb/>
+Planche 1 : Façade de l'hôtel de ville = Front of the town-hall<lb/>
+Planche 2 : Établissement des bains de rivière = Bathing establishment in the river<lb/>
+Planche 3 : Préfecture de la Marne. Cour intérieure = Marne-Prefectory. Inner yard<lb/>
+Planche 4 : Préfecture de la Marne. La façade et les jardins = Marne-Prefectory. Front and gardens</genreform></physdesc><unitid identifier="12FI/28">12 Fi 28</unitid></did>
+<note type="mnesysinternal"><p/></note><userestrict><p>Reproduction à usage privé (cf.Code de la propriété intellectuelle)</p>
+</userestrict><accessrestrict type="formate"><p>Communicable (Consultation avec des gants)</p></accessrestrict><custodhist><p>Ancienne cote : album 31</p>
+</custodhist><odd type="note_autre"><p>Estampille au verso "Customs and Excise" pour les planches 1, 2 et 3</p>
+</odd><odd type="note_exemplaire"><p>Photographies collées sur feuille de papier, elle-même collée sur une planche de bois</p>
+</odd><controlaccess><geogname>Châlons-sur-Marne (Marne ; ancienne commune)</geogname><geogname>Châlons-en-Champagne (Marne, Champagne-Ardenne, France)</geogname><genreform>PHOTOGRAPHIE</genreform><subject>Jardin</subject><subject>Piscine</subject><geogname>Châlons-en-Champagne (Marne) -- Hôtel de Ville</geogname><geogname>Châlons-en-Champagne (Marne) -- Préfecture</geogname><geogname>Marne (Marne ; cours d'eau)</geogname></controlaccess>
+</c><c id="a011513084944gbQvZE" level="" audience="internal"><did><unittitle>Conférence de la Paix à La Haye de 1899</unittitle><physdesc><extent>Album de photographies légendées collées sur  47 pages cartonnées montées sur onglet. Album en velours avec décor en relief et photographie enchâssée dans la couverture</extent><physfacet type="couleur">Noir et blanc</physfacet><dimensions>37,2 x 44 cm (album), 22 x 14,5 cm (image)</dimensions><genreform type="forme">Portraits des représentants de chaque pays présents à la conférence, fac-similes des signatures des présidents de commissions et premiers délégués, tableau des délégations pour la conférence, photographies des première, deuxième et troisième commissions, comité d'examens, comité de la Croix-Rouge, Palais du Bois</genreform></physdesc><unitid identifier="12FI/29">12 Fi 29</unitid></did>
+<note type="mnesysinternal"><p/></note><controlaccess><persname role="auteur">B. Matuszewski, Sigismond et Cie (Varsovie), Maison Benque (Paris)</persname><geogname>Pays-Bas</geogname><geogname>Hollande</geogname><genreform>ALBUM</genreform><persname>Matuszewski, B.</persname><genreform>PHOTOGRAPHIE</genreform><persname>Sigismond et Cie</persname><persname>Maison Benque</persname></controlaccess><userestrict><p>Reproduction à usage privé (cf.Code de la propriété intellectuelle)</p>
+</userestrict><accessrestrict type="formate"><p>Communicable (Consultation avec des gants)</p></accessrestrict><custodhist><p>Ancienne cote : album 32</p>
+</custodhist><odd type="note_autre"><p>Exemplaire de Son excellence Léon Bourgeois, député de la Marne, ancien Président des conseils des ministres, ancien ministre des Affaires étrangères, de l'Intérieur, de la Justice, de l'Instruction publique et des Beaux-Arts etc... Premier délégué de la République Française à la Conférence de la paix.</p>
+</odd><odd type="note_exemplaire"/>
+</c><c id="a0115130867372an4xA" level="" audience="internal"><did><unittitle>Conférence des Alliés à Paris en 1916</unittitle><unitdate normal="1916-03-28">mardi 28 mars 1916</unitdate><physdesc><extent>Album de 28 photographies légendées et collées sur feuilles cartonnées tenues entre elles par un ruban bleu, blanc, rouge</extent><physfacet type="couleur">Noir et blanc</physfacet><dimensions>26 x 33 cm (support), 12 x 17 cm (image)</dimensions><genreform type="forme">Photographie 1 : Le Ministère des Affaires Étrangères<lb/>
+Photographie 2 : Mr Briand, Président du Conseil, Ministre des Affaires Étrangères<lb/>
+Photographie 3 : Sir Francis Bertie et Mr Asquith sortant de l'Hôtel Crillon<lb/>
+Photographie 4 : Sir Francis Bertie et Sir Edward Grey sortant de l'Hôtel Crillon<lb/>
+Photographie 5 : Lord Kitchener quittant l'Hôtel Crillon<lb/>
+Photographie 6 : Mr Albert Thomas et Lloyd George sortant de l'Hôtel de ville<lb/>
+Photographie 7 : Mrs Salandra et Sonnino à l'hôtel Bristol<lb/>
+Photographie 8 : Les membres de la mission italienne - Place Vendôme<lb/>
+Photographie 9 : Lord Kitchener arrivant au Quai d'Orsay<lb/>
+Photographie 10 : Mr Salandra arrivant au Quai d'Orsay<lb/>
+Photographie 11 : Mr Salandra entrant au Quai&#160; d'Orsay<lb/>
+Photographie 12 : Mr Isvolski arrivant au Quai d'Orsay<lb/>
+Photographie 13 : Le Général Gilinsky arrivant au Quai d'Orsay<lb/>
+Photographie 14 : Mr Pachitch arrivant au Quai d'Orsay<lb/>
+Photographie 15 : Mr de Broqueville arrivant au Quai d'Orsay<lb/>
+Photographie 16 : Mr Matsui arrivant au Quai d'Orsay<lb/>
+Photographie 17 : Le Général Joffre arrivant au Quai d'Orsay<lb/>
+Photographie 18 : Le Général de Castelnau arrivant au Quai d'Orsay<lb/>
+Photographie 19 : Le Général Pellé arrivant au Quai d'Orsay<lb/>
+Photographie 20 : L'Amiral Lacaze arrivant au Quai d'Orsay<lb/>
+Photographie 21 : Mr Cambon entrant au Quai d'Orsay<lb/>
+Photographie 22 : Après le déjeuner au Quai d'Orsay<lb/>
+Photographie 23 : Après le déjeuner au Quai d'Orsay, 27 mars 1916<lb/>
+Photographie 24 : La conférence des Alliés<lb/>
+Photographie 25 : Mr Briand et Mr Salandra arrivant à l'Hôtel de ville<lb/>
+Photographie 26 : Le Général Cadorna quittant le Quai d'Orsay<lb/>
+Photographie 27 : Officiers italiens arrivant à l'Hôtel de ville<lb/>
+Photographie 28 : Mr Sonnino et l'Amiral Lacaze quittant le Quai d'Orsay<lb/>
+<lb/>
+&#160;</genreform></physdesc><unitid identifier="12FI/30">12 Fi 30</unitid></did>
+<note type="mnesysinternal"><p/></note><controlaccess><persname role="auteur">Section photographique de l'Armée</persname><geogname>Paris</geogname><genreform>ALBUM</genreform><persname>Section photographique de l'Armée</persname><genreform>PHOTOGRAPHIE</genreform></controlaccess><userestrict><p>Reproduction à usage privé (cf.Code de la propriété intellectuelle)</p>
+</userestrict><accessrestrict type="formate"><p>Communicable (Consultation avec des gants)</p></accessrestrict><custodhist><p>Ancienne cote : album 33</p>
+</custodhist><odd type="note_autre"/><odd type="note_exemplaire"><p>Carte de visite d'Aristide Briand épinglée sur la couverture (épingle rouillée)</p>
+</odd>
+</c><c id="a011513087645O1JWYh" level="" audience="internal"><did><unittitle>Images pieuses</unittitle><physdesc><extent>Album d'images pieuses (environ 300) collées sur feuille de papier</extent><physfacet type="couleur">Noir et blanc</physfacet><dimensions>16,5 x 31 cm (support), 11,5 x 7,5 cm (image)</dimensions><genreform type="forme"/></physdesc><unitid identifier="12FI/31">12 Fi 31</unitid></did>
+<note type="mnesysinternal"><p/></note><userestrict><p>Reproduction à usage privé (cf.Code de la propriété intellectuelle)</p>
+</userestrict><accessrestrict type="formate"><p>Communicable (Consultation avec des gants)</p></accessrestrict><custodhist><p>Ancienne cote : album 34</p>
+</custodhist><odd type="note_autre"/><odd type="note_exemplaire"/><controlaccess><genreform>ALBUM</genreform><genreform>ESTAMPE</genreform></controlaccess>
+</c><c id="a0115157510770qMn5P" level="" audience="internal"><did><unittitle>Album de portraits</unittitle><physdesc><extent>45 photographies enchâssées dans 26 pages cartonnées montées sur onglet. Album avec tranches dorées et fermeture métallique (incomplète)</extent><physfacet type="couleur">Noir et Blanc</physfacet><dimensions>30.5 x 24 cm (album) 8 x 5.5 cm  et 16.5 x 10.5 cm (image)</dimensions><genreform type="forme">Les portaits ne sont pas identifiés sauf un qui porte la mention " A mon vieil ami Gouttenègre". Nombreuses photographies de soldats dont certaines ont été prise par Jally photographe polytechnique et de l'armée de Paris, d'autres photographes sont localisés à Metz et Dieppe.</genreform></physdesc><unitid identifier="12FI/32">12 Fi 32</unitid></did>
+<note type="mnesysinternal"><p/></note><userestrict><p>Reproduction à usage privé (cf.Code de la propriété intellectuelle)</p>
+</userestrict><accessrestrict type="formate"><p>Communicable (Consultation avec des gants)</p></accessrestrict><custodhist><p>Ancienne cote : album 42</p>
+</custodhist><controlaccess><genreform>ALBUM</genreform><persname>Langlois, L.</persname><genreform>PHOTOGRAPHIE</genreform><persname>Jamin et Cie </persname><persname>Jally, G.</persname><persname>Krier, I.</persname><persname>Parkinson</persname><persname>Hermestroff, Louis</persname><persname>Mulot, L.</persname><persname>Schahl, Th.</persname><persname>Jotté-Latouche, E.</persname><persname>Durand, C.</persname><persname>Fabre, Marius</persname><persname>Fabre, J.</persname><subject>Portrait</subject><subject>Militaire</subject><subject>Arme</subject><subject>Jouet</subject><subject>Enfant</subject><subject>Mariage</subject></controlaccess>
+</c><c id="a011515753684OCrTvI" level="" audience="internal"><did><unittitle>Collège de Châlons-sur-Marne 1904-1905</unittitle><physdesc><extent>41 photographies enchâssées sur des pages cartonnées montées sur onglet. Album à couverture rouge et tranches dorées.</extent><physfacet type="couleur">Noir et Blanc</physfacet><dimensions>31.5 x 42.5 cm (album) 16.5 x 22.5 cm (image)</dimensions><genreform type="forme">Sont représentés les façades, cour intérieure, salle de réunion, salle d'étude et salle de classe sans les élèves, atelier, infirmerie ou dortoir, cantine, le directeur dans son bureau, groupe d'enseignants et photos de classe des élèves (22). Les photographies sont prises par J. David photographe à Levallois -Paris</genreform></physdesc><unitid identifier="12FI/33">12 Fi 33</unitid></did>
+<note type="mnesysinternal"><p/></note><userestrict><p>Reproduction à usage privé (cf.Code de la propriété intellectuelle)</p>
+</userestrict><accessrestrict type="formate"><p>Communicable (Consultation avec des gants)</p></accessrestrict><custodhist><p>Ancienne cote : album 43</p>
+</custodhist><odd type="note_exemplaire"><p>La coiffe est déchirée sur 5 cm</p>
+</odd><controlaccess><genreform>ALBUM</genreform><geogname>Châlons-sur-Marne (Marne ; ancienne commune)</geogname><genreform>PHOTOGRAPHIE</genreform><subject>Enseignement</subject><persname>David, J.</persname><geogname>Châlons-en-Champagne (Marne, Champagne-Ardenne, France)</geogname></controlaccess>
+</c><c id="a011515752572lP9zQx" level="" audience="internal"><did><unittitle>Collège de Châlons-sur-Marne 1912-1913</unittitle><unitdate normal="1912-01-01/1913-12-31" type="inclusive">1912-1913</unitdate><physdesc><extent>42 photographies collées sur pages cartonnées montées sur onglet avec tranches dorées</extent><physfacet type="couleur">Noir et Blanc</physfacet><dimensions>28.5 x 40 cm (album) 17 x 22 cm (image)</dimensions><genreform type="forme">Sont représentés les façades, la cour, la salle de classe et de réunion vides, les ateliers (élèves), les groupes d'enseignants ainsi que les photos de classe (22), les cuisines , réfectoires, dortoir ou infirmerie et personnels de l'établissement.</genreform></physdesc><unitid identifier="12FI/34">12 Fi 34</unitid></did>
+<note type="mnesysinternal"><p/></note><userestrict><p>Reproduction à usage privé (cf.Code de la propriété intellectuelle)</p>
+</userestrict><accessrestrict type="formate"><p>Communicable (Consultation avec des gants)</p></accessrestrict><custodhist><p>Ancienne cote : album 44</p>
+</custodhist><odd type="note_exemplaire"><p>Dos manquant</p>
+</odd><controlaccess><genreform>ALBUM</genreform><geogname>Châlons-en-Champagne (Marne, Champagne-Ardenne, France)</geogname><genreform>PHOTOGRAPHIE</genreform><persname>David, J.</persname><geogname>Châlons-sur-Marne (Marne ; ancienne commune)</geogname><persname>Vallois, E.</persname><persname>Atelier de portraits artistiques</persname></controlaccess>
+</c><c id="a011541426678AoT17j" level="" audience="internal"><did><unittitle>Album de photographies aériennes allemandes, 1916</unittitle><unitdate normal="1916-01-01/1916-12-31">1916</unitdate><physdesc><extent>64 photographies collées sur les pages d'un cahier</extent><physfacet type="couleur">noir et blanc</physfacet><genreform>Document iconographique</genreform><dimensions>32 x 22 cm (album fermé),  32 x 42 cm (album ouvert, 9 x 12 cm (image)</dimensions></physdesc><unitid identifier="12FI/35">12 FI 35</unitid></did>
+<note type="mnesysinternal"><p/></note><acqinfo><p>Entrée 2018 n°4762</p>
+</acqinfo><userestrict><p>Reproduction pour un usage strictement privé (Cf. Code de la propriété intellectuelle)</p>
+</userestrict><accessrestrict type="formate"><p>Communicable</p></accessrestrict><controlaccess><genreform>DOCUMENT PHOTOGRAPHIQUE</genreform><genreform>PHOTOGRAPHIE</genreform><genreform>ALBUM</genreform><geogname>Baconnes (Marne, Champagne-Ardenne, France)</geogname><geogname>Jonchery-sur-Suippe (Marne, Champagne-Ardenne, France)</geogname><geogname>Saint-Hilaire-le-Grand (Marne, Champagne-Ardenne, France)</geogname><geogname>Aubérive (Marne, Champagne-Ardenne, France)</geogname><geogname>Prosnes (Marne, Champagne-Ardenne, France)</geogname><geogname>Moronvilliers (Marne ; ancienne commune)</geogname><geogname>Pontfaverger-Moronvilliers (Marne, Champagne-Ardenne, France)</geogname><geogname>Dontrien (Marne, Champagne-Ardenne, France)</geogname><geogname>Saint-Souplet-sur-Py (Marne, Champagne-Ardenne, France)</geogname><geogname>Beaumont-sur-Vesle (Marne, Champagne-Ardenne, France)</geogname><geogname>Courmelois (Marne ; ancienne commune)</geogname><geogname>Val-de-Vesle (Marne, Champagne-Ardenne, France)</geogname><geogname>Mourmelon-le-Petit (Marne, Champagne-Ardenne, France)</geogname><geogname>Mourmelon-le-Grand (Marne, Champagne-Ardenne, France)</geogname></controlaccess><scopecontent><p>Ce journal de guerre présente 64 photographies localisées et légendées : référence du cliché, référence de l'avion, date et heure de la prise de vue, altitude ainsi que les règlages de l'appareil (éclairage, profondeur de champ, diaphragme, exposition etc.)</p>
+</scopecontent><odd type="note_exemplaire"><p>les photographies page 21 et page 39 sont manquantes</p>
+</odd>
+</c><c id="a011543246634ur95h7" level="" audience="internal"><did><unittitle>12 Fi 36. Album guerre 14-18 de Georges Laignier  et Yvonne Guerlet</unittitle><unitdate normal="1915-01-01/1918-12-31" type="inclusive">1915-1918</unitdate><physdesc>141 photographies collées (8 ne sont pas collées) sur les pages d'un album sans reliure de format 23 x 30 cm</physdesc><physloc>Centre de Châlons-en-Champagne</physloc></did><note type="mnesysinternal"><p/></note><acqinfo><p>Entrée 2018 n°4783</p>
+</acqinfo><accessrestrict type="formate"><p>Communicable</p></accessrestrict><phystech><p>les 16 pages de l'album sont désolidarisées de la reliure qui n'existe plus</p>
+</phystech><controlaccess><genreform>ALBUM</genreform><genreform>DOCUMENT PHOTOGRAPHIQUE</genreform><genreform>GUERRE 1914-1918</genreform><subject>camouflage</subject><subject>soins médicaux</subject><subject>armement</subject><subject>vie du soldat</subject><geogname>Pontfaverger (Marne ; ancienne commune)</geogname><geogname>Pontfaverger-Moronvilliers (Marne, Champagne-Ardenne, France)</geogname><geogname>Marne au Rhin, Canal de (Marne)</geogname><persname>Guerlet, Yvonne</persname><persname>Lainier, Charles Henri Georges</persname></controlaccess><scopecontent><p>L'album représente la vie du commandant Georges Laignier et de l'infirmière de la Croix Rouge Yvonne Guelet (son épouse). Ces photographies sont les témoins de la vie quotidienne pour ces deux engagés dans la guerre : travaux de terrassement, mise en place de grosse pièce d'artillerie, vue d'une "saucisse", radio et antenne TSF, équipe médicale près de blessés etc.</p>
+</scopecontent><userestrict><p>Reproduction pour un usage exclusivement privé (Cf. Code de la propriété intellectuelle)</p>
+</userestrict><odd type="note_exemplaire"><p>Reliure inexistante, les feuillets sont mobiles, des photographies volantes ont été intercalées entre les pages de l'album</p>
+
+<p>&#160;</p>
+</odd><bioghist><p>Henri George Laignier est né à Cernay-Lès-Reims (Marne) le 2 octobre 1878 et décède le 28 février 1952 aux Sables-d'Olonne (Vendée). Il est représentant de commerce dans la vie civile. Officier de marine au grade de Lieutenant de vaisseau il appartient au régiment de canonniers marins, il est décoré de la Croix de guerre et inscrit pour le grade de Chevalier de la légion d'honneur par arreté ministeriel du 11 juin 1917</p>
+
+<p>Yvonne Guerlet est née à Paris le 26 novembre 1888 et décède à Reims le 5 décembre 1968. Elle était infirmière à la Croix rouge pendant la guerre au Lycée Janson de Sailly à Paris (lycée devenu hôpital)</p>
+
+<p>Henri George Laignier et Yvonne Guerlet se marient le 23 décembre 1911 à Paris et divorcent le 27 juillet 1922.</p>
+
+<p>Guerre 1914-1918 :</p>
+
+<p>Un extrait du rapport du contre-amiral Jehenne Commandant des formations de Canonniers-marins et de Canonnières-fluviales aux opérations des Armées de terre du 30 août 1914 au 1er mars 1919 donne le détail des opérations des 1 - péniches-canons de 14 dans la région de Verdun en 1914, 1914 et 1917; 2 - péniches à canons de 16 en Lorraine, champagne et Flandres en 1915; 3 - péniches à canons de 19 et de 24 dans les offensives de 1917 et 1918.<emph render="italic"> Une des péniches-canons de 16 est envoyée su le canal de l'Aisne à la Marne, elle participe à l'offensive de septembre-octobre 1915 et exécute des tirs précis sur la gare de Pontfaverger.(lieutenant de vaisseau Laignier)</emph></p>
+
+<p>Un hôpital militaire est installé dans une partie des dortoirs du lycée Janson de Sailly en 1915 à Paris où oeuvre Yvonne Guerlet</p>
+</bioghist></c><c id="a0115433152479DiUTb" level="" audience="internal"><did><unittitle>12 Fi 37. Album guerre 14-18 de Georges Laignier</unittitle><unitdate normal="1915-01-01/1918-12-31" type="inclusive">1915-1918</unitdate><physdesc>23 photographies enchâssées de format 11 x 16 cm </physdesc><physloc>Centre de Châlons-en-Champagne</physloc></did><note type="mnesysinternal"><p>editmask=isbd</p></note><acqinfo><p>Entrée 2018 n°4783</p>
+</acqinfo><accessrestrict type="formate"><p>Communicable</p></accessrestrict><phystech><p>La reliure est désolidarisée de l'ensemble</p>
+</phystech><controlaccess><genreform>ALBUM</genreform><genreform>DOCUMENT PHOTOGRAPHIQUE</genreform><genreform>GUERRE 1914-1918</genreform><subject>armement</subject><subject>vie du soldat</subject><subject>hygiène</subject><persname>Lainier, Charles Henri Georges</persname></controlaccess><scopecontent><p>L'album représente la vie militaire du commandant Georges Laignier&#160; comme un témoin de sa vie quotidienne&#160; : travaux de terrassement, radio, toilette etc.</p>
+</scopecontent><userestrict><p>Reproduction pour un usage exclusivement privé (Cf. Code de la propriété intellectuelle)</p>
+</userestrict><odd type="note_exemplaire"><p>Il manque une photographie</p>
+</odd><bioghist><p>Henri George Laignier est né à Cernay-Lès-Reims (Marne) le 2 octobre 1878 et décède le 28 février 1952 aux Sables-d'Olonne (Vendée). Il est représentant de commerce dans la vie civile. Officier de marine au grade de Lieutenant de vaisseau il appartient au régiment de canonniers marins, il est décoré de la Croix de guerre et inscrit pour le grade de Chevalier de la légion d'honneur par arreté ministeriel du 11 juin 1917</p>
+
+<p>Yvonne Guerlet est née à Paris le 26 novembre 1888 et décède à Reims le 5 décembre 1968. Elle est infirmière de la Croix rouge pendant la guerre au Lycée Janson de Sailly à Paris (lycée devenu hôpital)</p>
+
+<p>Henri George Laignier et Yvonne Guerlet se marient le 23 décembre 1911 à Paris et divorcent le 27 juillet 1922.</p>
+
+<p>Guerre 1914-1918 :</p>
+
+<p>Un extrait du rapport du contre-amiral Jehenne Commandant des formations de Canonniers-marins et de Canonnières-fluviales aux opérations des Armées de terre du 30 août 1914 au 1er mars 1919 donne le détail des opérations des 1 - péniches-canons de 14 dans la région de Verdun en 1914, 1914 et 1917; 2 - péniches à canons de 16 en Lorraine, champagne et Flandres en 1915; 3 - péniches à canons de 19 et de 24 dans les offensives de 1917 et 1918.<emph render="italic"> Une des péniches-canons de 16 est envoyée su le canal de l'Aisne à la Marne, elle participe à l'offensive de septembre-octobre 1915 et exécute des tirs précis sur la gare de Pontfaverger.(lieutenant de vaisseau Laignier)</emph></p>
+
+<p>Un hôpital militaire est installé dans une partie des dortoirs du lycée Janson de Sailly en 1915 à Paris où oeuvre Yvonne Guerlet</p>
+</bioghist></c>
+</dsc>
+</archdesc>
+</ead>
+
+</metadata>
+</record>
+</ListRecords>
+</OAI-PMH>

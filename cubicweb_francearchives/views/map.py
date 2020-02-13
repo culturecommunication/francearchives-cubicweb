@@ -34,23 +34,22 @@ from cubicweb_francearchives.views import get_template, JinjaViewMixin
 
 
 class FAMapView(JinjaViewMixin, StartupView):
-    template = get_template('fa-map.jinja2')
-    __regid__ = 'fa-map'
+    template = get_template("fa-map.jinja2")
+    __regid__ = "fa-map"
 
     def add_css(self):
-        for css in ('leaflet.css', 'LeafletStyleSheet.css'):
+        for css in ("leaflet.css", "LeafletStyleSheet.css"):
             self._cw.add_css(css)
 
     def add_js(self):
-        for js in ('leaflet.js', 'PruneCluster.js',
-                   'bundle-pnialocation-map.js'):
+        for js in ("leaflet.js", "PruneCluster.js", "bundle-pnialocation-map.js"):
             self._cw.add_js(js)
 
     def call(self):
         self.add_css()
         self.add_js()
         self.call_template(
-            title=u'Carte des inventaires',
-            iconurl=self._cw.data_url('images/marker-jaune.png'),
-            markerurl=self._cw.build_url('fa-map.json'),
+            title="Carte des inventaires",
+            iconurl=self._cw.data_url("images/marker-jaune.png"),
+            markerurl=self._cw.build_url("fa-map.json"),
         )

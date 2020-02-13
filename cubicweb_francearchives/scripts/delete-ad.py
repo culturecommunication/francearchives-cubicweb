@@ -61,7 +61,7 @@ def es_bulk_index(es, es_docs, max_retry=3, **kwargs):
         try:
             bulk(es, es_docs, stats_only=True, **kwargs)
         except (ConnectionTimeout, SerializationError):
-            LOGGER.warning('failed to bulk index in ES, will retry in 0.5sec')
+            LOGGER.warning("failed to bulk index in ES, will retry in 0.5sec")
             numtry += 1
             time.sleep(0.5)
         else:
@@ -69,58 +69,62 @@ def es_bulk_index(es, es_docs, max_retry=3, **kwargs):
 
 
 def count(es, index, doc_type, query=None):
-    results = es.search(index=index, doc_type=doc_type,
-                        fields=(), body=query)
-    return results['hits']['total']
+    results = es.search(index=index, doc_type=doc_type, fields=(), body=query)
+    return results["hits"]["total"]
 
 
 def es_documents(es, index, doc_type, query=None):
-    for doc in scan(es, index=index, doc_type=doc_type,
-                    fields=(), query=query):
+    for doc in scan(es, index=index, doc_type=doc_type, fields=(), query=query):
         yield {
-            '_op_type': 'delete',
-            '_index': index,
-            '_type': doc['_type'],
-            '_id': doc['_id'],
+            "_op_type": "delete",
+            "_index": index,
+            "_type": doc["_type"],
+            "_id": doc["_id"],
         }
 
 
 def parse_cmdline():
     parser = argparse.ArgumentParser()
-    parser.add_argument('publisher',
-                        help='the publisher label (e.g. "AD du Cantal")')
-    parser.add_argument('--es-host',
-                        default='http://localhost:9200',
-                        help='The ES host (default is localhost:9200)')
-    parser.add_argument('--es-index',
-                        default='francearchives_all',
-                        help='The ES index (default is francearchives_all)')
+    parser.add_argument("publisher", help='the publisher label (e.g. "AD du Cantal")')
+    parser.add_argument(
+        "--es-host", default="http://localhost:9200", help="The ES host (default is localhost:9200)"
+    )
+    parser.add_argument(
+        "--es-index",
+        default="francearchives_all",
+        help="The ES index (default is francearchives_all)",
+    )
     return parser.parse_args()
 
 
 def run():
     args = parse_cmdline()
     es = get_connection(args.es_host)
-    print('deleting on {}/{}'.format(args.es_host, args.es_index))
-    nb_docs = count(es, index=args.es_index,
-                    doc_type='FAComponent,FindingAid',
-                    query={"query": {"match": {"publisher": args.publisher}}})
-    print('fetched {} documents'.format(nb_docs))
+    print("deleting on {}/{}".format(args.es_host, args.es_index))
+    nb_docs = count(
+        es,
+        index=args.es_index,
+        doc_type="FAComponent,FindingAid",
+        query={"query": {"match": {"publisher": args.publisher}}},
+    )
+    print("fetched {} documents".format(nb_docs))
     if nb_docs:
-        answer = raw_input('proceed ? [yes / no] ').strip().lower()  # noqa
-        if answer != 'yes':
-            print('ok, aborting')
+        answer = input("proceed ? [yes / no] ").strip().lower()  # noqa
+        if answer != "yes":
+            print("ok, aborting")
             return
         else:
-            print('proceeding')
+            print("proceeding")
 
     es_docs = es_documents(
-        es, index=args.es_index,
-        doc_type='FAComponent,FindingAid',
-        query={"query": {"match": {"publisher": args.publisher}}})
+        es,
+        index=args.es_index,
+        doc_type="FAComponent,FindingAid",
+        query={"query": {"match": {"publisher": args.publisher}}},
+    )
 
     es_bulk_index(es, es_docs, raise_on_error=False)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     run()

@@ -41,16 +41,16 @@ class SegmentIsEnlargedETypePredicate(object):
         self.translations = translations
 
     def text(self):
-        return 'segment_is_enlarged_etype = (%s, %s)' % (self.traverse_name, self.traverse_index)
+        return "segment_is_enlarged_etype = (%s, %s)" % (self.traverse_name, self.traverse_index)
 
     phash = text
 
     def __call__(self, info, request):
-        traverse = info['match'][self.traverse_name]
+        traverse = info["match"][self.traverse_name]
         if len(traverse) <= self.traverse_index:
             return False
         requested_etype = traverse[self.traverse_index].lower()
-        etypes = request.registry['cubicweb.registry'].case_insensitive_etypes
+        etypes = request.registry["cubicweb.registry"].case_insensitive_etypes
         return requested_etype in etypes or requested_etype in self.translations
 
 
@@ -59,7 +59,7 @@ class MultiAcceptPredicate(object):
         self.values = values
 
     def text(self):
-        return 'multiaccept = %s' % (self.values,)
+        return "multiaccept = %s" % (self.values,)
 
     phash = text
 
@@ -68,6 +68,6 @@ class MultiAcceptPredicate(object):
         if not list_accept:
             # requested accept is empty
             return False
-        if '*/*' in tuple(request.accept):
+        if "*/*" in tuple(request.accept):
             return False
         return any(val in request.accept for val in self.values)

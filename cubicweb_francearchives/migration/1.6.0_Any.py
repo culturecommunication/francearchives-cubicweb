@@ -29,9 +29,9 @@
 # The fact that you are presently reading this means that you have had
 # knowledge of the CeCILL-C license and that you accept its terms.
 #
-rql('DELETE CommemoDate D WHERE D date NULL')
+rql("DELETE CommemoDate D WHERE D date NULL")
 commit()
 
-sync_schema_props_perms('IndexRole')
-sync_schema_props_perms('CommemoDate')
-sync_schema_props_perms('Circular')
+sync_schema_props_perms("IndexRole")
+sync_schema_props_perms("CommemoDate")
+sync_schema_props_perms("Circular")

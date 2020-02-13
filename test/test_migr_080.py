@@ -37,31 +37,41 @@ from cubicweb_francearchives.migration import migr_080
 
 
 class Migration080Tests(CubicWebTC):
-
     def setUp(self):
         super(Migration080Tests, self).setUp()
-        self.config.global_set_option('compute-sha1hex', True)
+        self.config.global_set_option("compute-hash", True)
 
     def test_rewrite_cms_content(self):
         with self.admin_access.cnx() as cnx:
-            with cnx.allow_all_hooks_but('tidyhtml'):
-                cnx.create_entity('BaseContent', title=u'bc1', content=u'hello')
-                cnx.create_entity('BaseContent', title=u'bc2',
-                                  content=u'<a href="https://preprod.francearchives.fr/file/static_11/raw">the file</a>')  # noqa
-                f = cnx.create_entity('File', data=Binary(),
-                                      data_name=u'static_11.pdf',
-                                      data_format=u'application/pdf')
-                cnx.create_entity('BaseContent', title=u'bc3',
-                                  content=u'<a href="https://preprod.francearchives.fr/file/static_12/raw">the unknown file</a>')  # noqa
+            with cnx.allow_all_hooks_but("tidyhtml"):
+                cnx.create_entity("BaseContent", title="bc1", content="hello")
+                cnx.create_entity(
+                    "BaseContent",
+                    title="bc2",
+                    content='<a href="https://preprod.francearchives.fr/file/static_11/raw">the file</a>',  # noqa
+                )
+                f = cnx.create_entity(
+                    "File", data=Binary(), data_name="static_11.pdf", data_format="application/pdf"
+                )
+                cnx.create_entity(
+                    "BaseContent",
+                    title="bc3",
+                    content='<a href="https://preprod.francearchives.fr/file/static_12/raw">the unknown file</a>',  # noqa
+                )
                 migr_080.rewrite_cms_content_urls(cnx)
-                self.assertEqual(cnx.find('BaseContent', title=u'bc1').one().content,
-                                 u'hello')
-                self.assertEqual(cnx.find('BaseContent', title=u'bc2').one().content,
-                                 u'<a href="https://francearchives.fr/file/{}/static_11.pdf">the file</a>'.format(f.data_sha1hex))  # noqa
+                self.assertEqual(cnx.find("BaseContent", title="bc1").one().content, "hello")
+                self.assertEqual(
+                    cnx.find("BaseContent", title="bc2").one().content,
+                    '<a href="https://francearchives.fr/file/{}/static_11.pdf">the file</a>'.format(
+                        f.data_hash
+                    ),
+                )  # noqa
                 # only hostname should have changed in bc3 because file is unknown
-                self.assertEqual(cnx.find('BaseContent', title=u'bc3').one().content,
-                                 u'<a href="https://francearchives.fr/file/static_12/raw">the unknown file</a>')  # noqa
+                self.assertEqual(
+                    cnx.find("BaseContent", title="bc3").one().content,
+                    '<a href="https://francearchives.fr/file/static_12/raw">the unknown file</a>',
+                )  # noqa
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

@@ -38,17 +38,23 @@ from cubicweb_francearchives.utils import find_card
 
 
 class NewsLetterView(StartupView):
-    __regid__ = 'newsletter'
-    title = _('Newsletter')
+    __regid__ = "newsletter"
+    title = _("Newsletter")
 
     def call(self, **kwargs):
         card = find_card(self._cw, self.__regid__)
         if card is not None:
-            self.wview('primary', entity=card)
+            self.wview("primary", entity=card)
         with T.div(self.w, Class="row"):
             with T.div(self.w, Class="col-md-9"):
                 self.w(
-                    T.iframe(id='newsletter-frame', width="100%",
-                             frameborder="0", scrolling="no", marginheight="0",
-                             marginwidth="0",
-                             src="https://app.mailjet.com/widget/iframe/2Dpa/5MP"))
+                    T.iframe(
+                        id="newsletter-frame",
+                        width="100%",
+                        frameborder="0",
+                        scrolling="no",
+                        marginheight="0",
+                        marginwidth="0",
+                        src="https://app.mailjet.com/widget/iframe/2Dpa/5MP",
+                    )
+                )

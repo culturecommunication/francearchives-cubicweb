@@ -37,27 +37,28 @@ from cubicweb.xy import xy
 try:
     import rdflib_jsonld  # noqa
     from rdflib.plugin import register, Serializer
-    register('jsonld', Serializer, 'rdflib_jsonld.serializer', 'JsonLDSerializer')
+
+    register("jsonld", Serializer, "rdflib_jsonld.serializer", "JsonLDSerializer")
 except ImportError:
     pass
 
 namespaces = {
-    'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
-    'rdfs': 'http://www.w3.org/2000/01/rdf-schema#',
-    'skos': 'http://www.w3.org/2004/02/skos/core#',
-    'foaf': 'http://xmlns.com/foaf/0.1/',
-    'dcmitype': 'http://purl.org/dc/dcmitype/',
-    'dcterms': 'http://purl.org/dc/terms/',
-    'owl': 'http://www.w3.org/2002/07/owl#',
-    'schema': 'http://schema.org/',
-    'edm': 'http://www.europeana.eu/schemas/edm/',
-    'ore': 'http://www.openarchives.org/ore/terms/',
-    'rdaGr2': 'http://rdvocab.info/ElementsGr2',
-    'crm': 'http://www.cidoc-crm.org/rdfs/cidoc_crm_v5.0.2_english_label.rdfs#',
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "skos": "http://www.w3.org/2004/02/skos/core#",
+    "foaf": "http://xmlns.com/foaf/0.1/",
+    "dcmitype": "http://purl.org/dc/dcmitype/",
+    "dcterms": "http://purl.org/dc/terms/",
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "schema": "http://schema.org/",
+    "edm": "http://www.europeana.eu/schemas/edm/",
+    "ore": "http://www.openarchives.org/ore/terms/",
+    "rdaGr2": "http://rdvocab.info/ElementsGr2",
+    "crm": "http://www.cidoc-crm.org/rdfs/cidoc_crm_v5.0.2_english_label.rdfs#",
 }
 
 
-NS_VARS = {ns: Namespace(uri) for ns, uri in namespaces.items()}
+NS_VARS = {ns: Namespace(uri) for ns, uri in list(namespaces.items())}
 
 
 class VocabAdapter(object):
@@ -83,13 +84,13 @@ def conjunctive_graph():
     """factory to build a ``ConjunctiveGraph`` and bind all namespaces
     """
     graph = ConjunctiveGraph()
-    for vocab, rdfns in NS_VARS.items():
+    for vocab, rdfns in list(NS_VARS.items()):
         graph.bind(vocab, rdfns)
     return graph
 
 
 def register_prefixes():
-    for prefix, uri in namespaces.items():
+    for prefix, uri in list(namespaces.items()):
         xy.register_prefix(prefix, uri, overwrite=True)
 
 
@@ -100,12 +101,8 @@ def add_statements_to_graph(graph, rdf_adapter):
             # safety belt around malformed uris that might be found
             # in catalogues / dlweb / etc. (cf. #3072330)
             if term._is_valid_uri(obj):
-                add((URIRef(subj),
-                     getattr(NS_VARS[rvocab], propname),
-                     URIRef(obj)))
+                add((URIRef(subj), getattr(NS_VARS[rvocab], propname), URIRef(obj)))
         else:
             # Don't generate rdf statement with unspecified value
-            if obj is not None and obj != '':
-                add((URIRef(subj),
-                     getattr(NS_VARS[rvocab], propname),
-                     Literal(obj, **prop_props)))
+            if obj is not None and obj != "":
+                add((URIRef(subj), getattr(NS_VARS[rvocab], propname), Literal(obj, **prop_props)))

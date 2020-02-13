@@ -31,7 +31,9 @@
 
 """ migration helpers"""
 
+
 def alter_published_table(cnx, table, column, attrtype):
-    cnx.system_sql(str('ALTER TABLE published.cw_%s ADD cw_%s %s'
-                       % (table, column, attrtype)),
-                   rollback_on_failure=False)
+    cnx.system_sql(
+        str("ALTER TABLE published.cw_%s ADD cw_%s %s" % (table, column, attrtype)),
+        rollback_on_failure=False,
+    )

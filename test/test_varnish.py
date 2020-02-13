@@ -41,354 +41,400 @@ from pgfixtures import setup_module, teardown_module  # noqa
 
 
 def lang_urls(rest_path):
-    urls = ['^/{}$'.format(rest_path)]
+    urls = ["^/{}$".format(rest_path)]
     for lang in SUPPORTED_LANGS:
-        urls.append('^/{}/{}$'.format(lang, rest_path))
+        urls.append("^/{}/{}$".format(lang, rest_path))
     return urls
 
 
 class VarnishTests(PostgresTextMixin, CubicWebTC):
-
     def setUp(self):
         super(VarnishTests, self).setUp()
-        self.config.global_set_option('varnishcli-hosts', '127.0.0.1:6082')
-        self.config.global_set_option('varnish-version', 4)
+        self.config.global_set_option("varnishcli-hosts", "127.0.0.1:6082")
+        self.config.global_set_option("varnish-version", 4)
 
     def assertBanned(self, call_args_list, urls):
-        ban_commands = [('ban req.url ~', url) for url in urls]
-        self.assertCountEqual([call[0] for call in call_args_list],
-                              ban_commands)
+        ban_commands = [("ban req.url ~", url) for url in urls]
+        self.assertCountEqual([call[0] for call in call_args_list], ban_commands)
 
-    @patch('cubicweb_varnish.varnishadm.VarnishCLI.execute')
-    @patch('cubicweb_varnish.varnishadm.VarnishCLI.connect')
+    @patch("cubicweb_varnish.varnishadm.VarnishCLI.execute")
+    @patch("cubicweb_varnish.varnishadm.VarnishCLI.connect")
     def test_newscontent_homepage(self, _connect, cli_execute):
         with self.admin_access.cnx() as cnx:
-            news = cnx.create_entity('NewsContent', title=u'title',
-                                     start_date=u'2015-10-12')
+            news = cnx.create_entity("NewsContent", title="title", start_date="2015-10-12")
             cnx.commit()
             # first we set on_homepage so we should purge homepage
             cli_execute.reset_mock()
             news.cw_set(on_homepage=True)
             cnx.commit()
             rest_path = news.rest_path()
-            self.assertBanned(cli_execute.call_args_list,
-                              chain(lang_urls(rest_path),
-                                    lang_urls('actualite'),
-                                    lang_urls('actualites'),
-                                    lang_urls('sitemap'),
-                                    lang_urls('')))
+            self.assertBanned(
+                cli_execute.call_args_list,
+                chain(
+                    lang_urls(rest_path),
+                    lang_urls("actualite"),
+                    lang_urls("actualites"),
+                    lang_urls("sitemap"),
+                    lang_urls(""),
+                ),
+            )
             # then we reset on_homepage so news is not on home page anymore
             # we should purge homepage again
             cli_execute.reset_mock()
             news.cw_set(on_homepage=False)
             cnx.commit()
             rest_path = news.rest_path()
-            self.assertBanned(cli_execute.call_args_list,
-                              chain(lang_urls(rest_path),
-                                    lang_urls('actualite'),
-                                    lang_urls('actualites'),
-                                    lang_urls('sitemap'),
-                                    lang_urls('')))
+            self.assertBanned(
+                cli_execute.call_args_list,
+                chain(
+                    lang_urls(rest_path),
+                    lang_urls("actualite"),
+                    lang_urls("actualites"),
+                    lang_urls("sitemap"),
+                    lang_urls(""),
+                ),
+            )
             # finally we change title but we should not purge home page
             cli_execute.reset_mock()
-            news.cw_set(title=u'title2')
+            news.cw_set(title="title2")
             cnx.commit()
             rest_path = news.rest_path()
-            self.assertBanned(cli_execute.call_args_list,
-                              chain(lang_urls(rest_path),
-                                    lang_urls('actualite'),
-                                    lang_urls('actualites'),
-                                    lang_urls('sitemap')))
+            self.assertBanned(
+                cli_execute.call_args_list,
+                chain(
+                    lang_urls(rest_path),
+                    lang_urls("actualite"),
+                    lang_urls("actualites"),
+                    lang_urls("sitemap"),
+                ),
+            )
 
-    @patch('cubicweb_varnish.varnishadm.VarnishCLI.execute')
-    @patch('cubicweb_varnish.varnishadm.VarnishCLI.connect')
+    @patch("cubicweb_varnish.varnishadm.VarnishCLI.execute")
+    @patch("cubicweb_varnish.varnishadm.VarnishCLI.connect")
     def test_basecontent_cache_invalidation(self, _connect, cli_execute):
         with self.admin_access.cnx() as cnx:
-            basecontent = cnx.create_entity('BaseContent', title=u'title')
+            basecontent = cnx.create_entity("BaseContent", title="title")
             cnx.commit()
             cli_execute.reset_mock()
-            basecontent.cw_set(title=u'title2')
+            basecontent.cw_set(title="title2")
             cnx.commit()
             rest_path = basecontent.rest_path()
-            self.assertBanned(cli_execute.call_args_list,
-                              chain(lang_urls(rest_path),
-                                    lang_urls('article'),
-                                    lang_urls('articles'),
-                                    lang_urls('sitemap')))
+            self.assertBanned(
+                cli_execute.call_args_list,
+                chain(
+                    lang_urls(rest_path),
+                    lang_urls("article"),
+                    lang_urls("articles"),
+                    lang_urls("sitemap"),
+                ),
+            )
 
-    @patch('cubicweb_varnish.varnishadm.VarnishCLI.execute')
-    @patch('cubicweb_varnish.varnishadm.VarnishCLI.connect')
+    @patch("cubicweb_varnish.varnishadm.VarnishCLI.execute")
+    @patch("cubicweb_varnish.varnishadm.VarnishCLI.connect")
     def test_circular_cache_invalidation(self, _connect, cli_execute):
         with self.admin_access.cnx() as cnx:
-            circular = cnx.create_entity('Circular',
-                                         title=u'circ1',
-                                         circ_id=u'circ1',
-                                         status=u'revoked')
+            circular = cnx.create_entity(
+                "Circular", title="circ1", circ_id="circ1", status="revoked"
+            )
             cnx.commit()
             cli_execute.reset_mock()
-            circular.cw_set(title=u'circ2')
+            circular.cw_set(title="circ2")
             cnx.commit()
             rest_path = circular.rest_path()
-            self.assertBanned(cli_execute.call_args_list,
-                              chain(lang_urls(rest_path),
-                                    lang_urls('circulaire'),
-                                    lang_urls('circulaires'),
-                                    lang_urls('sitemap')))
+            self.assertBanned(
+                cli_execute.call_args_list,
+                chain(
+                    lang_urls(rest_path),
+                    lang_urls("circulaire"),
+                    lang_urls("circulaires"),
+                    lang_urls("sitemap"),
+                ),
+            )
 
-    @patch('cubicweb_varnish.varnishadm.VarnishCLI.execute')
-    @patch('cubicweb_varnish.varnishadm.VarnishCLI.connect')
+    @patch("cubicweb_varnish.varnishadm.VarnishCLI.execute")
+    @patch("cubicweb_varnish.varnishadm.VarnishCLI.connect")
     def test_service_cache_invalidation(self, _connect, cli_execute):
         with self.admin_access.cnx() as cnx:
-            service = cnx.create_entity('Service', category=u's1')
+            service = cnx.create_entity("Service", category="s1")
             cnx.commit()
             cli_execute.reset_mock()
-            service.cw_set(category=u's2')
+            service.cw_set(category="s2")
             cnx.commit()
             rest_path = service.rest_path()
-            self.assertBanned(cli_execute.call_args_list,
-                              chain(lang_urls(rest_path),
-                                    lang_urls('annuaire'),
-                                    lang_urls('services')))
+            self.assertBanned(
+                cli_execute.call_args_list,
+                chain(lang_urls(rest_path), lang_urls("annuaire"), lang_urls("services")),
+            )
 
-    @patch('cubicweb_varnish.varnishadm.VarnishCLI.execute')
-    @patch('cubicweb_varnish.varnishadm.VarnishCLI.connect')
+    @patch("cubicweb_varnish.varnishadm.VarnishCLI.execute")
+    @patch("cubicweb_varnish.varnishadm.VarnishCLI.connect")
     def test_card_cache_invalidation(self, _connect, cli_execute):
         with self.admin_access.cnx() as cnx:
-            card = cnx.create_entity('Card', wikiid=u'about-mi', title=u'about')
+            card = cnx.create_entity("Card", wikiid="about-mi", title="about")
             cnx.commit()
             cli_execute.reset_mock()
-            card.cw_set(title=u'about again')
+            card.cw_set(title="about again")
             cnx.commit()
-            self.assertBanned(cli_execute.call_args_list,
-                              chain(lang_urls('about')))
+            self.assertBanned(cli_execute.call_args_list, chain(lang_urls("about")))
 
-    @patch('cubicweb_varnish.varnishadm.VarnishCLI.execute')
-    @patch('cubicweb_varnish.varnishadm.VarnishCLI.connect')
+    @patch("cubicweb_varnish.varnishadm.VarnishCLI.execute")
+    @patch("cubicweb_varnish.varnishadm.VarnishCLI.connect")
     def test_section_cache_invalidation(self, _connect, cli_execute):
         with self.admin_access.cnx() as cnx:
-            section = cnx.create_entity('Section', title=u's1')
+            section = cnx.create_entity("Section", title="s1")
             cnx.commit()
             cli_execute.reset_mock()
-            section.cw_set(title=u's2')
+            section.cw_set(title="s2")
             cnx.commit()
             rest_path = section.rest_path()
-            self.assertBanned(cli_execute.call_args_list,
-                              chain(lang_urls(rest_path),
-                                    lang_urls('sitemap')))
+            self.assertBanned(
+                cli_execute.call_args_list, chain(lang_urls(rest_path), lang_urls("sitemap"))
+            )
 
-    @patch('cubicweb_varnish.varnishadm.VarnishCLI.execute')
-    @patch('cubicweb_varnish.varnishadm.VarnishCLI.connect')
+    @patch("cubicweb_varnish.varnishadm.VarnishCLI.execute")
+    @patch("cubicweb_varnish.varnishadm.VarnishCLI.connect")
     def test_section_ancestors_cache_invalidation(self, _connect, cli_execute):
         """make sure section ancestors are also purged"""
         with self.admin_access.cnx() as cnx:
-            s3 = cnx.create_entity('Section', title=u's3')
-            s2 = cnx.create_entity('Section', title=u's2', children=s3)
-            s1 = cnx.create_entity('Section', title=u's1', children=s2)
+            s3 = cnx.create_entity("Section", title="s3")
+            s2 = cnx.create_entity("Section", title="s2", children=s3)
+            s1 = cnx.create_entity("Section", title="s1", children=s2)
             cnx.commit()
             cli_execute.reset_mock()
-            s3.cw_set(title=u's3bis')
+            s3.cw_set(title="s3bis")
             cnx.commit()
             s1_rest_path = s1.rest_path()
             s2_rest_path = s2.rest_path()
             s3_rest_path = s3.rest_path()
-            self.assertBanned(cli_execute.call_args_list,
-                              chain(lang_urls(s1_rest_path),
-                                    lang_urls(s2_rest_path),
-                                    lang_urls(s3_rest_path),
-                                    lang_urls('sitemap')))
+            self.assertBanned(
+                cli_execute.call_args_list,
+                chain(
+                    lang_urls(s1_rest_path),
+                    lang_urls(s2_rest_path),
+                    lang_urls(s3_rest_path),
+                    lang_urls("sitemap"),
+                ),
+            )
 
-    @patch('cubicweb_varnish.varnishadm.VarnishCLI.execute')
-    @patch('cubicweb_varnish.varnishadm.VarnishCLI.connect')
+    @patch("cubicweb_varnish.varnishadm.VarnishCLI.execute")
+    @patch("cubicweb_varnish.varnishadm.VarnishCLI.connect")
     def test_topsection_cache_invalidation(self, _connect, cli_execute):
         """make sure topsection dedicated urls are also purged"""
         with self.admin_access.cnx() as cnx:
-            section = cnx.create_entity('Section', title=u's1', name=u'decouvrir')
+            section = cnx.create_entity("Section", title="s1", name="decouvrir")
             cnx.commit()
             cli_execute.reset_mock()
-            section.cw_set(title=u's2')
+            section.cw_set(title="s2")
             cnx.commit()
             rest_path = section.rest_path()
-            self.assertBanned(cli_execute.call_args_list,
-                              chain(lang_urls(rest_path),
-                                    lang_urls('decouvrir'),
-                                    lang_urls('sitemap')))
+            self.assertBanned(
+                cli_execute.call_args_list,
+                chain(lang_urls(rest_path), lang_urls("decouvrir"), lang_urls("sitemap")),
+            )
 
-    @patch('cubicweb_varnish.varnishadm.VarnishCLI.execute')
-    @patch('cubicweb_varnish.varnishadm.VarnishCLI.connect')
+    @patch("cubicweb_varnish.varnishadm.VarnishCLI.execute")
+    @patch("cubicweb_varnish.varnishadm.VarnishCLI.connect")
     def test_commemoration_cache_invalidation(self, _connect, cli_execute):
         with self.admin_access.cnx() as cnx:
-            coll = cnx.create_entity('CommemoCollection',
-                                     title=u'recueil 2010',
-                                     year=2010)
-            commemo = cnx.create_entity('CommemorationItem',
-                                        title=u'item1',
-                                        alphatitle=u'item1',
-                                        commemoration_year=2010,
-                                        collection_top=coll)
-            section = cnx.create_entity('Section', title=u'politique',
-                                        children=commemo)
+            coll = cnx.create_entity("CommemoCollection", title="recueil 2010", year=2010)
+            commemo = cnx.create_entity(
+                "CommemorationItem",
+                title="item1",
+                alphatitle="item1",
+                commemoration_year=2010,
+                collection_top=coll,
+            )
+            section = cnx.create_entity("Section", title="politique", children=commemo)
             cnx.commit()
             cli_execute.reset_mock()
-            commemo.cw_set(title=u'item1bis')
+            commemo.cw_set(title="item1bis")
             cnx.commit()
             commemo_rest_path = commemo.rest_path()
             coll_rest_path = coll.rest_path()
-            self.assertBanned(cli_execute.call_args_list,
-                              chain(lang_urls(commemo_rest_path),
-                                    lang_urls(coll_rest_path),
-                                    lang_urls(section.rest_path()),
-                                    lang_urls('{}/index'.format(coll_rest_path)),
-                                    lang_urls('{}/timeline'.format(coll_rest_path)),
-                                    lang_urls('{}/timeline.json'.format(coll_rest_path)),
-                                    lang_urls('sitemap')))
+            self.assertBanned(
+                cli_execute.call_args_list,
+                chain(
+                    lang_urls(commemo_rest_path),
+                    lang_urls(coll_rest_path),
+                    lang_urls(section.rest_path()),
+                    lang_urls("{}/index".format(coll_rest_path)),
+                    lang_urls("{}/timeline".format(coll_rest_path)),
+                    lang_urls("{}/timeline.json".format(coll_rest_path)),
+                    lang_urls("sitemap"),
+                ),
+            )
 
-    @patch('cubicweb_varnish.varnishadm.VarnishCLI.execute')
-    @patch('cubicweb_varnish.varnishadm.VarnishCLI.connect')
+    @patch("cubicweb_varnish.varnishadm.VarnishCLI.execute")
+    @patch("cubicweb_varnish.varnishadm.VarnishCLI.connect")
     def test_findingaid_cache_invalidation(self, _connect, cli_execute):
         with self.admin_access.cnx() as cnx:
-            fadid = cnx.create_entity('Did', unitid=u'maindid',
-                                      unittitle=u'maindid-title')
-            fa = cnx.create_entity('FindingAid', name=u'the-fa',
-                                   stable_id=u'FRAD084_xxx',
-                                   eadid=u'FRAD084_xxx',
-                                   publisher=u'FRAD084',
-                                   did=fadid,
-                                   fa_header=cnx.create_entity('FAHeader'))
+            fadid = cnx.create_entity("Did", unitid="maindid", unittitle="maindid-title")
+            fa = cnx.create_entity(
+                "FindingAid",
+                name="the-fa",
+                stable_id="FRAD084_xxx",
+                eadid="FRAD084_xxx",
+                publisher="FRAD084",
+                did=fadid,
+                fa_header=cnx.create_entity("FAHeader"),
+            )
             cnx.commit()
             cli_execute.reset_mock()
-            fa.cw_set(description=u'descr')
+            fa.cw_set(description="descr")
             cnx.commit()
-            self.assertBanned(cli_execute.call_args_list,
-                              chain(lang_urls('search/'),
-                                    lang_urls(fa.rest_path()),
-                                    lang_urls('inventaires/')))
+            self.assertBanned(
+                cli_execute.call_args_list,
+                chain(lang_urls("search/"), lang_urls(fa.rest_path()), lang_urls("inventaires/")),
+            )
             cli_execute.reset_mock()
-            service = cnx.create_entity('Service', category=u's1',
-                                        code=u'FRAN',
-                                        reverse_service=fa)
+            service = cnx.create_entity("Service", category="s1", code="FRAN", reverse_service=fa)
             cnx.commit()
-            self.assertBanned(cli_execute.call_args_list,
-                              chain(lang_urls('search/'),
-                                    lang_urls(fa.rest_path()),
-                                    lang_urls('inventaires/'),
-                                    lang_urls('inventaires/FRAN'),
-                                    lang_urls(service.rest_path()),
-                                    lang_urls('annuaire'),
-                                    lang_urls('services')))
+            self.assertBanned(
+                cli_execute.call_args_list,
+                chain(
+                    lang_urls("search/"),
+                    lang_urls(fa.rest_path()),
+                    lang_urls("inventaires/"),
+                    lang_urls("inventaires/FRAN"),
+                    lang_urls(service.rest_path()),
+                    lang_urls("annuaire"),
+                    lang_urls("services"),
+                ),
+            )
 
-    @patch('cubicweb_varnish.varnishadm.VarnishCLI.execute')
-    @patch('cubicweb_varnish.varnishadm.VarnishCLI.connect')
+    @patch("cubicweb_varnish.varnishadm.VarnishCLI.execute")
+    @patch("cubicweb_varnish.varnishadm.VarnishCLI.connect")
     def test_facomponent_cache_invalidation(self, _connect, cli_execute):
         with self.admin_access.cnx() as cnx:
-            fadid = cnx.create_entity('Did', unitid=u'maindid',
-                                      unittitle=u'maindid-title')
-            fcdid = cnx.create_entity('Did', unitid=u'fcdid',
-                                      unittitle=u'fcdid-title',
-                                      startyear=1234,
-                                      stopyear=1245,
-                                      origination=u'fc-origination',
-                                      repository=u'fc-repo')
-            service = cnx.create_entity('Service', category=u's1',
-                                        code=u'FRAN')
-            fa = cnx.create_entity('FindingAid', name=u'the-fa',
-                                   stable_id=u'FRAD084_xxx',
-                                   eadid=u'FRAD084_xxx',
-                                   publisher=u'FRAD084',
-                                   did=fadid,
-                                   service=service,
-                                   fa_header=cnx.create_entity('FAHeader'))
-            facomp = cnx.create_entity('FAComponent',
-                                       finding_aid=fa,
-                                       stable_id=u'fc-stable-id',
-                                       did=fcdid,
-                                       scopecontent=u'fc-scoppecontent',
-                                       description=u'fc-descr')
+            fadid = cnx.create_entity("Did", unitid="maindid", unittitle="maindid-title")
+            fcdid = cnx.create_entity(
+                "Did",
+                unitid="fcdid",
+                unittitle="fcdid-title",
+                startyear=1234,
+                stopyear=1245,
+                origination="fc-origination",
+                repository="fc-repo",
+            )
+            service = cnx.create_entity("Service", category="s1", code="FRAN")
+            fa = cnx.create_entity(
+                "FindingAid",
+                name="the-fa",
+                stable_id="FRAD084_xxx",
+                eadid="FRAD084_xxx",
+                publisher="FRAD084",
+                did=fadid,
+                service=service,
+                fa_header=cnx.create_entity("FAHeader"),
+            )
+            facomp = cnx.create_entity(
+                "FAComponent",
+                finding_aid=fa,
+                stable_id="fc-stable-id",
+                did=fcdid,
+                scopecontent="fc-scoppecontent",
+                description="fc-descr",
+            )
             cnx.commit()
             cli_execute.reset_mock()
-            facomp.cw_set(description=u'descr')
+            facomp.cw_set(description="descr")
             cnx.commit()
-            self.assertBanned(cli_execute.call_args_list,
-                              chain(lang_urls('search/'),
-                                    lang_urls(facomp.rest_path()),
-                                    lang_urls('inventaires/'),
-                                    lang_urls('inventaires/FRAN')))
+            self.assertBanned(
+                cli_execute.call_args_list,
+                chain(
+                    lang_urls("search/"),
+                    lang_urls(facomp.rest_path()),
+                    lang_urls("inventaires/"),
+                    lang_urls("inventaires/FRAN"),
+                ),
+            )
 
-    @patch('cubicweb_varnish.varnishadm.VarnishCLI.execute')
-    @patch('cubicweb_varnish.varnishadm.VarnishCLI.connect')
+    @patch("cubicweb_varnish.varnishadm.VarnishCLI.execute")
+    @patch("cubicweb_varnish.varnishadm.VarnishCLI.connect")
     def test_findingaid_cache_invalidation_with_index(self, _connect, cli_execute):
         with self.admin_access.cnx() as cnx:
             ce = cnx.create_entity
-            fadid = ce('Did', unitid=u'maindid', unittitle=u'maindid-title')
+            fadid = ce("Did", unitid="maindid", unittitle="maindid-title")
             fa = ce(
-                'FindingAid',
-                name=u'the-fa',
-                stable_id=u'FRAD084_xxx',
-                eadid=u'FRAD084_xxx',
-                publisher=u'FRAD084',
+                "FindingAid",
+                name="the-fa",
+                stable_id="FRAD084_xxx",
+                eadid="FRAD084_xxx",
+                publisher="FRAD084",
                 did=fadid,
-                fa_header=ce('FAHeader'))
-            agent1 = ce('AgentAuthority', label=u'joe')
-            loc1 = ce('LocationAuthority', label=u'Paris')
-            ce('AgentName', label=u'joe', index=fa, authority=agent1)
-            ce('Geogname', label=u'Paris', index=fa, authority=loc1)
+                fa_header=ce("FAHeader"),
+            )
+            agent1 = ce("AgentAuthority", label="joe")
+            loc1 = ce("LocationAuthority", label="Paris")
+            ce("AgentName", label="joe", index=fa, authority=agent1)
+            ce("Geogname", label="Paris", index=fa, authority=loc1)
             cnx.commit()
             cli_execute.reset_mock()
-            fa.cw_set(name=u'foo')
+            fa.cw_set(name="foo")
             cnx.commit()
-            self.assertBanned(cli_execute.call_args_list,
-                              chain(
-                                  lang_urls('search/'),
-                                  lang_urls(fa.rest_path()),
-                                  lang_urls('inventaires/'),
-                                  lang_urls(agent1.rest_path()),
-                                  lang_urls(loc1.rest_path())))
+            self.assertBanned(
+                cli_execute.call_args_list,
+                chain(
+                    lang_urls("search/"),
+                    lang_urls(fa.rest_path()),
+                    lang_urls("inventaires/"),
+                    lang_urls(agent1.rest_path()),
+                    lang_urls(loc1.rest_path()),
+                ),
+            )
 
-    @patch('cubicweb_varnish.varnishadm.VarnishCLI.execute')
-    @patch('cubicweb_varnish.varnishadm.VarnishCLI.connect')
+    @patch("cubicweb_varnish.varnishadm.VarnishCLI.execute")
+    @patch("cubicweb_varnish.varnishadm.VarnishCLI.connect")
     def test_facomponent_cache_invalidation_with_index(self, _connect, cli_execute):
         with self.admin_access.cnx() as cnx:
             ce = cnx.create_entity
-            fadid = ce('Did', unitid=u'maindid', unittitle=u'maindid-title')
+            fadid = ce("Did", unitid="maindid", unittitle="maindid-title")
             fcdid = ce(
-                'Did',
-                unitid=u'fcdid',
-                unittitle=u'fcdid-title',
+                "Did",
+                unitid="fcdid",
+                unittitle="fcdid-title",
                 startyear=1234,
                 stopyear=1245,
-                origination=u'fc-origination',
-                repository=u'fc-repo')
+                origination="fc-origination",
+                repository="fc-repo",
+            )
             fa = ce(
-                'FindingAid',
-                name=u'the-fa',
-                stable_id=u'FRAD084_xxx',
-                eadid=u'FRAD084_xxx',
-                publisher=u'FRAD084',
+                "FindingAid",
+                name="the-fa",
+                stable_id="FRAD084_xxx",
+                eadid="FRAD084_xxx",
+                publisher="FRAD084",
                 did=fadid,
-                fa_header=ce('FAHeader'))
+                fa_header=ce("FAHeader"),
+            )
             facomp = ce(
-                'FAComponent',
+                "FAComponent",
                 finding_aid=fa,
-                stable_id=u'fc-stable-id',
+                stable_id="fc-stable-id",
                 did=fcdid,
-                scopecontent=u'fc-scoppecontent',
-                description=u'fc-descr')
-            agent1 = ce('AgentAuthority', label=u'joe')
-            loc1 = ce('LocationAuthority', label=u'Paris')
-            ce('AgentName', label=u'joe', index=fa, authority=agent1)
-            ce('Geogname', label=u'Paris', index=facomp, authority=loc1)
+                scopecontent="fc-scoppecontent",
+                description="fc-descr",
+            )
+            agent1 = ce("AgentAuthority", label="joe")
+            loc1 = ce("LocationAuthority", label="Paris")
+            ce("AgentName", label="joe", index=fa, authority=agent1)
+            ce("Geogname", label="Paris", index=facomp, authority=loc1)
             cnx.commit()
             cli_execute.reset_mock()
-            facomp.cw_set(description=u'descr')
+            facomp.cw_set(description="descr")
             cnx.commit()
-            self.assertBanned(cli_execute.call_args_list,
-                              chain(
-                                  lang_urls('search/'),
-                                  lang_urls(facomp.rest_path()),
-                                  lang_urls('inventaires/'),
-                                  # agent1 should not be touched since it's not
-                                  # linked to the facomp
-                                  lang_urls(loc1.rest_path())))
+            self.assertBanned(
+                cli_execute.call_args_list,
+                chain(
+                    lang_urls("search/"),
+                    lang_urls(facomp.rest_path()),
+                    lang_urls("inventaires/"),
+                    # agent1 should not be touched since it's not
+                    # linked to the facomp
+                    lang_urls(loc1.rest_path()),
+                ),
+            )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

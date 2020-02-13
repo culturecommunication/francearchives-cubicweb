@@ -29,6 +29,7 @@
 # knowledge of the CeCILL-C license and that you accept its terms.
 #
 import shutil
+import tempfile
 
 from itertools import chain
 
@@ -48,7 +49,6 @@ from pgfixtures import setup_module, teardown_module  # noqa
 
 
 class ApeEadTransformationTest(PostgresTextMixin, CubicWebTC):
-
     @classmethod
     def init_config(cls, config):
         super(ApeEadTransformationTest, cls).init_config(config)
@@ -56,7 +56,7 @@ class ApeEadTransformationTest(PostgresTextMixin, CubicWebTC):
 
     def setUp(self):
         super(ApeEadTransformationTest, self).setUp()
-        self.ape_ead_dir = self.datapath('ape_ead_data')
+        self.ape_ead_dir = self.datapath("ape_ead_data")
 
     def ape_ead_filepath(self, filename):
         return os.path.join(self.config["appfiles-dir"], filename)
@@ -68,125 +68,161 @@ class ApeEadTransformationTest(PostgresTextMixin, CubicWebTC):
         if osp.exists(appdir):
             shutil.rmtree(appdir)
 
-    def get_elements(self, tree, tag,):
-        return tree.xpath('//e:{}'.format(tag),
-                          namespaces={'e': tree.nsmap[None]})
+    def get_elements(
+        self, tree, tag,
+    ):
+        return tree.xpath("//e:{}".format(tag), namespaces={"e": tree.nsmap[None]})
 
     def test_ape_ead_conversion(self):
         """test an ead file with all major tags"""
-        filepath = 'ead_complet.xml'
+        filepath = "ead_complet.xml"
         ape_filepath = self.ape_ead_filepath(filepath)
-        fa_url = 'https://francearchives.fr/1234'
+        fa_url = "https://francearchives.fr/1234"
         tree = preprocess_ead(self.datapath(self.ape_ead_dir, filepath))
         transform_ape_ead_file(fa_url, tree, ape_filepath)
         # test ead source file
         # test ape_ead resulting  file
-        with open(self.datapath(osp.join('ape_ead_data'), ape_filepath), 'r') as f:
-            tree = etree.fromstring(f.read())
-            eadid = tree.xpath('//e:eadid',
-                               namespaces={'e': tree.nsmap[None]})[0]
-            self.assertEqual(eadid.attrib['url'], fa_url)
-            # ptr, extptr, bibref, ref are transformed to extref
-            tags = (('extref', 10), ('ref', 0),
-                    ('extptr', 0), ('ptr', 0))
-            for tag, nb in tags:
-                elts = self.get_elements(tree, tag)
-                self.assertEqual(len(elts), nb)
+        filepath = self.datapath(osp.join("ape_ead_data"), ape_filepath)
+        # use etree.parse to let lxml handle file and encoding
+        tree = etree.parse(filepath).getroot()  # returns _ElementTree use getroot() to get Element
+        eadid = tree.xpath("//e:eadid", namespaces={"e": tree.nsmap[None]})[0]
+        self.assertEqual(eadid.attrib["url"], fa_url)
+        # ptr, extptr, bibref, ref are transformed to extref
+        tags = (("extref", 10), ("ref", 0), ("extptr", 0), ("ptr", 0))
+        for tag, nb in tags:
+            elts = self.get_elements(tree, tag)
+            self.assertEqual(len(elts), nb)
 
     def test_ape_full_ead_conversion(self):
         """test the newly generated ape file as exactly the same as the witness
            ape file (ape_ead_complet_expected.xml)
         """
-        filepath = 'ead_complet.xml'
+        self.maxDiff = 0
+        filepath = "ead_complet.xml"
         ape_filepath = self.ape_ead_filepath(filepath)
         ape_expected_filepath = self.datapath(
-            osp.join('ape_ead_data'), 'ape_ead_complet_expected.xml')
-        fa_url = 'https://francearchives.fr/1234'
-        tree = preprocess_ead(self.datapath(osp.join('ape_ead_data'), filepath))
+            osp.join("ape_ead_data"), "ape_ead_complet_expected.xml"
+        )
+        fa_url = "https://francearchives.fr/1234"
+        tree = preprocess_ead(self.datapath(osp.join("ape_ead_data"), filepath))
         transform_ape_ead_file(fa_url, tree, ape_filepath)
         ape_stream, ape_expected_stream = None, None
-        with open(self.datapath(osp.join('ape_ead_data'), ape_filepath), 'r') as f:
+        with open(self.datapath(osp.join("ape_ead_data"), ape_filepath), "r") as f:
             ape_stream = f.read()
-        with open(self.datapath(osp.join('ape_ead_data'),
-                                ape_expected_filepath), 'r') as f:
+        with open(self.datapath(osp.join("ape_ead_data"), ape_expected_filepath), "r") as f:
             ape_expected_stream = f.read()
         self.assertEqual(ape_stream, ape_expected_stream)
 
     def test_ape_full_ead_conversion_2(self):
-        filepath = 'FRAD070_115Edepot_rpnum_001.xml'
+        filepath = "FRAD070_115Edepot_rpnum_001.xml"
         ape_filepath = self.ape_ead_filepath(filepath)
         ape_expected_filepath = self.datapath(
-            osp.join('ape_ead_data'), 'ape_FRAD070_115Edepot_rpnum_001_expected.xml')
-        fa_url = 'https://francearchives.fr/findingaid/XXX'
-        tree = preprocess_ead(self.datapath(osp.join('ape_ead_data'), filepath))
+            osp.join("ape_ead_data"), "ape_FRAD070_115Edepot_rpnum_001_expected.xml"
+        )
+        fa_url = "https://francearchives.fr/findingaid/XXX"
+        tree = preprocess_ead(self.datapath(osp.join("ape_ead_data"), filepath))
         transform_ape_ead_file(fa_url, tree, ape_filepath)
         ape_stream, ape_expected_stream = None, None
-        with open(self.datapath(osp.join('ape_ead_data'), ape_filepath), 'r') as f:
+        with open(self.datapath(osp.join("ape_ead_data"), ape_filepath), "r") as f:
             ape_stream = f.read()
-        with open(self.datapath(osp.join('ape_ead_data'),
-                                ape_expected_filepath), 'r') as f:
+        with open(self.datapath(osp.join("ape_ead_data"), ape_expected_filepath), "r") as f:
             ape_expected_stream = f.read()
         self.assertEqual(ape_stream, ape_expected_stream)
 
     def test_ape_ead_conversion_xlinks(self):
         """test an ead file with all major tags"""
-        filepath = 'FRAD005_33FI.xml'
+        filepath = "FRAD005_33FI.xml"
         ape_filepath = self.ape_ead_filepath(filepath)
-        fa_url = 'https://francearchives.fr/findingaid/ee81f35ba975a0aceabfff4e2de751df3cccaff3'
-        tree = preprocess_ead(self.datapath(osp.join('ape_ead_data'), filepath))
+        fa_url = "https://francearchives.fr/findingaid/ee81f35ba975a0aceabfff4e2de751df3cccaff3"
+        tree = preprocess_ead(self.datapath(osp.join("ape_ead_data"), filepath))
         transform_ape_ead_file(fa_url, tree, ape_filepath)
         # test ead source file
-        with open(self.datapath(osp.join('ape_ead_data'), filepath), 'r') as f:
-            tree = etree.fromstring(f.read())
-            tags = ('archref', 'bibref', 'dao', 'daoloc',
-                    'extptr', 'extptrloc', 'extref', 'extrefloc',
-                    'ref', 'refloc', 'title')
-            elts = chain(self.get_elements(tree, tag) for tag in tags)
-            for elts_list in elts:
-                for elt in elts_list:
-                    xlink = elt.attrib['{{{}}}href'.format(tree.nsmap['xlink'])]
-                    self.assertTrue(elt.tag, xlink.startswith('/'))
-            daos = tree.xpath('//e:dao',
-                              namespaces={'e': tree.nsmap[None]})
-            self.assertEqual(len(daos), 88)
+        filepath = self.datapath(osp.join("ape_ead_data"), filepath)
+        tree = etree.parse(filepath).getroot()
+        tags = (
+            "archref",
+            "bibref",
+            "dao",
+            "daoloc",
+            "extptr",
+            "extptrloc",
+            "extref",
+            "extrefloc",
+            "ref",
+            "refloc",
+            "title",
+        )
+        elts = chain(self.get_elements(tree, tag) for tag in tags)
+        for elts_list in elts:
+            for elt in elts_list:
+                xlink = elt.attrib["{{{}}}href".format(tree.nsmap["xlink"])]
+                self.assertTrue(elt.tag, xlink.startswith("/"))
+        daos = tree.xpath("//e:dao", namespaces={"e": tree.nsmap[None]})
+        self.assertEqual(len(daos), 88)
         # test ape_ead resulting file
-        with open(self.datapath(osp.join('ape_ead_data'), ape_filepath), 'r') as f:
-            tree = etree.fromstring(f.read())
-            eadid = tree.xpath('//e:eadid',
-                               namespaces={'e': tree.nsmap[None]})[0]
-            self.assertEqual(eadid.attrib['url'], fa_url)
-            daos = tree.xpath('//e:dao',
-                              namespaces={'e': tree.nsmap[None]})
-            self.assertEqual(len(daos), 0)
+        ape_filepath = self.datapath(osp.join("ape_ead_data"), ape_filepath)
+        tree = etree.parse(ape_filepath).getroot()
+        eadid = tree.xpath("//e:eadid", namespaces={"e": tree.nsmap[None]})[0]
+        self.assertEqual(eadid.attrib["url"], fa_url)
+        daos = tree.xpath("//e:dao", namespaces={"e": tree.nsmap[None]})
+        self.assertEqual(len(daos), 0)
+
+    def test_ape_ead_conversion_dao_xlinks(self):
+        """test an dao """
+        filepath = "FRAD051_61Fi.xml"
+        ape_filepath = self.ape_ead_filepath(filepath)
+        fa_url = "https://francearchives.fr/findingaid/3d6c85cc8e4fa93d57d4c01c18d232ccc5a0d270"
+        tree = preprocess_ead(self.datapath(osp.join("ape_ead_data"), filepath))
+        transform_ape_ead_file(fa_url, tree, ape_filepath)
+        # test ead source file
+        filepath = self.datapath(osp.join("ape_ead_data"), filepath)
+        tree = etree.parse(filepath).getroot()
+        daos = tree.xpath("//e:daoloc", namespaces={"e": tree.nsmap[None]})
+        for dao in daos:
+            xlink = dao.attrib["href"]
+            self.assertTrue(dao.tag, xlink.startswith("/"))
+            if not dao.attrib.get("role") == "last_image":
+                xlink = dao.attrib["{{{}}}href".format(tree.nsmap["xlink"])]
+                self.assertTrue(dao.tag, xlink.startswith("/"))
+        self.assertEqual(len(daos), 3)
+        # test ape_ead resulting file
+        ape_filepath = self.datapath(osp.join("ape_ead_data"), ape_filepath)
+        tree = etree.parse(ape_filepath).getroot()
+        daos = tree.xpath("//e:dao", namespaces={"e": tree.nsmap[None]})
+        expected = [
+            "http://archives.marne.fr/ark:/86869/a011515062574JdMMvc/1/1.thumbnail",
+            "http://archives.marne.fr/ark:/86869/a011515062574JdMMvc/1/1",
+        ]
+        got = [dao.attrib["{{{}}}href".format(tree.nsmap["xlink"])] for dao in daos]
+        self.assertEqual(sorted(expected), sorted(got))
 
     def test_ape_ead_conversion_address(self):
         """<adress> must contains <addressline> if data"""
-        filepath = self.datapath('ape_ead_data/FRAD070_115Edepot_rpnum_001.xml')
-        with open(filepath, 'r') as f:
-            orig_tree = etree.fromstring(f.read())
-            addresses = orig_tree.findall('.//address')
-            self.assertEqual(len(addresses), 2)
-            for address in addresses:
-                for line in address:
-                    self.assertEqual(line.tag, 'addressline')
-        ape_filepath = self.datapath(
-            osp.join('ape_ead_data'),
-            'ape_FRAD070_115Edepot_rpnum_001.xml')
-        fa_url = 'https://francearchives.fr/findingaid/XXX'
+        filepath = self.datapath("ape_ead_data/FRAD070_115Edepot_rpnum_001.xml")
+        tree = etree.parse(filepath).getroot()
+        orig_tree = etree.parse(filepath).getroot()
+        addresses = orig_tree.findall(".//address")
+        self.assertEqual(len(addresses), 2)
+        for address in addresses:
+            for line in address:
+                self.assertEqual(line.tag, "addressline")
+        fa_url = "https://francearchives.fr/findingaid/XXX"
         tree = preprocess_ead(filepath)
-        transform_ape_ead_file(fa_url, tree, ape_filepath)
-        # test ead source file
-        with open(ape_filepath, 'r') as f:
-            tree = etree.fromstring(f.read())
-            addresses = tree.xpath('//e:address',
-                                   namespaces={'e': tree.nsmap[None]})
+        tempdir = tempfile.mkdtemp()
+        try:
+            ape_filepath = osp.join(tempdir, "ape_FRAD070_115Edepot_rpnum_001.xml")
+            transform_ape_ead_file(fa_url, tree, ape_filepath)
+            # test ead source file
+            tree = etree.parse(ape_filepath).getroot()
+            addresses = tree.xpath("//e:address", namespaces={"e": tree.nsmap[None]})
             self.assertEqual(len(addresses), 2)
             for address in addresses:
                 self.assertTrue(len(address))
                 for line in address:
-                    self.assertEqual(line.tag,
-                                     '{{{}}}addressline'.format(tree.nsmap[None]))
+                    self.assertEqual(line.tag, "{{{}}}addressline".format(tree.nsmap[None]))
+        finally:
+            shutil.rmtree(tempdir)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

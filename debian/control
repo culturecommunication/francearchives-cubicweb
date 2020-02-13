@@ -4,46 +4,70 @@ Priority: optional
 Maintainer: LOGILAB S.A. (Paris, FRANCE) <contact@logilab.fr>
 Build-Depends:
  debhelper (>= 9),
- python (>= 2.6.5),
- python-setuptools,
+ python3-all,
+ python3-setuptools,
  dh-python,
  dh-systemd,
- ruby-sass,
-Standards-Version: 3.9.6
-X-Python-Version: >= 2.6
+ python3-pytest,
+ python3-pytest-xdist,
+ python3-mock,
+ python3-pyramid,
+ python3-pyramid-multiauth,
+ python3-wsgicors,
+ python3-polib,
+ python3-crypto | python3-pycryptodome,
+ postgresql-all,
+ locales-all,
+ python3-cubicweb (>= 3.26.0), python3-cubicweb (<< 3.27.0),
+ python3-sickle (>= 0.6.4),
+ python3-yaml,
+ python3-cubicweb-eac (>= 0.9.1),
+ python3-cubicweb-prov (>= 0.4.0),
+ python3-cubicweb-elasticsearch (>= 0.8.0),
+ python3-cubicweb-varnish (>= 0.5.1),
+ python3-cubicweb-oaipmh (>= 0.6.0),
+ python3-cubicweb-file (>= 2.3.0),
+ python3-cubicweb-link (>= 1.8.0),
+ python3-cubicweb-card (>= 1.1.2),
+ python3-cubicweb-skos,
+ python3-cubicweb-sentry,
+ python3-sentry-sdk,
+ python3-glamconv (>= 0.1.8),
+ python3-rdflib (>= 4.2.0),
+ python3-jinja2,
+ poppler-utils,
+ python3-babel,
+ python3-requests,
+ python3-pil,
+ python3-psycopg2,
+ python3-rdflib-jsonld,
+ python3-vobject (>= 0.9.3),
+Standards-Version: 4.3.0
+X-Python3-Version: >= 3.5
+
+Package: python3-cubicweb-francearchives
+Architecture: all
+Section: python
+Depends:
+ ${python3:Depends},
+ ${misc:Depends},
+Recommends:
+ python3-pyramid-redis-sessions,
+Description: FranceArchives application
+ CubicWeb is a semantic web application framework.
+ .
+ FranceArchives
+ .
+ This package will install all the components you need to run the
+ cubicweb-francearchives application (cube :)..
 
 Package: cubicweb-francearchives
 Architecture: all
+Section: web
 Depends:
- ${python:Depends},
+ python3-cubicweb-francearchives (= ${source:Version}),
  ${misc:Depends},
- python-cubicweb (>= 3.24.0), python-cubicweb (<< 3.25.0),
- python-six (>= 1.4.0),
- python-pyoai,
- python-yaml,
- cubicweb-eac (>= 0.2.0),
- cubicweb-eac (<< 0.3.0),
- cubicweb-prov (>= 0.2.0),
- cubicweb-prov (<< 0.3.0),
- cubicweb-elasticsearch (>= 0.7.5),
- cubicweb-varnish (>= 0.4.0),
- cubicweb-oaipmh (>= 0.5.0),
- cubicweb-file (>= 1.19.0),
- cubicweb-link (>= 1.8.0),
- cubicweb-card,
- cubicweb-skos,
- cubicweb-sentry,
- python-glamconv (>= 0.1.5),
- python-rdflib (>= 4.2.0),
- python-jinja2,
- poppler-utils,
- python-babel,
- python-requests,
- python-imaging,
- python-psycopg2,
- python-rdflib-jsonld,
- python-vobject (<< 0.9.0),
-Description: FranceArchives
+Description: FranceArchives application
  CubicWeb is a semantic web application framework.
  .
  FranceArchives

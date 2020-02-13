@@ -32,9 +32,9 @@
 def fix_search_form_url(cnx):
     """replace %(term)s by %(eadid)s in Services.search_form_url"""
 
-    rset = cnx.execute('Any X, Y WHERE X search_form_url REGEXP "%\(term\)s", '
-                       'X search_form_url Y')
+    rset = cnx.execute(
+        'Any X, Y WHERE X search_form_url REGEXP "%\(term\)s", ' "X search_form_url Y"
+    )
     for eid, url in rset:
-        new_url = url.replace('%(term)s', '%(eadid)s')
-        cnx.execute('SET X search_form_url %(u)s WHERE X eid %(e)s', {
-            'e': eid, 'u': new_url})
+        new_url = url.replace("%(term)s", "%(eadid)s")
+        cnx.execute("SET X search_form_url %(u)s WHERE X eid %(e)s", {"e": eid, "u": new_url})

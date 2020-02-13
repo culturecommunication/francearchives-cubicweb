@@ -38,26 +38,29 @@ from cubicweb.utils import json_dumps
 from cubicweb.dataimport.stores import RQLObjectStore
 
 from cubicweb_francearchives import init_bfss
-from cubicweb_francearchives.dataimport import (clean_row,
-                                                strip_html,
-                                                default_csv_metadata,
-                                                get_date, get_year,
-                                                clean_values, usha1,
-                                                facomponent_stable_id,
-                                                CSVIntegrityError,
-                                                load_metadata_file,
-                                                sqlutil,
-                                                es_bulk_index,
-                                                remove_extension,
-                                                log_in_db)
-from cubicweb_francearchives.dataimport.ead import (Reader,
-                                                    service_infos_from_filepath,
-                                                    ead_foreign_key_tables,
-                                                    load_services_map,
-                                                    capture_exception)
+from cubicweb_francearchives.dataimport import (
+    clean_row,
+    strip_html,
+    default_csv_metadata,
+    get_date,
+    get_year,
+    clean_values,
+    usha1,
+    facomponent_stable_id,
+    load_metadata_file,
+    sqlutil,
+    es_bulk_index,
+    remove_extension,
+    log_in_db,
+    service_infos_from_filepath,
+    load_services_map,
+)
+from cubicweb_francearchives.dataimport.ead import Reader, capture_exception
 from cubicweb_francearchives.dataimport.stores import create_massive_store
 from cubicweb_francearchives.dataimport.scripts.generate_ape_ead import (
-    generate_ape_ead_from_other_sources,)
+    generate_ape_ead_from_other_sources,
+)
+from cubicweb_francearchives.dataimport.sqlutil import ead_foreign_key_tables
 
 LOGGER = logging.getLogger()
 CSV_METADATA_CACHE = {}
@@ -66,14 +69,12 @@ CSV_METADATA_CACHE = {}
 def parse_dc_csv(fpath):
     """Generate a data dict by CSV entry of `fpath`
     """
-    with open(fpath, 'rb') as csvfile:
+    with open(fpath) as csvfile:
         dcreader = csv.DictReader(csvfile)
         for row in dcreader:
             # remove possible whitespaces in header names
-            for key in row.keys():
-                value = row.pop(key)
-                if value:
-                    value = value.decode('utf-8')
+            for key in list(row.keys()):
+                value = row.pop(key) or ""
                 row[key.strip()] = value.strip()
             yield row
 
@@ -93,14 +94,12 @@ def csv_metadata_from_cache(filepath, metadata_filepath=None):
        - look for the metadata in the same direcrtory
        - use the cache"""
     if metadata_filepath:
-        return load_metadata_file(metadata_filepath)[
-            osp.basename(filepath)]
+        return load_metadata_file(metadata_filepath)[osp.basename(filepath)]
     directory = osp.dirname(filepath)
-    metadata_file = osp.join(directory, 'metadata.csv')
+    metadata_file = osp.join(directory, "metadata.csv")
     all_metadata = {}
     if not osp.isfile(metadata_file):
-        LOGGER.warning('metadata.csv file is missing in directory %s',
-                       directory)
+        LOGGER.warning("metadata.csv file is missing in directory %s", directory)
     elif metadata_file not in CSV_METADATA_CACHE:
         all_metadata = load_metadata_file(metadata_file)
         CSV_METADATA_CACHE[metadata_file] = all_metadata
@@ -108,7 +107,7 @@ def csv_metadata_from_cache(filepath, metadata_filepath=None):
         all_metadata = CSV_METADATA_CACHE[metadata_file]
     filename = osp.basename(filepath)
     if filename not in all_metadata:
-        LOGGER.info('using dummy metadata for %s', filename)
+        LOGGER.info("using dummy metadata for %s", filename)
         return default_csv_metadata(remove_extension(filename))
     return all_metadata[filename]
 
@@ -125,115 +124,111 @@ class CSVReader(Reader):
 
     def cleaned_rows(self, filepath):
         """check rows/files integrity"""
-        csv_empty_value = 'Missing required value for column "{col}", row "{row}"'
-        csv_missing_col = 'The required column "{col}" is missing'
-        mandatory_columns = ('titre', 'identifiant_cote')
+        csv_empty_value = 'Skip row  {row}: missing required value for column "{col}" \n'
+        csv_missing_col = 'The required column "{col}" is missing \n'
+        mandatory_columns = ("titre", "identifiant_cote")
         res = []
-        errors = []
         for i, row in enumerate(parse_dc_csv(filepath)):
+            errors = []
             if i == 0:
-                errors.extend([csv_missing_col.format(col=col)
-                               for col in mandatory_columns
-                               if col not in row])
+                errors.extend(
+                    [csv_missing_col.format(col=col) for col in mandatory_columns if col not in row]
+                )
                 if errors:
                     break
-            errors.extend([csv_empty_value.format(row=i, col=col)
-                           for col in mandatory_columns
-                           if not row[col]])
+            else:
+                errors.extend(
+                    [
+                        csv_empty_value.format(row=i, col=col)
+                        for col in mandatory_columns
+                        if not row[col]
+                    ]
+                )
             if not errors:
                 res.append(clean_row(row))
-        if errors:
-            raise CSVIntegrityError(' ;\n '.join(errors))
+            else:
+                self.log.warning(" ".join(errors))
         return res
 
     def import_filepath(self, services_map, filepath, metadata_filepath=None):
-        service_infos = service_infos_from_filepath(filepath,
-                                                    services_map)
+        service_infos = service_infos_from_filepath(filepath, services_map)
         self._stable_id_map = None
         sha1 = usha1(open(filepath).read())
-        if not self.config['esonly'] and self.ignore_filepath(filepath, sha1):
+        if not self.config["esonly"] and self.ignore_filepath(filepath, sha1):
             return []
         f = self.create_file(filepath, sha1=sha1)
         if f is None:
             return []
-        if not self.config.get('dc_no_cache'):
+        if not self.config.get("dc_no_cache"):
             metadata = csv_metadata_without_cache(filepath, metadata_filepath)
         else:
             metadata = csv_metadata_from_cache(filepath, metadata_filepath)
-        self.update_authorities_cache(service_infos.get('eid'))
-        fa_es_doc = self.import_findingaid(service_infos, filepath, metadata,
-                                           fa_support=f)
+        self.update_authorities_cache(service_infos.get("eid"))
+        fa_es_doc = self.import_findingaid(service_infos, filepath, metadata, fa_support=f)
         es_docs = [fa_es_doc]
         for order, row in enumerate(self.cleaned_rows(filepath)):
-            es_docs.append(self.import_facomponent(row, fa_es_doc['_source'], order))
+            es_docs.append(self.import_facomponent(row, fa_es_doc["_source"], order))
         self.delete_from_filename(filepath)
         return es_docs
 
     def import_facomponent(self, entry, findingaid_data, order):
-        fa_stable_id = findingaid_data['stable_id']
-        cote = entry['identifiant_cote']
+        fa_stable_id = findingaid_data["stable_id"]
+        cote = entry["identifiant_cote"]
         did_attrs = {
-            'unitid': cote,
-            'unittitle': entry['titre'],
-            'unitdate': get_date(entry.get('date1'), entry.get('date2')),
-            'startyear': get_year(entry.get('date1')),
-            'stopyear': get_year(entry.get('date2')),
-            'physdesc': self.richstring_html(entry.get('format'),
-                                             'physdesc'),
-            'physdesc_format': u'text/html',
-            'origination': entry.get('origine'),
-            'lang_description': self.richstring_html(entry.get('langue'),
-                                                     'language'),
-            'lang_description_format': u'text/html',
+            "unitid": cote,
+            "unittitle": entry["titre"],
+            "unitdate": get_date(entry.get("date1"), entry.get("date2")),
+            "startyear": get_year(entry.get("date1")),
+            "stopyear": get_year(entry.get("date2")),
+            "physdesc": self.richstring_html(entry.get("format"), "physdesc"),
+            "physdesc_format": "text/html",
+            "origination": entry.get("origine"),
+            "lang_description": self.richstring_html(entry.get("langue"), "language"),
+            "lang_description_format": "text/html",
         }
-        did_data = self.create_entity('Did', clean_values(did_attrs))
+        did_data = self.create_entity("Did", clean_values(did_attrs))
         comp_attrs = {
-            'finding_aid': findingaid_data['eid'],
-            'stable_id': facomponent_stable_id(cote, fa_stable_id),
-            'did': did_data['eid'],
-            'scopecontent': self.richstring_html(
-                entry.get('description'), 'scopecontent'),
-            'scopecontent_format': u'text/html',
-            'additional_resources': self.richstring_html(
-                entry.get('source_complementaire'), 'additional_resources'),
-            'additional_resources_format': u'text/html',
-            'accessrestrict': self.richstring_html(entry.get('conditions_acces'),
-                                                   'accessrestrict'),
-            'accessrestrict_format': u'text/html',
-            'userestrict': self.richstring_html(entry.get('conditions_utilisation'),
-                                                'userestrict'),
-            'userestrict_format': u'text/html',
-            'component_order': order,
+            "finding_aid": findingaid_data["eid"],
+            "stable_id": facomponent_stable_id(cote, fa_stable_id),
+            "did": did_data["eid"],
+            "scopecontent": self.richstring_html(entry.get("description"), "scopecontent"),
+            "scopecontent_format": "text/html",
+            "additional_resources": self.richstring_html(
+                entry.get("source_complementaire"), "additional_resources"
+            ),
+            "additional_resources_format": "text/html",
+            "accessrestrict": self.richstring_html(entry.get("conditions_acces"), "accessrestrict"),
+            "accessrestrict_format": "text/html",
+            "userestrict": self.richstring_html(entry.get("conditions_utilisation"), "userestrict"),
+            "userestrict_format": "text/html",
+            "component_order": order,
         }
-        comp_data = self.create_entity('FAComponent', clean_values(comp_attrs))
-        comp_eid = comp_data['eid']
+        comp_data = self.create_entity("FAComponent", clean_values(comp_attrs))
+        comp_eid = comp_data["eid"]
         # add daos
         daodef = self.digitized_version(entry)
         if daodef:
-            digit_ver_attrs = self.create_entity('DigitizedVersion',
-                                                 clean_values(daodef))
-            self.add_rel(comp_eid, 'digitized_versions',
-                         digit_ver_attrs['eid'])
+            digit_ver_attrs = self.create_entity("DigitizedVersion", clean_values(daodef))
+            self.add_rel(comp_eid, "digitized_versions", digit_ver_attrs["eid"])
         es_doc = self.build_complete_es_doc(
-            u'FAComponent', comp_data, did_data,
-            name=findingaid_data['name'],
-            fa_stable_id=findingaid_data['stable_id'],
-            publisher=findingaid_data['publisher'],
-            scopecontent=strip_html(comp_attrs.get('scopecontent')),
+            "FAComponent",
+            comp_data,
+            did_data,
+            name=findingaid_data["name"],
+            fa_stable_id=findingaid_data["stable_id"],
+            publisher=findingaid_data["publisher"],
+            scopecontent=strip_html(comp_attrs.get("scopecontent")),
             index_entries=self.index_entries(entry, comp_eid, findingaid_data),
-            digitized=bool(daodef))
-        self.create_entity('EsDocument', {'doc': json_dumps(es_doc['_source']),
-                                          'entity': comp_eid})
+            digitized=bool(daodef),
+        )
+        self.create_entity("EsDocument", {"doc": json_dumps(es_doc["_source"]), "entity": comp_eid})
         return es_doc
 
     def digitized_version(self, entry):
-        identifiant_uri = entry.get('identifiant_uri')
-        source_image = entry.get('source_image')
+        identifiant_uri = entry.get("identifiant_uri")
+        source_image = entry.get("source_image")
         if any((identifiant_uri, source_image)):
-            return {
-                'url': identifiant_uri,
-                'illustration_url': source_image
-            }
+            return {"url": identifiant_uri, "illustration_url": source_image}
         return {}
 
 
@@ -245,18 +240,18 @@ def import_filepaths(cnx, config, filepaths, metadata_filepath=None):
 @log_in_db
 def import_filepath(cnx, config, filepath, metadata_filepath=None):
     foreign_key_tables = ead_foreign_key_tables(cnx.vreg.schema)
-    if not config['esonly']:
-        store = create_massive_store(cnx, nodrop=config['nodrop'])
+    if not config["esonly"]:
+        store = create_massive_store(cnx, nodrop=config["nodrop"])
         store.master_init()
-        if config['nodrop']:
+        if config["nodrop"]:
             with sqlutil.sudocnx(cnx, interactive=False) as su_cnx:
                 sqlutil.disable_triggers(su_cnx, foreign_key_tables)
         cnx.commit()
     csv_import_filepath(cnx, config, filepath, metadata_filepath)
-    if not config['esonly']:
+    if not config["esonly"]:
         store.finish()
         store.commit()
-    if config['nodrop']:
+    if config["nodrop"]:
         with sqlutil.sudocnx(cnx, interactive=False) as su_cnx:
             sqlutil.enable_triggers(su_cnx, foreign_key_tables)
     generate_ape_ead_from_other_sources(cnx)
@@ -269,26 +264,27 @@ def csv_import_filepath(cnx, config, filepath, metadata_filepath=None):
     services_map = load_services_map(cnx)
     # bfss should be initialized to enable `FSPATH` in rql
     init_bfss(cnx.repo)
-    if not config['esonly']:
+    if not config["esonly"]:
         store = create_massive_store(cnx, slave_mode=True)
     else:
         store = RQLObjectStore(cnx)
-    readercls = config.get('readercls', CSVReader)
+    readercls = config.get("readercls", CSVReader)
     reader = readercls(config, store)
     es_docs = []
     try:
         es_docs = reader.import_filepath(services_map, filepath, metadata_filepath)
-    except Exception:
+    except Exception as exc:
         import traceback
+
         traceback.print_exc()
-        print('failed to import', repr(filepath))
-        LOGGER.exception('failed to import %r', filepath)
-        capture_exception(config, filepath)
+        print("failed to import", repr(filepath))
+        LOGGER.exception("failed to import %r", filepath)
+        capture_exception(exc, filepath)
         return
-    if not config['esonly']:
+    if not config["esonly"]:
         store.flush()
         store.commit()
-    if es_docs and not config['noes']:
-        indexer = cnx.vreg['es'].select('indexer', cnx)
+    if es_docs and not config["noes"]:
+        indexer = cnx.vreg["es"].select("indexer", cnx)
         es = indexer.get_connection()
         es_bulk_index(es, es_docs)

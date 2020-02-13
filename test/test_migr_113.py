@@ -36,38 +36,44 @@ from cubicweb_francearchives.migration import migr_113
 
 
 class Migration113Tests(CubicWebTC):
-
     def setUp(self):
         super(Migration113Tests, self).setUp()
-        self.config.global_set_option('compute-sha1hex', True)
+        self.config.global_set_option("compute-hash", True)
 
     def test_rewrite_cms_content(self):
         with self.admin_access.cnx() as cnx:
-            search_form_url = (u'http://archives.lille.fr/search?'
-                               u'preset=6&'
-                               u'query=&'
-                               u'quot;%(term)s&'
-                               u'quot&'
-                               u'search-query=&'
-                               u'view=classification&'
-                               u'search-query=1')
+            search_form_url = (
+                "http://archives.lille.fr/search?"
+                "preset=6&"
+                "query=&"
+                "quot;%(term)s&"
+                "quot&"
+                "search-query=&"
+                "view=classification&"
+                "search-query=1"
+            )
             cnx.create_entity(
-                'Service', category=u's1',
-                short_name=u'DA Hautes-Alpes', code=u'FRAD005',
-                search_form_url=search_form_url
+                "Service",
+                category="s1",
+                short_name="DA Hautes-Alpes",
+                code="FRAD005",
+                search_form_url=search_form_url,
             ).eid
             migr_113.fix_search_form_url(cnx)
-            search_form_url = ('http://archives.lille.fr/search?'
-                               'preset=6&'
-                               'query=&'
-                               'quot;%(eadid)s&'
-                               'quot&'
-                               'search-query=&'
-                               'view=classification&'
-                               'search-query=1')
-            self.assertEqual(cnx.find('Service', code=u'FRAD005').one().search_form_url,
-                             search_form_url)
+            search_form_url = (
+                "http://archives.lille.fr/search?"
+                "preset=6&"
+                "query=&"
+                "quot;%(eadid)s&"
+                "quot&"
+                "search-query=&"
+                "view=classification&"
+                "search-query=1"
+            )
+            self.assertEqual(
+                cnx.find("Service", code="FRAD005").one().search_form_url, search_form_url
+            )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

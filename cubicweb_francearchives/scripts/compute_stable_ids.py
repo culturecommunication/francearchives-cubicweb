@@ -29,7 +29,8 @@
 # knowledge of the CeCILL-C license and that you accept its terms.
 #
 """
-Recompute FindingAid and FAComponent stable ids by services.
+Recompute FindingAid and FAComponent stable ids by services only
+for OIA harvested services
 
 ElasticSearch reindexing is needed after the script is done
 
@@ -60,9 +61,11 @@ def build_parents(code):
     parents = {}
     comps = {}
     for f_eid, component_order, f_parent in rql(  # noqa
-            'Any F, C, P WHERE F finding_aid X, '
-            'X service S, F component_order C, '
-            'F parent_component P?, S code %(c)s', {'c': code}):
+        "Any F, C, P WHERE F finding_aid X, "
+        "X service S, F component_order C, "
+        "F parent_component P?, S code %(c)s",
+        {"c": code},
+    ):
         if f_parent:
             parents[f_eid] = f_parent
         comps[f_eid] = component_order
@@ -72,6 +75,7 @@ def build_parents(code):
 def fa_component_stable_id(fa, fi_stable_id, parents, comps):
     def iterparents_bis(fa_eid, strict=True):
         """Return an iterator on the parents of the entity."""
+
         def _uptoroot(fa_eid):
             curr = fa_eid
             while True:
@@ -79,61 +83,84 @@ def fa_component_stable_id(fa, fi_stable_id, parents, comps):
                 if curr is None:
                     break
                 yield comps[curr]
+
         if not strict:
             return chain([comps[fa_eid]], _uptoroot(fa_eid))
         return _uptoroot(fa_eid)
+
     comp_path = [co for co in iterparents_bis(fa.eid, strict=False)]
     comp_path.reverse()
     return component_stable_id(fi_stable_id, comp_path)
 
 
 def main(serivces):
-    sql = cnx.system_sql   # noqa
+    sql = cnx.system_sql  # noqa
     for code in services:
-        print('service %s' % code)
+        print("service %s" % code)
         parents, comps = build_parents(code)
-        fis = rql('Any X, SI, E WHERE X is FindingAid, '   # noqa
-                  'X eadid E, X stable_id SI, '
-                  'X service S, S code %(c)s', {"c": code})
-        print('found %s FindingAid' % len(fis))
+        fis = rql(  # noqa
+            "Any X, SI, E WHERE X is FindingAid, "
+            "X eadid E, X stable_id SI, "
+            "X service S, S code %(c)s",
+            {"c": code},
+        )
+        print("found %s FindingAid" % len(fis))
         for fi in fis.entities():
             fi_attrs = {}
             fi_stable_id_old = fi.stable_id
             fi_stable_id_new = usha1(fi.eadid)
             if fi_stable_id_new != fi_stable_id_old:
-                fi_attrs = {'s': fi_stable_id_new, 'e': fi.eid}
-                sql('''UPDATE cw_esdocument set cw_doc = jsonb_set(cw_doc::jsonb, '{{stable_id}}', '"{}"') where cw_entity = %(e)s'''.format(fi_attrs['s']), fi_attrs)   # noqa
-                sql('''UPDATE cw_esdocument set cw_doc = jsonb_set(cw_doc::jsonb, '{{fa_stable_id}}', '"{}"') where cw_entity = %(e)s'''.format(fi_attrs['s']), fi_attrs)   # noqa
-            fas = rql('Any F, SI WHERE F finding_aid X, '   # noqa
-                      'F stable_id SI, '
-                      'X eid %(e)s', {"e": fi.eid})
-            print('found %s FAComponents' % len(fas))
+                fi_attrs = {"s": fi_stable_id_new, "e": fi.eid}
+                sql(
+                    """UPDATE cw_esdocument set cw_doc = jsonb_set(cw_doc::jsonb, '{{stable_id}}', '"{}"') where cw_entity = %(e)s""".format(  # noqa
+                        fi_attrs["s"]
+                    ),
+                    fi_attrs,
+                )
+                sql(
+                    """UPDATE cw_esdocument set cw_doc = jsonb_set(cw_doc::jsonb, '{{fa_stable_id}}', '"{}"') where cw_entity = %(e)s""".format(  # noqa
+                        fi_attrs["s"]
+                    ),
+                    fi_attrs,
+                )
+            fas = rql(  # noqa
+                "Any F, SI WHERE F finding_aid X, " "F stable_id SI, " "X eid %(e)s", {"e": fi.eid},
+            )
+            print("found %s FAComponents" % len(fas))
             for fa in fas.entities():
-                if fa.stable_id != fa_component_stable_id(fa, fi_stable_id_old,
-                                                          parents, comps):
+                if fa.stable_id != fa_component_stable_id(fa, fi_stable_id_old, parents, comps):
                     # do not continue if we dont have the same old stable_id
-                    print('FaComponent stable_id computing failed for %s' %
-                          fa.absolute_url())
+                    print("FaComponent stable_id computing failed for %s" % fa.absolute_url())
                     continue
                 # compte the new stable_id
-                fa_stable_id_new = fa_component_stable_id(fa, fi_stable_id_new,
-                                                          parents, comps)
+                fa_stable_id_new = fa_component_stable_id(fa, fi_stable_id_new, parents, comps)
                 if fa_stable_id_new != fa.stable_id:
-                    attrs = {'s': fa_stable_id_new, 'e': fa.eid, 'fi_st': fi_stable_id_new}
-                    sql('UPDATE cw_facomponent SET cw_stable_id = %(s)s WHERE cw_eid = %(e)s',
-                        attrs)
-                    sql('''UPDATE cw_esdocument set cw_doc = jsonb_set(cw_doc::jsonb, '{{stable_id}}', '"{}"') where cw_entity = %(e)s'''.format(attrs['s']), attrs)  # noqa
-                    sql('''UPDATE cw_esdocument set cw_doc = jsonb_set(cw_doc::jsonb, '{{fa_stable_id}}', '"{}"') where cw_entity = %(e)s'''.format(attrs['fi_st']), attrs)   # noqa
+                    attrs = {"s": fa_stable_id_new, "e": fa.eid, "fi_st": fi_stable_id_new}
+                    sql(
+                        "UPDATE cw_facomponent SET cw_stable_id = %(s)s WHERE cw_eid = %(e)s", attrs
+                    )
+                    sql(
+                        """UPDATE cw_esdocument set cw_doc = jsonb_set(cw_doc::jsonb, '{{stable_id}}', '"{}"') where cw_entity = %(e)s""".format(  # noqa
+                            attrs["s"]
+                        ),
+                        attrs,
+                    )
+                    sql(
+                        """UPDATE cw_esdocument set cw_doc = jsonb_set(cw_doc::jsonb, '{{fa_stable_id}}', '"{}"') where cw_entity = %(e)s""".format(  # noqa
+                            attrs["fi_st"]
+                        ),
+                        attrs,
+                    )
             # update FindingAid stable id. This will trigger the update on published
             if fi_attrs:
-                sql('UPDATE cw_findingaid SET cw_stable_id = %(s)s WHERE cw_eid = %(e)s',
-                    fi_attrs)
+                sql("UPDATE cw_findingaid SET cw_stable_id = %(s)s WHERE cw_eid = %(e)s", fi_attrs)
 
     cnx.commit()  # noqa
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import sys
+
     services = sys.argv[4]
-    services = services.split(',')
+    services = services.split(",")
     main(services)

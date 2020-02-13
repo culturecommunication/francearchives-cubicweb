@@ -36,34 +36,33 @@ from cubicweb_francearchives.entities.cms import CmsObject
 
 
 class CommemoCollection(CmsObject):
-    __regid__ = 'CommemoCollection'
+    __regid__ = "CommemoCollection"
     fetch_attrs, cw_fetch_order = fetch_config(
-        ['order', 'title', 'subtitle', 'content', 'short_description', 'year'],
-        order='DESC')
-    image_rel_name = 'section_image'
+        ["order", "title", "subtitle", "content", "short_description", "year"], order="DESC"
+    )
+    image_rel_name = "section_image"
 
     def rest_path(self, use_ext_eid=False):
-        return u'commemo/recueil-{}/'.format(self.year)
+        return "commemo/recueil-{}/".format(self.year)
 
     def breadcrumbs_title(self):
         return self.dc_title()
 
 
 class CommemorationItem(CmsObject):
-    __regid__ = 'CommemorationItem'
-    image_rel_name = 'commemoration_image'
+    __regid__ = "CommemorationItem"
+    image_rel_name = "commemoration_image"
 
     @cachedproperty
     def collection(self):
         return self.collection_top[0]
 
     def rest_path(self, use_ext_eid=False):
-        return u'commemo/recueil-{}/{}'.format(self.commemoration_year,
-                                               self.eid)
+        return "commemo/recueil-{}/{}".format(self.commemoration_year, self.eid)
 
     def author_indexes(self):
 
         return self._cw.execute(
-            'DISTINCT Any X, XL WHERE E eid %(e)s, '
-            'E related_authority X, X label XL',
-            {'e': self.eid})
+            "DISTINCT Any X, XL WHERE E eid %(e)s, " "E related_authority X, X label XL",
+            {"e": self.eid},
+        )

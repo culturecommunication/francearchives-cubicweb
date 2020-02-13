@@ -31,7 +31,7 @@
 #
 
 # update cw_externef tables
-print('update cw_externef.content_format')
+print("update cw_externef.content_format")
 
 sql("UPDATE public.cw_externref SET cw_content_format='text/html'")
 sql("UPDATE published.cw_externref SET cw_content_format='text/html'")

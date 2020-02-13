@@ -33,30 +33,33 @@ from logilab.common.decorators import cachedproperty
 from cubicweb.view import StartupView
 from cubicweb.web.views.error import FourOhFour
 
-from cubicweb_francearchives.views import (JinjaViewMixin, top_sections_desc,
-                                           get_template)
+from cubicweb_francearchives.views import JinjaViewMixin, top_sections_desc, get_template
 
 
 class NotFoundView(JinjaViewMixin, StartupView):
-    __regid__ = '404'
-    template = get_template('notfound.jinja2')
+    __regid__ = "404"
+    template = get_template("notfound.jinja2")
 
     @cachedproperty
     def xiti_chapters(self):
-        return [u'404', self._cw.relative_path(False)]
+        return ["404", self._cw.relative_path(False)]
 
     def call(self):
         section_descs = []
         for title, label, name, cssclass, desc in top_sections_desc(self._cw):
-            section_descs.append({
-                'url': self._cw.build_url(name),
-                'cssclass': cssclass,
-                'title': self._cw._(title),
-                'label': self._cw._(label),
-            })
-        self.call_template(section_descs=section_descs,
-                           notfound_msg=self._cw._('notfound-msg'),
-                           notfound_picture=self._cw.data_url('images/notfound.png'))
+            section_descs.append(
+                {
+                    "url": self._cw.build_url(name),
+                    "cssclass": cssclass,
+                    "title": self._cw._(title),
+                    "label": self._cw._(label),
+                }
+            )
+        self.call_template(
+            section_descs=section_descs,
+            notfound_msg=self._cw._("notfound-msg"),
+            notfound_picture=self._cw.data_url("images/notfound.png"),
+        )
 
 
 def registration_callback(vreg):

@@ -29,8 +29,11 @@
 # knowledge of the CeCILL-C license and that you accept its terms.
 #
 
-import unittest
 
+# flake8: noqa
+
+
+import unittest
 from mock import Mock, MagicMock
 import string
 
@@ -38,39 +41,40 @@ from cubicweb.devtools.testlib import CubicWebTC
 from cubicweb.uilib import remove_html_tags
 
 from cubicweb_francearchives.utils import find_card
-from cubicweb_francearchives.entities.faproperties import (process_html,
-                                                           fix_links as fa_fix_links)
+from cubicweb_francearchives.entities.faproperties import process_html, fix_links as fa_fix_links
 from cubicweb_francearchives.views.forms import EMAIL_REGEX
-from cubicweb_francearchives.dataimport import normalize_entry
+from cubicweb_francearchives.dataimport import normalize_entry, clean
 from cubicweb_francearchives.views.search import PniaElasticSearchView
-from cubicweb_francearchives.utils import id_for_anchor
+from cubicweb_francearchives.utils import id_for_anchor, merge_dicts
 from cubicweb_francearchives.xmlutils import enhance_accessibility
-from cubicweb_francearchives.utils import clean_up, is_absolute_url
+from cubicweb_francearchives.utils import is_absolute_url
+from cubicweb_francearchives.dataimport import normalize_for_filepath, PUNCTUATION
 
 
 class UtilsTest(CubicWebTC):
-
     def test_fa_fix_links_1(self):
-        html = u'<div class="ead-p"> <a href="www.archives.valdoise.fr">Archives <b>départementales</b> du Val</a></div>'
-        expected = u'<div class="ead-p"> <a href="www.archives.valdoise.fr" rel="nofollow noopener noreferrer" target="_blank" title="Archives départementales du Val - New window">Archives <b>départementales</b> du Val</a></div>'
+        html = '<div class="ead-p"> <a href="www.archives.valdoise.fr">Archives <b>départementales</b> du Val</a></div>'
+        expected = '<div class="ead-p"> <a href="www.archives.valdoise.fr" rel="nofollow noopener noreferrer" target="_blank" title="Archives départementales du Val - New window">Archives <b>départementales</b> du Val</a></div>'
         with self.admin_access.cnx() as cnx:
             self.assertEqual(fa_fix_links(html, cnx), expected)
 
     def test_fa_fix_links_2(self):
-        html = u'''<div class="ead-p"><a href="www.archives.valdoise.fr" title="site">Archives départementales du Val-d'Oise</a></div>'''
-        expected = u'''<div class="ead-p"><a href="www.archives.valdoise.fr" title="site - New window" rel="nofollow noopener noreferrer" target="_blank">Archives départementales du Val-d'Oise</a></div>'''
+        html = """<div class="ead-p"><a href="www.archives.valdoise.fr" title="site">Archives départementales du Val-d'Oise</a></div>"""
+        expected = """<div class="ead-p"><a href="www.archives.valdoise.fr" title="site - New window" rel="nofollow noopener noreferrer" target="_blank">Archives départementales du Val-d'Oise</a></div>"""
         with self.admin_access.cnx() as cnx:
             self.assertEqual(fa_fix_links(html, cnx), expected)
 
     def test_fa_fix_links_3(self):
-        html = u'<div class="ead-section ead-otherfindaid"><div class="ead-wrapper"><div class="ead-p">Inventaire, CADN, 1991.<br>\n<a href="medias/Intruments%20de%20recherche%20bureautiques/CADN/POI/Otase_B_1955-1971_26POI.pdf" rel="nofollow noopener noreferrer" target="_blank">Voir l\'instrument de recherche</a>&#160;</div></div></div>'
-        expected = (u'<div class="ead-section ead-otherfindaid"><div class="ead-wrapper">'
-                    u'<div class="ead-p">Inventaire, CADN, 1991.<br>\n</div></div></div>')
+        html = '<div class="ead-section ead-otherfindaid"><div class="ead-wrapper"><div class="ead-p">Inventaire, CADN, 1991.<br>\n<a href="medias/Intruments%20de%20recherche%20bureautiques/CADN/POI/Otase_B_1955-1971_26POI.pdf" rel="nofollow noopener noreferrer" target="_blank">Voir l\'instrument de recherche</a>&#160;</div></div></div>'
+        expected = (
+            '<div class="ead-section ead-otherfindaid"><div class="ead-wrapper">'
+            '<div class="ead-p">Inventaire, CADN, 1991.<br>\n</div></div></div>'
+        )
         with self.admin_access.cnx() as cnx:
             self.assertEqual(fa_fix_links(html, cnx), expected)
 
     def test_insert_biblio_labels(self):
-        html = u"""<div class="ead-section ead-bibliography"><div class="ead-label">bibliography_label</div><div class="ead-wrapper"><div>
+        html = """<div class="ead-section ead-bibliography"><div class="ead-label">bibliography_label</div><div class="ead-wrapper"><div>
 <div class="ead-p">text-bibliography</div>
 </div></div></div>
 <div class="ead-section ead-bioghist"><div class="ead-wrapper">
@@ -84,116 +88,147 @@ class UtilsTest(CubicWebTC):
 <div class="ead-p">text-bioghist</div>
 </div></div>"""
 
-        labels = ['bibliography', 'bibref', 'bioghist']
+        labels = ["bibliography", "bibref", "bioghist"]
         with self.admin_access.cnx() as cnx:
             got = process_html(cnx, html, labels=labels)
             self.assertEqual(got, expected)
 
     def test_skip_empty_biblio_labels(self):
-        html = '''<div class="ead-section ead-bibliography"><div class="ead-wrapper"></div></div><div class="ead-section ead-arrangement"><div class="ead-wrapper"><div class="ead-p">Classement chronologique</div></div></div>'''
-        labels = ['bibliography', 'bibref', 'bioghist']
+        html = """<div class="ead-section ead-bibliography"><div class="ead-wrapper"></div></div><div class="ead-section ead-arrangement"><div class="ead-wrapper"><div class="ead-p">Classement chronologique</div></div></div>"""
+        labels = ["bibliography", "bibref", "bioghist"]
         with self.admin_access.cnx() as cnx:
             got = process_html(cnx, html, labels=labels)
             self.assertEqual(got, html)
 
     def test_insert_description_labels(self):
-        html = '''<div class="ead-section ead-accruals"><div class="ead-wrapper"><div class="ead-p">Fonds ouvert susceptible d'accroissement</div></div></div>
+        html = """<div class="ead-section ead-accruals"><div class="ead-wrapper"><div class="ead-p">Fonds ouvert susceptible d'accroissement</div></div></div>
 <div class="ead-section ead-appraisal"><div class="ead-wrapper"><div class="ead-p">Aucun</div></div></div>
-<div class="ead-section ead-arrangement"><div class="ead-wrapper"><div class="ead-p">Classement chronologique</div></div></div>'''
+<div class="ead-section ead-arrangement"><div class="ead-wrapper"><div class="ead-p">Classement chronologique</div></div></div>"""
 
-        expected =  '''<div class="ead-section ead-accruals"><div class="ead-label">accruals_label</div><div class="ead-wrapper"><div class="ead-p">Fonds ouvert susceptible d'accroissement</div></div></div>
+        expected = """<div class="ead-section ead-accruals"><div class="ead-label">accruals_label</div><div class="ead-wrapper"><div class="ead-p">Fonds ouvert susceptible d'accroissement</div></div></div>
 <div class="ead-section ead-appraisal"><div class="ead-label">appraisal_label</div><div class="ead-wrapper"><div class="ead-p">Aucun</div></div></div>
-<div class="ead-section ead-arrangement"><div class="ead-label">arrangement_label</div><div class="ead-wrapper"><div class="ead-p">Classement chronologique</div></div></div>'''
+<div class="ead-section ead-arrangement"><div class="ead-label">arrangement_label</div><div class="ead-wrapper"><div class="ead-p">Classement chronologique</div></div></div>"""
 
-        labels = ['accruals', 'appraisal', 'arrangement']
+        labels = ["accruals", "appraisal", "arrangement"]
         with self.admin_access.cnx() as cnx:
             got = process_html(cnx, html, labels=labels)
             self.assertEqual(got, expected)
 
     def test_additional_resources(self):
-        html = u'<div class="ead-section ead-otherfindaid"><div class="ead-wrapper"><div class="ead-p"><a href="../file/dd5464631894040fed175ea8db7bd843d3fc2f48/FRMAEE_MN_179CPCOM_Maroc.pdf" rel="nofollow noopener noreferrer" target="_blank">Voir l\'instrument de\n    recherche</a>&#160;</div></div></div>\n<div class="ead-section ead-otherfindaid"><div class="ead-wrapper"><div class="ead-p"><a href="../file/dd5464631894040fed175ea8db7bd843d3fc2f48/FRMAEE_MN_179CPCOM_Maroc.pdf" rel="nofollow noopener noreferrer" target="_blank">Voir l\'instrument de\n    recherche</a>&#160;</div></div></div>\n<div class="ead-section ead-relatedmaterial"><div class="ead-wrapper"><div class="ead-p"><a href="../file/06419493742584d8873722d6b1b3732cfc7d8532/FRMAEE_MN_179CPCOM_Maroc.pdf" rel="nofollow noopener noreferrer" target="_blank">Voir l\'instrument de\n    recherche</a>&#160;</div></div></div>\n<div class="ead-section ead-separatedmaterial"><div class="ead-wrapper"><div class="ead-p"><a href="../file/dd5464631894040fed175ea8db7bd843d3fc2f48/FRMAEE_MN_179CPCOM_Maroc.pdf" rel="nofollow noopener noreferrer" target="_blank">Voir l\'instrument de\n    recherche</a>&#160;</div></div></div>'
-        expected = u'<div class="ead-section ead-otherfindaid"><div class="ead-wrapper"><div class="ead-p"><a href="../file/dd5464631894040fed175ea8db7bd843d3fc2f48/FRMAEE_MN_179CPCOM_Maroc.pdf">Voir l\'instrument de\n    recherche</a>\xa0</div></div></div>\n<div class="ead-section ead-otherfindaid"><div class="ead-wrapper"><div class="ead-p"><a href="../file/dd5464631894040fed175ea8db7bd843d3fc2f48/FRMAEE_MN_179CPCOM_Maroc.pdf">Voir l\'instrument de\n    recherche</a>\xa0</div></div></div>\n<div class="ead-section ead-relatedmaterial"><div class="ead-wrapper"><div class="ead-p"><a href="../file/06419493742584d8873722d6b1b3732cfc7d8532/FRMAEE_MN_179CPCOM_Maroc.pdf">Voir l\'instrument de\n    recherche</a>\xa0</div></div></div>\n<div class="ead-section ead-separatedmaterial"><div class="ead-wrapper"><div class="ead-p"><a href="../file/dd5464631894040fed175ea8db7bd843d3fc2f48/FRMAEE_MN_179CPCOM_Maroc.pdf">Voir l\'instrument de\n    recherche</a>\xa0</div></div></div>'
-        labels=['custodhist']
+        html = '<div class="ead-section ead-otherfindaid"><div class="ead-wrapper"><div class="ead-p"><a href="../file/dd5464631894040fed175ea8db7bd843d3fc2f48/FRMAEE_MN_179CPCOM_Maroc.pdf" rel="nofollow noopener noreferrer" target="_blank">Voir l\'instrument de\n    recherche</a>&#160;</div></div></div>\n<div class="ead-section ead-otherfindaid"><div class="ead-wrapper"><div class="ead-p"><a href="../file/dd5464631894040fed175ea8db7bd843d3fc2f48/FRMAEE_MN_179CPCOM_Maroc.pdf" rel="nofollow noopener noreferrer" target="_blank">Voir l\'instrument de\n    recherche</a>&#160;</div></div></div>\n<div class="ead-section ead-relatedmaterial"><div class="ead-wrapper"><div class="ead-p"><a href="../file/06419493742584d8873722d6b1b3732cfc7d8532/FRMAEE_MN_179CPCOM_Maroc.pdf" rel="nofollow noopener noreferrer" target="_blank">Voir l\'instrument de\n    recherche</a>&#160;</div></div></div>\n<div class="ead-section ead-separatedmaterial"><div class="ead-wrapper"><div class="ead-p"><a href="../file/dd5464631894040fed175ea8db7bd843d3fc2f48/FRMAEE_MN_179CPCOM_Maroc.pdf" rel="nofollow noopener noreferrer" target="_blank">Voir l\'instrument de\n    recherche</a>&#160;</div></div></div>'
+        expected = '<div class="ead-section ead-otherfindaid"><div class="ead-wrapper"><div class="ead-p"><a href="../file/dd5464631894040fed175ea8db7bd843d3fc2f48/FRMAEE_MN_179CPCOM_Maroc.pdf">Voir l\'instrument de\n    recherche</a>\xa0</div></div></div>\n<div class="ead-section ead-otherfindaid"><div class="ead-wrapper"><div class="ead-p"><a href="../file/dd5464631894040fed175ea8db7bd843d3fc2f48/FRMAEE_MN_179CPCOM_Maroc.pdf">Voir l\'instrument de\n    recherche</a>\xa0</div></div></div>\n<div class="ead-section ead-relatedmaterial"><div class="ead-wrapper"><div class="ead-p"><a href="../file/06419493742584d8873722d6b1b3732cfc7d8532/FRMAEE_MN_179CPCOM_Maroc.pdf">Voir l\'instrument de\n    recherche</a>\xa0</div></div></div>\n<div class="ead-section ead-separatedmaterial"><div class="ead-wrapper"><div class="ead-p"><a href="../file/dd5464631894040fed175ea8db7bd843d3fc2f48/FRMAEE_MN_179CPCOM_Maroc.pdf">Voir l\'instrument de\n    recherche</a>\xa0</div></div></div>'
+        labels = ["custodhist"]
         with self.admin_access.cnx() as cnx:
             got = process_html(cnx, html, labels=labels)
             self.assertEqual(got, expected)
 
+    def test_merge_dicts(self):
+        def old_merge_dicts(dict1, *dicts):
+            for dct in dicts:
+                dict1.update(dct)
+            return dict1
+
+        test_cases = [[{"a": 1}, {"b": 2}, {"c": 3}, {"d": 4}], [{}, {"a": 1}, {"b": 2}, {"c": 3}]]
+        for args in test_cases:
+            self.assertEqual(old_merge_dicts(*args), merge_dicts(*args))
+
     def test_find_card_nocard(self):
         with self.admin_access.cnx() as cnx:
-            self.assertIsNone(find_card(cnx, 'no-such-wikiid'))
+            self.assertIsNone(find_card(cnx, "no-such-wikiid"))
 
     def test_find_card_nolang(self):
         with self.admin_access.cnx() as cnx:
-            c1 = cnx.create_entity('Card', title=u'c1', wikiid=u'c1',
-                                   content=u'foo')
-            self.assertEqual(find_card(cnx, 'c1').eid, c1.eid)
-            cnx.set_language('fr')
-            self.assertEqual(find_card(cnx, 'c1').eid, c1.eid)
+            c1 = cnx.create_entity("Card", title="c1", wikiid="c1", content="foo")
+            self.assertEqual(find_card(cnx, "c1").eid, c1.eid)
+            cnx.set_language("fr")
+            self.assertEqual(find_card(cnx, "c1").eid, c1.eid)
 
     def test_find_card_fr(self):
         with self.admin_access.cnx() as cnx:
-            c1 = cnx.create_entity('Card', title=u'c1', wikiid=u'c1',
-                                   content=u'foo')
-            c1fr = cnx.create_entity('Card', title=u'c1', wikiid=u'c1-fr',
-                                     content=u'foo')
-            cnx.set_language('fr')
-            self.assertEqual(find_card(cnx, 'c1').eid, c1fr.eid)
+            cnx.create_entity("Card", title="c1", wikiid="c1", content="foo")
+            c1fr = cnx.create_entity("Card", title="c1", wikiid="c1-fr", content="foo")
+            cnx.set_language("fr")
+            self.assertEqual(find_card(cnx, "c1").eid, c1fr.eid)
 
     def test_find_card_en_match(self):
         with self.admin_access.cnx() as cnx:
-            c1 = cnx.create_entity('Card', title=u'c1', wikiid=u'c1',
-                                   content=u'foo')
-            c1en = cnx.create_entity('Card', title=u'c1', wikiid=u'c1-en',
-                                     content=u'foo')
-            c1fr = cnx.create_entity('Card', title=u'c1', wikiid=u'c1-fr',
-                                     content=u'foo')
-            cnx.set_language('en')
-            self.assertEqual(find_card(cnx, 'c1').eid, c1en.eid)
+            cnx.create_entity("Card", title="c1", wikiid="c1", content="foo")
+            c1en = cnx.create_entity("Card", title="c1", wikiid="c1-en", content="foo")
+            cnx.create_entity("Card", title="c1", wikiid="c1-fr", content="foo")
+            cnx.set_language("en")
+            self.assertEqual(find_card(cnx, "c1").eid, c1en.eid)
 
     def test_find_card_en_fallback(self):
         with self.admin_access.cnx() as cnx:
-            c1 = cnx.create_entity('Card', title=u'c1', wikiid=u'c1',
-                                   content=u'foo')
-            c1fr = cnx.create_entity('Card', title=u'c1', wikiid=u'c1-fr',
-                                     content=u'foo')
-            cnx.set_language('en')
-            self.assertEqual(find_card(cnx, 'c1').eid, c1fr.eid)
+            cnx.create_entity("Card", title="c1", wikiid="c1", content="foo")
+            c1fr = cnx.create_entity("Card", title="c1", wikiid="c1-fr", content="foo")
+            cnx.set_language("en")
+            self.assertEqual(find_card(cnx, "c1").eid, c1fr.eid)
 
     def test_find_card_en_fallback_when_nocontent(self):
         with self.admin_access.cnx() as cnx:
-            c1fr = cnx.create_entity('Card', title=u'c1', wikiid=u'c1-fr',
-                                     content=u'foo')
+            c1fr = cnx.create_entity("Card", title="c1", wikiid="c1-fr", content="foo")
             # create an english card but with no content. Behaviour should
             # be the same as if there was no card
-            c1en = cnx.create_entity('Card', title=u'c1', wikiid=u'c1-en')
-            cnx.set_language('en')
-            self.assertEqual(find_card(cnx, 'c1').eid, c1fr.eid)
+            cnx.create_entity("Card", title="c1", wikiid="c1-en")
+            cnx.set_language("en")
+            self.assertEqual(find_card(cnx, "c1").eid, c1fr.eid)
 
     def test_email_checker(self):
-        email = 'test@toto.fr'
+        email = "test@toto.fr"
         self.assertTrue(EMAIL_REGEX.match(email))
-        email = 'testtoto.fr'
+        email = "testtoto.fr"
         self.assertFalse(EMAIL_REGEX.match(email))
-        email = 'test@totofr'
+        email = "test@totofr"
         self.assertFalse(EMAIL_REGEX.match(email))
-        email = '@test@toto.fr'
+        email = "@test@toto.fr"
         self.assertFalse(EMAIL_REGEX.match(email))
 
-    def test_normalize_entry(self):
+    def test_normalize_entry_iso(self):
+        # labels whose normalization is the same in Python and PostgreSQL"""
         norm = normalize_entry
-        self.assertEqual(norm('Charles de Gaulle'), 'charles de gaulle')
-        self.assertEqual(norm('Charles   de Gaulle'), 'charles de gaulle')
-        self.assertEqual(norm('Charles, Gaulle (de)'), 'charles de gaulle')
-        self.assertEqual(norm('Gaulle de, Charles'), 'charles de gaulle')
-        self.assertEqual(norm('Charles (de)   Gaulle'), 'charles de gaulle')
-        self.assertEqual(norm('Charles de Gaulle (1890-1970)'), 'charles de gaulle')
-        self.assertEqual(norm('Charles de Gaulle (1890 - 1970)'), 'charles de gaulle')
-        self.assertEqual(norm('Charles de Gaulle (1890 - 1970)'), 'charles de gaulle')
-        self.assertEqual(norm('Liszt, Franz (1811-1886)'), 'franz liszt')
-        self.assertEqual(norm('Liszt (Franz)'), 'franz liszt')
-        self.assertEqual(norm(u'debré, jean-louis (1944-....)'), 'debre jeanlouis')
-        self.assertEqual(norm(u'DEBRE, Jean-Louis'), 'debre jeanlouis')
-        self.assertEqual(norm(u'Debré, Jean-Louis'), 'debre jeanlouis')
+        self.assertEqual(norm("Charles de Gaulle"), "charles de gaulle")
+        self.assertEqual(norm("Charles   de Gaulle"), "charles de gaulle")
+        self.assertEqual(norm("Charles, Gaulle (de)"), "charles de gaulle")
+        self.assertEqual(norm("Gaulle de, Charles"), "charles de gaulle")
+        self.assertEqual(norm("Charles (de)   Gaulle"), "charles de gaulle")
+        self.assertEqual(norm("Charles de Gaulle (1890-1970)"), "charles de gaulle")
+        self.assertEqual(norm("Charles de Gaulle (1890 - 1970)"), "charles de gaulle")
+        self.assertEqual(norm("Charles de Gaulle (1890 - 1970)"), "charles de gaulle")
+        self.assertEqual(norm("Liszt, Franz (1811-1886)"), "franz liszt")
+        self.assertEqual(norm("Liszt (Franz)"), "franz liszt")
+        self.assertEqual(norm("debré, jean-louis (1944-....)"), "debre jeanlouis")
+        self.assertEqual(norm("DEBRE, Jean-Louis"), "debre jeanlouis")
+        self.assertEqual(norm("Debré, Jean-Louis"), "debre jeanlouis")
+        self.assertEqual(norm("Tavel... (de)"), "de tavel")
+        self.assertEqual(norm("Bonaparte, Élisa (1777-1820)"), "bonaparte elisa")
+        # labels whose normalization is not the same in Python and PostgreSQL
+        norm = normalize_entry
+        self.assertEqual(norm("Deboraüde ?"), "deboraude")
+        self.assertEqual(norm("Tavel… (de)"), "de tavel.")
+        self.assertEqual(
+            norm("Blein (Ange François Alexandre) , général"),
+            "alexandre ange blein francois general",
+        )
+        self.assertEqual(
+            norm("Gauthier de rougemont, chef d’escadron"), "chef d'escadron de gauthier rougemont"
+        )
+        self.assertEqual(
+            norm("Route nationale (n° 120) -- Cantal (France)"),
+            "120 cantal france n_ nationale route",
+        )
+        self.assertEqual(
+            norm(
+                (
+                    """Comité d'attribution des fonds recueillis à l'occasion """
+                    """de la journée nationale des orphelins de guerre (France)"""
+                )
+            ),
+            (
+                "a_ comite_ dattribution de de des des fonds france "
+                "guerre journe_e la loccasion nationale orphelins recueillis"
+            ),
+        )
 
     def test_pagination(self):
         # params: number_of_items (items_per_page, max_pages, max_pagination_links)
@@ -204,56 +239,52 @@ class UtilsTest(CubicWebTC):
         pesv._cw.form = Mock()
 
         # No need to paginate
-        pesv._cw.form.copy = MagicMock(return_value={'page': 1})
+        pesv._cw.form.copy = MagicMock(return_value={"page": 1})
         self.assertEqual(len(pesv.pagination(results_per_page)), 0)
 
         # [1] 2 > (only 1 item on the second page)
-        pesv._cw.form.copy = MagicMock(return_value={'page': 1})
+        pesv._cw.form.copy = MagicMock(return_value={"page": 1})
         self.assertEqual(len(pesv.pagination(results_per_page + 1)), 3)
 
         # [1] 2 >
-        pesv._cw.form.copy = MagicMock(return_value={'page': 1})
+        pesv._cw.form.copy = MagicMock(return_value={"page": 1})
         self.assertEqual(len(pesv.pagination(results_per_page * 2)), 3)
 
         # [1] 2 3 >
-        pesv._cw.form.copy = MagicMock(return_value={'page': 1})
+        pesv._cw.form.copy = MagicMock(return_value={"page": 1})
         self.assertEqual(len(pesv.pagination(results_per_page * 3)), 4)
 
         # < 1 [2] 3 4 5 >
-        pesv._cw.form.copy = MagicMock(return_value={'page': 2})
+        pesv._cw.form.copy = MagicMock(return_value={"page": 2})
         self.assertEqual(len(pesv.pagination(results_per_page * 5)), 7)
 
         # < 1 2 3 4 5 6 [7]
-        pesv._cw.form.copy = MagicMock(return_value={'page': 7})
+        pesv._cw.form.copy = MagicMock(return_value={"page": 7})
         self.assertEqual(len(pesv.pagination(results_per_page * 7)), 8)
 
         # [1] 2 3 4 5 … 30 >
-        pesv._cw.form.copy = MagicMock(return_value={'page': 1})
+        pesv._cw.form.copy = MagicMock(return_value={"page": 1})
         self.assertEqual(len(pesv.pagination(results_per_page * 30)), 8)
 
         # < 1 [2] 3 4 5 … 30 >
-        pesv._cw.form.copy = MagicMock(return_value={'page': 2})
+        pesv._cw.form.copy = MagicMock(return_value={"page": 2})
         self.assertEqual(len(pesv.pagination(results_per_page * 30)), 9)
 
         # < 1 … 26 27 28 29 [30]
-        pesv._cw.form.copy = MagicMock(return_value={'page': 30})
+        pesv._cw.form.copy = MagicMock(return_value={"page": 30})
         self.assertEqual(len(pesv.pagination(results_per_page * 30)), 8)
 
         # < 1 … 26 27 28 [29] 30 >
-        pesv._cw.form.copy = MagicMock(return_value={'page': 29})
+        pesv._cw.form.copy = MagicMock(return_value={"page": 29})
         self.assertEqual(len(pesv.pagination(results_per_page * 30)), 9)
 
         # < 1 … 13 14 [15] 16 … 30 >
-        pesv._cw.form.copy = MagicMock(return_value={'page': 15})
+        pesv._cw.form.copy = MagicMock(return_value={"page": 15})
         self.assertEqual(len(pesv.pagination(results_per_page * 30)), 10)
 
         # < 1 … 13 14 [15] 16 17 … 30 >
-        pesv._cw.form.copy = MagicMock(return_value={'page': 15})
-        self.assertEqual(
-            len(pesv.pagination(results_per_page * 30, max_pagination_links=7)),
-            11
-        )
-
+        pesv._cw.form.copy = MagicMock(return_value={"page": 15})
+        self.assertEqual(len(pesv.pagination(results_per_page * 30, max_pagination_links=7)), 11)
 
     def test_get_pagination_range(self):
         # params: current_page, number_of_pages, window
@@ -285,9 +316,9 @@ class UtilsTest(CubicWebTC):
         Trying: filename contains punctuation
         Expecting: punctuation replaced with "_"
         """
-        filename = "foo" + string.punctuation + "bar"
-        cleaned_up = "foo" + len(string.punctuation) * "_" + "bar"
-        self.assertEqual(cleaned_up, clean_up(filename))
+        filename = "foo" + PUNCTUATION + "bar"
+        cleaned_up = "foo" + len(PUNCTUATION) * "_" + "bar"
+        self.assertEqual(cleaned_up, normalize_for_filepath(filename))
 
     def test_clean_up_whitespace(self):
         """Test filename clean-up.
@@ -297,7 +328,7 @@ class UtilsTest(CubicWebTC):
         """
         filename = "foo" + string.whitespace + "bar"
         cleaned_up = "foo" + len(string.whitespace) * "_" + "bar"
-        self.assertEqual(cleaned_up, clean_up(filename))
+        self.assertEqual(cleaned_up, normalize_for_filepath(filename))
 
     def test_clean_up_common_french(self):
         """Test filename clean-up.
@@ -305,9 +336,9 @@ class UtilsTest(CubicWebTC):
         Trying: filename contains any of "ÀàÇçÉéÈè"
         Expecting: replaced with "AaEe"
         """
-        filename = u"ÀàÇçÉéÈè"
-        cleaned_up = u"AaCcEeEe"
-        self.assertEqual(cleaned_up, clean_up(filename))
+        filename = "ÀàÇçÉéÈè"
+        cleaned_up = "AaCcEeEe"
+        self.assertEqual(cleaned_up, normalize_for_filepath(filename))
 
     def test_absolute_url(self):
         """Test absolute URL check.
@@ -333,153 +364,182 @@ class UtilsTest(CubicWebTC):
         """
         self.assertTrue(is_absolute_url("www.foo.com/bar"))
 
+    def test_clean(self):
+        """Test cleaning labels.
+
+        Trying: cleaning labels
+        Expecting: cleaned labels
+        """
+        labels = ("foo\t\tbar\n\nbaz", "foo  bar foobar", "foo\u0090bar")
+        expected = ["foo bar baz", "foo bar foobar", "foobar"]
+        actual = list(clean(*labels))
+        self.assertCountEqual(actual, expected)
+
 
 class XMlUtilsTest(CubicWebTC):
-
     def test_link_remove_empty_title(self):
-        html = u'''<div><a href="www.archives.valdoise.fr" title="">Archives départementales du Val-d'Oise</a></div>'''  # noqa
+        html = """<div><a href="www.archives.valdoise.fr" title="">Archives départementales du Val-d'Oise</a></div>"""  # noqa
         target = 'rel="nofollow noopener noreferrer" target="_blank"'
-        expected = u'''<div><a href="www.archives.valdoise.fr" {}>Archives départementales du Val-d'Oise</a></div>'''.format(target)  # noqa
+        expected = """<div><a href="www.archives.valdoise.fr" {}>Archives départementales du Val-d'Oise</a></div>""".format(
+            target
+        )  # noqa
         with self.admin_access.cnx() as cnx:
             self.assertEqual(enhance_accessibility(html, cnx), expected)
 
     def test_link_invalid_html(self):
-        html = u'''href="www.archives.valdoise.fr" title="{0}"> Archives départementales du Val-d'Oise</a></div>'''  # noqa
+        html = """href="www.archives.valdoise.fr" title="{0}"> Archives départementales du Val-d'Oise</a></div>"""  # noqa
         with self.admin_access.cnx() as cnx:
             self.assertEqual(enhance_accessibility(html, cnx), html)
 
     def test_link_remove_identical_link_title(self):
-        title = u"Archives départementales du Val-d'Oise"
-        label = u"Archives départementales du <i>Val-d'Oise</i>"
-        html = u'<div><a href="www.archives.valdoise.fr" title="{0}">{1}</a></div>'.format(
-            title, label)
+        title = "Archives départementales du Val-d'Oise"
+        label = "Archives départementales du <i>Val-d'Oise</i>"
+        html = '<div><a href="www.archives.valdoise.fr" title="{0}">{1}</a></div>'.format(
+            title, label
+        )
         target = 'rel="nofollow noopener noreferrer" target="_blank"'
-        expected = u'<div><a href="www.archives.valdoise.fr" {}>{}</a></div>'.format(
-            target, label)
+        expected = '<div><a href="www.archives.valdoise.fr" {}>{}</a></div>'.format(target, label)
         with self.admin_access.cnx() as cnx:
             self.assertEqual(enhance_accessibility(html, cnx), expected)
 
     def test_link_add_blank_target(self):
-        html = u'<div><a href="www.google">google</a></div>'
-        expected = u'<div><a href="www.google" rel="nofollow noopener noreferrer" target="_blank">google</a></div>'  # noqa
+        html = '<div><a href="www.google">google</a></div>'
+        expected = '<div><a href="www.google" rel="nofollow noopener noreferrer" target="_blank">google</a></div>'  # noqa
         with self.admin_access.cnx() as cnx:
             self.assertEqual(enhance_accessibility(html, cnx), expected)
 
     def test_link_do_not_add_blank_target(self):
         with self.admin_access.cnx() as cnx:
-            html = u'<div><a href="{}google.fr">google</a></div>'.format(cnx.base_url())
+            html = '<div><a href="{}google.fr">google</a></div>'.format(cnx.base_url())
             self.assertEqual(enhance_accessibility(html, cnx), html)
 
     def test_link_add_target_1(self):
-        html = u'<a href="www.archives.valdoise.fr" title="toto">toto</a>'
+        html = '<a href="www.archives.valdoise.fr" title="toto">toto</a>'
         with self.admin_access.cnx() as cnx:
             expected = '<a href="www.archives.valdoise.fr" rel="nofollow noopener noreferrer" target="_blank">toto</a>'
             self.assertEqual(enhance_accessibility(html, cnx), expected)
 
     def test_link_add_target_2(self):
-        html = u'<a href="//www.archives.valdoise.fr" title="toto">toto</a>'
+        html = '<a href="//www.archives.valdoise.fr" title="toto">toto</a>'
         with self.admin_access.cnx() as cnx:
             expected = '<a href="//www.archives.valdoise.fr" rel="nofollow noopener noreferrer" target="_blank">toto</a>'
             self.assertEqual(enhance_accessibility(html, cnx), expected)
 
     def test_link_do_not_add_target_1(self):
-        html = u'<a href="./article" title="titi">toto</a>'
+        html = '<a href="./article" title="titi">toto</a>'
         with self.admin_access.cnx() as cnx:
             self.assertEqual(enhance_accessibility(html, cnx), html)
 
     def test_link_do_not_add_target_2(self):
-        html = u'<a href="/article" title="titi">toto</a>'
+        html = '<a href="/article" title="titi">toto</a>'
         with self.admin_access.cnx() as cnx:
             self.assertEqual(enhance_accessibility(html, cnx), html)
 
     def test_link_keep_link_title(self):
-        title = u"Archives départementales du Val-d'Oise - Voir plus"
-        label = u"Archives départementales du Val-d'Oise"
-        html = u'<div><a href="www.archives.valdoise.fr" title="{0}">{1}</a></div>'.format(
-            title, label)
+        title = "Archives départementales du Val-d'Oise - Voir plus"
+        label = "Archives départementales du Val-d'Oise"
+        html = '<div><a href="www.archives.valdoise.fr" title="{0}">{1}</a></div>'.format(
+            title, label
+        )
         target = 'rel="nofollow noopener noreferrer" target="_blank"'
-        expected = u'<div><a href="www.archives.valdoise.fr" title="{0}" {1}>{2}</a></div>'.format(
-            title, target, label)
+        expected = '<div><a href="www.archives.valdoise.fr" title="{0}" {1}>{2}</a></div>'.format(
+            title, target, label
+        )
         with self.admin_access.cnx() as cnx:
             self.assertEqual(enhance_accessibility(html, cnx), expected)
 
     def test_remove_target(self):
-        html = u'<a href="../location/18363459" target="_blank" rel="noopener">Saint-Laurent-Blangy</a>'
-        expected = u'<a href="../location/18363459">Saint-Laurent-Blangy</a>'
+        html = (
+            '<a href="../location/18363459" target="_blank" rel="noopener">Saint-Laurent-Blangy</a>'
+        )
+        expected = '<a href="../location/18363459">Saint-Laurent-Blangy</a>'
         with self.admin_access.cnx() as cnx:
             self.assertEqual(enhance_accessibility(html, cnx), expected)
 
     def test_images_add_empty_alt(self):
         """images must have alt attribute"""
-        html = u'<div><img src="http://advaldoise.fr"/></div>'
-        expected = u'<div><img src="http://advaldoise.fr" alt=""></div>'
+        html = '<div><img src="http://advaldoise.fr"/></div>'
+        expected = '<div><img src="http://advaldoise.fr" alt=""></div>'
         with self.admin_access.cnx() as cnx:
             self.assertEqual(enhance_accessibility(html, cnx), expected)
 
     def test_images_add_link_title_as_alt(self):
         """image's alt inside a link must be equal to the link title"""
-        label = u"Archives départementales du <i>Val-d'Oise</i>"
-        html = (u'<div><img src="http://google.fr">'
-                u'<a href="www.archives.valdoise.fr">'
-                u'<img src="http://advaldoise.fr" '
-                u'alt="toto" />{}</a></div>').format(
-                label)
+        label = "Archives départementales du <i>Val-d'Oise</i>"
+        html = (
+            '<div><img src="http://google.fr">'
+            '<a href="www.archives.valdoise.fr">'
+            '<img src="http://advaldoise.fr" '
+            'alt="toto" />{}</a></div>'
+        ).format(label)
         target = 'rel="nofollow noopener noreferrer" target="_blank"'
-        expected = (u'<div><img src="http://google.fr" alt="">'
-                    u'<a href="www.archives.valdoise.fr" {target} class="image-link">'
-                    u'<img src="http://advaldoise.fr" alt="{alt}">'
-                    u'{label}</a></div>').format(
-                        target=target, label=label, alt=remove_html_tags(label))
+        expected = (
+            '<div><img src="http://google.fr" alt="">'
+            '<a href="www.archives.valdoise.fr" {target} class="image-link">'
+            '<img src="http://advaldoise.fr" alt="{alt}">'
+            "{label}</a></div>"
+        ).format(target=target, label=label, alt=remove_html_tags(label))
         with self.admin_access.cnx() as cnx:
             self.assertEqual(enhance_accessibility(html, cnx), expected)
 
     def test_images_remove_alt_content(self):
         """images alt must be relevent"""
-        html = (u'<img src="../file/01c12288z2dsd/illustration_1.jpg" alt="illustration_1.jpg" '
-                u'width="523" height="371" >')
-        expected = (u'<img src="../file/01c12288z2dsd/illustration_1.jpg" alt="" '
-                    u'width="523" height="371">')
+        html = (
+            '<img src="../file/01c12288z2dsd/illustration_1.jpg" alt="illustration_1.jpg" '
+            'width="523" height="371" >'
+        )
+        expected = (
+            '<img src="../file/01c12288z2dsd/illustration_1.jpg" alt="" '
+            'width="523" height="371">'
+        )
         with self.admin_access.cnx() as cnx:
             self.assertEqual(enhance_accessibility(html, cnx), expected)
 
     def test_images_alt_and_title(self):
         """images alt and title must be identical is title is present"""
-        html = (u'<img src="../file/01c12288z2dsd/illustration_1.jpg" alt="alt" '
-                u'title="title" width="523" height="371" />')
-        expected = (u'<img src="../file/01c12288z2dsd/illustration_1.jpg" alt="alt" '
-                    u'title="alt" width="523" height="371">')
+        html = (
+            '<img src="../file/01c12288z2dsd/illustration_1.jpg" alt="alt" '
+            'title="title" width="523" height="371" />'
+        )
+        expected = (
+            '<img src="../file/01c12288z2dsd/illustration_1.jpg" alt="alt" '
+            'title="alt" width="523" height="371">'
+        )
         with self.admin_access.cnx() as cnx:
             self.assertEqual(enhance_accessibility(html, cnx), expected)
 
     def test_not_html_node(self):
         with self.admin_access.cnx() as cnx:
-            html = u'\xa0<p>tooo</p>'
+            html = "\xa0<p>tooo</p>"
             self.assertEqual(enhance_accessibility(html, cnx), html)
-            html = u'test<p>\xa0</p>'
+            html = "test<p>\xa0</p>"
             self.assertEqual(enhance_accessibility(html, cnx), html)
 
     def test_process_not_body_node(self):
         with self.admin_access.cnx() as cnx:
-            html = u'<body>\xa0<p>tooo</p></body>'
+            html = "<body>\xa0<p>tooo</p></body>"
             self.assertEqual(enhance_accessibility(html, cnx, eid=1111), html)
-
 
     def test_image_link_class(self):
         """add a specific css class on image-links"""
-        html = (u'<a href="www.archives.valdoise.fr" rel="nofollow noopener noreferrer" '
-                u'target="_blank" class="toto">'
-                u'<img src="../file/01c12288z2dsd/illustration_1.jpg" alt="alt" /></a>')
-        expected = (u'<a href="www.archives.valdoise.fr" rel="nofollow noopener noreferrer" '
-                    u'target="_blank" class="toto image-link">'
-                    u'<img src="../file/01c12288z2dsd/illustration_1.jpg" alt=""></a>')
+        html = (
+            '<a href="www.archives.valdoise.fr" rel="nofollow noopener noreferrer" '
+            'target="_blank" class="toto">'
+            '<img src="../file/01c12288z2dsd/illustration_1.jpg" alt="alt" /></a>'
+        )
+        expected = (
+            '<a href="www.archives.valdoise.fr" rel="nofollow noopener noreferrer" '
+            'target="_blank" class="toto image-link">'
+            '<img src="../file/01c12288z2dsd/illustration_1.jpg" alt=""></a>'
+        )
         with self.admin_access.cnx() as cnx:
             self.assertEqual(enhance_accessibility(html, cnx), expected)
 
     def test_id_for_anchor(self):
-        title = u'Commune de Pierre-Bénite - Archives : communales'
-        expected = u'commune-de-pierrebenite--archives--communales'
+        title = "Commune de Pierre-Bénite - Archives : communales"
+        expected = "commune-de-pierrebenite--archives--communales"
         self.assertEqual(id_for_anchor(title), expected)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

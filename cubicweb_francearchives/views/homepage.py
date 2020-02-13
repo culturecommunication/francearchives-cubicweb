@@ -33,7 +33,6 @@
 
 from datetime import datetime
 from babel.dates import format_date
-from six import text_type as unicode
 
 from cwtags import tag as T
 
@@ -44,16 +43,15 @@ from logilab.mtconverter import xml_escape
 from cubicweb.web.component import CtxComponent
 from cubicweb.web.views.startup import IndexView
 
-from cubicweb_francearchives.views import (JinjaViewMixin,
-                                           get_template)
+from cubicweb_francearchives.views import JinjaViewMixin, get_template
 from cubicweb_francearchives.utils import title_for_link, remove_html_tags
 
-_ = unicode
+_ = str
 
 
 class HomepageAbstractComponent(CtxComponent):
     __abstract__ = True
-    context = 'homepage'
+    context = "homepage"
 
     def render(self, w, view=None):
         self._render(w)
@@ -63,15 +61,15 @@ class HomepageAbstractComponent(CtxComponent):
 
 
 class HomeContentSectionComponent(CtxComponent):
-    __regid__ = 'section-title-comp'
-    context = 'section'
+    __regid__ = "section-title-comp"
+    context = "section"
 
     def render(self, w, grey_title, blue_title):
         _ = self._cw._
         with T.div(w, Class="content-section-header"):
             with T.h1(w):
                 w(T.span(_(grey_title), Class="content-section-header-grey"))
-                w(u'&nbsp;')
+                w("&nbsp;")
                 w(T.span(_(blue_title), Class="content-section-header-blue"))
         with T.div(w, Class="rhombus-title"):
             w(T.span(Class="medium-grey-line mr20"))
@@ -79,9 +77,47 @@ class HomeContentSectionComponent(CtxComponent):
             w(T.span(Class="medium-grey-line ml20"))
 
 
+class HomeContentFlashComponent(JinjaViewMixin, HomepageAbstractComponent):
+    __regid__ = "homepage-content-flash"
+    template = get_template("flash-home.jinja2")
+    order = 1
+
+    def call_template(self, w, **ctx):
+        w(self.template.render(**ctx))
+
+    def _render(self, w):
+        req = self._cw
+        rset = req.execute(
+            """
+            Any X, I, U LIMIT 1 WHERE  X basecontent_image I,
+            I uri U,
+            X is BaseContent, X on_homepage True"""
+        )
+        if rset:
+            entity = rset.one()
+            title = entity.title
+            content = {"content": entity.content, "link": entity.view("incontext")}
+            image = entity.basecontent_image[0] if entity.basecontent_image else None
+            content["image"] = {
+                "src": image.image_file[0].download_url(),
+                "alt": remove_html_tags(title),
+                "title": title_for_link(self._cw, title),
+                "href": image.uri,
+            }
+        else:
+            content = {}
+        return self.call_template(
+            w,
+            grey_title=_("###events_grey###"),
+            blue_title=_("###events_blue###"),
+            data=content,
+            default_picto_src=self._cw.uiprops["DOCUMENT_IMG"],
+        )
+
+
 class HomeContentEventsComponent(JinjaViewMixin, HomepageAbstractComponent):
-    __regid__ = 'homepage-content-events'
-    template = get_template('commemorations-home.jinja2')
+    __regid__ = "homepage-content-events"
+    template = get_template("commemorations-home.jinja2")
     order = 6
 
     def call_template(self, w, **ctx):
@@ -90,46 +126,51 @@ class HomeContentEventsComponent(JinjaViewMixin, HomepageAbstractComponent):
     def _render(self, w):
         req = self._cw
         rset = req.execute(
-            'Any X ORDERBY O LIMIT 10 WHERE '
-            'X is CommemorationItem, '
-            'X commemoration_year XA, '
-            'X on_homepage True, X on_homepage_order O')
+            "Any X ORDERBY O LIMIT 10 WHERE "
+            "X is CommemorationItem, "
+            "X commemoration_year XA, "
+            "X on_homepage True, X on_homepage_order O"
+        )
         _ = req._
-        commemos = [{
-            'url': commemo.absolute_url(),
-            'title': commemo.title,
-            'plain_title': remove_html_tags(commemo.title),
-            'link_title': title_for_link(req, commemo.title),
-            'image': commemo.image} for commemo in rset.entities()]
-        return self.call_template(w,
-                                  grey_title=_('###events_grey###'),
-                                  blue_title=_('###events_blue###'),
-                                  commemos=commemos,
-                                  default_picto_src=self._cw.uiprops['DOCUMENT_IMG'])
+        commemos = [
+            {
+                "url": commemo.absolute_url(),
+                "title": commemo.title,
+                "plain_title": remove_html_tags(commemo.title),
+                "link_title": title_for_link(req, commemo.title),
+                "image": commemo.image,
+            }
+            for commemo in rset.entities()
+        ]
+        return self.call_template(
+            w,
+            grey_title=_("###events_grey###"),
+            blue_title=_("###events_blue###"),
+            commemos=commemos,
+            default_picto_src=self._cw.uiprops["DOCUMENT_IMG"],
+        )
 
 
 class HomeContentNewsComponent(HomepageAbstractComponent):
-    __regid__ = 'homepage-content-news'
+    __regid__ = "homepage-content-news"
     order = 5
 
     def _render(self, w):
         _ = self._cw._
         with T.section(w, id="content-news"):
             w(T.div(Class="content-news-tbg"))
-            comp = self._cw.vreg['ctxcomponents'].select_or_none('section-title-comp',
-                                                                 self._cw,
-                                                                 rset=self.cw_rset)
+            comp = self._cw.vreg["ctxcomponents"].select_or_none(
+                "section-title-comp", self._cw, rset=self.cw_rset
+            )
             if comp:
-                comp.render(w=w, grey_title=_('###news_title__grey###'),
-                            blue_title=_('###new_title_blue###'))
+                comp.render(
+                    w=w,
+                    grey_title=_("###news_title__grey###"),
+                    blue_title=_("###new_title_blue###"),
+                )
             now = datetime.now()
             with T.div(w, id="content-news-date", Class="row"):
-                w(
-                    T.h2(
-                        format_date(now, "MMMM y", locale=self._cw.lang),
-                        Class="date"
-                    )
-                )
+                w(T.h2(format_date(now, "MMMM y", locale=self._cw.lang), Class="date"))
             self.render_timeline(w)
             w(T.div(Class="content-news-bbg"))
 
@@ -139,9 +180,10 @@ class HomeContentNewsComponent(HomepageAbstractComponent):
         req = self._cw
         _ = self._cw._
         last_news = req.execute(
-            'Any X ORDERBY SA DESC LIMIT 7 WHERE X is NewsContent, '
-            'X start_date SA, X on_homepage TRUE').entities()
-        default_picto_src = self._cw.uiprops['DOCUMENT_IMG']
+            "Any X ORDERBY SA DESC LIMIT 7 WHERE X is NewsContent, "
+            "X start_date SA, X on_homepage TRUE"
+        ).entities()
+        default_picto_src = self._cw.uiprops["DOCUMENT_IMG"]
         with T.div(w, Class="timeline"):
             last_date = None
             for i, news in enumerate(last_news):
@@ -160,26 +202,28 @@ class HomeContentNewsComponent(HomepageAbstractComponent):
                         with T.div(w, Class="clearfix"):
                             if news.news_image:
                                 image = news.news_image[0]
-                                img_src = (image.image_file[0]
-                                           .cw_adapt_to('IDownloadable').download_url())
-                                with T.a(w, href=news.absolute_url(),
-                                         title=link_title):
-                                    w(T.img(src=img_src,
+                                img_src = (
+                                    image.image_file[0].cw_adapt_to("IDownloadable").download_url()
+                                )
+                                with T.a(w, href=news.absolute_url(), title=link_title):
+                                    w(
+                                        T.img(
+                                            src=img_src,
                                             data_defaultsrc=default_picto_src,
-                                            Class='timeline-news__picto responsive-img',
-                                            alt=remove_html_tags(title)))
-                                    w(T.span(title, Class='sr-only'))
+                                            Class="timeline-news__picto responsive-img",
+                                            alt=remove_html_tags(title),
+                                        )
+                                    )
+                                    w(T.span(title, Class="sr-only"))
                             with T.div(w, Class="timeline-news__datetime"):
                                 day, month = format_date(
-                                    news.start_date, 'dd##MMM',
-                                    locale=self._cw.lang).split('##')
+                                    news.start_date, "dd##MMM", locale=self._cw.lang
+                                ).split("##")
                                 w(T.div(day, Class="timeline-news__datetime__day"))
-                                w(T.div(month[:3],
-                                        Class="timeline-news__datetime__month"))
+                                w(T.div(month[:3], Class="timeline-news__datetime__month"))
                         with T.div(w, Class="timeline-news__title"):
                             with T.h3(w):
-                                w(T.a(title, href=news.absolute_url(),
-                                      title=link_title))
+                                w(T.a(title, href=news.absolute_url(), title=link_title))
                         if news.header:
                             w(T.div(news.header, Class="timeline-news__chapo"))
                 ordered.extend(current_news)
@@ -188,43 +232,46 @@ class HomeContentNewsComponent(HomepageAbstractComponent):
             # XXX set border in javascript, not in CSS
             with T.div(self.w, Class="row"):
                 with T.div(self.w, Class="col-12 ordered"):
-                    self.w(u'\n'.join([unicode(e) for e in ordered]))
+                    self.w("\n".join([str(e) for e in ordered]))
             with T.div(self.w, Class="row"):
                 with T.div(self.w, Class="col-md-6 col-xs-6 odd"):
-                    self.w(u'\n'.join([unicode(e) for e in odd]))
+                    self.w("\n".join([str(e) for e in odd]))
                 with T.div(self.w, Class="col-md-6 col-xs-6 even"):
-                    self.w(u'\n'.join([unicode(e) for e in even]))
+                    self.w("\n".join([str(e) for e in even]))
             with T.div(self.w, Class="row"):
-                url = self._cw.build_url('actualites')
-                self.w(T.a(T.span(_('See all news'), Class="sr-only"),
-                       href=xml_escape(url),
-                       Class="timeline__more-events"))
+                url = self._cw.build_url("actualites")
+                self.w(
+                    T.a(
+                        T.span(_("See all news"), Class="sr-only"),
+                        href=xml_escape(url),
+                        Class="timeline__more-events",
+                    )
+                )
 
 
 class PniaIndexView(IndexView):
-    needs_css = ('lightslider-master/css/lightslider.min.css',)
+    needs_css = ("lightslider-master/css/lightslider.min.css",)
 
     @cachedproperty
     def xiti_chapters(self):
-        return [u'Home']
+        return ["Home"]
 
     def template_context(self):
         req = self._cw
-        meta = req.vreg['adapters'].select('IMeta', req, homepage=True)
-        og = req.vreg['adapters'].select('IOpenGraph', req, homepage=True)
-        return {'open_graph': og.og_data(),
-                'meta': meta.meta_data()}
+        meta = req.vreg["adapters"].select("IMeta", req, homepage=True)
+        og = req.vreg["adapters"].select("IOpenGraph", req, homepage=True)
+        return {"open_graph": og.og_data(), "meta": meta.meta_data()}
 
     def call(self):
         self._cw.add_css(self.needs_css)
-        comps = self._cw.vreg['ctxcomponents'].poss_visible_objects(self._cw,
-                                                                    context='homepage',
-                                                                    rset=self.cw_rset)
+        comps = self._cw.vreg["ctxcomponents"].poss_visible_objects(
+            self._cw, context="homepage", rset=self.cw_rset
+        )
         for comp in comps:
             comp.render(w=self.w)
-        self._cw.add_js('lightslider-master/js/lightslider.min.js')
+        self._cw.add_js("lightslider-master/js/lightslider.min.js")
 
 
 def registration_callback(vreg):
     vreg.unregister(IndexView)
-    vreg.register_all(globals().values(), __name__)
+    vreg.register_all(list(globals().values()), __name__)

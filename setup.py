@@ -35,7 +35,7 @@ cubicweb_francearchives/__pkginfo__.py file
 """
 import os
 from os.path import join, dirname, exists
-from distutils.command import build
+from setuptools.command.sdist import sdist as orig_sdist
 
 from setuptools import find_packages, setup
 
@@ -72,7 +72,7 @@ install_requires = ["{0} {1}".format(d, v or "").strip()
                     for d, v in requires.items()]
 
 
-class MyBuildCommand(build.build):
+class sdist(orig_sdist):
 
     def run(self):
         if exists('/usr/bin/sass'):
@@ -84,7 +84,7 @@ class MyBuildCommand(build.build):
             self.spawn(['npm', 'install'])
             os.environ['NODE_ENV'] = 'production'
             self.spawn(['npm', 'run', 'build'])
-        build.build.run(self)
+        orig_sdist.run(self)
 
 
 
@@ -97,7 +97,7 @@ setup(
     author=author,
     author_email=author_email,
     url=web,
-    cmdclass={'build': MyBuildCommand},
+    cmdclass={'sdist': sdist},
     classifiers=classifiers,
     packages=find_packages(exclude=['test']),
     install_requires=install_requires,

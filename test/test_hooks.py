@@ -36,64 +36,66 @@ from cubicweb.devtools import testlib
 
 
 class HookTests(testlib.CubicWebTC):
-
     def test_delete_card(self):
         with self.admin_access.cnx() as cnx:
-            card = cnx.create_entity('Card',
-                                     title=u'Test',
-                                     wikiid=u'test')
+            card = cnx.create_entity("Card", title="Test", wikiid="test")
             cnx.commit()
             card.cw_delete()
             cnx.commit()
 
     def test_undeletable_section(self):
         with self.admin_access.cnx() as cnx:
-            section = cnx.create_entity(
-                'Section',
-                title=u'Test',
-                name=u'test')
+            section = cnx.create_entity("Section", title="Test", name="test")
             cnx.commit()
             with self.assertRaises(Unauthorized):
                 section.cw_delete()
 
     def test_delete_section(self):
         with self.admin_access.cnx() as cnx:
-            section = cnx.create_entity(
-                'Section', title=u'Test')
+            section = cnx.create_entity("Section", title="Test")
             cnx.commit()
             section.cw_delete()
             cnx.commit()
 
     def test_rgaa_hook_service(self):
         with self.admin_access.cnx() as cnx:
-            other = (u'<img src="../file/01c12288z2dsd/illustration_1.jpg" '
-                     u'alt="illustration_1.jpg"  width="523" height="371" >')
+            other = (
+                '<img src="../file/01c12288z2dsd/illustration_1.jpg" '
+                'alt="illustration_1.jpg"  width="523" height="371" >'
+            )
             service = cnx.create_entity(
-                'Service', category=u'foo1',
-                level=u'level-R', dpt_code=u'75',
-                name=u'Service de Paris',
-                other=other)
+                "Service",
+                category="foo1",
+                level="level-R",
+                dpt_code="75",
+                name="Service de Paris",
+                other=other,
+            )
             cnx.commit()
-            expected = (u'<img src="../file/01c12288z2dsd/illustration_1.jpg" alt="" '
-                        u'width="523" height="371">')
+            expected = (
+                '<img src="../file/01c12288z2dsd/illustration_1.jpg" alt="" '
+                'width="523" height="371">'
+            )
             self.assertEqual(service.other, expected)
 
     def test_rgaa_hook_map(self):
         with self.admin_access.cnx() as cnx:
-            top = u'<div><a href="www.google">google</a></div>'
-            bottom = u'<div><img src="http://advaldoise.fr"/></div>'
-            with open(osp.join(self.datadir,
-                               'Carte_Cadastres.csv'), 'rb') as stream:
+            top = '<div><a href="www.google">google</a></div>'
+            bottom = '<div><img src="http://advaldoise.fr"/></div>'
+            with open(osp.join(self.datadir, "Carte_Cadastres.csv"), "rb") as stream:
                 map = cnx.create_entity(
-                    'Map', title=u'map',
+                    "Map",
+                    title="map",
                     map_file=Binary(stream.read()),
-                    top_content=top, bottom_content=bottom)
+                    top_content=top,
+                    bottom_content=bottom,
+                )
             cnx.commit()
-            new_top= u'<div><a href="www.google" rel="nofollow noopener noreferrer" target="_blank">google</a></div>'  # noqa
-            new_bottom = u'<div><img src="http://advaldoise.fr" alt=""></div>'
+            new_top = '<div><a href="www.google" rel="nofollow noopener noreferrer" target="_blank">google</a></div>'  # noqa
+            new_bottom = '<div><img src="http://advaldoise.fr" alt=""></div>'
             self.assertEqual(map.top_content, new_top)
             self.assertEqual(map.bottom_content, new_bottom)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

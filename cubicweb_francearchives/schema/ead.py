@@ -30,157 +30,160 @@
 #
 """cubicweb-francearchives schema"""
 
-from yams.buildobjs import (EntityType, RelationDefinition, SubjectRelation,
-                            make_type, ComputedRelation, String, RichString,
-                            Int)
+from yams.buildobjs import (
+    EntityType,
+    RelationDefinition,
+    SubjectRelation,
+    make_type,
+    ComputedRelation,
+    String,
+    RichString,
+    Int,
+)
 from cubicweb import _
 from cubicweb.schema import WorkflowableEntityType
 
 
-Json = make_type('Json')
+Json = make_type("Json")
 
 
 class Did(EntityType):
-    unitid = String(maxsize=256, fulltextindexed=True,
-                    indexed=True)
+    unitid = String(maxsize=256, fulltextindexed=True, indexed=True)
     unittitle = String(required=True, fulltextindexed=True)
     unitdate = String()
-    extptr = String(maxsize=512)
-    materialspec = RichString(default_format='text/html')
-    note = RichString(default_format='text/html')
-    origination = RichString(default_format='text/html')
-    physdesc = RichString(default_format='text/html')
-    physloc = RichString(default_format='text/html')
-    repository = RichString(default_format='text/html')
+    extptr = String(maxsize=2048)
+    materialspec = RichString(default_format="text/html")
+    note = RichString(default_format="text/html")
+    origination = RichString(default_format="text/html")
+    physdesc = RichString(default_format="text/html")
+    physloc = RichString(default_format="text/html")
+    repository = RichString(default_format="text/html")
     startyear = Int()
     stopyear = Int()
-    abstract = RichString(default_format='text/html')
-    lang_description = RichString(default_format='text/html')
+    abstract = RichString(default_format="text/html")
+    lang_description = RichString(default_format="text/html")
     lang_code = String(maxsize=16, indexed=True)
 
 
 class FAHeader(EntityType):
-    titlestmt = RichString(default_format='text/html', fulltextindexed=True)
+    titlestmt = RichString(default_format="text/html", fulltextindexed=True)
     titleproper = String(fulltextindexed=True)
-    publicationstmt = RichString(default_format='text/html', fulltextindexed=True)
-    author = RichString(default_format='text/html', fulltextindexed=True)
-    changes = RichString(default_format='text/html')
-    creation = RichString(default_format='text/html')
-    descrules = RichString(default_format='text/html')
-    lang_description = RichString(default_format='text/html')
+    publicationstmt = RichString(default_format="text/html", fulltextindexed=True)
+    author = RichString(default_format="text/html", fulltextindexed=True)
+    changes = RichString(default_format="text/html")
+    creation = RichString(default_format="text/html")
+    descrules = RichString(default_format="text/html")
+    lang_description = RichString(default_format="text/html")
     lang_code = String(maxsize=16, indexed=True)
 
 
 class FindingAid(EntityType):
     """A descriptive document created to allow retrieval within an archive.
     """
-    name = String(required=True, fulltextindexed=True, indexed=True)
+
+    name = String(required=True, unique=True, fulltextindexed=True, indexed=True)
     eadid = String(required=True, fulltextindexed=True)
     publisher = String(required=True, fulltextindexed=True, indexed=True)
     fatype = String(maxsize=64, indexed=True)
-    description = RichString(fulltextindexed=True, default_format='text/html')
+    description = RichString(fulltextindexed=True, default_format="text/html")
     # acqinfo = RichString(default_format='text/html')
-    accessrestrict = RichString(default_format='text/html')
-    userestrict = RichString(default_format='text/html')
-    acquisition_info = RichString(default_format='text/html')
-    additional_resources = RichString(default_format='text/html')
-    bibliography = RichString(default_format='text/html')
-    keywords = String(fulltextindexed=True,
-                      description=_('comma-separated list of key words'))
-    fa_header = SubjectRelation('FAHeader', cardinality='11',
-                                inlined=True, composite='subject')
-    did = SubjectRelation('Did', cardinality='1*', inlined=True)
+    accessrestrict = RichString(default_format="text/html")
+    userestrict = RichString(default_format="text/html")
+    acquisition_info = RichString(default_format="text/html")
+    additional_resources = RichString(default_format="text/html")
+    bibliography = RichString(default_format="text/html")
+    keywords = String(fulltextindexed=True, description=_("comma-separated list of key words"))
+    fa_header = SubjectRelation("FAHeader", cardinality="11", inlined=True, composite="subject")
+    did = SubjectRelation("Did", cardinality="1*", inlined=True)
     # arrangement = SubjectRelation('Arrangement', cardinality='??',
     #                               inlined=True, composite='subject')
     # biblio_elements = SubjectRelation('BibElement')
-    bioghist = RichString(default_format='text/html')
-    notes = RichString(default_format='text/html')
-    genreform = String(fulltextindexed=True)
-    function = String(fulltextindexed=True)
-    occupation = String(fulltextindexed=True)
-    scopecontent = RichString(fulltextindexed=True, default_format='text/html')
+    bioghist = RichString(default_format="text/html")
+    notes = RichString(default_format="text/html")
+    scopecontent = RichString(fulltextindexed=True, default_format="text/html")
     stable_id = String(required=True, unique=True, maxsize=64)
-    service = SubjectRelation('Service', cardinality='?*', inlined=True)
-    website_url = String(maxsize=512, description=_('used as bounce url'))
+    service = SubjectRelation("Service", cardinality="?*", inlined=True)
+    website_url = String(maxsize=512, description=_("used as bounce url"))
+    oai_id = String(maxsize=512, indexed=True)
 
 
 class top_components(ComputedRelation):
-    rule = 'O finding_aid S, NOT EXISTS(O parent_component FAP)'
+    rule = "O finding_aid S, NOT EXISTS(O parent_component FAP)"
 
 
 class child_components(ComputedRelation):
-    rule = 'O parent_component S'
+    rule = "O parent_component S"
 
 
 class findingaid_support(RelationDefinition):
-    subject = 'FindingAid'
-    object = 'File'
-    cardinality = '??'
+    subject = "FindingAid"
+    object = "File"
+    cardinality = "??"
     inlined = True
-    composite = 'subject'
-    description = _('support document for a finding aid')
+    composite = "subject"
+    description = _("support document for a finding aid")
 
 
 class ape_ead_file(RelationDefinition):
-    subject = 'FindingAid'
-    object = 'File'
-    cardinality = '??'
+    subject = "FindingAid"
+    object = "File"
+    cardinality = "??"
     inlined = True
-    composite = 'subject'
-    description = _('APE-EAD XML version of the finding aid')
+    composite = "subject"
+    description = _("APE-EAD XML version of the finding aid")
 
 
 class FAComponent(EntityType):
-    did = SubjectRelation('Did', cardinality='1*', inlined=True)
-    description = RichString(fulltextindexed=True, default_format='text/html')
-    bibliography = RichString(default_format='text/html')
-    accessrestrict = RichString(default_format='text/html')
-    userestrict = RichString(default_format='text/html')
-    acquisition_info = RichString(default_format='text/html')
-    additional_resources = RichString(default_format='text/html')
+    did = SubjectRelation("Did", cardinality="1*", inlined=True)
+    description = RichString(fulltextindexed=True, default_format="text/html")
+    bibliography = RichString(default_format="text/html")
+    accessrestrict = RichString(default_format="text/html")
+    userestrict = RichString(default_format="text/html")
+    acquisition_info = RichString(default_format="text/html")
+    additional_resources = RichString(default_format="text/html")
     # appraisal = String()
-    parent_component = SubjectRelation('FAComponent', cardinality='?*', inlined=True)
-    finding_aid = SubjectRelation('FindingAid', cardinality='1*', inlined=True)
-    digitized_versions = SubjectRelation('DigitizedVersion')
+    parent_component = SubjectRelation("FAComponent", cardinality="?*", inlined=True)
+    finding_aid = SubjectRelation("FindingAid", cardinality="1*", inlined=True)
+    digitized_versions = SubjectRelation("DigitizedVersion")
     # arrangement = SubjectRelation('Arrangement', cardinality='??',
     #                               inlined=True, composite='subject')
     # biblio_elements = SubjectRelation('BibElement')
-    bioghist = RichString(default_format='text/html')
-    notes = RichString(default_format='text/html')
-    genreform = String(fulltextindexed=True)
-    function = String(fulltextindexed=True)
-    occupation = String(fulltextindexed=True)
-    scopecontent = RichString(fulltextindexed=True, default_format='text/html')
+    bioghist = RichString(default_format="text/html")
+    notes = RichString(default_format="text/html")
+    scopecontent = RichString(fulltextindexed=True, default_format="text/html")
     stable_id = String(required=True, unique=True, maxsize=64)
     component_order = Int(indexed=True)
 
 
 class EsDocument(EntityType):
     doc = Json()
-    entity = SubjectRelation(('FindingAid', 'FAComponent'),
-                             inlined=True, composite='object', cardinality='1?')
+    entity = SubjectRelation(
+        ("FindingAid", "FAComponent"), inlined=True, composite="object", cardinality="1?"
+    )
 
 
 class DigitizedVersion(EntityType):
     url = String(maxsize=512)
     illustration_url = String(maxsize=512)
-    role = String(maxsize=32, indexed=True)
+    role = String(maxsize=128, indexed=True)
 
 
 class OAIRepository(EntityType):
-    name = String(maxsize=128,
-                  description=_('human-readable name for the repository'))
-    service = SubjectRelation('Service', cardinality='1*', inlined=True)
-    url = String(maxsize=512, description=_('OAI-PMH ListRecords url'))
+    name = String(maxsize=128, description=_("human-readable name for the repository"))
+    service = SubjectRelation("Service", cardinality="1*", inlined=True)
+    url = String(maxsize=512, description=_("OAI-PMH ListRecords url"))
 
 
 class OAIImportTask(WorkflowableEntityType):
-    oai_repository = SubjectRelation('OAIRepository', cardinality='1*',
-                                     inlined=True, composite='object')
+    oai_repository = SubjectRelation(
+        "OAIRepository", cardinality="1*", inlined=True, composite="object"
+    )
 
 
 class fa_referenced_files(RelationDefinition):
-    subject = ('FindingAid', 'FAComponent')
-    object = 'File'
-    composite = 'subject'
-    description = _("files referenced in '[otherfindaid|relatedmaterial|separatedmateri]//..//archref'")  # noqa
+    subject = ("FindingAid", "FAComponent")
+    object = "File"
+    composite = "subject"
+    description = _(
+        "files referenced in '[otherfindaid|relatedmaterial|separatedmateri]//..//archref'"
+    )  # noqa

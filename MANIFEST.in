@@ -1,15 +1,29 @@
-include *.py
-recursive-include * *.py
-include scss/*.scss
-include cubicweb_francearchives/dataimport/xslt/*.xsl
-include cubicweb_francearchives/views/portal_config.yaml
-recursive-include cubicweb_francearchives/migration/initialdata *
-recursive-include cubicweb_francearchives/data *.gif *.png *.ico *.css *.js *.svg *.jpg *.json
-recursive-include cubicweb_francearchives/data/fonts *
-recursive-include cubicweb_francearchives/i18n *.po
-recursive-include cubicweb_francearchives/wdoc *
-recursive-include cubicweb_francearchives/dataimport *.sql
-recursive-include cubicweb_francearchives/dataimport/images *.jpg
-include cubicweb_francearchives/dataimport/*.json
-include cubicweb_francearchives/views/templates/*.jinja2
-recursive-include cubicweb_francearchives/data/veritejs/css/icons *.eot *.ttf *.woff
+recursive-include cubicweb_francearchives *.py *.css *.js *.jinja2 *.jpg *.json *.csv *.ttf *.otf *.eot *.svg *.xsl *.xslt *.html *.png *.woff *.woff2 *.xml *.yaml *.txt *.ico .editorconfig .jshintrc *.po *.pot *.scss
+recursive-include doc *.html *.rst *.yaml
+recursive-include a11y *.js *.json
+recursive-include appjs *.js
+include pyproject.toml
+recursive-include sphinx *.rst *.bat *.py
+include package.json
+include LICENCE.txt Licence_CeCILL-C_V1-en.txt
+include francearchives_screenshot.jpg
+include *.js
+include pa11y.json
+recursive-include test *.py bootstrap_cubes *.XML *.csv *.jpg *.pdf *.png *.rdf *.rst *.txt *.xml *.xsd ccsv
+# build from sass
+include cubicweb_francearchives/data/css/francearchives.bundle.css
+include cubicweb_francearchives/data/css/francearchives.bundle.css.map
+# build from npm
+include cubicweb_francearchives/data/bundle-circular-table.js
+include cubicweb_francearchives/data/bundle-pnialocation-map.js
+prune scss
+prune debian
+prune gitfilter
+prune sonar-project.properties
+prune .babelrc
+prune .eslintrc.yml
+prune .gitlab-ci.yml
+prune .style.yapf
+prune dev-requirements.txt
+prune tox.ini
+prune Makefile

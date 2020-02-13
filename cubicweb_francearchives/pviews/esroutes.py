@@ -38,19 +38,22 @@ from pyramid.view import view_config
 from cubicweb_elasticsearch.es import get_connection
 
 
-@view_config(route_name='suggest',
-             renderer='json',
-             request_method=('GET', 'HEAD'))
+@view_config(route_name="suggest", renderer="json", request_method=("GET", "HEAD"))
 def suggest_view(request):
-    query_string = request.params.get('q', '').strip()
+    """Retrieve suggestions (e.g. for authorities to group with)."""
+    query_string = request.params.get("q", "").strip()
     if not query_string:
         return []
-    cwconfig = request.registry['cubicweb.config']
+    cwconfig = request.registry["cubicweb.config"]
     get_connection(cwconfig)
-    search = Search(doc_type='_doc',
-                    index='{}_suggest'.format(cwconfig['index-name'])).sort('-count')
-    must = [{'match': {'text': {'query': query_string,
-                                'operator': 'and'}}}]
+    search = Search(doc_type="_doc", index="{}_suggest".format(cwconfig["index-name"])).sort(
+        "-count"
+    )
+    must = [
+        {"match": {"text": {"query": query_string, "operator": "and"}}},
+        # do not show authorities without related documents
+        {"range": {"count": {"gte": 1}}},
+    ]
     search.query = dsl_query.Bool(must=must)
     try:
         response = search.execute()
@@ -60,23 +63,23 @@ def suggest_view(request):
     results = []
     if response and response.hits.total:
         _ = request.cw_request._
-        countlabel_templates = (_('No result'),
-                                _('1 document'),
-                                _('{count} documents'))
+        countlabel_templates = (_("No result"), _("1 document"), _("{count} documents"))
         for result in response:
-            count = result.count if hasattr(result, 'count') else 0
-            countlabel = countlabel_templates[min(count, 2)].format(
-                count=count)
-            indextype = result.type if 'type' in result else result.cw_etype
-            results.append({
-                'url': build_url(result.urlpath),
-                'text': result.text,
-                'countlabel': countlabel,
-                'etype': _(indextype),
-                'additional': result.additional})
+            count = result.count if hasattr(result, "count") else 0
+            countlabel = countlabel_templates[min(count, 2)].format(count=count)
+            indextype = result.type if "type" in result else result.cw_etype
+            results.append(
+                {
+                    "url": build_url(result.urlpath),
+                    "text": result.text,
+                    "countlabel": countlabel,
+                    "etype": _(indextype),
+                    "additional": result.additional,
+                }
+            )
     return results
 
 
 def includeme(config):
-    config.add_route('suggest', '/_suggest')
+    config.add_route("suggest", "/_suggest")
     config.scan(__name__)

@@ -1,10 +1,10 @@
-concaténation,Affichage nom long,Affichage nom court,texte brut,racine,indicatif,numéro,nom de département,chef-lieu,URL,Url vers formulaire de recherche / Arborescence de l’inventaire,Remarques
-FRAD004,Archives départementales des Alpes-de-Haute-Provence,AD des Alpes-de-Haute-Provence,FRAD004 ,FRAD,0,4,Alpes-de-Haute-Provence ,Digne-les-Bains ,http://www.archives04.fr,"http://www.archives04.fr/s/20/actes-etat-civil/?
+concaténation,Affichage nom long,Affichage nom court,texte brut,racine,indicatif,numéro,nom de département,chef-lieu,Url vers formulaire de recherche / Arborescence de l’inventaire,Remarques
+FRAD004,Archives départementales des Alpes-de-Haute-Provence,AD des Alpes-de-Haute-Provence,FRAD004 ,FRAD,0,4,Alpes-de-Haute-Provence ,Digne-les-Bains ,"http://www.archives04.fr/s/20/actes-etat-civil/?
 http://www.archives04.fr/s/21/actes-paroissiaux/?
 http://www.archives04.fr/s/22/tables-decennales/?
 http://www.archives04.fr/s/23/tables-annuelles/?",un formulaire de recherche par type d’archives
-FRAD005,Archives départementales des Hautes-Alpes,AD des Hautes-Alpes,FRAD005 ,FRAD,0,5,Hautes-Alpes ,Gap ,http://www.archives05.fr/,https://www.archives05.fr/archive/resultats/general/n:19?RECH_libre=31+S+1119&type=general,exemple d’url avec recherche sur la cote « 31 S 1119 »
-FRAD006,Archives départementales des Alpes-Maritimes,AD des Alpes-Maritimes,FRAD006 ,FRAD,0,6,Alpes-Maritimes ,Nice ,https://www.departement06.fr/culture/archives-departementales-2797.html,"https://www.departement06.fr/archives-departementales/outils-de-recherche-et-archives-numerisees-2895.html#c10101 ;
+FRAD005,Archives départementales des Hautes-Alpes,AD des Hautes-Alpes,FRAD005 ,FRAD,0,5,Hautes-Alpes ,Gap ,https://www.archives05.fr/archive/resultats/general/n:19?RECH_libre=31+S+1119&type=general,exemple d’url avec recherche sur la cote « 31 S 1119 »
+FRAD006,Archives départementales des Alpes-Maritimes,AD des Alpes-Maritimes,FRAD006 ,FRAD,0,6,Alpes-Maritimes ,Nice ,"https://www.departement06.fr/archives-departementales/outils-de-recherche-et-archives-numerisees-2895.html#c10101 ;
 http://www.basesdocumentaires-cg06.fr/os-html/arca/home.html ;
 http://www.basesdocumentaires-cg06.fr/os-html/amam/home.html ;
 http://www.basesdocumentaires-cg06.fr/archives/indexRP.php ;
@@ -19,8 +19,8 @@ http://www.basesdocumentaires-cg06.fr/archives/indexEC.php ;
 http://www.basesdocumentaires-cg06.fr/os-html/immi/home.html ;
 http://www.basesdocumentaires-cg06.fr/os-html/eves/home.html ;
 http://www.basesdocumentaires-cg06.fr/os-html/mari/home.html",un formulaire de recherche par type d’archives
-FRAD046,Archives départementales du Lot,AD du Lot,FRAD046 ,FRAD,0,46,Lot ,Cahors ,http://archives.lot.fr/,http://archives.lot.fr/search,
-FRAD030,Service truc,AD du Gard,FRAD030 ,FRAD,0,30,Gard ,Nîmes ,http://archives.gard.fr,,
-FRANOM,Archives nationales d’outre-mer,Archives nationales d’outre-mer,FRANOM,FRANOM,,,,,w.archivesnationales.culture.gouv.fr/anom/fr/,http://anom.archivesnationales.culture.gouv.fr/,
-FRAN,Archives nationales,Archives nationales,FRAN,FRAN,,,,,http://www.archives-nationales.culture.gouv.fr/,http://www.siv.archives-nationales.culture.gouv.fr/siv/rechercheconsultation/recherche/ir/rechercheGeneraliste.action?fromIR=false,
-FRAD033,Archives départementales de la Gironde,AD de la Gironde,FRAD033 ,FRAD,0,33,Gironde,Bordeaux,http://archives.gironde.fr/,,
+FRAD046,Archives départementales du Lot,AD du Lot,FRAD046 ,FRAD,0,46,Lot ,Cahors ,http://archives.lot.fr/search,
+FRAD030,Service truc,AD du Gard,FRAD030 ,FRAD,0,30,Gard ,Nîmes ,,
+FRANOM,Archives nationales d’outre-mer,Archives nationales d’outre-mer,FRANOM,FRANOM,,,,,http://anom.archivesnationales.culture.gouv.fr/,
+FRAN,Archives nationales,Archives nationales,FRAN,FRAN,,,,,http://www.siv.archives-nationales.culture.gouv.fr/siv/rechercheconsultation/recherche/ir/rechercheGeneraliste.action?fromIR=false,
+FRAD033,Archives départementales de la Gironde,AD de la Gironde,FRAD033 ,FRAD,0,33,Gironde,Bordeaux,,

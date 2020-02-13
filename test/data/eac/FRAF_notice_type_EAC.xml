@@ -1,0 +1,452 @@
+<eac-cpf xmlns="urn:isbn:1-931666-33-4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="urn:isbn:1-931666-33-4 cpf.xsd">
+   <control>
+      <recordId>FRAN_0001</recordId>
+      <otherRecordId localType="Ancien_identifiant">Autres identifiants qui peuvent être associés à
+         l’instance EAC-CPF.Facultatif</otherRecordId>
+      <maintenanceStatus>new</maintenanceStatus>
+      <publicationStatus>inProcess</publicationStatus>
+      <maintenanceAgency>
+         <agencyCode>FR-FRAF</agencyCode>
+         <agencyName>Service interministériel des Archives de France</agencyName>
+      </maintenanceAgency>
+      <languageDeclaration>
+         <language languageCode="fre">Français</language>
+         <script scriptCode="Latn"/>
+      </languageDeclaration>
+      <conventionDeclaration>
+         <citation>Notice établie conformément à la norme ICA-ISAAR (CPF) 2004, aux normes ISO 8601
+            pour le système de normalisation des dates utilisé, ainsi que AFNOR NF Z 44-061, juin
+            1986. Catalogage : forme et structure des vedettes noms de personne, des vedettes
+            titres, des rubriques de classement et des titres forgés.</citation>
+      </conventionDeclaration>
+      <conventionDeclaration>
+         <abbreviation>RICA</abbreviation>
+         <citation>RICA (Regole italiane di catalogazione per autore)</citation>
+      </conventionDeclaration>
+      <localControl localType="niveau_de_detail">
+         <term>Élément utilisé pour enregistrer et définir toute information relative au contrôle,
+            nécessaire à la satisfaction des pratiques locales, en complément des éléments par
+            ailleurs disponibles au sein de l’élément Contrôle. La valeur de l’entrée peut être
+            donnée dans un élément Terme auquel une date peut être associée, soit sous forme de date
+            unique (élément Date , soit sous forme d’un Intervalle de dates . Le type de l’entrée
+            peut être défini en utilisant l’attribut @localType.</term>
+      </localControl>
+      <maintenanceHistory>
+         <maintenanceEvent>
+            <eventDescription>Élément au sein de l’élément Intervention permettant de décrire
+               l’intervention. L’élément offre la possibilité de donner une description complète de
+               l’intervention à côté de sa définition sommaire fournie par la valeur fixe de
+               l’élément Type d’intervention.</eventDescription>
+               <eventType>created</eventType>
+            <eventDateTime standardDateTime="2013-04-23">2013-04-23</eventDateTime>
+            <agentType>machine</agentType>
+            <agent>Pour chaque intervention décrite dans l’élément Intervention “machine”
+               (machine).</agent>
+         </maintenanceEvent>
+      </maintenanceHistory>
+      <sources>
+         <source>
+            <descriptiveNote>
+               <p>Élément pans ce contexte ne doit pas être confondue avec l’élément Citation un
+                  certain nombre d’éléments descriptifs pour pointer vers une ressource qui fournit
+                  des données descriptives non incluses dans l’instance EAC-CPF. Un lien vers la
+                  source peut être effectué en utilisant les attributs de XML Linking Language
+                  (XLink)</p>
+               <p>
+                  <span style="italic">Bottin administratif</span>, Paris, 1978-1998. </p>
+            </descriptiveNote>
+         </source>
+      </sources>
+   </control>
+   <cpfDescription>
+      <identity identitytype="given">
+         <entityId>Élément facultatif d’Identita compétence, peuvent être encodés dans cet élément.
+            Ne pas confondre aveui indique l’identifiant de l’instance EAC-CPF et non celui de
+            l’entité décrite. ex. ISNI 0000 0001 2156 3687</entityId>
+         <entityType>Type de l’entité décrite. Cet élément ne peut contenir que "person" ou
+            "corporateBody" ou "family".</entityType>
+         <nameEntry localType="autorisée" scriptCode="Latn" xml:lang="fre">
+            <part>Élément contenant une forme du nom d’une collectivité, d’une personne ou d’une
+               famille. L’élément Forme dque l’entité puisse être identifiée avec certitude et
+               distinguée des autres qui portent un nom semblable ou similaire.</part>
+         </nameEntry>
+         <nameEntry>
+	   <authorizedForm>AACR2</authorizedForm>
+           <part>Forme parallèle du nom</part>
+            <useDates>
+               <dateRange>
+                  <fromDate notAfter="1981-01-01">1981</fromDate>
+                  <toDate notBefore="1986-12-31">1986</toDate>
+               </dateRange>
+            </useDates>
+         </nameEntry>
+         <nameEntryParallel>
+            <nameEntry xml:lang="fre" scriptCode="Latn">
+               <part>Institut international des droits de l'homme</part>
+               <preferredForm>AFNOR_Z44-060</preferredForm>
+            </nameEntry>
+            <nameEntry xml:lang="eng" scriptCode="Latn">
+              <part>International institute of human rights
+            </part></nameEntry>
+            <nameEntry xml:lang="spa" scriptCode="Latn">
+               <part>Instituto internacional de derechos humanos</part>
+            </nameEntry>
+            <authorizedForm>AFNOR_Z44-060</authorizedForm>
+	    <useDates>
+	      <dateRange localType="open">
+		<fromDate
+		    standardDate="1949">1949
+		</fromDate>
+		<toDate>open
+		</toDate>
+	      </dateRange>
+	    </useDates>
+         </nameEntryParallel>
+         <nameEntry>
+            <part>Brown, Bob, 1886-1959</part>
+            <authorizedForm>AACR2</authorizedForm>
+            <alternativeForm>ncafnor</alternativeForm>
+         </nameEntry>
+      </identity>
+      <description>
+         <descriptiveNote>Les dates d'existence de l'entité décrite, par exemple les dates de
+            création et de disparition d'une collectivité, et les dates de naissance et de mort ou
+            d'activité d'une personne.</descriptiveNote>
+         <existDates>
+            <dateRange>
+               <fromDate standardDateTime="1978-01-01">1978</fromDate>
+               <toDate standardDate="1998-12-31">1998</toDate>
+            </dateRange>
+         </existDates>
+         <languagesUsed>
+            <languageUsed>
+               <language languageCode="eng">English</language>
+               <script scriptCode="Latn">Latin</script>
+            </languageUsed>
+            <languageUsed>
+               <language languageCode="spa">Spanish</language>
+               <script scriptCode="Latn">Latin</script>
+            </languageUsed>
+            <descriptiveNote>
+               <p>Published works in English and Spanish.</p>
+            </descriptiveNote>
+         </languagesUsed>
+         <localDescriptions>
+            <localDescription
+               localType="https://francearchives.fr/fr/location/18294577">
+               <term
+                  vocabularySource="http://....fr/eac-cpf/
+                  localType/nationalité#French"
+                  >French</term>
+               <placeEntry countryCode="FR"
+                  vocabularySource="http://....fr/
+                  registerOfFrenchPlaceNames#France" accuracy="01"
+                  >France</placeEntry>
+            </localDescription>
+            <localDescription
+               localType="https://francearchives.fr/fr/location/18294577">
+               <term
+                  vocabularySource="http://....fr/eac-cpf/localType/
+                  citoyenneté#French"
+                  >French</term>
+               <placeEntry countryCode="FR"
+                  vocabularySource="http://....fr/
+                  registerOfFrenchPlaceNames#France"
+                  >France</placeEntry>
+            </localDescription>
+            <localDescription
+               localType="https://francearchives.fr/fr/location/18294577">
+               <term
+                  vocabularySource="http://....fr/eac-cpf/localType/
+                  citoyenneté#Brazil"
+                  >Brazil</term>
+               <placeEntry countryCode="BR"
+                  vocabularySource="http://....fr/
+                  registerOfFrenchPlaceNames#France"
+                  >Brazil</placeEntry>
+            </localDescription>
+         </localDescriptions>
+         <legalStatuses>
+            <legalStatus>
+               <term vocabularySource="d5blonaxbw--1mt8t42bokzts">L’élément Statut juridiqueément
+                  englobant qui sert à encoder un terme d’indexation, en utilisant l’élément enfant
+                  Le statut juridique d’une collectivité est d’ordinaire défini et garanti par les
+                  autorités publiques ou par des agences habilitées pour ce faire. Les termes à
+                  entrer doivent s’accorder avec les dispositions de la législation en vigueur. Ils
+                  peuvent provenir aussi bien de vocabulaires contrôlés que du langage
+                  naturel.</term>
+		  <dateSet>
+                  <dateRange>
+                     <fromDate standardDate="1928-09">Septembre 1928</fromDate>
+                     <toDate standardDate="1930-08">Août 1930</toDate>
+                  </dateRange>
+                  <dateRange>
+                     <fromDate standardDate="1947">1947</fromDate>
+                     <toDate standardDate="1949">1949</toDate>
+                  </dateRange>
+               </dateSet>
+            </legalStatus>
+         </legalStatuses>
+         <functions>
+            <function>
+               <term vocabularySource="d5bhviikk9--y6te63k761ib">culture</term>
+               <descriptiveNote>
+                  <p>L'élément Fonction est un élément englobant qui sert à encoder des termes
+                     d'indexation en utilisant l'élément-enfant Terme Les termes utilisés
+                     identifient les fonctions, processus de travail, activités, tâches ou
+                     transactions accomplis par l'entité décrite dans l’instance EAC-CPF. Les termes
+                     utilisés peuvent être tirés de vocabulaires contrôlés ou exprimés en langage
+                     naturel. Des dates ou intervalles dele de nt être introduits pour préciser le
+                     sens du terme. Une Note descriptive peut être introduite si une explication
+                     sous forme de texte est nécessaire.</p>
+               </descriptiveNote>
+               <dateRange>
+                  <fromDate standardDate="1765-09-18">18 septembre 1765</fromDate>
+                  <toDate standardDate="1846-06-01">1er juin 1846</toDate>
+               </dateRange>
+	       <placeEntry altitude="1000m" latitude="2" longitude="47">
+		 Paris, France
+	       </placeEntry>
+            </function>
+         </functions>
+         <occupation>
+	   <dateSet>
+                  <dateRange>
+                     <fromDate standardDate="1928-09">Septembre 1928</fromDate>
+                     <toDate standardDate="1930-08">Août 1930</toDate>
+                  </dateRange>
+                  <dateRange>
+                     <fromDate standardDate="1947">1947</fromDate>
+                     <toDate standardDate="1949">1949</toDate>
+                  </dateRange>
+               </dateSet>
+	   <descriptiveNote>
+                  <p>Test note Occupation</p>
+               </descriptiveNote>
+	   <citation>Test citation Occupation
+	   </citation>
+	   <list>
+	     <item>
+	       item1
+	     </item>
+	     <item>
+	       item2
+	     </item>
+	     <item>
+	       item3
+	     </item>
+	   </list>
+	   <placeEntry altitude="1000m" latitude="2" longitude="47">
+	     Paris, France
+	   </placeEntry>
+           <term>Élément qui fournit des informations sur l'occupation de l'entité décrite.</term>
+         </occupation>
+         <mandates>
+            <mandate>
+               <term>L'élément Mandat un élément englobant qui sert à encoder des termes
+                  d'indexation à l'aide de l'élément-enfant Termermes utilisés servent à identifier
+                  le texte de référence (loi, directive, convention) ou les attributions d'une
+                  collectivité en matière de pouvoirs, fonctions, responsabilités ou sphères
+                  d'activités</term>
+               <descriptiveNote>
+                  <p>Texte de référence ou mandat d'une collectivité précisant ses pouvoirs,
+                     fonctions, responsabilités ou sphères d'activité, par exemple un texte de loi,
+                     directive ou convention.</p>
+               </descriptiveNote>
+               <dateRange>
+                  <fromDate standardDate="1765-09-18">18 septembre 1765</fromDate>
+                  <toDate standardDate="1846-06-01">1er juin 1846</toDate>
+               </dateRange>
+               <placeEntry>Paris, France</placeEntry>
+            </mandate>
+         </mandates>
+         <generalContext>
+            <p>Élément permettant d’encoder les informations relatives au contexte social et
+               culturel général de l’entité décrite.</p>
+         </generalContext>
+         <structureOrGenealogy>
+            <p>Description de la ou des structure(s) administrative(s) interne(s) d’une collectivité
+               ou de la généalogie d’une famille.</p>
+            <list>
+               <item><span style="font-style:italic">1450-1950</span> (1929)</item>
+            </list>
+            <citation>L'élément Citation à fournir un lien vers un document externe comme un
+               organigramme ou un arbre généalogique. Pour une présentation plus simple, sous forme
+               de texte, on peut utiliser un ou plusieurs élém.
+	    </citation>
+         </structureOrGenealogy>
+         <biogHist>
+	   <!-- <placeEntry> Ne peut pas apparaitre sous <bioghist>, seuleument sous <chronItem>  -->
+	   <!-- <placeEntry altitude="1000m" latitude="2" longitude="47"> -->
+           <!--   Paris, France -->
+	   <!-- </placeEntry> -->
+            <abstract>Established in 1961, the United States Peace Corps administered and
+               coordinated Federal international volunteer and related domestic volunteer programs
+               in areas of agricultural assistance, community development, education, environmental
+               protection, and nation assistance.</abstract>
+            <p>Élément qui fournit, sous la forme d’un bref texte rédigé et/ou d’une chronologie,
+               des informations biographiques ou historiques sur l'entité décrite dans l’instance
+               EAC-CPF </p>
+            <chronList>
+               <chronItem>
+                  <date standardDate="1936">1936</date>
+                  <event>Bachelor of Science (Bsc), obtenu à l'Université de Sydney </event>
+               </chronItem>
+               <chronItem>
+                  <date standardDate="1937">1937</date>
+                  <event>Master of Science (MSc), obtenu à l'Université de Sydney </event>
+               </chronItem>
+               <chronItem>
+                  <dateRange>
+                     <fromDate standardDate="1937">1937</fromDate>
+                     <toDate standardDate="1941">1941</toDate>
+                  </dateRange>
+                  <event>Linnean Macleay Fellow</event>
+		  <placeEntry altitude="1000m" latitude="2" longitude="47">
+		    Paris, France
+		  </placeEntry>
+               </chronItem>
+               <chronItem>
+                  <dateRange>
+                     <fromDate standardDate="1939">c. 1939</fromDate>
+                     <toDate standardDate="1945">c. 1945</toDate>
+                  </dateRange>
+                  <event>Travaille au sein des services de renseignement de l'armée à cartographier
+                     la flore (arbres et sous-bois) <!-- <p> --> des régions côtières de Nouvelle-Galles du
+                     Sud.</event>
+               </chronItem>
+            </chronList>
+         </biogHist>
+	 <place altitude="1000m" latitude="2" longitude="47">
+           Paris, France
+           <address>
+             <addressLine localType="voie">2 rue Corneille</addressLine>
+             <addressLine localType="city">Paris</addressLine>
+             <addressLine localType="postalcode">75006</addressLine>
+             <addressLine>France</addressLine>
+           </address>
+	   <address>
+             <addressLine localType="###">3 Rue des peupliers</addressLine>
+             <addressLine localType="###">Marseille</addressLine>
+             <addressLine localType="###">13009</addressLine>
+             <addressLine>France</addressLine>
+           </address>
+           <placeRole>Élément explicitant le rôle d’un lieu ou d’une juridiction en relation
+                     avec l’entité décrite dans l’instance EAC-CPF dans des éléments
+           lieu</placeRole>
+	   <placeEntry altitude="1000m" latitude="2" longitude="47">
+	     Paris, France
+	   </placeEntry>
+	   <citation>U.S. National Archives and Records
+	   Administration. "Lifecycle Data Requirements
+	   Guide". March 2012. (for creating the
+	   authorized form of the name).
+	   </citation>
+	   <list>
+	     <item>
+	       item1
+	     </item>
+	     <item>
+	       item2
+	     </item>
+	     <item>
+	       item3
+	     </item>
+	   </list>
+	 </place>
+      </description>
+      <relations>
+         <cpfRelation xmlns:xlink="http://www.w3.org/1999/xlink"
+            cpfRelationType="hierarchical-child" xlink:href="FRAN_NP_005155" xlink:type="simple" xml:base="https://francearchives.fr/fr/location/18294577">
+            <relationEntry>France. Ministère de la Culture et de la Communication. Direction du
+            patrimoine. Sous-direction de l'archéologie (1979-1998)</relationEntry>
+	    <placeEntry altitude="1000m" latitude="2" longitude="47">
+              Paris, France
+	   </placeEntry>
+            <dateRange>
+               <fromDate standardDate="1979-01-01">1979</fromDate>
+               <toDate standardDate="1998-12-31">1998</toDate>
+            </dateRange>
+            <descriptiveNote>
+               <p/>
+            </descriptiveNote>
+         </cpfRelation>
+         <cpfRelation xmlns:xlink="http://www.w3.org/1999/xlink"
+            cpfRelationType="hierarchical-parent" xlink:href="FRAN_NP_000005" xlink:type="simple">
+            <relationEntry>Ministère de la Culture et de la Communication</relationEntry>
+            <dateRange>
+               <fromDate standardDate="1978-01-01">1978</fromDate>
+               <toDate standardDate="1998-12-31">1998</toDate>
+            </dateRange>
+            <descriptiveNote>
+               <p>@isPartOf@</p>
+            </descriptiveNote>
+         </cpfRelation>
+         <cpfRelation xmlns:xlink="http://www.w3.org/1999/xlink" cpfRelationType="associative"
+            xlink:href="FRAN_NP_000005" xlink:type="simple">
+            <relationEntry>Ministère de la Culture et de la Communication</relationEntry>
+            <dateRange>
+               <fromDate standardDate="1978-01-01">1978</fromDate>
+               <toDate standardDate="1998-12-31">1998</toDate>
+            </dateRange>
+	    <placeEntry altitude="1000m" latitude="2" longitude="47">
+              Paris, France
+	    </placeEntry>
+            <descriptiveNote>
+               <p>@isPartOf@</p>
+            </descriptiveNote>
+         </cpfRelation>
+         <cpfRelation xmlns:xlink="http://www.w3.org/1999/xlink" cpfRelationType="identity"
+            xlink:href="http://catalogue.bnf.fr/ark:/12148/cb11863935s" xlink:type="simple">
+            <relationEntry>France. Direction du patrimoine</relationEntry>
+            <dateRange>
+               <fromDate standardDate="1978-01-01">1978</fromDate>
+               <toDate standardDate="1998-12-31">1998</toDate>
+            </dateRange>
+            <descriptiveNote>
+               <p>Notice d'autorité BnF</p>
+            </descriptiveNote>
+         </cpfRelation>
+         <cpfRelation xmlns:xlink="http://www.w3.org/1999/xlink" cpfRelationType="temporal-earlier"
+            xlink:href="FRAN_NP_000051" xlink:type="simple">
+            <relationEntry>France. Ministère des affaires culturelles. Direction de l'architecture
+               (1959-1978)</relationEntry>
+            <dateRange>
+               <fromDate standardDate="1978-01-01">1978</fromDate>
+            </dateRange>
+	    <placeEntry altitude="1000m" latitude="2" longitude="47">
+	      Paris, France
+	    </placeEntry>
+            <descriptiveNote>
+               <p>La direction du patrimoine récupère certaines compétences de la direction de
+                  l'architecture : la responsabilité sur les monuments classés ou inscrits ainsi que
+                  sur les bâtiments civils.</p>
+            </descriptiveNote>
+         </cpfRelation>
+         <resourceRelation xmlns:xlink="http://www.w3.org/1999/xlink"
+            resourceRelationType="creatorOf" xlink:href="FRAN_IR_018324" xlink:type="simple" xlink:actuate="onRequest">
+            <relationEntry localType="archival" xml:lang="bul">Culture ; Direction du patrimoine
+            (1920-1990)</relationEntry>
+	    <placeEntry altitude="1000m" latitude="2" longitude="47">
+	      Paris, France
+	    </placeEntry>
+         </resourceRelation>
+         <resourceRelation xmlns:xlink="http://www.w3.org/1999/xlink"
+            resourceRelationType="subjectOf" xlink:href="FRAN_IR_010437" xlink:type="simple" xlink:role="image" xlink:show="yes" xlink:title="culture patrimoine">
+            <relationEntry localType="archival">Culture ; Direction patrimoine
+               (1962-1995)</relationEntry>
+         </resourceRelation>
+	 <functionRelation functionRelationType="performs"
+			   xmlns:xlink="http://www.w3.org/1999/xlink"
+			   xlink:href="FRAN_IR_010437">
+           <relationEntry>Alumni communication manageme University of Glasgow</relationEntry>
+           <descriptiveNote>
+             <p>Une fonction reliée à l'entité décrite. L’attribut @functionRelationType est
+             un attribut de l’élément Relation avec une foncts possibles : "controls"
+             (contrôle) ou "owns" (est titulaire de) ou "performs" (exerce)</p>
+           </descriptiveNote>
+         </functionRelation>
+      </relations>
+   </cpfDescription>
+</eac-cpf>

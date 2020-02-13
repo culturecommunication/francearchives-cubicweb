@@ -30,20 +30,20 @@
 #
 """pnia_content views/footer_actions views and components"""
 
-from six import text_type as unicode
 
 from logilab.mtconverter import xml_escape
 
 from cubicweb.web import action
 
-_ = unicode
+_ = str
 
 
 class FooterAction(action.Action):
     """footer actions infos are displayed in the page footer.
     """
+
     __abstract__ = True
-    category = 'pnia-footer'
+    category = "pnia-footer"
     title = None
 
     def url(self):
@@ -51,45 +51,45 @@ class FooterAction(action.Action):
 
 
 class LegalNoticeAction(FooterAction):
-    __regid__ = 'pnia.footer.legal-notices'
+    __regid__ = "pnia.footer.legal-notices"
     order = 1
-    title = _('Legal notices')
+    title = _("Legal notices")
 
     def url(self):
-        return xml_escape(self._cw.build_url('legal_notices'))
+        return xml_escape(self._cw.build_url("legal_notices"))
 
 
 class AccessibilityAction(FooterAction):
-    __regid__ = 'pnia.footer.accessibilityt'
+    __regid__ = "pnia.footer.accessibilityt"
     order = 2
-    title = _('Accessibility')
+    title = _("Accessibility")
 
     def url(self):
-        return xml_escape(self._cw.build_url('accessibility'))
+        return xml_escape(self._cw.build_url("accessibility"))
 
 
 class SiteMapAction(FooterAction):
-    __regid__ = 'pnia.footer.site-map'
+    __regid__ = "pnia.footer.site-map"
     order = 3
-    title = _('Site map')
+    title = _("Site map")
 
     def url(self):
-        return xml_escape(self._cw.build_url('sitemap'))
+        return xml_escape(self._cw.build_url("sitemap"))
 
 
 class CGUMapAction(FooterAction):
-    __regid__ = 'pnia.footer.cgu'
+    __regid__ = "pnia.footer.cgu"
     order = 4
-    title = _('CGU')
+    title = _("CGU")
 
     def url(self):
-        return xml_escape(self._cw.build_url('cgu'))
+        return xml_escape(self._cw.build_url("cgu"))
 
 
 class PrivacyPolicyAction(FooterAction):
-    __regid__ = 'pnia.footer.privacy-policy'
+    __regid__ = "pnia.footer.privacy-policy"
     order = 5
-    title = _('Privacy policy')
+    title = _("Privacy policy")
 
     def url(self):
-        return xml_escape(self._cw.build_url('privacy_policy'))
+        return xml_escape(self._cw.build_url("privacy_policy"))

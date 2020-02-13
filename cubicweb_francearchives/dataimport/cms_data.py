@@ -51,5 +51,5 @@ SECTION_SHORT_DESCRIPTIONS = {
                 des règles particulières de stockage, de conservation et
                 d'accès. Cette rubrique présente les questions professionnelles,
                 qui vont de la collecte des documents physiques à l'entrée
-                des données de description d'archives dans l'Open Data."""
+                des données de description d'archives dans l'Open Data.""",
 }

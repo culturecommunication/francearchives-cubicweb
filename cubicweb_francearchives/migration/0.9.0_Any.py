@@ -32,5 +32,4 @@
 
 rset = rql('Any X WHERE X is Circular, X circ_id ILIKE "%?"')
 for e in rset.entities():
-    e.cw_set(circ_id=e.circ_id.replace('?', '_'))
-
+    e.cw_set(circ_id=e.circ_id.replace("?", "_"))

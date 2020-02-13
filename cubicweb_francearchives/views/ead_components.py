@@ -40,8 +40,8 @@ from cubicweb_francearchives.utils import cut_words
 
 
 class TreeOnelineView(EntityView):
-    __select__ = EntityView.__select__ & is_instance('FindingAid', 'FAComponent')
-    __regid__ = 'tree-oneline'
+    __select__ = EntityView.__select__ & is_instance("FindingAid", "FAComponent")
+    __regid__ = "tree-oneline"
 
     def cell_call(self, row, col, selected, _class):
         entity = self.cw_rset.get_entity(row, col)
@@ -52,17 +52,17 @@ class TreeOnelineView(EntityView):
             if entity.eid == selected:
                 w(T.span(xml_escape(title), Class="detailed-path-list-item-active"))
             else:
-                kwargs = {'href': xml_escape(entity.absolute_url())}
+                kwargs = {"href": xml_escape(entity.absolute_url())}
                 if title != full_title:
-                    kwargs['title'] = xml_escape(full_title)
+                    kwargs["title"] = xml_escape(full_title)
                 with T.a(w, **kwargs):
                     w(xml_escape(title))
 
 
 class AbstractFindingAidTreeComponent(EntityCtxComponent):
     __abstract__ = True
-    __regid__ = 'findinaid.tree'
-    context = 'related-top-main-content'
+    __regid__ = "findinaid.tree"
+    context = "related-top-main-content"
     order = 1
 
     def render(self, w, view=None):
@@ -75,13 +75,14 @@ class AbstractFindingAidTreeComponent(EntityCtxComponent):
         service = entity.related_service
         if service:
             service_label = service.dc_title()
-            tooltip = (self._cw._('Search all documents for publisher %s')
-                       % service_label)
-            w(u'<a title="{}" href="{}">{}</a>'.format(
-                xml_escape(tooltip),
-                xml_escape(service.documents_url()),
-                xml_escape(service_label)
-            ))
+            tooltip = self._cw._("Search all documents for publisher %s") % service_label
+            w(
+                '<a title="{}" href="{}">{}</a>'.format(
+                    xml_escape(tooltip),
+                    xml_escape(service.documents_url()),
+                    xml_escape(service_label),
+                )
+            )
         else:
             w(entity.publisher)
 
@@ -96,45 +97,46 @@ class AbstractFindingAidTreeComponent(EntityCtxComponent):
                             w(T.span(Class="detailed-path-root-picto"))
                         with T.div(w, Class="col-md-11"):
                             self.display_service_link(entity, w)
-                with T.div(w, Class='detailed-path-inner-levels'):
+                with T.div(w, Class="detailed-path-inner-levels"):
                     self.render_tree(w, entity, tree_items)
             w(T.div(Class="clearfix"))
 
     def render_tree(self, w, entity, tree_items):
-        with T.ul(w, Class='detailed-path-list'):
+        with T.ul(w, Class="detailed-path-list"):
             with T.li(w):
-                w(entity.view('tree-oneline',
-                              selected=entity.eid,
-                              _class='detailed-path-list-item-last'))
+                w(
+                    entity.view(
+                        "tree-oneline", selected=entity.eid, _class="detailed-path-list-item-last"
+                    )
+                )
                 with T.ul(w, Class="detailed-path-list"):
                     tree_items = list(tree_items)
                     total = len(tree_items)
-                    item_class = 'detailed-path-list-item'
+                    item_class = "detailed-path-list-item"
                     for i, item in enumerate(tree_items, 1):
-                        _class = 'detailed-path-list-item-last' if total == i else item_class
+                        _class = "detailed-path-list-item-last" if total == i else item_class
                         with T.li(w):
                             # XXX FIXE here is only one level present
-                            w(item.view('tree-oneline',
-                                        selected=entity.eid,
-                                        _class=_class))
+                            w(item.view("tree-oneline", selected=entity.eid, _class=_class))
 
 
 class FindingAidTreeComponent(AbstractFindingAidTreeComponent):
-    __select__ = is_instance('FindingAid')
+    __select__ = is_instance("FindingAid")
 
     def tree_items(self, entity):
         return self._cw.execute(
-            'Any C,CI,D,DT,DI,DS,DSF '
-            'ORDERBY CO '
-            'WHERE X top_components C, X eid %(x)s, '
-            'C stable_id CI, C did D, D unittitle DT, '
-            'D unitid DI, C description DS, '
-            'C description_format DSF, C component_order CO',
-            {'x': entity.eid}).entities()
+            "Any C,CI,D,DT,DI,DS,DSF "
+            "ORDERBY CO "
+            "WHERE X top_components C, X eid %(x)s, "
+            "C stable_id CI, C did D, D unittitle DT, "
+            "D unitid DI, C description DS, "
+            "C description_format DSF, C component_order CO",
+            {"x": entity.eid},
+        ).entities()
 
 
 class FAComponentTreeComponent(AbstractFindingAidTreeComponent):
-    __select__ = is_instance('FAComponent')
+    __select__ = is_instance("FAComponent")
     order = 1
 
     def tree_items(self, entity):
@@ -152,15 +154,14 @@ class FAComponentTreeComponent(AbstractFindingAidTreeComponent):
         return component_chain
 
     def render_tree(self, w, entity, tree_items, level=1):
-        with T.ul(w, Class='detailed-path-list'):
+        with T.ul(w, Class="detailed-path-list"):
             total = len(tree_items[0])
             for i, _entity in enumerate(tree_items[0], 1):
                 with T.li(w):
-                    _class = 'detailed-path-list-item-last' \
-                        if total == i else 'detailed-path-list-item'
-                    w(_entity.view('tree-oneline',
-                                   selected=entity.eid,
-                                   _class=_class))
+                    _class = (
+                        "detailed-path-list-item-last" if total == i else "detailed-path-list-item"
+                    )
+                    w(_entity.view("tree-oneline", selected=entity.eid, _class=_class))
             if len(tree_items) > 1:
                 with T.li(w):
                     self.render_tree(w, entity, tree_items[1:], level + 1)

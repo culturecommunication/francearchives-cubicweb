@@ -1,0 +1,104 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ead xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:isbn:1-931666-22-9" xmlns:xlink="http://www.w3.org/1999/xlink" xsi:schemaLocation="urn:isbn:1-931666-22-9 http://www.loc.gov/ead/ead.xsd http://www.w3.org/1999/xlink http://www.loc.gov/standards/xlink/xlink.xsd">
+<eadheader findaidstatus="unverified-partial-draft">
+<eadid>FRAD051_61Fi</eadid>
+<filedesc>
+<titlestmt>
+<titleproper>Fonds Pirat. <lb/>Guerre 1914-1918 (61 Fi)</titleproper>
+</titlestmt>
+<publicationstmt>
+<publisher>Archives départementales de la Marne</publisher>
+<address><addressline>Châlons-en-Champagne</addressline></address>
+</publicationstmt>
+</filedesc>
+<profiledesc>
+<creation>Instrument de recherche produit au moyen du logiciel Arkhéïa Aide au classement de la société Anaphore sarl, version 3-9.3 du <date normal="2011-06-24">vendredi 24 juin 2011</date>. 
+Date de l'export : <date normal="2018-10-18">jeudi 18 octobre 2018</date> (09:16 h)</creation>
+<langusage>Instrument de recherche rédigé en <language langcode="fre">français</language></langusage>
+</profiledesc>
+</eadheader>
+<archdesc level="fonds" id="a011515062574tMYtAj">
+<did><unitid label="Cotes extrêmes" identifier="61FI/1"><extptr xlink:href="http://archives.marne.fr/ark:/86869/a011515062574tMYtAj"/>61 Fi art. 1</unitid>
+<unittitle label="">Fonds Pirat, Guerre 1914-1918 (61 Fi)</unittitle>
+<unitdate label="" normal="1907-01-01/1919-12-31" type="inclusive">1907-1919</unitdate>
+<physdesc label="Description physique"><genreform source="liste-typedocAC">Document iconographique</genreform><lb/>
+19 impressions photomécaniques (carte postale)<lb/>
+<extent type="unités description" label="Nombre d'unités de niveau bas">1</extent><lb/>
+<extent label="Métrage linéaire" unit="ml">0,01</extent><lb/>
+<physfacet type="noir et blanc ou couleur" label="Noir et blanc ou couleur">Noir et blanc</physfacet><lb/>
+</physdesc>
+<repository label="Organisme responsable de laccès intellectuel">Archives départementales de la Marne</repository>
+<origination label="Origine"><persname role="producteur">Pirat, Charles-Henri</persname>
+</origination>
+</did>
+<custodhist><head>Historique de la conservation</head><p>Don dans le cadre de la Grande collecte guerre 1914-1918 effectué en 2013</p>
+</custodhist>
+<acqinfo><head>Informations sur les modalités d'entrée</head>
+<p>Don 2013, entrée n° 4017</p>
+</acqinfo>
+<scopecontent><p>19 Cartes postales marnaises : 10 portent une correspondance datée (1907-1919), 4 ne sont pas datées et 5 n'ont ni correspondance ni date.</p><p>Lieux représentés : L'Epine (1), Maurupt (3), Reims (9), Mourmelon-le-Grand. Camp de Châlons (1), Heiltz (2), Tours-sur-Marne (3)</p>
+</scopecontent>
+<accessrestrict><head>Modalités d'accès</head>
+<accessrestrict>
+<head>Statut juridique</head>
+<legalstatus>
+Archives privées
+</legalstatus>
+</accessrestrict>
+<accessrestrict>
+<head>Communicabilité</head>
+<p>En ligne sur le site internet des Archives</p>
+</accessrestrict>
+</accessrestrict>
+<userestrict><head>Conditions d'utilisation</head>
+<p>Reproduction pour un usage strictement privé (Cf. Code de la propriété intellectuelle)</p>
+</userestrict>
+<controlaccess>
+<head>Descripteurs</head>
+<genreform>CARTE POSTALE</genreform>
+<subject source="contexte-historique">GUERRE 1914-1918</subject>
+<subject>Guerre mondiale</subject>
+<geogname>Heiltz-le-Maurupt (Marne, Champagne-Ardenne, France)</geogname>
+<geogname>Reims (Marne, Champagne-Ardenne, France)</geogname>
+<geogname>Mourmelon-le-Grand (Marne, Champagne-Ardenne, France)</geogname>
+<geogname>Camp de Châlons (Mourmelon-le-Grand -- lieu-dit)</geogname>
+<geogname>Tours-sur-Marne (Marne, Champagne-Ardenne, France)</geogname>
+<geogname>Épine (L') (Marne, Champagne-Ardenne, France)</geogname>
+<genreform type="typir">Recherche détaillée</genreform>
+</controlaccess><note type="mnesysinternal"><p/></note>
+<dsc type="in-depth">
+<c id="a011515062574JdMMvc" level="fonds">
+<did altrender="isbd-nbm-fr-imagefixe">
+<unitid label="Cotes extrêmes"><extptr xlink:href="http://archives.marne.fr/ark:/86869/a011515062574JdMMvc"/>61 Fi 1</unitid>
+<unittitle label="Intitulé de l'unité documentaire">
+Fonds Pirat. Grande collecte 2013 guerre 1914-1918.</unittitle>
+<unitdate label="Date de l'unité documentaire" normal="1907-01-01/1919-12-31" type="inclusive">1907-1919</unitdate>
+<physdesc label="Description physique">
+<genreform source="liste-typedocAC">Document iconographique</genreform><lb/>
+</physdesc>
+</did>
+<scopecontent>
+<head>Présentation du contenu</head>
+<p>19 Cartes postales marnaises : 10 portent une correspondance datée (1907-1919), 4 ne sont pas datées et 5 n'ont ni correspondance ni date</p><p>Lieux représentés : L'Epine (1), Maurupt (3), Reims (9), Mourmelon-le-Grand. Camp de Châlons (1), Heiltz (2), Tours-sur-Marne (3)</p>
+</scopecontent>
+<controlaccess>
+<head>Descripteurs</head>
+<genreform>CARTE POSTALE</genreform>
+<subject source="contexte-historique">GUERRE 1914-1918</subject>
+<subject>Guerre mondiale, 1914-1918</subject>
+<geogname>Heiltz-le-Maurupt (Marne, Champagne-Ardenne, France)</geogname>
+<geogname>Reims (Marne, Champagne-Ardenne, France)</geogname>
+<geogname>Mourmelon-le-Grand (Marne, Champagne-Ardenne, France)</geogname>
+<geogname>Camp de Châlons (Mourmelon-le-Grand -- lieu-dit)</geogname>
+<geogname>Tours-sur-Marne (Marne, Champagne-Ardenne, France)</geogname>
+<geogname>Épine (L') (Marne, Champagne-Ardenne, France)</geogname>
+</controlaccess>
+<daogrp>
+<daoloc href="medias/06_fonds_icono/61Fi/FRAD051_61Fi01.jpg" role="first_image" xlink:href="http://archives.marne.fr/ark:/86869/a011515062574JdMMvc/1/1.thumbnail" xlink:title="thumbnail"/>
+<daoloc href="medias/06_fonds_icono/61Fi/FRAD051_61Fi01.jpg" xlink:href="http://archives.marne.fr/ark:/86869/a011515062574JdMMvc/1/1" role="first_image"/>
+<daoloc href="medias/06_fonds_icono/61Fi/FRAD051_61Fi33.jpg" role="last_image"/>
+</daogrp>
+</c>
+</dsc>
+</archdesc>
+</ead>

@@ -33,12 +33,15 @@
 from cubicweb_francearchives.dataimport import sqlutil
 
 
-with sqlutil.no_trigger(cnx, tables=('entities',), interactive=False):
-    sql('truncate same_as_relation')
-    sql('truncate other_forms_relation')
-    sql("delete from entities where type in ('PniaLocation', 'PniaLocationForm', 'PniaAgent', 'PniaAgentForm', 'PniaSubject', 'PniaSubjectForm', 'IndexRole', 'Index')")
+with sqlutil.no_trigger(cnx, tables=("entities",), interactive=False):
+    sql("truncate same_as_relation")
+    sql("truncate other_forms_relation")
+    sql(
+        "delete from entities where type in ('PniaLocation', 'PniaLocationForm', 'PniaAgent', 'PniaAgentForm', 'PniaSubject', 'PniaSubjectForm', 'IndexRole', 'Index')"
+    )
 
-    sql('''
+    sql(
+        """
     truncate is_relation;
     insert into is_relation select e.eid, et.cw_eid from entities e join cw_cwetype et on et.cw_name = e.type;
     truncate is_instance_of_relation;
@@ -57,59 +60,60 @@ with sqlutil.no_trigger(cnx, tables=('entities',), interactive=False):
     truncate created_by_relation;
     insert into created_by_relation select * from tmp_created_by_relation;
     drop table tmp_created_by_relation;
-    ''')
+    """
+    )
     cnx.commit()
 
 print("drop_relation_type('index_agent')")
-drop_relation_type('index_agent')
+drop_relation_type("index_agent")
 print("drop_relation_type('index_location')")
-drop_relation_type('index_location')
+drop_relation_type("index_location")
 print("drop_relation_type('index_subject')")
-drop_relation_type('index_subject')
+drop_relation_type("index_subject")
 print("drop_relation_type('other_forms')")
-drop_relation_type('other_forms')
-for subtype in ('PniaLocation', 'PniaSubject', 'PniaAgent'):
-    drop_relation_definition(subtype, 'same_as', 'ExternalUri')
+drop_relation_type("other_forms")
+for subtype in ("PniaLocation", "PniaSubject", "PniaAgent"):
+    drop_relation_definition(subtype, "same_as", "ExternalUri")
 print("drop_relation_definition('PniaAgent', 'same_as', 'Person')")
-drop_relation_definition('PniaAgent', 'same_as', 'Person')
+drop_relation_definition("PniaAgent", "same_as", "Person")
 print("drop_relation_definition('PniaAgent', 'same_as', 'AuthorityRecord')")
-drop_relation_definition('PniaAgent', 'same_as', 'AuthorityRecord')
+drop_relation_definition("PniaAgent", "same_as", "AuthorityRecord")
 print("drop_relation_definition('PniaSubject', 'same_as', 'Concept')")
-drop_relation_definition('PniaSubject', 'same_as', 'Concept')
+drop_relation_definition("PniaSubject", "same_as", "Concept")
 print("drop_entity_type('PniaLocation')")
-drop_entity_type('PniaLocation')
+drop_entity_type("PniaLocation")
 print("drop_entity_type('PniaLocationForm')")
-drop_entity_type('PniaLocationForm')
+drop_entity_type("PniaLocationForm")
 print("drop_entity_type('PniaAgent')")
-drop_entity_type('PniaAgent')
+drop_entity_type("PniaAgent")
 print("drop_entity_type('PniaAgentForm')")
-drop_entity_type('PniaAgentForm')
+drop_entity_type("PniaAgentForm")
 print("drop_entity_type('PniaSubject')")
-drop_entity_type('PniaSubject')
+drop_entity_type("PniaSubject")
 print("drop_entity_type('PniaSubjectForm')")
-drop_entity_type('PniaSubjectForm')
+drop_entity_type("PniaSubjectForm")
 print("drop_entity_type('IndexRole')")
-drop_entity_type('IndexRole')
+drop_entity_type("IndexRole")
 print("drop_entity_type('Index')")
-drop_entity_type('Index')
+drop_entity_type("Index")
 
 
-add_entity_type('LocationAuthority')
-add_entity_type('Geogname')
-add_entity_type('AgentAuthority')
-add_entity_type('AgentName')
-add_entity_type('SubjectAuthority')
-add_entity_type('Subject')
-add_relation_definition('CommemorationItem', 'related_authority', 'AgentAuthority')
-add_relation_definition('ExternRef', 'related_authority', 'AgentAuthority')
+add_entity_type("LocationAuthority")
+add_entity_type("Geogname")
+add_entity_type("AgentAuthority")
+add_entity_type("AgentName")
+add_entity_type("SubjectAuthority")
+add_entity_type("Subject")
+add_relation_definition("CommemorationItem", "related_authority", "AgentAuthority")
+add_relation_definition("ExternRef", "related_authority", "AgentAuthority")
 
 
 sql(
-    'CREATE TABLE authority_history ( '
-    '  findingaid varchar(64),'
-    '  type varchar(20),'
-    '  label varchar(2048),'
-    '  autheid int,'
-    '  UNIQUE (findingaid, type, label)'
-    ')'
+    "CREATE TABLE authority_history ( "
+    "  findingaid varchar(64),"
+    "  type varchar(20),"
+    "  label varchar(2048),"
+    "  autheid int,"
+    "  UNIQUE (findingaid, type, label)"
+    ")"
 )

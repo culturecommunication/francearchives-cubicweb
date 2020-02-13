@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ead xmlns:xlink="http://www.w3.org/1999/xlink">
+    <eadheader>
+        <eadid>FRAD063_000051242</eadid>
+        <filedesc>
+            <titlestmt>
+                <titleproper>Bailliage de Chauvance (répertoire provisoire)</titleproper>
+            </titlestmt>
+            <publicationstmt>
+                <publisher>Archives Départementales du Puy de Dôme</publisher>
+                <address>
+                    <addressline>75 r Neyrat 63100 Clermont Ferrand</addressline>
+                </address>
+            </publicationstmt>
+        </filedesc>
+        <profiledesc>
+            <creation>Cet instrument de recherche a été généré avec la suite Ligeo
+                    Archives21/03/2018<date normal="2018/2018">21/03/2018</date></creation>
+            <langusage>Instrument de recherche rédigé en<language>français</language></langusage>
+        </profiledesc>
+    </eadheader>
+    <archdesc level="fonds" id="ark--72847-vta1a56e5e06dfce452">
+        <did>
+            <unittitle>Bailliage de Chauvance (répertoire provisoire)</unittitle>
+        </did>
+        <accessrestrict type="statut_publication">
+            <p>Publiable sur internet</p>
+        </accessrestrict>
+        <dsc type="in-depth">
+            <c altrender="ligeo-branche-standard" id="ark--72847-2581053">
+                <did>
+                    <unittitle>Sentences, requêtes, défauts, plaintes, enquêtes, successions,
+                        procès-verbaux, etc (civil et criminel)</unittitle>
+                    <unitid type="ligeo-cote-automatique"><extptr
+                        xlink:href="http://www.archivesdepartementales.puydedome.fr/ark:/72847/2581053"
+                    />B MO 283, 288</unitid>
+                </did>
+                <c level="file" altrender="ligeo-article-simplifie" id="ark--72847-414995.2581055">
+                    <did>
+                        <unittitle>1751-1774 (mélangé avec des pièces des bailliages de Biollet et
+                            de Rochedagoux)</unittitle>
+                        <unitid>B MO 283<extptr
+                                xlink:href="http://www.archivesdepartementales.puydedome.fr/ark:/72847/414995.2581055"
+                            /></unitid>
+                    </did>
+                </c>
+                <c altrender="ligeo-article-simplifie" id="ark--72847-415000.2581056" level="file">
+                    <did>
+                        <unittitle>1787-1790 (châtellenie de Salvert de Chauvance ???)</unittitle>
+                        <unitid>B MO 288<extptr
+                                xlink:href="http://www.archivesdepartementales.puydedome.fr/ark:/72847/415000.2581056"
+                            /></unitid>
+                    </did>
+                </c>
+            </c>
+        </dsc>
+    </archdesc>
+</ead>

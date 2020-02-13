@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <ead xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:isbn:1-931666-22-9" audience="external" xsi:schemaLocation="urn:isbn:1-931666-22-9 http://www.loc.gov/ead/ead.xsd">
   <eadheader>
-    <eadid identifier="FRAD084_xxx" url="https://francearchives.fr/findingaid/FRAD084_xxx">FRAD084_xxx</eadid>
+    <eadid identifier="FRAD084_xxx" url="https://francearchives.fr/findingaid/23a35c56694f6d50d879fc54dea7c5d0ba6d0c1f">FRAD084_xxx</eadid>
     <filedesc>
       <titlestmt>
         <titleproper>titleproper</titleproper>

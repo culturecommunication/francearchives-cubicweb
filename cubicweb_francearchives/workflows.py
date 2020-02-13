@@ -33,10 +33,10 @@ from cubicweb import _
 
 
 def oai_import_task_workflow(add_workflow):
-    wf = add_workflow(u'OAI import workflow', 'OAIImportTask')
-    running = wf.add_state(_('wfs_oaiimport_running'), initial=True)
-    completed = wf.add_state(_('wfs_oaiimport_completed'))
-    failed = wf.add_state(_('wfs_oaimport_failed'))
-    wf.add_transition(_('wft_faimport_complete'), (running, ), completed)
-    wf.add_transition(_('wft_faimport_fail'), (running, ), failed)
+    wf = add_workflow("OAI import workflow", "OAIImportTask")
+    running = wf.add_state(_("wfs_oaiimport_running"), initial=True)
+    completed = wf.add_state(_("wfs_oaiimport_completed"))
+    failed = wf.add_state(_("wfs_oaimport_failed"))
+    wf.add_transition(_("wft_faimport_complete"), (running,), completed)
+    wf.add_transition(_("wft_faimport_fail"), (running,), failed)
     return wf

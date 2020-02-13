@@ -34,28 +34,30 @@ from cubicweb_francearchives.migration import migr_080
 def fix_hero_labels(cnx):
     """Fix text source shown on the hero image"""
 
-    with cnx.allow_all_hooks_but('es', 'sync', 'varnish'):
-        res = rql('Any X '
-                  'WHERE  X is CssImage, X cssid LIKE "hero-%%", '
-                  '       X cssid I, X copyright R')
+    with cnx.allow_all_hooks_but("es", "sync", "varnish"):
+        res = rql(
+            "Any X "
+            'WHERE  X is CssImage, X cssid LIKE "hero-%%", '
+            "       X cssid I, X copyright R"
+        )
 
         for hero in res.entities():
             if hero.cssid == "hero-comprendre":
-                hero.cw_set(copyright=u"Source : Archives de la Vienne")
+                hero.cw_set(copyright="Source : Archives de la Vienne")
             if hero.cssid == "hero-gerer":
-                hero.cw_set(copyright=u"Source : Archives de la Vienne")
+                hero.cw_set(copyright="Source : Archives de la Vienne")
             if hero.cssid == "hero-decouvrir":
-                hero.cw_set(copyright=u"Source : Archives Nationales")
+                hero.cw_set(copyright="Source : Archives Nationales")
 
         cnx.commit()
 
 
-if __name__ == '__main__':
-    if confirm('fix illustration url? [Y/n]'):
+if __name__ == "__main__":
+    if confirm("fix illustration url? [Y/n]"):
         migr_080.fix_illustration_urls(cnx, sql)
 
-    if confirm('rewrite CMS content URLs ? [Y/n]'):
+    if confirm("rewrite CMS content URLs ? [Y/n]"):
         migr_080.rewrite_cms_content_urls(cnx)
 
-    if confirm('Fix hero sources ? [Y/n]'):
+    if confirm("Fix hero sources ? [Y/n]"):
         fix_hero_labels(cnx)

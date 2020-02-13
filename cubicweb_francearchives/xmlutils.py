@@ -31,7 +31,7 @@
 
 """ xml utility functions"""
 from lxml import html as lxml_html
-from utils import is_external_link
+from .utils import is_external_link
 
 import logging
 
@@ -45,8 +45,8 @@ def to_unicode(el):
 def log(msg, eid=None):
     try:
         if eid:
-            msg = u'Entity {}: {}'.format(eid, msg)
-        logging.getLogger('xmltulils').warn(msg)
+            msg = "Entity {}: {}".format(eid, msg)
+        logging.getLogger("xmltulils").warn(msg)
     except Exception:
         pass
 
@@ -56,24 +56,25 @@ def process_html_as_xml(func):
         if not html:
             return None
         # security belt
-        eid = kwargs.get('eid')
-        if not html.startswith('<'):
+        eid = kwargs.get("eid")
+        if not html.startswith("<"):
             return html
-        if html.startswith('<body'):
+        if html.startswith("<body"):
             return html
         try:
             fragments = lxml_html.fragments_fromstring(html)
         except Exception as err:
-            log(u'Invalid html: {}'.format(err), eid)
+            log("Invalid html: {}".format(err), eid)
             return html
         if fragments:
             func(fragments[0], *args, **kwargs)
-        html = u''.join(to_unicode(fragment) for fragment in fragments)
+        html = "".join(to_unicode(fragment) for fragment in fragments)
         return html
+
     return wrapper
 
 
-FRFILE = re.compile(r'../file/(\w+)/(.*)')
+FRFILE = re.compile(r"../file/(\w+)/(.*)")
 
 
 def is_francearchive_relatif_link(href):
@@ -85,33 +86,33 @@ def is_francearchive_relatif_link(href):
 
 def add_title_on_external_links(cnx, node, href=None):
     if is_external_link(href, cnx.base_url()):
-        node.set('rel', 'nofollow noopener noreferrer')
-        node.set('target', '_blank')
-        title = node.attrib.get('title')
+        node.set("rel", "nofollow noopener noreferrer")
+        node.set("target", "_blank")
+        title = node.attrib.get("title")
         if not title:
             title = node.text_content()
-        title = u'{} {}'.format(title, cnx._('- New window'))
-        node.set('title', title)
+        title = "{} {}".format(title, cnx._("- New window"))
+        node.set("title", title)
 
 
 def fix_fa_external_links(root, cnx):
     """this method is used in views"""
-    nodes = root.xpath('//*[@href]')
+    nodes = root.xpath("//*[@href]")
     tobe_removed = []
     for node in nodes:
-        href = node.attrib['href']
-        if href.startswith('//'):
-            node.set('href', 'http:{}'.format(href))
-            href = node.attrib['href']
+        href = node.attrib["href"]
+        if href.startswith("//"):
+            node.set("href", "http:{}".format(href))
+            href = node.attrib["href"]
         if is_external_link(href, cnx.base_url()):
             # add _blank target
             add_title_on_external_links(cnx, node, href)
         elif is_francearchive_relatif_link(href):
-            rel = node.attrib.get('rel')
-            if rel == 'nofollow noopener noreferrer':
-                del node.attrib['rel']
-            if 'target' in node.attrib:
-                del node.attrib['target']
+            rel = node.attrib.get("rel")
+            if rel == "nofollow noopener noreferrer":
+                del node.attrib["rel"]
+            if "target" in node.attrib:
+                del node.attrib["target"]
         else:
             # remove links with relative path
             # (cf. https://extranet.logilab.fr/ticket/54134093)
@@ -129,42 +130,43 @@ def fix_links(root, cnx, *args, **kwargs):
 
     """
     base_url = cnx.base_url()
-    for node in root.xpath('//a'):
+    for node in root.xpath("//a"):
         attribs = node.attrib
         # remove empty title
-        title = attribs.get('title', None)
+        title = attribs.get("title", None)
         if title is not None and not title.strip():
-            attribs.pop('title')
+            attribs.pop("title")
         # remove title identical to the link's label
         content = node.text_content()
         if title is not None and title == content:
-            attribs.pop('title')
-        href = attribs.get('href')
+            attribs.pop("title")
+        href = attribs.get("href")
         if href is None:
-            if attribs.get('name') is None:
+            if attribs.get("name") is None:
                 log(
-                    (u'Invalid link tag with missing href: '
-                     u'content "{}", attrs"{}"').format(
-                         repr(node.text_content()),
-                         repr(attribs)), kwargs.get('eid'))
+                    ("Invalid link tag with missing href: " 'content "{}", attrs"{}"').format(
+                        repr(node.text_content()), repr(attribs)
+                    ),
+                    kwargs.get("eid"),
+                )
         else:
             if is_external_link(href, base_url):
-                node.set('rel', 'nofollow noopener noreferrer')
-                node.set('target', '_blank')
+                node.set("rel", "nofollow noopener noreferrer")
+                node.set("target", "_blank")
             else:
-                for attr in ('target', 'rel'):
+                for attr in ("target", "rel"):
                     if attribs.get(attr):
                         attribs.pop(attr)
         # change the image alt
         images = node.xpath(".//child::img")
         for image in images:
-            image.set('alt', content)
+            image.set("alt", content)
         if images:
-            if 'class' in attribs:
-                css_class = '{} image-link'.format(attribs['class'])
+            if "class" in attribs:
+                css_class = "{} image-link".format(attribs["class"])
             else:
-                css_class = 'image-link'
-            node.set('class', css_class)
+                css_class = "image-link"
+            node.set("class", css_class)
 
 
 def fix_images(root, *args, **kwargs):
@@ -172,28 +174,28 @@ def fix_images(root, *args, **kwargs):
     in etree root by process_html_as_xml
 
     """
-    for node in root.xpath('//img'):
+    for node in root.xpath("//img"):
         attribs = node.attrib
         # add an empty alt rgaa 3.1
-        alt = ''
-        if 'alt' not in attribs:
-            attribs['alt'] = alt
+        alt = ""
+        if "alt" not in attribs:
+            attribs["alt"] = alt
             # rgaa 3.2
-            if 'title' in attribs:
-                attribs.pop('title')
+            if "title" in attribs:
+                attribs.pop("title")
         else:
             # 3.3 alt must be relevent
-            filename = attribs['src'].rsplit('/', 1)[-1]
-            alt = attribs['alt'].strip()
+            filename = attribs["src"].rsplit("/", 1)[-1]
+            alt = attribs["alt"].strip()
             if alt == filename.strip():
-                attribs['alt'] = ''
+                attribs["alt"] = ""
         # 3.3 alt and title must be identical is title exists
-        if 'title' in attribs:
-            title = attribs['title'].strip()
+        if "title" in attribs:
+            title = attribs["title"].strip()
             if not title:
-                attribs.pop('title')
+                attribs.pop("title")
             elif title != alt:
-                attribs['title'] = alt
+                attribs["title"] = alt
 
 
 @process_html_as_xml

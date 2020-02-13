@@ -39,31 +39,25 @@ from cubicweb_francearchives import i18n
 
 
 class PolibTests(BaseTestCase):
-
     def test_po_catalogs_update(self):
         po_files = i18n.all_pofiles()
         po_dicts = i18n.pofiles_as_dicts(po_files, skip_msgctxt=False)
-        po_dicts['en'][('', 'Person')].msgstr = ''
-        po_dicts = i18n.update_i18n_catalogs(po_files,
-                                             self.datapath('translations.csv'),
-                                             autosave=False, skip_msgctxt=False)
-        self.assertEqual('auteurfr',
-                         po_dicts['fr'][('', 'Person')].msgstr)
-        self.assertEqual('auteurfr',
-                         po_dicts['en'][('', 'Person')].msgstr)
-        self.assertEqual('auteurde',
-                         po_dicts['de'][('', 'Person')].msgstr)
-        self.assertEqual('nameservde',
-                         po_dicts['de'][('Service', 'name')].msgstr)
-        self.assertEqual('namesecten',
-                         po_dicts['en'][('Section', 'name')].msgstr)
+        po_dicts["en"][("", "Person")].msgstr = ""
+        po_dicts = i18n.update_i18n_catalogs(
+            po_files, self.datapath("translations.csv"), autosave=False, skip_msgctxt=False
+        )
+        self.assertEqual("auteurfr", po_dicts["fr"][("", "Person")].msgstr)
+        self.assertEqual("auteurfr", po_dicts["en"][("", "Person")].msgstr)
+        self.assertEqual("auteurde", po_dicts["de"][("", "Person")].msgstr)
+        self.assertEqual("nameservde", po_dicts["de"][("Service", "name")].msgstr)
+        self.assertEqual("namesecten", po_dicts["en"][("Section", "name")].msgstr)
 
     def test_schema_msgid_filtered(self):
         po_files = i18n.all_pofiles()
         po_dicts = i18n.pofiles_as_dicts(po_files)
-        msgids = {msgid for _, msgid in po_dicts['fr'].keys()}
-        self.assertNotIn('add a BaseContent', msgids)
-        self.assertIn('Circular', msgids)
+        msgids = {msgid for _, msgid in list(po_dicts["fr"].keys())}
+        self.assertNotIn("add a BaseContent", msgids)
+        self.assertIn("Circular", msgids)
 
 
 def load_tests(loader, tests, ignore):
@@ -71,5 +65,5 @@ def load_tests(loader, tests, ignore):
     return tests
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

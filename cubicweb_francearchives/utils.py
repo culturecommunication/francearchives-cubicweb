@@ -30,13 +30,15 @@
 #
 
 """small utility functions"""
-from __future__ import print_function
+
 
 import os.path as osp
 import string
-from six.moves import urllib
+import urllib.parse
+from collections import OrderedDict
 
 from elasticsearch.exceptions import NotFoundError
+from functools import reduce
 
 from logilab.mtconverter import xml_escape, html_unescape
 from logilab.database import get_db_helper
@@ -48,14 +50,43 @@ from cubicweb_elasticsearch.es import get_connection
 
 
 def remove_html_tags(html):
-    html = html.replace('<br>', ' ').replace(r'<br\>', ' ').replace(r'<br \>', ' ')
+    html = html.replace("<br>", " ").replace(r"<br\>", " ").replace(r"<br \>", " ")
     return cw_remove_html_tags(html)
 
 
-def merge_dicts(dict1, *dicts):
-    for d in dicts:
-        dict1.update(d)
-    return dict1
+def merge_dicts(*dicts):
+    def merge2dicts(x, y):
+        z = x.copy()
+        z.update(y)
+        return z
+
+    return reduce(merge2dicts, dicts)
+
+
+def format_entity_attributes(elem, result):
+    if type(elem) == dict or type(elem) == OrderedDict:
+        if len(list(elem.keys())) == 1:
+            for label, values in elem.items():
+                result += "{}".format(format_entity_attributes(values, ""))
+        else:
+            for label, values in elem.items():
+                if values:
+                    if label:
+                        result += '<div class="ead-label">{label}</div><div>{value}</div>'.format(
+                            label=label, value=format_entity_attributes(values, "")
+                        )
+                    else:
+                        result += format_entity_attributes(values, "")
+        return result
+    elif type(elem) == list:
+        for i, e in enumerate(elem):
+            if i == 0:
+                result += "{}".format(format_entity_attributes(e, ""))
+            else:
+                result += " {}".format(format_entity_attributes(e, ""))
+        return result
+    else:
+        return "{}".format(elem)
 
 
 def pick(infos, *keys):
@@ -74,13 +105,15 @@ def find_card(cwreq, wikiid):
     """
     # try to fetch all candidates in a single query
     rset = cwreq.execute(
-        'Any X,XW,XT,XC,XCF WHERE X is Card, '
-        'X wikiid XW, X title XT, X content XC, X content_format XCF, '
-        'X wikiid ILIKE %(w)s', {'w': '{}%'.format(wikiid)})
+        "Any X,XW,XT,XC,XCF WHERE X is Card, "
+        "X wikiid XW, X title XT, X content XC, X content_format XCF, "
+        "X wikiid ILIKE %(w)s",
+        {"w": "{}%".format(wikiid)},
+    )
     cards = {e.wikiid: e for e in rset.entities()}
-    candidate_wikiids = ['{}-fr'.format(wikiid), wikiid]
-    if cwreq.lang != 'fr':
-        candidate_wikiids.insert(0, '{}-{}'.format(wikiid, cwreq.lang))
+    candidate_wikiids = ["{}-fr".format(wikiid), wikiid]
+    if cwreq.lang != "fr":
+        candidate_wikiids.insert(0, "{}-{}".format(wikiid, cwreq.lang))
     for wikiid in candidate_wikiids:
         # consider card as valid if it exists _and_ has some content
         if wikiid in cards and cards[wikiid].content:
@@ -90,76 +123,76 @@ def find_card(cwreq, wikiid):
 
 def es_setup_backup(config):
     es = get_connection(config)
-    es.snapshot.create_repository(repository='francearchives-backups',
-                                  body={
-                                      'type': 'fs',
-                                      'settings': {
-                                          'location': 'backups',
-                                          'compress': True
-                                      }})
+    es.snapshot.create_repository(
+        repository="francearchives-backups",
+        body={"type": "fs", "settings": {"location": "backups", "compress": True}},
+    )
 
 
 def es_dump(config, snapshot_name, delete=False):
     es = get_connection(config)
     if delete:
         try:
-            es.snapshot.delete(repository='francearchives-backups',
-                               snapshot=snapshot_name)
+            es.snapshot.delete(repository="francearchives-backups", snapshot=snapshot_name)
         except NotFoundError:
             pass
-    es.snapshot.create(repository='francearchives-backups',
-                       snapshot=snapshot_name,
-                       body={
-                           'indices': [
-                               config['index-name'] + '_all',
-                               config['index-name'] + '_suggest',
-                           ],
-                           'include_global_state': False,
-                       },)
+    es.snapshot.create(
+        repository="francearchives-backups",
+        snapshot=snapshot_name,
+        body={
+            "indices": [config["index-name"] + "_all", config["index-name"] + "_suggest",],
+            "include_global_state": False,
+        },
+    )
 
 
 def es_restore(config, snapshot_name, index_prefix, delete=False):
     es = get_connection(config)
     if delete:
-        for ext in ('_all', '_suggest'):
+        for ext in ("_all", "_suggest"):
             # we need to loop on possible extensions here
             # to be a bit robust: if one of the indices does not
             # exists, we do want to delete other indices
             try:
-                es.indices.delete(index=config['index-name'] + ext)
+                es.indices.delete(index=config["index-name"] + ext)
             except NotFoundError:
                 pass
-    es.snapshot.restore(repository='francearchives-backups',
-                        snapshot=snapshot_name,
-                        body={
-                            'indices': [
-                                index_prefix + '_all',
-                                index_prefix + '_suggest',
-                            ],
-                            'include_global_state': False,
-                            'rename_pattern': '.+_([^_]+)$',
-                            'rename_replacement': config['index-name'] + '_$1'
-                        },)
+    es.snapshot.restore(
+        repository="francearchives-backups",
+        snapshot=snapshot_name,
+        body={
+            "indices": [index_prefix + "_all", index_prefix + "_suggest",],
+            "include_global_state": False,
+            "rename_pattern": ".+_([^_]+)$",
+            "rename_replacement": config["index-name"] + "_$1",
+        },
+    )
 
 
 # utility functions used for materialized view management
-def table_exists(sql, tablename, pg_schema='public'):
+def table_exists(sql, tablename, pg_schema="public"):
     """Return True if the given table already exists in the database."""
     # sql can be either cnx.system_sql (Connection.system_sql) or sql helper of cubicweb-ctl shell
     # (ServerMigrationHelper.sqlexec)
     # in first case it returns cursor in second case it returns cursor.fetchall result
-    cu = sql('SELECT 1 from information_schema.tables '
-             'WHERE table_name=%(t)s AND table_schema=%(s)s',
-             {'t': tablename, 's': pg_schema})
-    if hasattr(cu, 'fetchone'):
+    cu = sql(
+        "SELECT 1 from information_schema.tables " "WHERE table_name=%(t)s AND table_schema=%(s)s",
+        {"t": tablename, "s": pg_schema},
+    )
+    if hasattr(cu, "fetchone"):
         return bool(cu.fetchone())
     return bool(cu)
 
 
-def setup_published_schema(sql, etypes=None, rtypes=None,
-                           user=None,
-                           sqlschema='published', dumpfiles=None,
-                           force_recreate=False):
+def setup_published_schema(
+    sql,
+    etypes=None,
+    rtypes=None,
+    user=None,
+    sqlschema="published",
+    dumpfiles=None,
+    force_recreate=False,
+):
     """Create (or replace) a SQL schema (named "published" by default) in
     which we find filtered copied of CMS entities postgresql tables
     (and the required relations) that are in the
@@ -174,56 +207,51 @@ def setup_published_schema(sql, etypes=None, rtypes=None,
     # XXX use jinja2 instead
     create_tables = []
     for etype in etypes:
-        tablename = 'cw_' + etype.lower()
+        tablename = "cw_" + etype.lower()
         if table_exists(sql, tablename, sqlschema):
             no_table_exists = False
             continue
         create_tables.append(
-            'create table if not exists {schema}.{table} as '
-            '  select * from {table} where null;'.format(
-                table=tablename,
-                schema=sqlschema))
+            "create table if not exists {schema}.{table} as "
+            "  select * from {table} where null;".format(table=tablename, schema=sqlschema)
+        )
         create_tables.append(
-            'alter table {schema}.{table} '
-            '  add primary key (cw_eid);'.format(
-                table='cw_' + etype.lower(),
-                schema=sqlschema))
+            "alter table {schema}.{table} "
+            "  add primary key (cw_eid);".format(table="cw_" + etype.lower(), schema=sqlschema)
+        )
 
     # XXX should we introspect the cw schema to get these rtypes?
     indexes = []
     for rtype in rtypes:
-        tablename = rtype + '_relation'
+        tablename = rtype + "_relation"
         if table_exists(sql, tablename, sqlschema):
             no_table_exists = False
             continue
         create_tables.append(
-            'create table if not exists {schema}.{table} as '
-            '  select * from {table} where null;'.format(
-                table=tablename,
-                schema=sqlschema))
+            "create table if not exists {schema}.{table} as "
+            "  select * from {table} where null;".format(table=tablename, schema=sqlschema)
+        )
         create_tables.append(
-            'alter table {schema}.{table} '
-            '  add primary key (eid_from, eid_to);'.format(
-                table=rtype + '_relation',
-                schema=sqlschema))
+            "alter table {schema}.{table} "
+            "  add primary key (eid_from, eid_to);".format(
+                table=rtype + "_relation", schema=sqlschema
+            )
+        )
         # create indexes on those relation tables
-        for col in ('eid_from', 'eid_to'):
-            indexes.append('create index {rtype}_{col}_idx on '
-                           '{schema}.{rtype}_relation({col});'.format(
-                               schema=sqlschema,
-                               rtype=rtype,
-                               col=col,
-                           ))
-    schema_creation = ''
+        for col in ("eid_from", "eid_to"):
+            indexes.append(
+                "create index {rtype}_{col}_idx on "
+                "{schema}.{rtype}_relation({col});".format(schema=sqlschema, rtype=rtype, col=col,)
+            )
+    schema_creation = ""
     if force_recreate or no_table_exists:
         # we should not recreate schema unless either force_recreate option is True or
         # all expected tables are missing
-        schema_creation = '''
+        schema_creation = """
 drop schema if exists {schema} cascade;
 create schema {schema} {authorization};
-        '''.format(
-            schema=sqlschema,
-            authorization='authorization %s' % user if user is not None else '',
+        """.format(
+            schema=sqlschema, authorization="authorization %s" % user if user is not None else "",
         )
     template = """
 {schema_creation}
@@ -234,17 +262,17 @@ create schema {schema} {authorization};
 """
     sqlcode = template.format(
         schema_creation=schema_creation,
-        create_tables='\n'.join(create_tables),
-        indexes='\n'.join(indexes))
+        create_tables="\n".join(create_tables),
+        indexes="\n".join(indexes),
+    )
     if dumpfiles:
-        with open(osp.join(dumpfiles, 'setup.sql'), 'w') as fobj:
+        with open(osp.join(dumpfiles, "setup.sql"), "w") as fobj:
             fobj.write(sqlcode)
     if sql:
         sql(sqlcode)
 
 
-def init_repository(config, interactive=True, drop=False, vreg=None,
-                    init_config=None):
+def init_repository(config, interactive=True, drop=False, vreg=None, init_config=None):
     """Initialise a repository database by creating tables ONLY (does NOT
     fill them)
 
@@ -253,12 +281,13 @@ def init_repository(config, interactive=True, drop=False, vreg=None,
     from cubicweb.server.repository import Repository
     from cubicweb.server.sqlutils import sqlexec, sqlschema, sql_drop_all_user_tables
     from cubicweb.server.sqlutils import _SQL_DROP_ALL_USER_TABLES_FILTER_FUNCTION as drop_filter
+
     # configuration to avoid db schema loading and user'state checking
     # on connection
     config.creating = True
     config.consider_user_state = False
-    config.cubicweb_appobject_path = set(('hooks', 'entities'))
-    config.cube_appobject_path = set(('hooks', 'entities'))
+    config.cubicweb_appobject_path = set(("hooks", "entities"))
+    config.cube_appobject_path = set(("hooks", "entities"))
     # only enable the system source at initialization time
     repo = Repository(config, vreg=vreg)
     if init_config is not None:
@@ -266,8 +295,8 @@ def init_repository(config, interactive=True, drop=False, vreg=None,
         init_config(config)
     schema = repo.schema
     sourcescfg = config.read_sources_file()
-    source = sourcescfg['system']
-    driver = source['db-driver']
+    source = sourcescfg["system"]
+    driver = source["db-driver"]
     with repo.internal_cnx() as cnx:
         sqlcnx = cnx.cnxset.cnx
         sqlcursor = cnx.cnxset.cu
@@ -281,20 +310,22 @@ def init_repository(config, interactive=True, drop=False, vreg=None,
             # (looping may induce infinite recursion when user have no rights for example).
             # Here we try to keep code simple and backend independent. That's why we don't try to
             # distinguish remaining tables (missing privileges, dependencies, ...).
-            failed = sqlexec(dropsql, execute, cnx=sqlcnx,
-                             pbtitle='-> dropping tables (first pass)')
+            failed = sqlexec(
+                dropsql, execute, cnx=sqlcnx, pbtitle="-> dropping tables (first pass)"
+            )
             if failed:
-                failed = sqlexec(failed, execute, cnx=sqlcnx,
-                                 pbtitle='-> dropping tables (second pass)')
+                failed = sqlexec(
+                    failed, execute, cnx=sqlcnx, pbtitle="-> dropping tables (second pass)"
+                )
                 remainings = list(filter(drop_filter, helper.list_tables(sqlcursor)))
-                assert not remainings, 'Remaining tables: %s' % ', '.join(remainings)
+                assert not remainings, "Remaining tables: %s" % ", ".join(remainings)
         handler = config.migration_handler(schema, interactive=False, repo=repo, cnx=cnx)
         # install additional driver specific sql files
         handler.cmd_install_custom_sql_scripts()
         for cube in reversed(config.cubes()):
             handler.cmd_install_custom_sql_scripts(cube)
-        _title = '-> creating tables '
-        print(_title, end=' ')
+        _title = "-> creating tables "
+        print(_title, end=" ")
         # schema entities and relations tables
         # can't skip entities table even if system source doesn't support them,
         # they are used sometimes by generated sql. Keeping them empty is much
@@ -302,29 +333,29 @@ def init_repository(config, interactive=True, drop=False, vreg=None,
         schemasql = sqlschema(schema, driver)
         failed = sqlexec(schemasql, execute, pbtitle=_title)
         if failed:
-            print('The following SQL statements failed. You should check your schema.')
+            print("The following SQL statements failed. You should check your schema.")
             print(failed)
-            raise Exception('execution of the sql schema failed, you should check your schema')
+            raise Exception("execution of the sql schema failed, you should check your schema")
         sqlcursor.close()
         sqlcnx.commit()
-    print('-> database tables for instance %s created.' % config.appid)
+    print("-> database tables for instance %s created." % config.appid)
 
 
 def safe_cut(text, length, remove_html=False):
     """returns a string of length <length> based on <text>, removing any html
     tags from given text if cut is necessary or remove_html`is True."""
     if not text:
-        return u''
+        return ""
     noenttext = html_unescape(text)
     text_nohtml = remove_html_tags(noenttext)
     # try to keep html tags if text is short enough
     if len(text_nohtml) <= length:
         return text_nohtml if remove_html else text
     # else if un-tagged text is too long, cut it
-    return xml_escape(text_nohtml[:length] + u'...')
+    return xml_escape(text_nohtml[:length] + "...")
 
 
-def cut_words(text, length=120, end=u'...'):
+def cut_words(text, length=120, end="..."):
     """returns a string of a maximum length <length> based on <text>
     without cutting the words.
 
@@ -336,7 +367,7 @@ def cut_words(text, length=120, end=u'...'):
         count += len(word) + 1  # count the upcommingspace
         if count > length:
             i = i if i else 1
-            title = u' '.join(words[:i])
+            title = " ".join(words[:i])
             break
     else:
         title = text
@@ -348,39 +379,23 @@ def cut_words(text, length=120, end=u'...'):
 def title_for_link(cnx, title, readmore=True):
     """html: title used to title attribute in links"""
     if readmore:
-        end = u' - {}'.format(cnx._('Read more'))
+        end = " - {}".format(cnx._("Read more"))
     title = title.replace('"', "'")
-    return u'{}{}'.format(title, end)
+    return "{}{}".format(title, end)
 
 
 def id_for_anchor(title):
     if title:
-        title = ''.join([unormalize(x[0].lower()) for x in title])
-        title = title.translate({ord(c): u'' for c in string.punctuation})
-        title = title.lower().replace(' ', '-')
+        title = "".join([unormalize(x[0].lower()) for x in title])
+        title = title.translate({ord(c): "" for c in string.punctuation})
+        title = title.lower().replace(" ", "-")
     return title
-
-
-def clean_up(filename):
-    """Clean up filename.
-
-    :param str filename: filename
-
-    :returns: cleaned-up filename
-    (replace punctuation and whitespace with "_" and remove non-ASCII)
-    :rtype: str
-    """
-    filename = u"".join(
-        char if char not in string.punctuation + string.whitespace else u"_"
-        for char in filename
-    )
-    return unormalize(filename)
 
 
 def is_absolute_url(url):
     if bool(urllib.parse.urlparse(url).netloc):
         return True
-    if url.startswith('www.'):
+    if url.startswith("www."):
         return True
     return False
 

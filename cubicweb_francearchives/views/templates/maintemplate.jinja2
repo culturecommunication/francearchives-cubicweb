@@ -93,7 +93,7 @@
           <div id="social-networks" class="col-xs-6">
             {% if sn %}
              <ul>
-              {% for snid, snvals in sn.iteritems() %}
+              {% for snid, snvals in sn.items() %}
               <li>
                 <a id="{{ snid }}-action"
                    class="action-link"

@@ -34,7 +34,7 @@
 
 
 # standard library imports
-from __future__ import unicode_literals
+
 
 import os
 import glob
@@ -76,7 +76,7 @@ class TestOAIPMHWriter(unittest.TestCase):
         os.makedirs(path)
         open(file_path, "w+").close()
         oai_writer = oai_utils.OAIPMHWriter(
-            self.EAD_SERVICES_DIR, self.SERVICE_INFOS
+            self.EAD_SERVICES_DIR, self.SERVICE_INFOS, subdirectories=["oaipmh"]
         )
         oai_writer.makedir(subdirectories=["oaipmh"])
         self.assertTrue(os.path.exists(path))
@@ -89,9 +89,7 @@ class TestOAIPMHWriter(unittest.TestCase):
         Expecting: new directory
         """
         path = self.PATH.format(**self.SERVICE_INFOS)
-        oai_writer = oai_utils.OAIPMHWriter(
-            self.EAD_SERVICES_DIR, self.SERVICE_INFOS
-        )
+        oai_writer = oai_utils.OAIPMHWriter(self.EAD_SERVICES_DIR, self.SERVICE_INFOS)
         oai_writer.makedir(subdirectories=["oaipmh"])
         self.assertTrue(os.path.exists(path))
 
@@ -99,15 +97,61 @@ class TestOAIPMHWriter(unittest.TestCase):
         """Test getting file path.
 
         Trying: fout-digit EAD ID
-        Expecting: file path is {path}/{eadid}.xml
+        Expecting: file path is {path}/{code_service}_{eadid}.xml
         """
         path = self.PATH.format(**self.SERVICE_INFOS)
         eadid = "1234"
-        file_path = os.path.join(path, "{eadid}.xml".format(eadid=eadid))
+        service_code = self.SERVICE_INFOS["code"]
+        file_path = os.path.join(path, "{code}_{eadid}.xml".format(code=service_code, eadid=eadid))
         oai_writer = oai_utils.OAIPMHWriter(
-            self.EAD_SERVICES_DIR, self.SERVICE_INFOS
+            self.EAD_SERVICES_DIR, self.SERVICE_INFOS, subdirectories=["oaipmh"]
         )
-        self.assertEqual(file_path, oai_writer.get_file_path(path, eadid))
+        self.assertEqual(file_path, oai_writer.get_file_path(eadid))
+
+    def test_get_file_path_lower(self):
+        """Test getting file path.
+
+        Trying: fout-digit EAD ID
+        Expecting: file path is {path}/{code_service}_{eadid}.xml
+        """
+        path = self.PATH.format(**self.SERVICE_INFOS)
+        eadid = "frad123_1234"
+        service_code = self.SERVICE_INFOS["code"]
+        file_path = os.path.join(path, "{code}_1234.xml".format(code=service_code))
+        oai_writer = oai_utils.OAIPMHWriter(
+            self.EAD_SERVICES_DIR, self.SERVICE_INFOS, subdirectories=["oaipmh"]
+        )
+        self.assertEqual(file_path, oai_writer.get_file_path(eadid))
+
+    def test_get_file_whitespace(self):
+        """Test getting file path.
+
+        Trying: fout-digit EAD ID
+        Expecting: file path is {path}/{code_service}_{eadid}.xml
+        """
+        path = self.PATH.format(**self.SERVICE_INFOS)
+        eadid = " FRAD123_1234 "
+        service_code = self.SERVICE_INFOS["code"]
+        file_path = os.path.join(path, "{code}_1234.xml".format(code=service_code))
+        oai_writer = oai_utils.OAIPMHWriter(
+            self.EAD_SERVICES_DIR, self.SERVICE_INFOS, subdirectories=["oaipmh"]
+        )
+        self.assertEqual(file_path, oai_writer.get_file_path(eadid))
+
+    def test_get_file_path_dasg(self):
+        """Test getting file path.
+
+        Trying: EAD ID with dash
+        Expecting: file path is {path}/{code_service}_{eadid}.xml
+        """
+        path = self.PATH.format(**self.SERVICE_INFOS)
+        eadid = "FRAD123 F 1-1423"
+        service_code = self.SERVICE_INFOS["code"]
+        file_path = os.path.join(path, "FRAD123_F_1-1423.xml".format(code=service_code))
+        oai_writer = oai_utils.OAIPMHWriter(
+            self.EAD_SERVICES_DIR, self.SERVICE_INFOS, subdirectories=["oaipmh"]
+        )
+        self.assertEqual(file_path, oai_writer.get_file_path(eadid))
 
     def test_get_file_contents(self):
         """Test getting file contents.
@@ -115,9 +159,7 @@ class TestOAIPMHWriter(unittest.TestCase):
         Trying: calling get_file_contents method
         Expecting: raises NotImplementedError
         """
-        oai_writer = oai_utils.OAIPMHWriter(
-            self.EAD_SERVICES_DIR, self.SERVICE_INFOS
-        )
+        oai_writer = oai_utils.OAIPMHWriter(self.EAD_SERVICES_DIR, self.SERVICE_INFOS)
         with self.assertRaises(NotImplementedError):
             oai_writer.get_file_contents()
 
@@ -127,13 +169,15 @@ class TestOAIPMHWriter(unittest.TestCase):
         Trying: new file
         Expecting: new file
         """
+        eadid = "IR0001383"
         path = self.PATH.format(**self.SERVICE_INFOS)
-        file_path = os.path.join(path, "foo")
+        file_path = os.path.join(path, "{}_{}.xml".format(self.SERVICE_INFOS["code"], eadid))
         os.makedirs(path)
         oai_writer = oai_utils.OAIPMHWriter(
-            self.EAD_SERVICES_DIR, self.SERVICE_INFOS
+            self.EAD_SERVICES_DIR, self.SERVICE_INFOS, subdirectories=["oaipmh"]
         )
-        oai_writer.dump(file_path, "bar")
+        oai_file_path = oai_writer.dump(eadid, b"bar")
+        self.assertEqual(file_path, oai_file_path)
         with open(file_path) as fp:
             self.assertEqual("bar", fp.read())
 
@@ -143,14 +187,16 @@ class TestOAIPMHWriter(unittest.TestCase):
         Trying: existing file
         Expecting: new file
         """
+        eadid = "IR0001383"
         path = self.PATH.format(**self.SERVICE_INFOS)
-        file_path = os.path.join(path, "foo")
+        file_path = os.path.join(path, "{}_{}.xml".format(self.SERVICE_INFOS["code"], eadid))
         os.makedirs(path)
         with open(file_path, "w+") as fp:
             fp.write("bar")
         oai_writer = oai_utils.OAIPMHWriter(
-            self.EAD_SERVICES_DIR, self.SERVICE_INFOS
+            self.EAD_SERVICES_DIR, self.SERVICE_INFOS, subdirectories=["oaipmh"]
         )
-        oai_writer.dump(file_path, "baz")
+        oai_file_path = oai_writer.dump(eadid, b"baz")
+        self.assertEqual(file_path, oai_file_path)
         with open(file_path) as fp:
             self.assertEqual("baz", fp.read())

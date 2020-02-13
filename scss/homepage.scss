@@ -222,3 +222,35 @@
 .content-topic-bbg {
   padding-top: 155px;
 }
+
+#flash-section h1 {
+  color: $royal-blue;
+  font-family: "Open Sans", sans-serif;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+#flash-tbg{
+  border-top: 8px solid #eee;
+}
+
+#flash-bbg {
+  padding-top: 2em;
+}
+
+#flash-images {
+  margin-right: 2em;
+  max-width: 100%;
+  text-align: center;
+
+  @include if-wider-than(xs) {
+    float: left;
+    max-width: 50%;
+    text-align: left;
+  }
+
+  img {
+    margin: auto;
+    @include if-wider-than(xs) { margin: 0; }
+  }
+}

@@ -40,28 +40,28 @@ from pgfixtures import setup_module, teardown_module  # noqa
 
 
 class UpdateImportTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
-
     def test_update_fa_additional_resources(self):
         """https://extranet.logilab.fr/ticket/44252128"""
-        fc_rql = 'Any X WHERE X is FAComponent, X did D, D unitid %(u)s'
+        fc_rql = "Any X WHERE X is FAComponent, X did D, D unitid %(u)s"
         with self.admin_access.cnx() as cnx:
-            fpath = 'FRAD067_1_FRAD067_EDF1_archives_paroissiales.xml'
+            fpath = "FRAD067_1_FRAD067_EDF1_archives_paroissiales.xml"
             fspath = self.datapath(fpath)
             self.import_filepath(cnx, fspath)
-            fc = cnx.execute(fc_rql, {'u': u'2 G'}).one()
-            url = 'http://archives.bas-rhin.fr/media/96780/2G0Tabledesparoissesdef.pdf'
-            relatedmaterial = (u'<a href="{url}" rel="nofollow noopener noreferrer" '
-                               'target="_blank">{url}</a>'.format(url=url))
-            self.assertIn(relatedmaterial,
-                          fc.additional_resources)
+            fc = cnx.execute(fc_rql, {"u": "2 G"}).one()
+            url = "http://archives.bas-rhin.fr/media/96780/2G0Tabledesparoissesdef.pdf"
+            relatedmaterial = (
+                '<a href="{url}" rel="nofollow noopener noreferrer" '
+                'target="_blank">{url}</a>'.format(url=url)
+            )
+            self.assertIn(relatedmaterial, fc.additional_resources)
             fc.cw_set(additional_resources=None)
-            fc = cnx.find('FAComponent', eid=fc.eid).one()
+            fc = cnx.find("FAComponent", eid=fc.eid).one()
             self.assertIsNone(fc.additional_resources)
         with self.admin_access.cnx() as cnx:
             migr_update_fa_content.reimport_content(cnx)
-            fc = cnx.execute(fc_rql, {'u': u'2 G'}).one()
+            fc = cnx.execute(fc_rql, {"u": "2 G"}).one()
             self.assertIn(relatedmaterial, fc.additional_resources)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

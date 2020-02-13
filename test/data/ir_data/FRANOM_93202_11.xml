@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE ead PUBLIC "+//ISBN 1-931666-00-8//DTD ead.dtd (Encoded Archival Description (EAD) Version 2002)//EN" "ead.dtd">
+<ead audience="external">
+	<eadheader>
+		<eadid>FRANOM_93202_11</eadid>
+		<filedesc>
+			<titlestmt>
+				<titleproper>Commune mixte d'Aïn Touta</titleproper>
+				<subtitle/>
+				<author/>
+			</titlestmt>
+			<publicationstmt>
+				<publisher>Archives nationales d'outre-mer</publisher>
+			</publicationstmt>
+		</filedesc>
+		<profiledesc>
+			<creation>Instrument de recherche encodé sous X-Metal</creation>
+			<langusage>Instrument de recherche rédigé en <language langcode="fre">français</language></langusage>
+			<descrules>ISAD-G2000 / DTD-EAD2002</descrules>
+		</profiledesc>
+	</eadheader>
+	<archdesc id="a011286292727TDYQEP" level="fonds">
+		<did>
+			<unitid identifier="93202">93202</unitid>
+			<unittitle>Commune mixte d'Aïn Touta</unittitle>
+			<unitdate normal="1940/1954">1940-1954</unitdate>
+			 
+			<origination><corpname>Commune mixte d'Aïn Touta</corpname></origination>
+			<repository>Archives nationales d'outre-mer</repository>
+			<physdesc> 0,10 mètre linéaire</physdesc>
+		</did>
+		<scopecontent>
+			<p>93202 11_Recherches dans l'intérêt des familles, recherches d'évadés, rapatriements : directives, correspondance (1940-1954).</p>
+		</scopecontent>
+		<bioghist>
+			<p>Conçue en 1868 pour administrer les territoires militaires à population majoritairement musulmane, la commune mixte coexiste jusqu’en 1956 avec la commune de plein exercice, établie quant à elle dans les zones à peuplement essentiellement européen. La commune mixte est une agrégation de territoires formant une circonscription administrative, dotée de la personnalité civile et de l’autonomie financière. De type exceptionnel, elle tient son unité de la présence d’un administrateur nommé par le pouvoir central, assisté d’une commission municipale composée de conseillers européens élus et de conseillers musulmans nommés (ou élus à compter de 1919). L’administrateur de la commune possède des pouvoirs plus étendus que ceux des maires des communes françaises.</p><p> La commune mixte d'Aïn Touta est créée par arrêté gouvernemental du 29 décembre 1884 à l'aide de territoires distraits de la commune indigène de Batna. Elle a pour chef-lieu Mac-Mahon.
+
+Elle est supprimée par arrêté du 12 janvier 1957.</p>
+		</bioghist>
+		<accessrestrict>
+			<p>Vous pouvez consulter librement la plupart de ces documents. Néanmoins, certains d’entre eux sont protégés au titre du secret de la Défense nationale (code de la défense, art. L. 2311 à 2313-4, et code pénal, art. 413-9 à 413-13). Leur déclassification préalable par les autorités qui les ont émis est nécessaire avant toute consultation.</p>
+			
+		</accessrestrict>
+		<userestrict><p>Vous pouvez reproduire librement ces documents, à l’exception de ceux qui sont protégés au titre du secret de la Défense nationale et qui n’ont pas encore été déclassifiés.</p></userestrict><otherfindaid>
+			<p>ESCANDE Laurent, VIDAL Anne-Isabelle, GOMBERT Pierre (dir), Commune mixte d’Aïn Touta (1916-1958), Répertoire numérique de la sous-série 93202 1-34, Aix-en-Provence, Archives nationales d'outre-mer, s.d.</p>
+		</otherfindaid>
+		<relatedmaterial>
+			<p/>
+		</relatedmaterial>
+		<dsc type="in-depth"/>
+		<acqinfo>
+			<p>Transfert en 1962.</p>
+		</acqinfo>
+		<controlaccess>
+			<geogname>Algérie</geogname><geogname>Constantine, Région (Algérie)</geogname><geogname>Constantine, Département (Algérie)</geogname><geogname>Batna, Arrondissement (Algérie)</geogname><geogname>Aïn Touta, Commune mixte (Algérie)</geogname><subject>guerre d’Algérie (1954-1962)</subject>
+			<subject>disparu de la guerre d'Algérie</subject>
+		</controlaccess>
+		<custodhist>
+			<p>L'histoire des archives de la commune mixte d'Aïn Touta est intrinsèquement liée à celle de l'arrondissement de Batna, dont elle dépendait : lors de sa suppression en 1957, les dossiers clos de cette institution ont certainement rejoint ceux de l'arrondissement érigé en département. En 1961-1962, le transfert en France des archives issues de la sous-préfecture puis préfecture de Batna s'organise en 3 expéditions, ces archives englobant également celles de six anciennes communes mixtes, dont Aïn-Touta.
+
+Le classement d'une grande partie de ce fonds a été fait en 1992. Les classements de la sous-préfecture de Batna et des autres communes mixtes de cet arrondissement, opérés en 2011-2013, ont permis de retrouver plusieurs articles issus de la commune mixte d'Aïn-Touta, qui ont été réintégrés ensuite, l'ensemble totalisant 6 mètres linéaires.</p>
+		</custodhist>
+	</archdesc>
+
+</ead>

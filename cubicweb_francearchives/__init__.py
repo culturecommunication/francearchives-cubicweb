@@ -36,7 +36,6 @@ import os
 import os.path as osp
 import stat
 
-from six import PY2
 
 import psycopg2
 
@@ -44,12 +43,16 @@ from pyramid.settings import asbool
 
 from logilab.common.decorators import monkeypatch
 
+from cubicweb.__pkginfo__ import numversion as cwversion
 from cubicweb.cwctl import init_cmdline_log_threshold
 from cubicweb.cwconfig import CubicWebConfiguration
 from cubicweb.entity import Entity, TransformData, ENGINE
 from cubicweb.server.repository import Repository
-from cubicweb.server.utils import TasksManager
+from cubicweb.server.utils import scheduler
 from cubicweb.server.sources import storages
+from cubicweb import repoapi
+
+from cubicweb_francearchives.__pkginfo__ import numversion as faversion
 
 from cubicweb_elasticsearch import es
 
@@ -61,32 +64,73 @@ from cubicweb_francearchives.htmlutils import soup2xhtml
 psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
 psycopg2.extensions.register_type(psycopg2.extensions.UNICODEARRAY)
 
+
+def get_user_agent():
+    def format_version(numversion):
+        return ".".join(str(i) for i in numversion)
+
+    user_agent = (
+        "FranceArchives/{faversion} (francearchives.siaf@culture.gouv.fr) CubicWeb/{cwversion}"
+    )
+    return user_agent.format(
+        faversion=format_version(faversion), cwversion=format_version(cwversion)
+    )
+
+
 # safety belt to register a custom, hard-coded list of indexable types to avoid
 # indexing Files, EmailAddress (or any unwanted entity type) by mistake
 es.INDEXABLE_TYPES = [
-    'Section', 'CommemorationItem', 'BaseContent', 'Card',
-    'NewsContent', 'Circular', 'Service', 'CommemoCollection', 'Map',
-    'ExternRef', 'Person', 'FindingAid', 'FAComponent', 'File']
+    "Section",
+    "CommemorationItem",
+    "BaseContent",
+    "Card",
+    "NewsContent",
+    "Circular",
+    "Service",
+    "CommemoCollection",
+    "Map",
+    "ExternRef",
+    "Person",
+    "FindingAid",
+    "FAComponent",
+    "File",
+]
 
 
-SUPPORTED_LANGS = ('fr', 'en', 'de', 'es')
+SUPPORTED_LANGS = ("fr", "en", "de", "es")
 
-SOCIAL_NETWORK_LIST = ('facebook', 'twitter', 'storify', 'flickr', 'wikimedia',
-                       'rss', 'dailymotion', 'blog', 'pinterest', 'foursquare',
-                       'scoop it', 'vimeo', 'youtube', 'instagram')
+SOCIAL_NETWORK_LIST = (
+    "facebook",
+    "twitter",
+    "storify",
+    "flickr",
+    "wikimedia",
+    "rss",
+    "dailymotion",
+    "blog",
+    "pinterest",
+    "foursquare",
+    "scoop it",
+    "vimeo",
+    "youtube",
+    "instagram",
+)
 
-CMS_OBJECTS = ('Section',
-               'BaseContent',
-               'NewsContent',
-               'Circular',
-               'CommemorationItem',
-               'CommemoCollection',
-               'ExternRef',
-               'Map')
+CMS_OBJECTS = (
+    "Section",
+    "BaseContent",
+    "NewsContent",
+    "Circular",
+    "CommemorationItem",
+    "CommemoCollection",
+    "ExternRef",
+    "Map",
+)
+
+FIRST_LEVEL_SECTIONS = {"decouvrir", "comprendre", "gerer"}
 
 
 class Authkey(object):
-
     def __init__(self, fa_stable_id, type, label, role):
         self.fa_stable_id = fa_stable_id
         self.type = type
@@ -103,16 +147,16 @@ def register_auth_history(cnx, key, autheid):
     testing NULL = NULL instead of NULL is NULL)
     """
     cnx.system_sql(
-        'INSERT INTO authority_history (fa_stable_id, type, label, indexrole, autheid) VALUES '
-        '(%(fa)s, %(type)s, %(l)s, %(role)s, %(a)s) '
-        'ON CONFLICT (fa_stable_id, type, label, indexrole) DO UPDATE SET autheid = EXCLUDED.autheid',  # noqa
+        "INSERT INTO authority_history (fa_stable_id, type, label, indexrole, autheid) VALUES "
+        "(%(fa)s, %(type)s, %(l)s, %(role)s, %(a)s) "
+        "ON CONFLICT (fa_stable_id, type, label, indexrole) DO UPDATE SET autheid = EXCLUDED.autheid",  # noqa
         {
-            'fa': key.fa_stable_id,
-            'type': key.type,
-            'l': key.label,
-            'role': key.role or 'index',
-            'a': autheid,
-        }
+            "fa": key.fa_stable_id,
+            "type": key.type,
+            "l": key.label,
+            "role": key.role or "index",
+            "a": autheid,
+        },
     )
 
 
@@ -120,7 +164,7 @@ class FABfssStorage(storages.BytesFileSystemStorage):
     wmode = stat.S_IRUSR | stat.S_IWUSR
 
     def __init__(self, *args, **kwargs):
-        kwargs.setdefault('wmode', self.wmode)
+        kwargs.setdefault("wmode", self.wmode)
         super(FABfssStorage, self).__init__(*args, **kwargs)
 
     def new_fs_path(self, entity, attr):
@@ -135,35 +179,56 @@ class FABfssStorage(storages.BytesFileSystemStorage):
         else:
             flags = os.O_RDWR | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW
         fd = os.open(fspath, flags, self.wmode)
-        return fd, fspath.encode(self.fsencoding) if PY2 else fspath
+        return fd, fspath
+
+    def entity_deleted(self, entity, attr):
+        """an entity using this storage for attr has been deleted.
+        Francearchives customization:
+          while deleting a CWFile, only delete the referenced file from FS
+          if there is no other CWFile referencing the same filepath
+        """
+        fpath = self.current_fs_path(entity, attr)
+        if fpath is not None:
+            sys_source = entity._cw.repo.system_source
+            sql_query = """
+            SELECT count(cw_eid) FROM cw_file f
+            WHERE encode(f.cw_data, 'escape')=%(fpath)s
+                   AND not cw_eid=%(eid)s;"""
+            attrs = {"fpath": fpath, "eid": entity.eid}
+            cu = sys_source.doexec(entity._cw, sql_query, attrs)
+            res = cu.fetchone()[0]
+            # only delete the file if there is no more cw_files referencing the same
+            # fspath
+            if not res:
+                storages.DeleteFileOp.get_instance(entity._cw).add_data(fpath)
 
 
 def admincnx(appid, loglevel=None):
     config = CubicWebConfiguration.config_for(appid)
-    config['connections-pool-size'] = 2
+    config["connections-pool-size"] = 2
 
-    login = config.default_admin_config['login']
-    password = config.default_admin_config['password']
+    login = config.default_admin_config["login"]
+    password = config.default_admin_config["password"]
 
     if loglevel is not None:
         init_cmdline_log_threshold(config, loglevel)
 
-    repo = Repository(config, TasksManager())
-    session = repo.new_session(login, password=password)
-    return session.new_cnx()
+    repo = Repository(config, scheduler=scheduler())
+    repo.bootstrap()
+    return repoapi.connect(repo, login, password=password)
 
 
 def init_bfss(repo):
-    bfssdir = repo.config['appfiles-dir']
+    bfssdir = repo.config["appfiles-dir"]
     if not osp.exists(bfssdir):
         os.makedirs(bfssdir)
-        print('created {}'.format(bfssdir))
+        print("created {}".format(bfssdir))
     storage = FABfssStorage(bfssdir)
-    storages.set_attribute_storage(repo, 'File', 'data', storage)
+    storages.set_attribute_storage(repo, "File", "data", storage)
 
 
 def check_static_css_dir(repo):
-    if repo.config.name != 'all-in-one':
+    if repo.config.name != "all-in-one":
         return
     directory = static_css_dir(repo.config.static_directory)
     if not osp.isdir(directory):
@@ -177,26 +242,25 @@ def check_static_css_dir(repo):
 
 
 def includeme(config):
-    if asbool(config.registry.settings.get('francearchives.autoinclude', True)):
-        config.include('.pviews')
-        config.include('.pviews.catch_all')
+    if asbool(config.registry.settings.get("francearchives.autoinclude", True)):
+        config.include(".pviews")
+        config.include(".pviews.catch_all")
 
 
 @monkeypatch(Entity)
-def _cw_mtc_transform(self, data, format, target_format, encoding,
-                      _engine=ENGINE):
+def _cw_mtc_transform(self, data, format, target_format, encoding, _engine=ENGINE):
     trdata = TransformData(data, format, encoding, appobject=self)
     data = _engine.convert(trdata, target_format).decode()
-    if target_format == 'text/html':
+    if target_format == "text/html":
         data = soup2xhtml(data, self._cw.encoding)
     return data
 
 
 def create_homepage_metadata(cnx):
     cnx.create_entity(
-        'Metadata',
-        uuid=u'metadata-homepage',
-        title=u'FranceArchives.fr',
-        description=u'Portail National des Archives de France',
-        type=u'website',
+        "Metadata",
+        uuid="metadata-homepage",
+        title="FranceArchives.fr",
+        description="Portail National des Archives de France",
+        type="website",
     )

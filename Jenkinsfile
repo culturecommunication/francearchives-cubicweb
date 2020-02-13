@@ -11,12 +11,22 @@ node('debian_stretch') {
         sh('sudo apt-get install -y poppler-utils')
     }
     stage('Lint') {
-        sh 'tox -e flake8'
+        parallel (
+            'flake8': {
+                sh 'tox -e flake8'
+            },
+            'dodgy': {
+                sh 'tox -e dodgy'
+            },
+            'check-manifest': {
+                sh 'tox -e check-manifest'
+            }
+        )
     }
     stage('Test') {
         timeout(time: 1, unit: 'HOURS') {
           withEnv(["PATH+POSTGRESQL=/usr/lib/postgresql/9.6/bin"]) {
-            sh 'tox -e py27'
+            sh 'tox -e py3'
           }
         }
     }

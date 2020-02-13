@@ -40,7 +40,7 @@ from cubicweb_francearchives import SUPPORTED_LANGS
 
 
 class OpenGraphMixin(object):
-    og_type = 'article'
+    og_type = "article"
 
     def authors(self):
         return []
@@ -49,72 +49,73 @@ class OpenGraphMixin(object):
         return ()
 
     def locale(self):
-        return u'fr_FR'
+        return "fr_FR"
 
     def url(self):
         pass
 
     def og_data(self):
-        data = [(u'locale', self.locale()),
-                (u'site_name', self._cw.property_value('ui.site-title')),
-                (u'url', self.url()),
-                (u'title', self.meta.title()),
-                (u'description', self.meta.description()),
-                (u'type', self.og_type),
-                ]
-        data.extend([('author', a) for a in self.authors()])
-        data.extend([('image', i) for i in self.images()])
+        data = [
+            ("locale", self.locale()),
+            ("site_name", self._cw.property_value("ui.site-title")),
+            ("url", self.url()),
+            ("title", self.meta.title()),
+            ("description", self.meta.description()),
+            ("type", self.og_type),
+        ]
+        data.extend([("author", a) for a in self.authors()])
+        data.extend([("image", i) for i in self.images()])
         return [(name, value) for name, value in data if value]
 
 
 class HomePageOpenGrapAdpater(Adapter, OpenGraphMixin):
-    __regid__ = 'IOpenGraph'
-    __select__ = match_kwargs({'homepage': True})
-    og_type = 'website'
+    __regid__ = "IOpenGraph"
+    __select__ = match_kwargs({"homepage": True})
+    og_type = "website"
 
     def locale(self):
         lang = self._cw.lang
-        return '{}-{}'.format(lang, lang.upper())
+        return "{}-{}".format(lang, lang.upper())
 
     def url(self):
         return xml_escape(self._cw.url())
 
     @cachedproperty
     def meta(self):
-        return self._cw.vreg['adapters'].select('IMeta', self._cw, homepage=True)
+        return self._cw.vreg["adapters"].select("IMeta", self._cw, homepage=True)
 
 
 class OpenGrapAdpater(EntityAdapter, OpenGraphMixin):
-    __regid__ = 'IOpenGraph'
+    __regid__ = "IOpenGraph"
 
     @cachedproperty
     def meta(self):
-        return self.entity.cw_adapt_to('IMeta')
+        return self.entity.cw_adapt_to("IMeta")
 
     def url(self):
         return self.entity.absolute_url()
 
     def images(self):
-        url = getattr(self.entity, 'illustration_url', None)
+        url = getattr(self.entity, "illustration_url", None)
         if url:
             return [url]
         return []
 
 
 class CommemorationItemOpenGrapAdpater(OpenGrapAdpater):
-    __select__ = OpenGrapAdpater.__select__ & is_instance('CommemorationItem')
+    __select__ = OpenGrapAdpater.__select__ & is_instance("CommemorationItem")
 
     def authors(self):
         return [a.dc_title() for a in self.entity.author_indexes().entities()]
 
 
 class CardOpenGraphAdapter(OpenGrapAdpater):
-    __select__ = OpenGrapAdpater.__select__ & is_instance('Card')
+    __select__ = OpenGrapAdpater.__select__ & is_instance("Card")
 
     def locale(self):
         card = self.entity
         if card.wikiid:
             for lang in SUPPORTED_LANGS:
-                if card.wikiid.endswith('-{}'.format(lang)):
-                    return u'{}_{}'.format(lang, lang.upper())
-        return u'fr_FR'
+                if card.wikiid.endswith("-{}".format(lang)):
+                    return "{}_{}".format(lang, lang.upper())
+        return "fr_FR"

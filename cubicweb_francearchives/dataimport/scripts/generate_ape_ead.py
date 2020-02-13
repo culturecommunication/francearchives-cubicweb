@@ -32,7 +32,6 @@
 import mimetypes
 import os
 import os.path as osp
-from six import text_type as unicode
 from uuid import uuid4
 
 from cubicweb import Binary
@@ -40,51 +39,56 @@ from cubicweb import Binary
 
 from cubicweb_francearchives import init_bfss
 
-from cubicweb_francearchives.dataimport.ead import (generate_ape_ead_file_from_xml,
-                                                    load_services_map,
-                                                    decode_filepath,
-                                                    compute_ape_relpath)
+from cubicweb_francearchives.dataimport.ead import (
+    generate_ape_ead_file_from_xml,
+    decode_filepath,
+    compute_ape_relpath,
+)
 from cubicweb_francearchives.dataimport.eadreader import preprocess_ead
+from cubicweb_francearchives.dataimport import load_services_map
 
 
 def create_file(cnx, filepath):
-    cnx.transaction_data['fs_importing'] = True
+    cnx.transaction_data["fs_importing"] = True
     ufilepath = osp.abspath(decode_filepath(filepath))
     basepath = osp.basename(ufilepath)
-    return cnx.create_entity('File', **{
-        'title': basepath,
-        'data': Binary(str(ufilepath)),
-        'data_format': unicode(mimetypes.guess_type(filepath)[0]),
-        'data_name': basepath,
-        'uuid': unicode(uuid4().hex),
-    })
+    return cnx.create_entity(
+        "File",
+        **{
+            "title": basepath,
+            "data": Binary(ufilepath.encode("utf-8")),
+            "data_format": str(mimetypes.guess_type(filepath)[0]),
+            "data_name": basepath,
+            "uuid": str(uuid4().hex),
+        }
+    )
 
 
 def get_service_infos(services_map, service_code):
     infos = {
-        'code': service_code,
-        'name': service_code,
-        'eid': None,
+        "code": service_code,
+        "name": service_code,
+        "eid": None,
     }
     if service_code in services_map:
         service = services_map[service_code]
-        infos.update({
-            'eid': service.eid,
-            'name': service.publisher(),
-        })
+        infos.update(
+            {"eid": service.eid, "name": service.publisher(),}
+        )
     return infos
 
 
 def regenerate_all_ape_ead_from_xml(cnx):
     """generate all ape_ead_files from xml"""
     rset = cnx.execute(
-        'Any X, N, SI, FSPATH(D), FSPATH(AD), CS '
-        'WHERE X findingaid_support F, '
-        'X stable_id SI, X name N, F data D, '
-        'X ape_ead_file AF?, AF data AD, '
-        'X service S, S code CS, '
-        'F data_format "application/xml"')
-    print('regenerate_all_ape_ead_from_xml', rset.rowcount)
+        "Any X, N, SI, FSPATH(D), FSPATH(AD), CS "
+        "WHERE X findingaid_support F, "
+        "X stable_id SI, X name N, F data D, "
+        "X ape_ead_file AF?, AF data AD, "
+        "X service S, S code CS, "
+        'F data_format "application/xml"'
+    )
+    print("regenerate_all_ape_ead_from_xml", rset.rowcount)
     if rset:
         _generate_ape_ead_from_xml(cnx, rset)
 
@@ -92,33 +96,39 @@ def regenerate_all_ape_ead_from_xml(cnx):
 def generate_ape_ead_from_xml(cnx):
     """generate only missing ape_ead_files from xml"""
     rset = cnx.execute(
-        'Any X, N, SI, FSPATH(D), NULL, CS '
-        'WHERE X findingaid_support F, '
-        'X stable_id SI, X name N, F data D, '
-        'NOT EXISTS(X ape_ead_file AF), '
-        'X service S, S code CS, '
-        'F data_format "application/xml"')
+        "Any X, N, SI, FSPATH(D), NULL, CS "
+        "WHERE X findingaid_support F, "
+        "X stable_id SI, X name N, F data D, "
+        "NOT EXISTS(X ape_ead_file AF), "
+        "X service S, S code CS, "
+        'F data_format "application/xml"'
+    )
     if rset:
         _generate_ape_ead_from_xml(cnx, rset)
 
 
 def regenerate_all_ape_ead_xml_for_service(cnx, service_code):
     """generate all ape_ead_files for a given service from xml"""
-    rset = cnx.execute((
-        'Any X, N, SI, FSPATH(D), FSPATH(AD), CS '
-        'WHERE X findingaid_support F, '
-        'X stable_id SI, X name N, F data D, '
-        'X ape_ead_file AF?, AF data AD, '
-        'X service S, S code CS, S code %(c)s, '
-        'F data_format "application/xml"'), {'c': service_code})
-    print('regenerate_all_ape_ead_xml_for_service', rset.rowcount)
+    rset = cnx.execute(
+        (
+            "Any X, N, SI, FSPATH(D), FSPATH(AD), CS "
+            "WHERE X findingaid_support F, "
+            "X stable_id SI, X name N, F data D, "
+            "X ape_ead_file AF?, AF data AD, "
+            "X service S, S code CS, S code %(c)s, "
+            'F data_format "application/xml"'
+        ),
+        {"c": service_code},
+    )
+    print("regenerate_all_ape_ead_xml_for_service", rset.rowcount)
     if rset:
         _generate_ape_ead_from_xml(cnx, rset)
 
 
 def generate_ape_ead_xml_from_eids(cnx, eids):
     """generate all ape_ead_files for given eids from xml"""
-    rset = cnx.execute('''
+    rset = cnx.execute(
+        """
         (Any X, N, XID, NULL, CS
          WHERE X eadid XID, X name N,
          X eid IN (%(e)s),
@@ -131,50 +141,60 @@ def generate_ape_ead_xml_from_eids(cnx, eids):
           X findingaid_support F, X name N,
           X service S?, S code CS,
           NOT F data_format "application/xml")
-    ''' % {'e': ', '.join(eids)})
+    """
+        % {"e": ", ".join(eids)}
+    )
     if rset:
         _generate_ape_ead_from_other_sources(cnx, rset)
-    rset = cnx.execute((
-        'Any X, N, SI, FSPATH(D), NULL, CS '
-        'WHERE X eid IN (%(e)s),'
-        'X findingaid_support F, '
-        'X stable_id SI, X name N, F data D, '
-        'X service S?, S code CS, '
-        'F data_format "application/xml"') % {'e': ', '.join(eids)})
+    rset = cnx.execute(
+        (
+            "Any X, N, SI, FSPATH(D), NULL, CS "
+            "WHERE X eid IN (%(e)s),"
+            "X findingaid_support F, "
+            "X stable_id SI, X name N, F data D, "
+            "X service S?, S code CS, "
+            'F data_format "application/xml"'
+        )
+        % {"e": ", ".join(eids)}
+    )
     if rset:
         _generate_ape_ead_from_xml(cnx, rset)
 
 
 def _generate_ape_ead_from_xml(cnx, rset):
     services_map = load_services_map(cnx)
-    appfiles = cnx.vreg.config['appfiles-dir']
-    for (fa_eid, fa_name, fa_stable_id, fspath,
-         ape_ead_fspath, service_code) in rset:
+    appfiles = cnx.vreg.config["appfiles-dir"]
+    for (fa_eid, fa_name, fa_stable_id, fspath, ape_ead_fspath, service_code) in rset:
         xml_path = fspath.getvalue()
         try:
             # if not (osp.exists(xml_path) and osp.isfile(xml_path)):
             tree = preprocess_ead(xml_path)
         except Exception as ex:
-            print('[ape_ead] Could not generate ape_ead_file for {f} : {e}'.format(
-                e=ex, f=fa_stable_id))
+            print(
+                "[ape_ead] Could not generate ape_ead_file for {f} : {e}".format(
+                    e=ex, f=fa_stable_id
+                )
+            )
             continue
         service_infos = get_service_infos(services_map, service_code)
         ape_ead_fspath = ape_ead_fspath.getvalue() if ape_ead_fspath else None
         ape_filepath = ape_ead_fspath or osp.join(
-            appfiles, compute_ape_relpath(fa_name, service_infos))
-        generate_ape_ead_file_from_xml(
-            cnx, tree, service_infos, fa_stable_id, ape_filepath)
+            appfiles, compute_ape_relpath(cnx, fa_name, service_infos)
+        )
+        generate_ape_ead_file_from_xml(cnx, tree, service_infos, fa_stable_id, ape_filepath)
         if not ape_ead_fspath:
             ape_file = create_file(cnx, ape_filepath)
             cnx.execute(
-                'SET X ape_ead_file F WHERE X eid %(x)s, F eid %(f)s',
-                {'x': fa_eid, 'f': ape_file.eid})
+                "SET X ape_ead_file F WHERE X eid %(x)s, F eid %(f)s",
+                {"x": fa_eid, "f": ape_file.eid},
+            )
             cnx.commit()
 
 
 def regenerate_all_ape_ead_from_other_sources(cnx):
     """regenerate all ape_ead_files from other sources"""
-    rset = cnx.execute('''
+    rset = cnx.execute(
+        """
         (Any X, N, XID, FSPATH(AD), CS
          WHERE X eadid XID, X name N,
          X ape_ead_file AF?, AF data AD,
@@ -187,15 +207,17 @@ def regenerate_all_ape_ead_from_other_sources(cnx):
           X ape_ead_file AF?, AF data AD,
           X service S, S code CS,
           NOT F data_format "application/xml")
-        ''')
-    print('regenerate_all_ape_ead_from_other_sources', rset.rowcount)
+        """
+    )
+    print("regenerate_all_ape_ead_from_other_sources", rset.rowcount)
     if rset:
         _generate_ape_ead_from_other_sources(cnx, rset)
 
 
 def regenerate_all_ape_ead_other_for_service(cnx, service_code):
     """regenerate all ape_ead_files for a given service from other sources"""
-    rset = cnx.execute('''
+    rset = cnx.execute(
+        """
         (Any X, N, XID, FSPATH(AD), CS
          WHERE X eadid XID, X name N,
          X service S, S code CS, S code %(c)s,
@@ -208,7 +230,9 @@ def regenerate_all_ape_ead_other_for_service(cnx, service_code):
           X findingaid_support F,
           NOT F data_format "application/xml",
           X service S, S code CS, S code %(c)s)
-        ''', {'c': service_code})
+        """,
+        {"c": service_code},
+    )
     if rset:
         _generate_ape_ead_from_other_sources(cnx, rset)
 
@@ -216,19 +240,21 @@ def regenerate_all_ape_ead_other_for_service(cnx, service_code):
 def generate_ape_ead_from_other_sources(cnx):
     """generate only missing ape_ead_files from other sources"""
     rset = cnx.execute(
-        '''Any X, N, XID, NULL, CS
+        """Any X, N, XID, NULL, CS
         WHERE X eadid XID,
         X findingaid_support F, X name N,
         NOT EXISTS(X ape_ead_file AF),
         X service S?, S code CS
-        ''')
+        """
+    )
     if rset:
         _generate_ape_ead_from_other_sources(cnx, rset)
 
 
 def generate_ape_ead_other_sources_from_eids(cnx, eids):
     """generate all ape_ead_files for given eids from other source"""
-    rset = cnx.execute('''
+    rset = cnx.execute(
+        """
         (Any X, N, XID, NULL, CS
          WHERE X eadid XID, X name N,
          X eid IN (%(e)s),
@@ -243,25 +269,30 @@ def generate_ape_ead_other_sources_from_eids(cnx, eids):
           NOT EXISTS(X ape_ead_file AF),
           X service S?, S code CS,
           NOT F data_format "application/xml")
-    ''' % {'e': ', '.join(eids)})
+    """
+        % {"e": ", ".join(eids)}
+    )
     if rset:
         _generate_ape_ead_from_other_sources(cnx, rset)
 
 
 def _generate_ape_ead_from_other_sources(cnx, rset):
     services_map = load_services_map(cnx)
-    appfiles = cnx.vreg.config['appfiles-dir']
-    for (fa, fa_name, fa_stable_id,
-         ape_ead_fspath, service_code) in rset.iter_rows_with_entities():
+    appfiles = cnx.vreg.config["appfiles-dir"]
+    for (fa, fa_name, fa_eadid, ape_ead_fspath, service_code) in rset.iter_rows_with_entities():
         service_infos = get_service_infos(services_map, service_code)
         ape_ead_fspath = ape_ead_fspath.getvalue() if ape_ead_fspath else None
         ape_filepath = ape_ead_fspath or osp.join(
-            appfiles, compute_ape_relpath(fa_name, service_infos))
+            appfiles, compute_ape_relpath(cnx, fa_eadid, service_infos)
+        )
         try:
-            ape_xml = fa.cw_adapt_to('OAI_EAD').dump()
+            ape_xml = fa.cw_adapt_to("OAI_EAD").dump().decode("utf-8")
         except Exception as ex:
-            print('[ape-ead oai] Could not generate ape_ead_file for {f} : {e}'.format(
-                e=ex, f=fa_stable_id))
+            print(
+                "[ape-ead oai] Could not generate ape_ead_file for {f} : {e}".format(
+                    e=ex, f=fa_eadid
+                )
+            )
             continue
         # important! release cw cache cache
         fa.cw_clear_all_caches()
@@ -270,16 +301,17 @@ def _generate_ape_ead_from_other_sources(cnx, rset):
             output_dir = osp.dirname(ape_filepath)
             if not osp.isdir(output_dir):
                 os.makedirs(output_dir)
-            with open(ape_filepath, 'w') as outf:
+            with open(ape_filepath, "w") as outf:
                 outf.write(ape_xml)
         except Exception as ex:
-            print('[generate_ape_ead_from_other_sources] Error {}'.format(ex))
+            print("[generate_ape_ead_from_other_sources] Error {}".format(ex))
             continue
         if not ape_ead_fspath:
             ape_file = create_file(cnx, ape_filepath)
             cnx.execute(
-                'SET X ape_ead_file F WHERE X eid %(x)s, F eid %(f)s',
-                {'x': fa.eid, 'f': ape_file.eid})
+                "SET X ape_ead_file F WHERE X eid %(x)s, F eid %(f)s",
+                {"x": fa.eid, "f": ape_file.eid},
+            )
             cnx.commit()
 
 

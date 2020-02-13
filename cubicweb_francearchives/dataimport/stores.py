@@ -38,34 +38,33 @@ def clean_massive_store(store):
     """clean any temporary table left by a previous massive import"""
     store.logger.info("Start cleaning")
     # Get all the initialized etypes/rtypes
-    if store._dbh.table_exists('cwmassive_initialized'):
-        cu = store.sql('SELECT retype, type, uuid FROM cwmassive_initialized')
+    if store._dbh.table_exists("cwmassive_initialized"):
+        cu = store.sql("SELECT retype, type, uuid FROM cwmassive_initialized")
         entities = defaultdict(list)
         relations = defaultdict(list)
         for retype, _type, uuid in cu.fetchall():
-            if _type == 'rtype':
+            if _type == "rtype":
                 relations[retype].append(uuid)
             else:  # _type = 'etype'
                 entities[retype].append(uuid)
         # get back entity data from the temporary tables
-        for etype, uuids in entities.items():
-            tablename = 'cw_%s' % etype.lower()
+        for etype, uuids in list(entities.items()):
+            tablename = "cw_%s" % etype.lower()
             for uuid in uuids:
-                tmp_tablename = '%s_%s' % (tablename, uuid)
+                tmp_tablename = "%s_%s" % (tablename, uuid)
                 store._tmp_data_cleanup(tmp_tablename, etype, uuid)
         # get back relation data from the temporary tables
-        for rtype, uuids in relations.items():
-            tablename = '%s_relation' % rtype.lower()
+        for rtype, uuids in list(relations.items()):
+            tablename = "%s_relation" % rtype.lower()
             for uuid in uuids:
-                tmp_tablename = '%s_%s' % (tablename, uuid)
+                tmp_tablename = "%s_%s" % (tablename, uuid)
                 store._tmp_data_cleanup(tmp_tablename, rtype, uuid)
     # delete the meta data table
-    store.sql('DROP TABLE IF EXISTS cwmassive_initialized')
+    store.sql("DROP TABLE IF EXISTS cwmassive_initialized")
     store.commit()
 
 
 class NoDropPGHelper(PGHelper):
-
     def drop_indexes(self, tablename):
         """Drop indexes and constraints, storing them in a table for later restore."""
         # Create a table to save the constraints, it allows reloading even after crash
@@ -76,7 +75,7 @@ class NoDropPGHelper(PGHelper):
 
 
 def create_massive_store(cnx, nodrop=False, **kwargs):
-    metagen = MetadataGenerator(cnx, meta_skipped=('owned_by', 'created_by'))
+    metagen = MetadataGenerator(cnx, meta_skipped=("owned_by", "created_by"))
     store = MassiveObjectStore(cnx, metagen=metagen, **kwargs)
     if nodrop:
         store._dbh = NoDropPGHelper(cnx)

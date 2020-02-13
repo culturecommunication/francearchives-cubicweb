@@ -28,31 +28,34 @@
 # The fact that you are presently reading this means that you have had
 # knowledge of the CeCILL-C license and that you accept its terms.
 #
-from __future__ import print_function
+
 
 import subprocess as S
 import os.path as osp
 import logging
 
+from cubicweb_francearchives.dataimport import default_service_name
+
 
 def pdf_infos(filepath):
-    pipe = S.Popen(['/usr/bin/pdftotext', filepath, '-'], stdout=S.PIPE)
+    pipe = S.Popen(["/usr/bin/pdftotext", filepath, "-"], stdout=S.PIPE)
     basepath = osp.basename(filepath)
     try:
-        text = pipe.stdout.read().decode('utf-8')
+        text = pipe.stdout.read().decode("utf-8")
     except Exception:
-        logging.exception('failed to extract text from %s', filepath)
-        text = u''
+        logging.exception("failed to extract text from %s", filepath)
+        text = ""
     return {
-        'publisher': basepath.split('_')[0],
-        'title': basepath,
-        'text': text,
+        "publisher": default_service_name(basepath),
+        "title": basepath,
+        "text": text,
     }
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import sys
+
     infos = pdf_infos(sys.argv[1])
-    print('publisher', infos['publisher'])
-    print('title', infos['title'])
-    print('text', len(infos['text']), infos['text'][:200])
+    print("publisher", infos["publisher"])
+    print("title", infos["title"])
+    print("text", len(infos["text"]), infos["text"][:200])

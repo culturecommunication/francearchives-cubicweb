@@ -39,40 +39,37 @@ from cubicweb_francearchives.entities.cms import CmsObject
 def get_children(cnx, section_eid):
     children = []
     rset = cnx.execute(
-        'Any X, T ORDERBY O WHERE S is IN (Section, CommemoCollection), '
-        'X order O, '
-        'S eid %(eid)s, S children X, X title T',
-        {'eid': section_eid})
+        "Any X, T ORDERBY O WHERE S is IN (Section, CommemoCollection), "
+        "X order O, "
+        "S eid %(eid)s, S children X, X title T",
+        {"eid": section_eid},
+    )
     for child in rset.entities():
         infos = dict(
-            title=child.title,
-            etype=child.cw_etype,
-            url=child.absolute_url(),
-            children=None
+            title=child.title, etype=child.cw_etype, url=child.absolute_url(), children=None
         )
-        if child.cw_etype == 'Section':
-            infos['children'] = get_children(cnx, child.eid)
+        if child.cw_etype == "Section":
+            infos["children"] = get_children(cnx, child.eid)
         children.append(infos)
     return children
 
 
 class Section(CmsObject):
-    __regid__ = 'Section'
-    rest_attr = 'eid'
+    __regid__ = "Section"
+    rest_attr = "eid"
     fetch_attrs, cw_fetch_order = fetch_config(
-        ['order', 'title', 'subtitle', 'content', 'short_description'],
-        order='DESC')
+        ["order", "title", "subtitle", "content", "short_description"], order="DESC"
+    )
 
     def dc_title(self):
         titles = [self.title, self.subtitle]
-        return u' - '.join(t for t in titles if t)
+        return " - ".join(t for t in titles if t)
 
     def breadcrumbs_title(self):
         return self.title
 
     def is_commemo_section(self):
-        return (self.reverse_children
-                and self.reverse_children[0].cw_etype == 'CommemoCollection')
+        return self.reverse_children and self.reverse_children[0].cw_etype == "CommemoCollection"
 
     @property
     def commemo_section(self):

@@ -37,19 +37,23 @@ from glob import glob
 from lxml import etree
 
 TRANS = (
-    ('&rsquo;', "'"), ('&hellip;', '&#8230;'),
-    ('&mdash;', '&#8212;'), ('&nbsp;', '&#160;'),
-    ('&laquo;', '&lt;'), ('&raquo;', '&gt;'),
-    ('&deg;', '&#176;'), ('&ndash;', '&#8211;'),
-    (' & ', ' &#38; ')
+    ("&rsquo;", "'"),
+    ("&hellip;", "&#8230;"),
+    ("&mdash;", "&#8212;"),
+    ("&nbsp;", "&#160;"),
+    ("&laquo;", "&lt;"),
+    ("&raquo;", "&gt;"),
+    ("&deg;", "&#176;"),
+    ("&ndash;", "&#8211;"),
+    (" & ", " &#38; "),
 )
 
 
 def clean_files(directory):
-    new_directory = 'NEW_{}'.format(directory)
+    new_directory = "NEW_{}".format(directory)
     if not osp.isdir(new_directory):
         os.mkdir(new_directory)
-    for filepath in glob(osp.join(directory, '*.xml')):
+    for filepath in glob(osp.join(directory, "*.xml")):
         f = open(filepath)
         stream = f.read()
         for char in stream:
@@ -57,24 +61,23 @@ def clean_files(directory):
                 try:
                     num = ord(char)
                     if 31 >= num >= 13:
-                        stream = stream.replace(char, '')
+                        stream = stream.replace(char, "")
                 except Exception:
                     pass
         for t, r in TRANS:
             stream = stream.replace(t, r)
         f.close()
-        new_filepath = '{}/{}'.format(
-            new_directory,
-            osp.basename(filepath))
-        with open(new_filepath, 'w') as f:
+        new_filepath = "{}/{}".format(new_directory, osp.basename(filepath))
+        with open(new_filepath, "w") as f:
             f.write(stream)
-        with open(new_filepath, 'r') as nf:
+        with open(new_filepath, "r") as nf:
             try:
                 etree.parse(nf)
             except Exception as e:
-                print('processing {}'.format(filepath), e)
+                print("processing {}".format(filepath), e)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import sys
+
     clean_files(sys.argv[1])

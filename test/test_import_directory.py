@@ -37,103 +37,96 @@ from cubicweb_francearchives.dataimport.directories import import_directory, get
 
 
 class ImportDirectoryTC(testlib.CubicWebTC):
-
     def test_dpt_code_computation(self):
-        res = get_dpt_code('2000')
-        self.assertEqual(res, '02')
-        res = get_dpt_code('3200')
-        self.assertEqual(res, '03')
-        res = get_dpt_code('20090')
-        self.assertEqual(res, '2A')
-        res = get_dpt_code('20200')
-        self.assertEqual(res, '2B')
-        res = get_dpt_code('20410')
-        self.assertEqual(res, '2B')
-        res = get_dpt_code('97150')
-        self.assertEqual(res, '978')
+        res = get_dpt_code("2000")
+        self.assertEqual(res, "02")
+        res = get_dpt_code("3200")
+        self.assertEqual(res, "03")
+        res = get_dpt_code("20090")
+        self.assertEqual(res, "2A")
+        res = get_dpt_code("20200")
+        self.assertEqual(res, "2B")
+        res = get_dpt_code("20410")
+        self.assertEqual(res, "2B")
+        res = get_dpt_code("97150")
+        self.assertEqual(res, "978")
 
     def test_import_directory(self):
-        filepath = self.datapath('directory.csv')
-        departements = self.datapath('departements.csv')
-        logos_services = self.datapath('logos_services')
+        filepath = self.datapath("directory.csv")
+        departements = self.datapath("departements.csv")
+        logos_services = self.datapath("logos_services")
         with self.admin_access.cnx() as cnx:
-            with cnx.allow_all_hooks_but('es'):
-                import_directory(cnx, filepath,
-                                 departements, logos_services)
+            with cnx.allow_all_hooks_but("es"):
+                import_directory(cnx, filepath, departements, logos_services)
                 cnx.commit()
-                services = cnx.find('Service')
+                services = cnx.find("Service")
                 # 15 services from filepath
                 # 7 services from departements
                 self.assertEqual(len(services), 21)
                 # service from filepath, updated with departements info
-                gard = cnx.find('Service', category=u'Département du Gard').one()
-                self.assertEqual(gard.code, u'FRAD030')
-                self.assertEqual(gard.name, u'Archives départementales')
-                self.assertEqual(gard.name2, u'Service truc')
-                self.assertEqual(gard.short_name, u'AD du Gard')
-                self.assertEqual(gard.address, u'365 rue du Forez')
-                self.assertEqual(gard.zip_code, '30000')
-                self.assertEqual(gard.city, u'Nîmes')
-                self.assertEqual(gard.website_url, u'http://archives.gard.fr')
-                self.assertEqual(gard.browser_url, u'http://archives.gard.fr')
-                self.assertEqual(gard.search_form_url, u'')
-                self.assertEqual(gard.contact_name, u'Nadine Rouayroux')
-                self.assertEqual(gard.phone_number, u'04.66.05.05.10')
-                self.assertEqual(gard.fax, u'04.66.05.05.55')
-                self.assertEqual(gard.email, u'archives@gard.fr')
-                self.assertEqual(gard.annual_closure, u'se renseigner')
-                self.assertEqual(gard.level, u'level-D')
-                self.assertEqual(gard.opening_period, u'Lu.-Ve. 8 h 30 à 17 h')
-                rset = cnx.execute('Any X WHERE X is Service, X annex_of Y')
+                gard = cnx.find("Service", category="Département du Gard").one()
+                self.assertEqual(gard.code, "FRAD030")
+                self.assertEqual(gard.name, "Archives départementales")
+                self.assertEqual(gard.name2, "Service truc")
+                self.assertEqual(gard.short_name, "AD du Gard")
+                self.assertEqual(gard.address, "365 rue du Forez")
+                self.assertEqual(gard.zip_code, "30000")
+                self.assertEqual(gard.city, "Nîmes")
+                self.assertEqual(gard.website_url, "http://archives.gard.fr")
+                self.assertEqual(gard.search_form_url, "")
+                self.assertEqual(gard.bounce_url({}), "http://archives.gard.fr")
+                self.assertEqual(gard.contact_name, "Nadine Rouayroux")
+                self.assertEqual(gard.phone_number, "04.66.05.05.10")
+                self.assertEqual(gard.fax, "04.66.05.05.55")
+                self.assertEqual(gard.email, "archives@gard.fr")
+                self.assertEqual(gard.annual_closure, "se renseigner")
+                self.assertEqual(gard.level, "level-D")
+                self.assertEqual(gard.opening_period, "Lu.-Ve. 8 h 30 à 17 h")
+                rset = cnx.execute("Any X WHERE X is Service, X annex_of Y")
                 # self.assertNotEqual(len(rset), 0)
-                rset = cnx.execute('Any X WHERE X is SocialNetwork, '
-                                   'S service_social_network X')
+                rset = cnx.execute("Any X WHERE X is SocialNetwork, " "S service_social_network X")
                 self.assertNotEqual(len(rset), 0)
                 logo = gard.service_image[0]
-                self.assertEqual(logo.caption, u'Logo')
+                self.assertEqual(logo.caption, "Logo")
                 self.assertTrue(len(logo.image_file[0].data.getvalue()))
                 # service from departements
-                lot = cnx.find('Service',
-                               category=u'Archives départementales du Lot').one()
+                lot = cnx.find("Service", category="Archives départementales du Lot").one()
                 self.assertEqual(lot.name, None)
-                self.assertEqual(lot.name2, u'Archives d\xe9partementales du Lot')
-                self.assertEqual(lot.short_name, u'AD du Lot')
-                self.assertEqual(lot.browser_url, u'http://archives.lot.fr/')
-                self.assertEqual(lot.search_form_url,
-                                 u'http://archives.lot.fr/search')
+                self.assertEqual(lot.name2, "Archives d\xe9partementales du Lot")
+                self.assertEqual(lot.short_name, "AD du Lot")
+                self.assertEqual(lot.search_form_url, "http://archives.lot.fr/search")
+                self.assertEqual(lot.bounce_url({}), "http://archives.lot.fr/search")
                 # FRANOM
-                franom = cnx.find('Service', code=u'FRANOM').one()
+                franom = cnx.find("Service", code="FRANOM").one()
                 self.assertEqual(franom.name, None)
                 self.assertTrue(len(franom.service_image[0].image_file[0].data.getvalue()))
                 # `concaténation` service from csv header is not created
                 with self.assertRaises(NoResultError):
-                    cnx.find('Service', code=u'concaténation').one()
+                    cnx.find("Service", code="concaténation").one()
                 # test addresses
-                cannes = cnx.find('Service',
-                                  name2=u'Archives municipales de la commune de Cannes').one()
-                self.assertEqual(cannes.address, u'9 avenue Montrose')
-                self.assertEqual(cannes.zip_code, '6400')
-                self.assertEqual(cannes.city, u'Cannes')
-                self.assertEqual(cannes.mailing_address,
-                                 u'Hôtel de ville, CS 30140,  Cannes Cedex')
+                cannes = cnx.find(
+                    "Service", name2="Archives municipales de la commune de Cannes"
+                ).one()
+                self.assertEqual(cannes.address, "9 avenue Montrose")
+                self.assertEqual(cannes.zip_code, "6400")
+                self.assertEqual(cannes.city, "Cannes")
+                self.assertEqual(cannes.mailing_address, "Hôtel de ville, CS 30140,  Cannes Cedex")
                 # FRAN
-                fran = cnx.find('Service', code=u'FRAN').one()
-                self.assertEqual(fran.name, u'Archives nationales')
+                fran = cnx.find("Service", code="FRAN").one()
+                self.assertEqual(fran.name, "Archives nationales")
                 self.assertEqual(fran.name2, None)
-                self.assertEqual(fran.short_name, u'Archives nationales')
-                self.assertEqual(fran.browser_url,
-                                 u'http://www.archives-nationales.culture.gouv.fr/')
-                self.assertEqual(fran.level, u'level-N')
-                self.assertEqual(fran.address, u'59 rue Guynemer')
-                self.assertEqual(fran.zip_code, '93383')
-                self.assertEqual(fran.city, u'Pierrefitte-sur-Seine')
+                self.assertEqual(fran.short_name, "Archives nationales")
+                self.assertEqual(fran.level, "level-N")
+                self.assertEqual(fran.address, "59 rue Guynemer")
+                self.assertEqual(fran.zip_code, "93383")
+                self.assertEqual(fran.city, "Pierrefitte-sur-Seine")
                 self.assertEqual(fran.mailing_address, None)
-                self.assertEqual(fran.phone_number, u'01.75.47.20.02')
-                martin = cnx.find('Service', category=u'Collectivité de Saint-Martin').one()
-                self.assertEqual(martin.dpt_code, '978')
-                gironde = cnx.find('Service', code=u'FRAD033').one()
-                self.assertEqual(gironde.level, u'level-D')
+                self.assertEqual(fran.phone_number, "01.75.47.20.02")
+                martin = cnx.find("Service", category="Collectivité de Saint-Martin").one()
+                self.assertEqual(martin.dpt_code, "978")
+                gironde = cnx.find("Service", code="FRAD033").one()
+                self.assertEqual(gironde.level, "level-D")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

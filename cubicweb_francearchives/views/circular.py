@@ -39,26 +39,37 @@ from cubicweb_francearchives.views import JinjaViewMixin, get_template
 class CircularTable(JinjaViewMixin, PrimaryView):
     __select__ = (
         PrimaryView.__select__
-        & is_instance('Card')
-        & score_entity(lambda x: x.wikiid.startswith('tableau-circulaires'))
+        & is_instance("Card")
+        & score_entity(lambda x: x.wikiid.startswith("tableau-circulaires"))
     )
-    template = get_template('circular-table.jinja2')
+    template = get_template("circular-table.jinja2")
 
     def entity_call(self, entity):
         req = self._cw
-        req.add_css('react-bootstrap-table-all.min.css')
-        req.add_js('bundle-circular-table.js')
-        rset = req.execute('''
+        req.add_css("react-bootstrap-table-all.min.css")
+        req.add_js("bundle-circular-table.js")
+        rset = req.execute(
+            """
 Any X, K, DK, N, DC, C, S, DS, T, ST, CI, JSON_AGG(L)
 GROUPBY X, K, DK, N, DC, C, S, DS, T, ST, CI
-WHERE
-  X is Circular,
-  X kind K, X siaf_daf_kind DK,
-  X nor N, X siaf_daf_code DC, X code C,
-  X signing_date S, X siaf_daf_signing_date DS,
-  X title T, X status ST, X circ_id CI,
-  X business_field B, B preferred_label PL, PL label L
-''')
+WITH X, K, DK, N, DC, C, S, DS, T, ST, CI, L BEING
+(
+    (Any X, K, DK, N, DC, C, S, DS, T, ST, CI, L
+    WHERE X is Circular, X kind K, X siaf_daf_kind DK,
+    X nor N, X siaf_daf_code DC, X code C,
+    X signing_date S, X siaf_daf_signing_date DS,
+    X title T, X status ST, X circ_id CI,
+    X business_field B, B preferred_label PL, PL label L)
+    UNION
+    (Any X, K, DK, N, DC, C, S, DS, T, ST, CI, 'n/r'
+    WHERE X is Circular, X kind K, X siaf_daf_kind DK,
+    X nor N, X siaf_daf_code DC, X code C,
+    X signing_date S, X siaf_daf_signing_date DS,
+    X title T, X status ST, X circ_id CI, NOT X business_field B
+    )
+)
+"""
+        )
         rows = []
         for idx, rsetrow in enumerate(rset):
             business_fields = rsetrow[-1]
@@ -70,13 +81,13 @@ WHERE
             else:
                 date = None
             row = {
-                'eid': e.eid,
-                'kind': e.siaf_daf_kind,
-                'code': e.siaf_daf_code or e.code or e.nor,
-                'date': date,
-                'title': (e.title, e.absolute_url()),
-                'status': (req._(e.status), e.status),
-                'business_fields': business_fields,
+                "eid": e.eid,
+                "kind": e.siaf_daf_kind,
+                "code": e.siaf_daf_code or e.code or e.nor,
+                "date": date,
+                "title": (e.title, e.absolute_url()),
+                "status": (req._(e.status), e.status),
+                "business_fields": [req._(field) for field in business_fields],
             }
             rows.append(row)
         self.call_template(data=json_dumps(rows), entity=entity)

@@ -31,10 +31,13 @@
 #
 from cubicweb_francearchives import SUPPORTED_LANGS
 
-wikiid = 'tableau-circulaires'
+wikiid = "tableau-circulaires"
 for lang in SUPPORTED_LANGS:
-        create_entity('Card', wikiid=u'%s-%s' % (wikiid, lang),
-                      title=u'Tableau des circulaires',
-                      content=u'Vous trouverez ci-dessus la liste des circulaires',
-                      content_format=u'text/html')
+    create_entity(
+        "Card",
+        wikiid="%s-%s" % (wikiid, lang),
+        title="Tableau des circulaires",
+        content="Vous trouverez ci-dessus la liste des circulaires",
+        content_format="text/html",
+    )
 commit()

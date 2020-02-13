@@ -173,3 +173,15 @@ msgstr ""
 
 msgid "www.geonames.org"
 msgstr ""
+
+msgid "n/r"
+msgstr ""
+
+msgid "wikidata"
+msgstr ""
+
+msgid "databnf"
+msgstr ""
+
+msgid "start_date"
+msgstr ""

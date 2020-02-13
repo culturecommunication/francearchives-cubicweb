@@ -35,23 +35,24 @@ from cubicweb_francearchives import create_homepage_metadata
 create_homepage_metadata(cnx)
 commit()
 
-add_entity_type('Json')
-add_entity_type('EsDocument')
+add_entity_type("Json")
+add_entity_type("EsDocument")
 
-add_attribute('CommemorationItem', 'on_homepage_order')
+add_attribute("CommemorationItem", "on_homepage_order")
 
-drop_entity_type('FAChange')
-drop_entity_type('IndexEntry')
-drop_entity_type('Alignment')
+drop_entity_type("FAChange")
+drop_entity_type("IndexEntry")
+drop_entity_type("Alignment")
 
-add_entity_type('OAIRepository')
-add_entity_type('OAIImportTask')
+add_entity_type("OAIRepository")
+add_entity_type("OAIImportTask")
 oai_import_task_workflow(add_workflow)
 commit()
 
-sync_schema_props_perms('collection_top')
+sync_schema_props_perms("collection_top")
 
-cnx.system_sql('''
+cnx.system_sql(
+    """
 CREATE OR REPLACE FUNCTION delete_entities(etype varchar, from_table varchar)
 RETURNS void AS $$
 DECLARE
@@ -63,6 +64,7 @@ BEGIN
   EXECUTE format('DELETE FROM %s USING %s WHERE cw_eid = %s.eid', etype, from_table, from_table);
   EXECUTE format('DELETE FROM entities USING %s WHERE entities.eid = %s.eid', from_table, from_table);
 END;
-$$ LANGUAGE plpgsql;''')  # noqa
+$$ LANGUAGE plpgsql;"""
+)  # noqa
 
 commit()

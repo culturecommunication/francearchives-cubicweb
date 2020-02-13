@@ -38,27 +38,27 @@ from pgfixtures import setup_module, teardown_module  # noqa
 
 
 class PostprocessTests(PostgresTextMixin, CubicWebTC):
-
     def test_normalize_entry(self):
         with self.admin_access.cnx() as cnx:
+
             def norm(label):
-                cu = cnx.system_sql('SELECT normalize_entry(%(l)s)', {'l': label})
+                cu = cnx.system_sql("SELECT normalize_entry(%(l)s)", {"l": label})
                 return cu.fetchone()[0]
 
-            self.assertEqual(norm('Charles de Gaulle'), 'charles de gaulle')
-            self.assertEqual(norm('Charles   de Gaulle'), 'charles de gaulle')
-            self.assertEqual(norm('Charles, Gaulle (de)'), 'charles de gaulle')
-            self.assertEqual(norm('Gaulle de, Charles'), 'charles de gaulle')
-            self.assertEqual(norm('Charles (de)   Gaulle'), 'charles de gaulle')
-            self.assertEqual(norm('Charles de Gaulle (1890-1970)'), 'charles de gaulle')
-            self.assertEqual(norm('Charles de Gaulle (1890 - 1970)'), 'charles de gaulle')
-            self.assertEqual(norm('Charles de Gaulle (1890 - 1970)'), 'charles de gaulle')
-            self.assertEqual(norm('Liszt, Franz (1811-1886)'), 'franz liszt')
-            self.assertEqual(norm('Liszt (Franz)'), 'franz liszt')
-            self.assertEqual(norm(u'debré, jean-louis (1944-....)'), 'debre jeanlouis')
-            self.assertEqual(norm(u'DEBRE, Jean-Louis'), 'debre jeanlouis')
-            self.assertEqual(norm(u'Debré, Jean-Louis'), 'debre jeanlouis')
+            self.assertEqual(norm("Charles de Gaulle"), "charles de gaulle")
+            self.assertEqual(norm("Charles   de Gaulle"), "charles de gaulle")
+            self.assertEqual(norm("Charles, Gaulle (de)"), "charles de gaulle")
+            self.assertEqual(norm("Gaulle de, Charles"), "charles de gaulle")
+            self.assertEqual(norm("Charles (de)   Gaulle"), "charles de gaulle")
+            self.assertEqual(norm("Charles de Gaulle (1890-1970)"), "charles de gaulle")
+            self.assertEqual(norm("Charles de Gaulle (1890 - 1970)"), "charles de gaulle")
+            self.assertEqual(norm("Charles de Gaulle (1890 - 1970)"), "charles de gaulle")
+            self.assertEqual(norm("Liszt, Franz (1811-1886)"), "franz liszt")
+            self.assertEqual(norm("Liszt (Franz)"), "franz liszt")
+            self.assertEqual(norm("debré, jean-louis (1944-....)"), "debre jeanlouis")
+            self.assertEqual(norm("DEBRE, Jean-Louis"), "debre jeanlouis")
+            self.assertEqual(norm("Debré, Jean-Louis"), "debre jeanlouis")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

@@ -29,42 +29,43 @@
 # knowledge of the CeCILL-C license and that you accept its terms.
 #
 
-from six import text_type
-
 
 from cubicweb import mail, _
 from cubicweb.web import ProcessFormError
 from cubicweb.web import formfields as ff
 from cubicweb.web.views.forms import FieldsForm
 
-from cubicweb_francearchives.views.forms import (AbstractPniaStaticFormRenderer,
-                                                 AbstractStaticFormView,
-                                                 EMAIL_REGEX)
+from cubicweb_francearchives.views.forms import (
+    AbstractPniaStaticFormRenderer,
+    AbstractStaticFormView,
+    EMAIL_REGEX,
+)
 from cubicweb_francearchives.views import get_template
 
 
 class ContactFormView(AbstractStaticFormView):
-    __regid__ = 'contact'
-    title = _('Contact')
+    __regid__ = "contact"
+    title = _("Contact")
 
 
 class ContactForm(FieldsForm):
-    __regid__ = 'contact'
-    form_renderer_id = 'contact'
-    domid = 'contactForm'
-    cssclass = 'static'
+    __regid__ = "contact"
+    form_renderer_id = "contact"
+    domid = "contactForm"
+    cssclass = "static"
     redirect_path = "contact#contactForm"
     email_content = _(
-u'''%(message)s
+        """%(message)s
 
 
 respond to : %(name)s, %(email)s
-''')  # noqa
+"""
+    )  # noqa
     # fields
-    name = ff.StringField(label=_('Name: '), required=True)
-    email = ff.StringField(required=True, label=_('Email:'))
-    object = ff.StringField(required=True, label=_('Object:'))
-    message = ff.StringField(required=True, label=_('Message:'))
+    name = ff.StringField(label=_("Name: "), required=True)
+    email = ff.StringField(required=True, label=_("Email:"))
+    object = ff.StringField(required=True, label=_("Object:"))
+    message = ff.StringField(required=True, label=_("Message:"))
 
     @property
     def action(self):
@@ -73,29 +74,33 @@ respond to : %(name)s, %(email)s
     def publish_form(self):
         """Captcha field is hidden from humans. If captcha is filled
            there is a bug chance that it was done by a robot"""
-        form = self._cw.vreg['forms'].select('contact', self._cw)
-        captcha = self._cw.form.get('captcha')
+        form = self._cw.vreg["forms"].select("contact", self._cw)
+        captcha = self._cw.form.get("captcha")
         if captcha:
             # do not send the email
             return
         data, errors = self.checked_data(form)
         if not errors:
-            recipient = self._cw.vreg.config['contact-email']
+            recipient = self._cw.vreg.config["contact-email"]
             msg = self.build_email(recipient, data)
             try:
                 self._cw.vreg.config.sendmails([(msg, (recipient,))])
-                msg = self._cw._(u'Your message has been send.')
+                msg = self._cw._("Your message has been send.")
             except Exception:
-                msg = self._cw._(u'Your message could not be send. Please try again.')
-            return {'errors': errors, 'msg': msg}
+                msg = self._cw._("Your message could not be send. Please try again.")
+            return {"errors": errors, "msg": msg}
         else:
-            return {'errors': errors}
+            return {"errors": errors}
 
     def build_email(self, recipient, data):
         content = self._cw._(self.email_content) % data
-        return mail.format_mail({}, [recipient], content=content,
-                                subject=self._cw._(data['object']),
-                                config=self._cw.vreg.config)
+        return mail.format_mail(
+            {},
+            [recipient],
+            content=content,
+            subject=self._cw._(data["object"]),
+            config=self._cw.vreg.config,
+        )
 
     def checked_data(self, form):
         form.formvalues = {}  # init fields value cache
@@ -105,30 +110,33 @@ respond to : %(name)s, %(email)s
                 for field, value in field.process_posted(form):
                     if value is not None:
                         data[field.role_name()] = value
-                    if field.name == 'email' and not EMAIL_REGEX.match(value):
-                        msg = self._cw._(u'Please, enter a valid email address')
+                    if field.name == "email" and not EMAIL_REGEX.match(value):
+                        msg = self._cw._("Please, enter a valid email address")
                         errors[field.role_name()] = msg
             except ProcessFormError as exc:
-                errors[field.role_name()] = text_type(exc)
+                errors[field.role_name()] = str(exc)
         return data, errors
 
 
 class ContactFormRenderer(AbstractPniaStaticFormRenderer):
-    __regid__ = 'contact'
-    template = get_template('contact_fields.jinja2')
+    __regid__ = "contact"
+    template = get_template("contact_fields.jinja2")
 
     def template_attrs(self):
         _ = self._cw._
-        return {'submit_value': _('Send your message'),
-                'required_info': _('This field is required'),
-                'contact_name_label': _('Name:'),
-                'contact_email_label': _('Email:'),
-                'contact_object_label': _('Object:'),
-                'contact_message_label': _('Message:'),
-                'contact_captcha_label': _('Captcha:'),
-                'contact_objects': [
-                    _('contact_object_1'),
-                    _('contact_object_2'),
-                    _('contact_object_3'),
-                    _('contact_object_4'),
-                    _('contact_object_5')]}
+        return {
+            "submit_value": _("Send your message"),
+            "required_info": _("This field is required"),
+            "contact_name_label": _("Name:"),
+            "contact_email_label": _("Email:"),
+            "contact_object_label": _("Object:"),
+            "contact_message_label": _("Message:"),
+            "contact_captcha_label": _("Captcha:"),
+            "contact_objects": [
+                _("contact_object_1"),
+                _("contact_object_2"),
+                _("contact_object_3"),
+                _("contact_object_4"),
+                _("contact_object_5"),
+            ],
+        }

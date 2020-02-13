@@ -113,7 +113,7 @@ msgid "APE-EAD XML version of the finding aid"
 msgstr ""
 
 msgid "Access to the site"
-msgstr ""
+msgstr "Accéder au site"
 
 msgid "Accessibility"
 msgstr "Accessibilité"
@@ -122,9 +122,31 @@ msgstr "Accessibilité"
 #
 # singular and plural forms for each entity type
 msgid "AgentAuthority"
-msgstr ""
+msgstr "Autorité agent"
 
 msgid "AgentAuthority_plural"
+msgstr "Autorités agent"
+
+msgid "AgentInfo"
+msgstr ""
+
+msgid ""
+"AgentInfo entities contain external information about an AgentAuthority. The "
+"'dates' attributes contain the date of birth and date of death as well as "
+"related information, e.g., dates = { 'birthdate': { 'timestamp': "
+"'1906-12-09', 'isbc': 'False', 'isdate': 'True', 'precision': 'd', 'isiso': "
+"True }, 'deathdate': { 'timestamp': '1992-01-01', 'isbc': 'False', 'isdate': "
+"'True', 'precision': 'd', 'isiso': True } }, with 'timestamp' being either a "
+"date string in '%Y-%m-%d' format ('isdate' is True in this case), or the "
+"original date if it cannot be converted into a date object ('isdate' is "
+"False in this case). The value 'isbc' is used to flag 'timestamp' as Before "
+"Christ. The value 'precision' specifies up to which time unit "
+"('c' (century), 'dc' (decade), 'y' (year), 'm' (month) or 'd' (day)) the "
+"timestamp is exact. The 'isiso' flag indicates whether BCE dates adhere to "
+"ISO8601 standard (0000 is 1BC -0001 is 2BC and so on)."
+msgstr ""
+
+msgid "AgentInfo_plural"
 msgstr ""
 
 msgid "AgentName"
@@ -167,6 +189,12 @@ msgstr ""
 "Fichier CSV avec les colonnes \"Code_insee\", \"URL\", \"Couleur\" and "
 "\"Legende\"séparées par \",\""
 
+msgid "Caches"
+msgstr ""
+
+msgid "Caches_plural"
+msgstr ""
+
 msgid "Captcha:"
 msgstr "Captcha :"
 
@@ -180,7 +208,7 @@ msgid "Change the navigation language"
 msgstr "Cambiar la lengua de navegación"
 
 msgid "Choose search perimeter"
-msgstr ""
+msgstr "Choisir le périmètre de recherche"
 
 msgid "Circular"
 msgstr "Circulaire"
@@ -189,7 +217,7 @@ msgid "Circular_plural"
 msgstr "Circulaires"
 
 msgid "Circulars"
-msgstr ""
+msgstr "Circulaires"
 
 msgid "CmsObject"
 msgstr ""
@@ -218,8 +246,14 @@ msgstr "Commémorations"
 msgid "Commemorations"
 msgstr ""
 
+msgid "Conservation institutions: "
+msgstr "Institution de conservation : "
+
+msgid "Consult the source"
+msgstr "Consulter la source"
+
 msgid "Consult the virtual exhibits"
-msgstr ""
+msgstr "Consulter l'exposition virtuelle"
 
 msgid "Contact"
 msgstr "contact"
@@ -237,7 +271,7 @@ msgid "Cote"
 msgstr "Cote"
 
 msgid "Creation date"
-msgstr ""
+msgstr "Date de création"
 
 msgid "CssImage"
 msgstr ""
@@ -261,16 +295,16 @@ msgid "DigitizedVersion_plural"
 msgstr "Versions numérisées"
 
 msgid "Display next years"
-msgstr ""
+msgstr "Afficher les années suivantes"
 
 msgid "Display previous years"
-msgstr ""
+msgstr "Afficher les années précédentes"
 
 msgid "Display the section: "
-msgstr ""
+msgstr "Déployer la rubrique : "
 
 msgid "Download shelfmark"
-msgstr "CSV"
+msgstr "Télécharger la cote"
 
 msgid "Download the inventory"
 msgstr "Ouvrir le document"
@@ -289,6 +323,12 @@ msgstr "Référence externe"
 
 msgid "ExternRef_plural"
 msgstr "Références externes"
+
+msgid "ExternalId"
+msgstr ""
+
+msgid "ExternalId_plural"
+msgstr ""
 
 msgid "FAComponent"
 msgstr "Document d'archives"
@@ -321,12 +361,15 @@ msgid "Fonds"
 msgstr "Fonds"
 
 msgid "Footer content"
-msgstr ""
+msgstr "Bas de page"
 
 msgid "For more results, try a fuzzy search"
 msgstr "Pour plus de résultats, essayez la recherche approximative"
 
 msgid "FranceArchives: Portail National des Archives de France"
+msgstr ""
+
+msgid "GB"
 msgstr ""
 
 msgid "Geogname"
@@ -349,25 +392,25 @@ msgstr "Consúltese Google+"
 
 #, python-format
 msgid "Go to commemorations %s"
-msgstr ""
+msgstr "Accéder au Recueil des Commémorations nationales %s"
 
 msgid "Go to previous the page"
-msgstr ""
+msgstr "Accéder à la page précédente"
 
 msgid "Go to the next page"
-msgstr ""
+msgstr "Accéder à la page suivante"
 
 msgid "Go to the page"
 msgstr "Acceder a la página"
 
 msgid "Go to the section"
-msgstr ""
+msgstr "Accéder à la rubrique"
 
 msgid "Go to the site:"
 msgstr "Ir al sitio web: "
 
 msgid "Go to the top of the page"
-msgstr ""
+msgstr "Remonter en haut de la page"
 
 msgid "Home"
 msgstr "Accueil"
@@ -381,28 +424,31 @@ msgstr "Image"
 msgid "Image_plural"
 msgstr "Images"
 
-msgid "Institution de conservation : "
-msgstr ""
-
 msgid "Invalid subscription data. Please try subscription again."
 msgstr "Données d'inscription incorrectes. Veuillez recommencer l'inscription."
 
 msgid "Inventory"
 msgstr "Inventaire"
 
+msgid "KB"
+msgstr ""
+
 msgid "Legal notices"
 msgstr "Mentions légales"
 
 msgid "Less options"
-msgstr ""
+msgstr "Moins d'options"
 
 msgid "Link the the commemoration full version"
-msgstr ""
+msgstr "Lien vers le texte complet de la commémoration"
 
 msgid "LocationAuthority"
-msgstr ""
+msgstr "Autorité lieu"
 
 msgid "LocationAuthority_plural"
+msgstr "Autorités lieu"
+
+msgid "MB"
 msgstr ""
 
 msgid "Map"
@@ -423,9 +469,12 @@ msgstr "Métadonnées"
 msgid "Metadata_plural"
 msgstr "Métadonnées"
 
+msgid "Missing title"
+msgstr "Titre absent"
+
 #, python-format
 msgid "More options (%(count)s)"
-msgstr "More options (%(count)s)"
+msgstr "Plus d'options (%(count)s)"
 
 msgid "N/R"
 msgstr "Non renseigné"
@@ -439,10 +488,16 @@ msgstr "Nom :"
 msgid "New AgentAuthority"
 msgstr ""
 
+msgid "New AgentInfo"
+msgstr ""
+
 msgid "New AgentName"
 msgstr ""
 
 msgid "New BaseContent"
+msgstr ""
+
+msgid "New Caches"
 msgstr ""
 
 msgid "New Category"
@@ -476,6 +531,9 @@ msgid "New EsDocument"
 msgstr ""
 
 msgid "New ExternRef"
+msgstr ""
+
+msgid "New ExternalId"
 msgstr ""
 
 msgid "New FAComponent"
@@ -554,7 +612,7 @@ msgid "Newsletter"
 msgstr "Lettre d'information"
 
 msgid "Next page"
-msgstr ""
+msgstr "Page suivante"
 
 msgid "No documents in this section"
 msgstr "Pas de document dans cette rubrique"
@@ -564,6 +622,9 @@ msgstr "Pas de résultat"
 
 msgid "Normalized interministerial system for official tests numbering"
 msgstr ""
+
+msgid "Notice author :"
+msgstr "Auteur de la notice : "
 
 msgid "Notice excerpt:"
 msgstr "Extrait de la notice :"
@@ -578,10 +639,10 @@ msgid "OAIImportTask_plural"
 msgstr ""
 
 msgid "OAIRepository"
-msgstr ""
+msgstr "entrepôt OAI"
 
 msgid "OAIRepository_plural"
-msgstr ""
+msgstr "entrepôts OAI"
 
 msgid "Object:"
 msgstr "Objet :"
@@ -593,7 +654,7 @@ msgid "OfficialText_plural"
 msgstr ""
 
 msgid "Open the menu"
-msgstr ""
+msgstr "Ouvrir le menu"
 
 msgid "Other"
 msgstr "Autre"
@@ -620,7 +681,7 @@ msgid "Please, enter a valid email address"
 msgstr "Veuillez entrer un courriel valide."
 
 msgid "Previous page"
-msgstr ""
+msgstr "Page précédente"
 
 msgid "PreviousInfo"
 msgstr ""
@@ -641,17 +702,17 @@ msgid "Publisher:"
 msgstr "Institution :"
 
 msgid "Read more"
-msgstr "Meer más"
+msgstr "Leer más"
 
 msgid "Sans date"
 msgstr ""
 
 #, python-format
 msgid "Search all documents for publisher %s"
-msgstr ""
+msgstr "Rechercher tous les documents pour l'institution : %s"
 
 msgid "Search results"
-msgstr "Resultados de búsqueda"
+msgstr "Résultats de recherche"
 
 msgid "Section"
 msgstr "Rubrique"
@@ -666,10 +727,10 @@ msgid "See all news"
 msgstr "Voir toutes les actualités"
 
 msgid "See all virtual exhibits"
-msgstr ""
+msgstr "Voir toutes les expositions virtuelles"
 
 msgid "See more"
-msgstr ""
+msgstr "Voir plus"
 
 msgid "See the timeline"
 msgstr "Voir la frise chronologique"
@@ -678,7 +739,7 @@ msgid "Select department"
 msgstr "Sélectionner un département"
 
 msgid "Selected year"
-msgstr ""
+msgstr "Année sélectionnée"
 
 msgid "Send your message"
 msgstr "Envoyez votre message"
@@ -693,16 +754,16 @@ msgid "Service_plural"
 msgstr "Services"
 
 msgid "Share FranceArchives on Facebook"
-msgstr ""
+msgstr "Partager FranceArchives sur Facebook"
 
 msgid "Share FranceArchives on Google+"
-msgstr ""
+msgstr "Partager FranceArchives sur Google+"
 
 msgid "Share FranceArchives on Twitter"
-msgstr ""
+msgstr "Partager FranceArchives sur Twitter"
 
 msgid "Share FranceArchives on Youtube"
-msgstr ""
+msgstr "Partager FranceArchives sur Youtube"
 
 msgid "Signing or publication date"
 msgstr "Date de signature ou de publication"
@@ -714,13 +775,13 @@ msgid "Site map"
 msgstr "Plan du site"
 
 msgid "Site:"
-msgstr ""
+msgstr "Site :"
 
 msgid "Skip to content"
-msgstr ""
+msgstr "Aller au contenu"
 
 msgid "Skip to menu"
-msgstr ""
+msgstr "Allez au menu"
 
 msgid "SocialNetwork"
 msgstr "Réseau social"
@@ -729,15 +790,18 @@ msgid "SocialNetwork_plural"
 msgstr "Réseaux sociaux"
 
 msgid "Subject"
-msgstr ""
+msgstr "Sujet"
 
 msgid "SubjectAuthority"
-msgstr ""
+msgstr "Autorité sujet"
 
 msgid "SubjectAuthority_plural"
-msgstr ""
+msgstr "Autorités sujet"
 
 msgid "Subject_plural"
+msgstr "Sujets"
+
+msgid "TB"
 msgstr ""
 
 msgid "Text author:"
@@ -767,6 +831,12 @@ msgstr ""
 msgid "This AgentAuthority:"
 msgstr ""
 
+msgid "This AgentInfo"
+msgstr ""
+
+msgid "This AgentInfo:"
+msgstr ""
+
 msgid "This AgentName"
 msgstr ""
 
@@ -777,6 +847,12 @@ msgid "This BaseContent"
 msgstr ""
 
 msgid "This BaseContent:"
+msgstr ""
+
+msgid "This Caches"
+msgstr ""
+
+msgid "This Caches:"
 msgstr ""
 
 msgid "This Category"
@@ -843,6 +919,12 @@ msgid "This ExternRef"
 msgstr ""
 
 msgid "This ExternRef:"
+msgstr ""
+
+msgid "This ExternalId"
+msgstr ""
+
+msgid "This ExternalId:"
 msgstr ""
 
 msgid "This FAComponent"
@@ -966,7 +1048,7 @@ msgid "This SubjectAuthority:"
 msgstr ""
 
 msgid "This field is required"
-msgstr ""
+msgstr "Ce champ est requis"
 
 #, python-format
 msgid "Timeline for %s"
@@ -975,13 +1057,17 @@ msgstr "Frise chronologique : %s"
 msgid "Toggle navigation"
 msgstr ""
 
+msgid "Url for an internal link"
+msgstr "Url du lien interne de l'image "
+
 #, python-format
 msgid "Use %(eadid)s, %(unitid)s or %(unititle)s substitution pattern"
 msgstr ""
+"Utiliser %(eadid)s, %(unitid)s or %(unititle)s comme modèle de substitution"
 
 #, python-brace-format
 msgid "Use {url} substitution pattern"
-msgstr ""
+msgstr "Utiliser {url} comme modèle de substitution"
 
 msgid "Virtual_exhibit"
 msgstr "Exposition virtuelle"
@@ -1022,21 +1108,18 @@ msgid "abrogation_date"
 msgstr "date d'abrogation"
 
 msgid "abrogation_text"
-msgstr "texte d'abrogation"
+msgstr "texte abrogatoire"
 
 msgctxt "Circular"
 msgid "abrogation_text"
-msgstr "texte d'abrogation"
+msgstr "texte abrogatoire"
 
 msgid "abstract"
-msgstr "résumé"
+msgstr "Résumé"
 
 msgctxt "Did"
 msgid "abstract"
 msgstr "résumé du contenu"
-
-msgid "abstract_format"
-msgstr "résumé"
 
 msgctxt "Did"
 msgid "abstract_format"
@@ -1100,7 +1183,7 @@ msgstr "action"
 
 msgctxt "Circular"
 msgid "action"
-msgstr "action"
+msgstr "Action"
 
 msgid "action_object"
 msgstr ""
@@ -1113,6 +1196,9 @@ msgid "add BaseContent basecontent_image Image subject"
 msgstr ""
 
 msgid "add Circular additional_attachment File subject"
+msgstr ""
+
+msgid "add Circular attachment File subject"
 msgstr ""
 
 msgid "add CommemoCollection section_image Image subject"
@@ -1148,10 +1234,16 @@ msgstr ""
 msgid "add a AgentAuthority"
 msgstr ""
 
+msgid "add a AgentInfo"
+msgstr ""
+
 msgid "add a AgentName"
 msgstr ""
 
 msgid "add a BaseContent"
+msgstr ""
+
+msgid "add a Caches"
 msgstr ""
 
 msgid "add a Category"
@@ -1185,6 +1277,9 @@ msgid "add a EsDocument"
 msgstr ""
 
 msgid "add a ExternRef"
+msgstr ""
+
+msgid "add a ExternalId"
 msgstr ""
 
 msgid "add a FAComponent"
@@ -1265,11 +1360,11 @@ msgid "additional_attachment_object"
 msgstr ""
 
 msgid "additional_link"
-msgstr "lien supplémentaire"
+msgstr "Lien supplémentaire"
 
 msgctxt "Circular"
 msgid "additional_link"
-msgstr "lien supplémentaire"
+msgstr "Lien supplémentaire"
 
 msgid "additional_link_object"
 msgstr ""
@@ -1279,7 +1374,7 @@ msgid "additional_link_object"
 msgstr ""
 
 msgid "additional_resources"
-msgstr ""
+msgstr "ressources complémentaires"
 
 msgctxt "FAComponent"
 msgid "additional_resources"
@@ -1301,14 +1396,28 @@ msgid "additional_resources_format"
 msgstr ""
 
 msgid "additional_resources_label"
-msgstr ""
+msgstr "Ressources complémentaires : "
 
 msgid "address"
-msgstr "address"
+msgstr "adresse physique"
 
 msgctxt "Service"
 msgid "address"
 msgstr "adresse"
+
+msgid "agent_info_of"
+msgstr ""
+
+msgctxt "AgentInfo"
+msgid "agent_info_of"
+msgstr ""
+
+msgid "agent_info_of_object"
+msgstr ""
+
+msgctxt "ExternalUri"
+msgid "agent_info_of_object"
+msgstr ""
 
 msgid "aligned_url"
 msgstr "url alignée"
@@ -1434,8 +1543,11 @@ msgstr "documents d'archives"
 msgid "arrangement_label"
 msgstr "Mise en forme :"
 
+msgid "associative_link_label"
+msgstr "Lien d'association :"
+
 msgid "attachment"
-msgstr "ajouter le pdf de la circulaire"
+msgstr "Ajouter le pdf de la circulaire"
 
 msgctxt "Circular"
 msgid "attachment"
@@ -1446,6 +1558,21 @@ msgstr ""
 
 msgctxt "File"
 msgid "attachment_object"
+msgstr ""
+
+msgid "authfilenumber"
+msgstr ""
+
+msgctxt "AgentName"
+msgid "authfilenumber"
+msgstr ""
+
+msgctxt "Geogname"
+msgid "authfilenumber"
+msgstr ""
+
+msgctxt "Subject"
+msgid "authfilenumber"
 msgstr ""
 
 msgid "author"
@@ -1497,7 +1624,7 @@ msgid "authority_object"
 msgstr ""
 
 msgid "basecontent_image"
-msgstr ""
+msgstr "image"
 
 msgctxt "BaseContent"
 msgid "basecontent_image"
@@ -1518,11 +1645,14 @@ msgid "basecontent_service"
 msgstr ""
 
 msgid "basecontent_service_object"
-msgstr ""
+msgstr "Contenu éditorial simple"
 
 msgctxt "Service"
 msgid "basecontent_service_object"
 msgstr ""
+
+msgid "bc"
+msgstr "av. J.-C."
 
 msgid "bibliography"
 msgstr "références bibliographiques"
@@ -1550,10 +1680,10 @@ msgid "bibliography_label"
 msgstr "Références bibliographiques :"
 
 msgid "bibref_label"
-msgstr ""
+msgstr "Références bibliographiques :"
 
 msgid "bioghist"
-msgstr ""
+msgstr "Informations sur le producteur :"
 
 msgctxt "FAComponent"
 msgid "bioghist"
@@ -1577,6 +1707,9 @@ msgstr ""
 msgid "bioghist_label"
 msgstr "Informations sur le producteur :"
 
+msgid "birth_date_label"
+msgstr "Date de naissance :"
+
 msgid "birthyear"
 msgstr "année de naissance"
 
@@ -1598,19 +1731,12 @@ msgctxt "Map"
 msgid "bottom_content_format"
 msgstr ""
 
-msgid "browser_url"
-msgstr ""
-
-msgctxt "Service"
-msgid "browser_url"
-msgstr ""
-
 msgid "business_field"
-msgstr "domaine métier"
+msgstr "Domaine métier"
 
 msgctxt "Circular"
 msgid "business_field"
-msgstr "domaine métier"
+msgstr "Domaine métier"
 
 msgid "business_field_facet"
 msgstr "Domaine (Thésaurus)"
@@ -1729,7 +1855,7 @@ msgid "children_object"
 msgstr ""
 
 msgid "circ_id"
-msgstr "Circ_id (identifiant unique de la circulaire)"
+msgstr "Identifiant unique de la circulaire"
 
 msgctxt "Circular"
 msgid "circ_id"
@@ -1843,6 +1969,9 @@ msgstr "URI de la circulaire"
 msgid "circulars"
 msgstr "circulaires"
 
+msgid "citation_label"
+msgstr ""
+
 msgctxt "Service"
 msgid "city"
 msgstr "ville"
@@ -1898,7 +2027,7 @@ msgid "commemo_dates_object"
 msgstr ""
 
 msgid "commemoration_category"
-msgstr ""
+msgstr "Catégorie de la commémoration"
 
 msgctxt "CommemorationItem"
 msgid "commemoration_category"
@@ -1916,7 +2045,7 @@ msgstr "Ajouter une image"
 
 msgctxt "CommemorationItem"
 msgid "commemoration_image"
-msgstr ""
+msgstr "image"
 
 msgid "commemoration_image_object"
 msgstr ""
@@ -1943,10 +2072,10 @@ msgid "component_order"
 msgstr ""
 
 msgid "consult the digitized version"
-msgstr ""
+msgstr "consulter le document numérisé"
 
 msgid "consult the virtual exhibits"
-msgstr ""
+msgstr "consulter l'exposition virtuelle"
 
 msgid "contact_name"
 msgstr "contact"
@@ -1969,6 +2098,9 @@ msgstr "Contenu du site"
 
 msgid "contact_object_5"
 msgstr "Autres sujets"
+
+msgid "content"
+msgstr ""
 
 msgctxt "BaseContent"
 msgid "content"
@@ -2046,12 +2178,18 @@ msgstr "Organisation"
 msgid "corpname_index_label"
 msgstr "Organisation :"
 
+msgid "cpf_relations_label"
+msgstr "Producteurs d'archives en relation :"
+
 msgid ""
 "creating CommemorationItem (CommemorationItem collection_top "
 "CommemoCollection %(linkto)s)"
 msgstr ""
 
 msgid "creating File (Circular %(linkto)s additional_attachment File)"
+msgstr ""
+
+msgid "creating File (Circular %(linkto)s attachment File)"
 msgstr ""
 
 msgid "creating File (FAComponent %(linkto)s fa_referenced_files File)"
@@ -2142,6 +2280,12 @@ msgstr ""
 msgid "ctxcomponents_homepage-content-events_description"
 msgstr ""
 
+msgid "ctxcomponents_homepage-content-flash"
+msgstr ""
+
+msgid "ctxcomponents_homepage-content-flash_description"
+msgstr ""
+
 msgid "ctxcomponents_homepage-content-news"
 msgstr ""
 
@@ -2157,6 +2301,9 @@ msgstr ""
 msgid "custodhist_label"
 msgstr "Historique de conservation :"
 
+msgid "databnf"
+msgstr "data.bnf.fr"
+
 msgid "date"
 msgstr ""
 
@@ -2171,6 +2318,10 @@ msgctxt "CommemoDate"
 msgid "date_is_precise"
 msgstr ""
 
+msgid "dates"
+msgstr "dates de naissance et de décès"
+
+msgctxt "AgentInfo"
 msgid "dates"
 msgstr ""
 
@@ -2191,8 +2342,14 @@ msgstr ""
 msgid "dates_label:"
 msgstr "Dates :"
 
+msgid "dates_sub_label"
+msgstr "dates :"
+
 msgid "de_lang"
 msgstr "Deutsch"
+
+msgid "death_date_label"
+msgstr "Date de décès :"
 
 msgid "death_year"
 msgstr "année de décès"
@@ -2202,7 +2359,7 @@ msgid "death_year"
 msgstr "année de décès"
 
 msgid "death_year_label:"
-msgstr ""
+msgstr "année de décès :"
 
 msgid "deathyear"
 msgstr "année de décès"
@@ -2211,6 +2368,10 @@ msgctxt "AgentAuthority"
 msgid "deathyear"
 msgstr ""
 
+msgid "description"
+msgstr "description"
+
+msgctxt "AgentInfo"
 msgid "description"
 msgstr ""
 
@@ -2237,6 +2398,10 @@ msgstr "description"
 msgctxt "Metadata"
 msgid "description"
 msgstr "description"
+
+msgctxt "AgentInfo"
+msgid "description_format"
+msgstr ""
 
 msgctxt "CssImage"
 msgid "description_format"
@@ -2326,11 +2491,11 @@ msgid "doc"
 msgstr ""
 
 msgid "document_type"
-msgstr "types de ressources"
+msgstr "Types de ressources"
 
 msgctxt "Circular"
 msgid "document_type"
-msgstr "type de document"
+msgstr "Type de document"
 
 msgid "document_type_facet"
 msgstr "Types de ressources"
@@ -2358,6 +2523,18 @@ msgstr "département"
 msgctxt "Service"
 msgid "dpt_code"
 msgstr "département"
+
+msgid "eac_biogist_label"
+msgstr "Description :"
+
+msgid "eac_function_label"
+msgstr "Fonction :"
+
+msgid "eac_occupation_label"
+msgstr "Activité :"
+
+msgid "eac_source_label"
+msgstr "Source :"
 
 msgid "eadid"
 msgstr "identifiant"
@@ -2390,7 +2567,7 @@ msgid "en_lang"
 msgstr "English"
 
 msgid "entity"
-msgstr ""
+msgstr "entité"
 
 msgctxt "EsDocument"
 msgid "entity"
@@ -2410,6 +2587,9 @@ msgstr ""
 msgid "es_lang"
 msgstr "Español"
 
+msgid "events"
+msgstr "Évènements"
+
 msgid "exref_service"
 msgstr "service"
 
@@ -2428,7 +2608,7 @@ msgid "extent_label"
 msgstr "Importance matérielle : "
 
 msgid "externref_image"
-msgstr ""
+msgstr "image"
 
 msgctxt "ExternRef"
 msgid "externref_image"
@@ -2441,6 +2621,14 @@ msgctxt "Image"
 msgid "externref_image_object"
 msgstr ""
 
+msgid "extid"
+msgstr "identifiant externe"
+
+msgctxt "ExternalId"
+msgid "extid"
+msgstr ""
+
+msgctxt "ExternalUri"
 msgid "extid"
 msgstr ""
 
@@ -2486,6 +2674,9 @@ msgstr ""
 msgid "failed to connect to elasticsearch"
 msgstr "Erreur de connexion au moteur de recherche"
 
+msgid "family_link_label"
+msgstr "Lien familial :"
+
 msgid "famname"
 msgstr "Nom de famille"
 
@@ -2507,7 +2698,7 @@ msgid "fax"
 msgstr "fax"
 
 msgid "file_label"
-msgstr ""
+msgstr "Fichier :"
 
 msgid ""
 "files referenced in '[otherfindaid|relatedmaterial|separatedmateri]//..//"
@@ -2544,10 +2735,10 @@ msgstr ""
 
 #, python-format
 msgid "for \"%s\""
-msgstr ""
+msgstr "pour \"%s\""
 
 msgid "for the query:"
-msgstr ""
+msgstr "pour la recherche :"
 
 msgid "forenames"
 msgstr "prénoms"
@@ -2568,30 +2759,23 @@ msgstr "Rechercher dans ces résultats"
 msgid "function"
 msgstr "activités"
 
-msgctxt "FAComponent"
-msgid "function"
-msgstr ""
-
-msgctxt "FindingAid"
-msgid "function"
-msgstr ""
-
 msgid "function_label"
-msgstr "Activités : "
+msgstr "Fonctions : "
+
+msgid "function_relation_label"
+msgstr "Relation avec une fonction :"
+
+msgid "functions_label"
+msgstr "Fonctions :"
 
 msgid "fuzzy search activation"
 msgstr "activation de la recherche approximative"
 
+msgid "general_context_label"
+msgstr "Contexte :"
+
 msgid "genreform"
 msgstr "type de document"
-
-msgctxt "FAComponent"
-msgid "genreform"
-msgstr ""
-
-msgctxt "FindingAid"
-msgid "genreform"
-msgstr ""
 
 msgid "genreform_label"
 msgstr "Type de document : "
@@ -2603,9 +2787,6 @@ msgid "geogname"
 msgstr "Lieu"
 
 msgid "geoname"
-msgstr "GeoNames"
-
-msgid "www.geonames.org"
 msgstr "GeoNames"
 
 msgid "grouped_with"
@@ -2645,6 +2826,9 @@ msgctxt "NewsContent"
 msgid "header"
 msgstr "chapo"
 
+msgid "hierarchical_link_label"
+msgstr "Lien hiérarchique :"
+
 msgid "historical_context"
 msgstr "Contexte historique"
 
@@ -2659,8 +2843,14 @@ msgctxt "Concept"
 msgid "historical_context_object"
 msgstr ""
 
+msgid "history_label"
+msgstr "Histoire :"
+
 msgid "human-readable name for the repository"
-msgstr ""
+msgstr "nom de l'entrepôt, lisible par l'utilisateur"
+
+msgid "identity_link_label"
+msgstr "Equivalent à :"
 
 msgid "illustration_url"
 msgstr ""
@@ -2728,11 +2918,24 @@ msgstr "type d'index"
 msgid "index_url"
 msgstr "url d'index"
 
+msgid "indexes_label"
+msgstr "Voir toutes les archives en lien :"
+
+msgid "instance_type"
+msgstr "type d'instance"
+
+msgctxt "Caches"
+msgid "instance_type"
+msgstr ""
+
 msgid "internal file link"
 msgstr ""
 
 msgid "inventory"
 msgstr "inventaire"
+
+msgid "items_label"
+msgstr "Liste d'élements"
 
 msgid "json_values"
 msgstr ""
@@ -2760,14 +2963,19 @@ msgctxt "Circular"
 msgid "kind"
 msgstr ""
 
-msgid "label"
-msgstr ""
-
 msgctxt "AgentAuthority"
 msgid "label"
 msgstr ""
 
 msgctxt "AgentName"
+msgid "label"
+msgstr ""
+
+msgctxt "ExternalId"
+msgid "label"
+msgstr ""
+
+msgctxt "ExternalUri"
 msgid "label"
 msgstr ""
 
@@ -2820,12 +3028,18 @@ msgctxt "FAHeader"
 msgid "lang_description_format"
 msgstr ""
 
+msgid "language_used_label"
+msgstr "Langue utilisée :"
+
 msgid "languages_label"
-msgstr "Langues:"
+msgstr "Langues :"
 
 msgctxt "LocationAuthority"
 msgid "latitude"
 msgstr ""
+
+msgid "legal_statuses_label"
+msgstr "Statuts juridiques :"
 
 msgid "level"
 msgstr ""
@@ -2920,6 +3134,26 @@ msgstr ""
 msgid "main_service"
 msgstr "service relié à"
 
+msgid "maintainer"
+msgstr ""
+
+msgctxt "AuthorityRecord"
+msgid "maintainer"
+msgstr ""
+
+msgid "maintainer_object"
+msgstr ""
+
+msgctxt "Service"
+msgid "maintainer_object"
+msgstr ""
+
+msgid "maintenance_event_label"
+msgstr "Mise a jour :"
+
+msgid "mandates_label"
+msgstr "Textes de référence :"
+
 msgid "manif_prog"
 msgstr "Ajouter des manifestations"
 
@@ -2942,7 +3176,7 @@ msgid "map_file"
 msgstr ""
 
 msgid "map_image"
-msgstr ""
+msgstr "image"
 
 msgctxt "Map"
 msgid "map_image"
@@ -3036,7 +3270,7 @@ msgid "modified_text_object"
 msgstr ""
 
 msgid "modifying_text"
-msgstr "Texte qui modifie cette circulaire"
+msgstr "Texte(s) qui modifie(nt) cette circulaire"
 
 msgctxt "Circular"
 msgid "modifying_text"
@@ -3049,8 +3283,15 @@ msgctxt "OfficialText"
 msgid "modifying_text_object"
 msgstr ""
 
+msgid "n/r"
+msgstr " non renseigné"
+
 msgid "name"
 msgstr "Nom"
+
+msgctxt "Caches"
+msgid "name"
+msgstr ""
 
 msgctxt "Category"
 msgid "name"
@@ -3095,6 +3336,9 @@ msgctxt "Service"
 msgid "name2"
 msgstr ""
 
+msgid "name_entries_label"
+msgstr "Autres noms :"
+
 msgid "name_index_label"
 msgstr "Personne ou Organisation :"
 
@@ -3119,7 +3363,7 @@ msgid "no"
 msgstr "non"
 
 msgid "no label"
-msgstr ""
+msgstr "pas de libellé"
 
 msgid "nor"
 msgstr "N° NOR"
@@ -3190,27 +3434,23 @@ msgstr "caduc"
 msgid "occupation"
 msgstr "fonction"
 
-msgctxt "FAComponent"
-msgid "occupation"
-msgstr ""
-
-msgctxt "FindingAid"
-msgid "occupation"
-msgstr ""
-
 msgid "occupation_label"
-msgstr "Fonction : "
+msgstr "Activité : "
 
 #, python-format
 msgid "on %s "
-msgstr "le %s"
+msgstr "du %s"
 
 #, python-format
 msgid "on term \"%s\""
-msgstr ""
+msgstr "pour \"%s\""
 
 msgid "on_homepage"
 msgstr "sur la page d'accueil"
+
+msgctxt "BaseContent"
+msgid "on_homepage"
+msgstr ""
 
 msgctxt "CommemorationItem"
 msgid "on_homepage"
@@ -3221,7 +3461,7 @@ msgid "on_homepage"
 msgstr "sur la page d'accueil"
 
 msgid "on_homepage_order"
-msgstr ""
+msgstr "ordre d'affichage sur la page d'accueil"
 
 msgctxt "CommemorationItem"
 msgid "on_homepage_order"
@@ -3277,13 +3517,6 @@ msgctxt "Section"
 msgid "order"
 msgstr ""
 
-msgid "organization_chart"
-msgstr ""
-
-msgctxt "Service"
-msgid "organization_chart"
-msgstr ""
-
 msgid "originalsloc_label"
 msgstr "Conservation des originaux :"
 
@@ -3312,7 +3545,7 @@ msgid "other"
 msgstr ""
 
 msgid "other_format"
-msgstr ""
+msgstr "autres formats"
 
 msgctxt "Service"
 msgid "other_format"
@@ -3320,7 +3553,7 @@ msgstr ""
 
 #, python-format
 msgid "page %s on %s"
-msgstr ""
+msgstr "page %s sur %s"
 
 msgid "parent_component"
 msgstr ""
@@ -3340,7 +3573,7 @@ msgid "period"
 msgstr "période"
 
 msgid "period_label"
-msgstr ""
+msgstr "Période :"
 
 msgid "persname"
 msgstr "Personne"
@@ -3391,6 +3624,12 @@ msgstr ""
 
 msgid "physloc_label"
 msgstr "Localisation physique :"
+
+msgid "places_label"
+msgstr "Lieu :"
+
+msgid "places_sub_label"
+msgstr "lieu :"
 
 msgid "previous_info"
 msgstr ""
@@ -3491,12 +3730,15 @@ msgstr "Institutions"
 msgid "punctual"
 msgstr "ponctuel"
 
+msgid "record_id_label"
+msgstr "Identifiant :"
+
 msgid "reftype"
 msgstr "type de référence"
 
 msgctxt "ExternRef"
 msgid "reftype"
-msgstr ""
+msgstr "type de référence"
 
 msgid "related_authority"
 msgstr ""
@@ -3528,11 +3770,11 @@ msgid "related_finding_aid_label"
 msgstr "Inventaire d'archives :"
 
 msgid "repository"
-msgstr "Organisme responsable de l’accès intellectuel"
+msgstr "Organisme responsable de l'accès intellectuel"
 
 msgctxt "Did"
 msgid "repository"
-msgstr "Organisme responsable de l’accès intellectuel"
+msgstr "Organisme responsable de l'accès intellectuel"
 
 msgid "repository_format"
 msgstr ""
@@ -3542,17 +3784,20 @@ msgid "repository_format"
 msgstr ""
 
 msgid "repository_label"
-msgstr "Organisme responsable de l’accès intellectuel"
+msgstr "Organisme responsable de l'accès intellectuel :"
+
+msgid "resource_relation_label"
+msgstr "Archives de ce producteur :"
 
 msgid "revoked"
 msgstr "abrogée"
 
 msgid "revoked_text"
-msgstr "texte abrogé"
+msgstr "Texte(s) abrogé(s)"
 
 msgctxt "Circular"
 msgid "revoked_text"
-msgstr "texte abrogé"
+msgstr "Texte(s) abrogé(s)"
 
 msgid "revoked_text_object"
 msgstr ""
@@ -3577,9 +3822,6 @@ msgctxt "Subject"
 msgid "role"
 msgstr ""
 
-msgid "same_as"
-msgstr ""
-
 msgctxt "AgentAuthority"
 msgid "same_as"
 msgstr ""
@@ -3589,6 +3831,10 @@ msgid "same_as"
 msgstr ""
 
 msgctxt "Concept"
+msgid "same_as"
+msgstr ""
+
+msgctxt "ExternalId"
 msgid "same_as"
 msgstr ""
 
@@ -3603,6 +3849,9 @@ msgstr ""
 msgctxt "SubjectAuthority"
 msgid "same_as"
 msgstr ""
+
+msgid "same_as_label"
+msgstr "Source :"
 
 msgid "scopecontent"
 msgstr "contenu"
@@ -3640,7 +3889,7 @@ msgid "search_form_url"
 msgstr ""
 
 msgid "section_image"
-msgstr ""
+msgstr "image"
 
 msgctxt "CommemoCollection"
 msgid "section_image"
@@ -3659,6 +3908,9 @@ msgstr ""
 
 msgid "see service related documents"
 msgstr "Voir les références des documents d'archives"
+
+msgid "see_also_label"
+msgstr "Autres ressources :"
 
 msgid "select"
 msgstr "Sélectionner"
@@ -3679,7 +3931,7 @@ msgid "service"
 msgstr ""
 
 msgid "service_image"
-msgstr ""
+msgstr "image"
 
 msgctxt "Service"
 msgid "service_image"
@@ -3726,7 +3978,7 @@ msgid "short name"
 msgstr "Nom court"
 
 msgid "short_description"
-msgstr ""
+msgstr "description courte"
 
 msgctxt "CommemoCollection"
 msgid "short_description"
@@ -3744,7 +3996,7 @@ msgid "short_name"
 msgstr ""
 
 msgid "siaf_daf_code"
-msgstr ""
+msgstr "Code SIAF"
 
 msgctxt "Circular"
 msgid "siaf_daf_code"
@@ -3775,7 +4027,18 @@ msgid "signing_date"
 msgstr "Date de signature"
 
 msgid "source"
+msgstr "source"
+
+msgctxt "ExternalId"
+msgid "source"
 msgstr ""
+
+msgctxt "ExternalUri"
+msgid "source"
+msgstr ""
+
+msgid "source_entry_label"
+msgstr "Sources :"
 
 msgid "stable_id"
 msgstr ""
@@ -3788,9 +4051,15 @@ msgctxt "FindingAid"
 msgid "stable_id"
 msgstr ""
 
+msgid "start_date"
+msgstr ""
+
 msgctxt "NewsContent"
 msgid "start_date"
 msgstr ""
+
+msgid "start_date_label"
+msgstr "Date de début :"
 
 msgid "start_year"
 msgstr "date de début"
@@ -3823,6 +4092,9 @@ msgctxt "NewsContent"
 msgid "stop_date"
 msgstr "date de fin"
 
+msgid "stop_date_label"
+msgstr "Date de fin :"
+
 msgid "stop_year"
 msgstr "date de fin"
 
@@ -3836,6 +4108,9 @@ msgstr ""
 msgctxt "Did"
 msgid "stopyear"
 msgstr ""
+
+msgid "structure_label"
+msgstr "Organisation :"
 
 msgid "subject"
 msgstr "Thème catalogué"
@@ -3865,18 +4140,21 @@ msgstr ""
 msgid "support document for a finding aid"
 msgstr ""
 
+msgid "temporal_link_label"
+msgstr "Lien temporel :"
+
 msgid "there was a problem with the elasticsearch request"
 msgstr ""
 
 msgid "thumbnail_dest"
-msgstr ""
+msgstr "Url de la visionneuse"
 
 msgctxt "Service"
 msgid "thumbnail_dest"
 msgstr ""
 
 msgid "thumbnail_url"
-msgstr ""
+msgstr "Url de la vignette"
 
 msgctxt "Service"
 msgid "thumbnail_url"
@@ -3926,7 +4204,7 @@ msgid "title"
 msgstr "titre"
 
 msgid "title_label"
-msgstr ""
+msgstr "Titre :"
 
 msgid "titleproper"
 msgstr ""
@@ -3985,9 +4263,17 @@ msgctxt "CommemoDate"
 msgid "type"
 msgstr ""
 
+msgctxt "Geogname"
+msgid "type"
+msgstr ""
+
 msgctxt "Metadata"
 msgid "type"
 msgstr "type"
+
+msgctxt "Subject"
+msgid "type"
+msgstr ""
 
 msgid "unique identifier"
 msgstr ""
@@ -4016,6 +4302,10 @@ msgctxt "Did"
 msgid "unittitle"
 msgstr "Titre"
 
+msgctxt "Image"
+msgid "uri"
+msgstr ""
+
 msgctxt "DigitizedVersion"
 msgid "url"
 msgstr ""
@@ -4036,8 +4326,11 @@ msgctxt "SocialNetwork"
 msgid "url"
 msgstr ""
 
+msgid "used as bounce url"
+msgstr "utilisé comme url de rebond"
+
 msgid "userestrict"
-msgstr "restrictions d'utilisation"
+msgstr "conditions d'utilisation"
 
 msgctxt "FAComponent"
 msgid "userestrict"
@@ -4059,7 +4352,7 @@ msgid "userestrict_format"
 msgstr ""
 
 msgid "userestrict_label"
-msgstr "Restrictions d'utilisation :"
+msgstr "Conditions d'utilisation :"
 
 msgctxt "BaseContent"
 msgid "uuid"
@@ -4132,11 +4425,22 @@ msgstr ""
 msgid "validating..."
 msgstr ""
 
+msgid "values"
+msgstr "valeurs"
+
+msgctxt "Caches"
+msgid "values"
+msgstr ""
+
 msgid "website_label:"
 msgstr "Site web :"
 
 msgid "website_url"
 msgstr "site web"
+
+msgctxt "FindingAid"
+msgid "website_url"
+msgstr ""
 
 msgctxt "Service"
 msgid "website_url"
@@ -4157,8 +4461,21 @@ msgstr ""
 msgid "wft_faimport_fail"
 msgstr ""
 
+msgid "wikidata"
+msgstr "Wikidata"
+
 msgid "write to us"
 msgstr "nous écrire"
+
+msgid "www.geonames.org"
+msgstr "GeoNames"
+
+msgid "xml_support"
+msgstr "fichier XML"
+
+msgctxt "AuthorityRecord"
+msgid "xml_support"
+msgstr ""
 
 msgid "year"
 msgstr "année"
@@ -4218,6 +4535,9 @@ msgstr "{count} résultats"
 #~ msgid "###home-title-meta###"
 #~ msgstr "FranceArchives.fr"
 
+#~ msgid "###sitewide###"
+#~ msgstr "dans le site"
+
 #~ msgid "- Read more"
 #~ msgstr "- Leer más"
 
@@ -4265,6 +4585,9 @@ msgstr "{count} résultats"
 #~ "Un email d'activation de l'inscription vous a été envoyé. Veuillez suivre "
 #~ "les instructions dans ce courrier."
 
+#~ msgid "abstract_format"
+#~ msgstr "résumé"
+
 #~ msgid "abstract_label"
 #~ msgstr "Résumé du contenu :"
 
@@ -4292,6 +4615,9 @@ msgstr "{count} résultats"
 
 #~ msgid "fatype_label"
 #~ msgstr "Type :"
+
+#~ msgid "label"
+#~ msgstr "libellé"
 
 #~ msgid "location"
 #~ msgstr "lieux"

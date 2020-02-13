@@ -32,13 +32,16 @@
 from cubicweb_francearchives.migration import migr_113
 from cubicweb_francearchives.dataimport import sqlutil
 from cubicweb_francearchives.dataimport.ead import ead_foreign_key_tables
-add_relation_type('externref_image')
+
+add_relation_type("externref_image")
 
 
 def alter_published_table(table, column, attrtype):
-    cnx.system_sql(str('ALTER TABLE published.cw_%s ADD cw_%s %s'
-                       % (table, column, attrtype)),
-                    rollback_on_failure=False)
+    cnx.system_sql(
+        str("ALTER TABLE published.cw_%s ADD cw_%s %s" % (table, column, attrtype)),
+        rollback_on_failure=False,
+    )
+
 
 with sqlutil.sudocnx(cnx, interactive=False) as su_cnx:
     foreign_key_tables = ead_foreign_key_tables(cnx.vreg.schema)
@@ -46,37 +49,39 @@ with sqlutil.sudocnx(cnx, interactive=False) as su_cnx:
     # remove default value for FAComponent.additional_resources_format
     # to avoid excuting the "UPDATE cw_facomponent SET cw_a...='text/html' that
     # takes ages
-    adr_fmt_rdef = fsschema.rschema('additional_resources_format').rdef('FAComponent', 'String')
+    adr_fmt_rdef = fsschema.rschema("additional_resources_format").rdef("FAComponent", "String")
     adr_fmt_rdef.default = None
     for etype, attrs in (
-        ('FindingAid', ('accessrestrict', 'userestrict', 'additional_resources')),
-        ('FAComponent', ('additional_resources',)),
-        ):
+        ("FindingAid", ("accessrestrict", "userestrict", "additional_resources")),
+        ("FAComponent", ("additional_resources",)),
+    ):
         for attr in attrs:
-            print('add attr %s' % attr)
-            attr_fmt = '{}_format'.format(attr)
+            print("add attr %s" % attr)
+            attr_fmt = "{}_format".format(attr)
             add_attribute(etype, attr)
             add_attribute(etype, attr_fmt)
-            alter_published_table(etype, attr, 'text')
-            alter_published_table(etype, attr_fmt, 'character varying(50)')
+            alter_published_table(etype, attr, "text")
+            alter_published_table(etype, attr_fmt, "character varying(50)")
     # reset correct default value in cw_cwattribute for FAComponent.additional_resources_format
-    cnx.system_sql("UPDATE cw_cwattribute as a "
-                   "SET cw_defaultval=a2.cw_defaultval "
-                   "FROM cw_cwrtype r, cw_cwetype e, "
-                   "     cw_cwattribute a2 JOIN cw_cwrtype r2 ON (r2.cw_eid=a2.cw_relation_type) "
-                   "   JOIN cw_cwetype e2 ON (a2.cw_from_entity=e2.cw_eid) "
-                   "WHERE a.cw_relation_type=r.cw_eid AND a.cw_from_entity=e.cw_eid "
-                   "   AND e.cw_name='FAComponent' AND r.cw_name='additional_resources_format'"
-                   "   AND r2.cw_name='additional_resources_format' AND e2.cw_name='FindingAid'")
+    cnx.system_sql(
+        "UPDATE cw_cwattribute as a "
+        "SET cw_defaultval=a2.cw_defaultval "
+        "FROM cw_cwrtype r, cw_cwetype e, "
+        "     cw_cwattribute a2 JOIN cw_cwrtype r2 ON (r2.cw_eid=a2.cw_relation_type) "
+        "   JOIN cw_cwetype e2 ON (a2.cw_from_entity=e2.cw_eid) "
+        "WHERE a.cw_relation_type=r.cw_eid AND a.cw_from_entity=e.cw_eid "
+        "   AND e.cw_name='FAComponent' AND r.cw_name='additional_resources_format'"
+        "   AND r2.cw_name='additional_resources_format' AND e2.cw_name='FindingAid'"
+    )
     cnx.commit()
     sqlutil.enable_triggers(su_cnx, foreign_key_tables)
 
-print('add description on the url')
+print("add description on the url")
 
 # add description on search_form_url
-# sync_schema_props_perms('search_form_url')
+#  sync_schema_props_perms('search_form_url')
 
 
-if __name__ == '__main__':
-    if confirm('fix Service.search_form_url? [Y/n]'):
+if __name__ == "__main__":
+    if confirm("fix Service.search_form_url? [Y/n]"):
         migr_113.fix_search_form_url(cnx)

@@ -43,36 +43,35 @@ from cubicweb import Binary
 
 
 LOG = logging.getLogger(__name__)
-DATE_RE = re.compile(r'(\d+)[-/](\d+)[-/](\d+)')
+DATE_RE = re.compile(r"(\d+)[-/](\d+)[-/](\d+)")
 
 
 def get_by_uuid(cnx, etype, **kwargs):
     rset = cnx.find(etype, **kwargs)
     if len(rset) != 1:
-        raise HTTPBadRequest('no entity for etype %r and params %r' % (etype, kwargs))
+        raise HTTPBadRequest("no entity for etype %r and params %r" % (etype, kwargs))
     return rset.one()
 
 
 def parse_date(value):
     m = DATE_RE.search(value)
     if m is None:
-        raise ValueError('date data %s does not match regexp %s' %
-                         (value, DATE_RE.pattern))
+        raise ValueError("date data %s does not match regexp %s" % (value, DATE_RE.pattern))
     return date(int(m.group(1)), int(m.group(2)), int(m.group(3)))
 
 
 def load_json_value(value, ttype):
-    if ttype == 'Bytes':
+    if ttype == "Bytes":
         return Binary(base64.b64decode(value))
-    elif ttype in ('TZDatetime', 'Datetime'):
-        date, time = value.split(' ', 1)
-        time = datetime.strptime(time, '%H:%M:%S')
+    elif ttype in ("TZDatetime", "Datetime"):
+        date, time = value.split(" ", 1)
+        time = datetime.strptime(time, "%H:%M:%S")
         date = parse_date(date)
         return datetime(date.year, date.month, date.day, time.hour, time.minute, time.second)
-    elif ttype == 'Date':
+    elif ttype == "Date":
         return parse_date(value)
-    elif ttype in ('Time', 'TZTime'):
-        return datetime.strptime(value, '%H:%M:%S').time()
+    elif ttype in ("Time", "TZTime"):
+        return datetime.strptime(value, "%H:%M:%S").time()
     else:
         return value
 
@@ -108,9 +107,9 @@ def _get_modifications(previous_state, new_state):
 
     """
     modifications = {}
-    for attrname, attrvalue in new_state.items():
+    for attrname, attrvalue in list(new_state.items()):
         curvalue = previous_state.get(attrname)
-        if hasattr(curvalue, 'tzinfo'):
+        if hasattr(curvalue, "tzinfo"):
             curvalue = naive_dt(curvalue)
         # Binary objects implement __eq__ but not __ne__
         if not (curvalue == attrvalue):
@@ -119,12 +118,12 @@ def _get_modifications(previous_state, new_state):
 
 
 def get_uuid_attr(vreg, etype):
-    if vreg.schema.eschema(etype).has_relation('uuid', 'subject'):
-        return 'uuid'
-    eclass = vreg['etypes'].etype_class(etype)
-    uuid_attr = getattr(eclass, 'uuid_attr', None)
+    if vreg.schema.eschema(etype).has_relation("uuid", "subject"):
+        return "uuid"
+    eclass = vreg["etypes"].etype_class(etype)
+    uuid_attr = getattr(eclass, "uuid_attr", None)
     if uuid_attr is None:
-        vreg.warning('%s class does not have uuid_attr skipping edition', etype)
+        vreg.warning("%s class does not have uuid_attr skipping edition", etype)
         return
     return uuid_attr
 
@@ -143,7 +142,7 @@ def edit_object(cnx, etype, posted, previous_state=None, _done=None):
     rset = cnx.find(etype, **{uuid_attr: uuid})
     if rset:
         entity = rset.one()
-        previous_state = previous_state or entity.cw_adapt_to('ISync').build_put_body()
+        previous_state = previous_state or entity.cw_adapt_to("ISync").build_put_body()
         modifications = _get_modifications(previous_state, entity_data)
         if modifications:
             entity.cw_set(**modifications)
@@ -166,14 +165,13 @@ def edit_object(cnx, etype, posted, previous_state=None, _done=None):
                 previous_target_states[rdata[target_uuid_attr]] = rdata
             posted_uuids = {}
             targets = []
-            targets_data = (t for t in relation_data[rtype]
-                            if t['cw_etype'] == ttype)
+            targets_data = (t for t in relation_data[rtype] if t["cw_etype"] == ttype)
             for target_data in targets_data:
                 target_uuid = target_data[target_uuid_attr]
                 # recurse: create / edit related entity
                 target, target_created = edit_object(
-                    cnx, ttype, target_data,
-                    previous_target_states.get(target_uuid, {}), _done)
+                    cnx, ttype, target_data, previous_target_states.get(target_uuid, {}), _done
+                )
                 posted_uuids[target_uuid] = target
             for target_uuid in set(posted_uuids) - existing_uuids:
                 targets.append(posted_uuids[target_uuid])
@@ -182,85 +180,90 @@ def edit_object(cnx, etype, posted, previous_state=None, _done=None):
                 if rdef.composite:
                     cnx.find(ttype, **{target_uuid_attr: target_uuid}).one().cw_delete()
                 else:
-                    rql = ('DELETE X {rtype} Y WHERE X is {etype}, '
-                           'X {uuid_attr} %(x)s, Y is {ttype}, '
-                           'Y {target_uuid_attr} %(y)s'.format(rtype=rtype, etype=etype,
-                                                               uuid_attr=uuid_attr, ttype=ttype,
-                                                               target_uuid_attr=target_uuid_attr))
-                    cnx.execute(rql, {'x': uuid, 'y': target_uuid})
+                    rql = (
+                        "DELETE X {rtype} Y WHERE X is {etype}, "
+                        "X {uuid_attr} %(x)s, Y is {ttype}, "
+                        "Y {target_uuid_attr} %(y)s".format(
+                            rtype=rtype,
+                            etype=etype,
+                            uuid_attr=uuid_attr,
+                            ttype=ttype,
+                            target_uuid_attr=target_uuid_attr,
+                        )
+                    )
+                    cnx.execute(rql, {"x": uuid, "y": target_uuid})
     return entity, created
 
 
-@view_config(route_name='update-cmsobject', request_method=('PUT',))
+@view_config(route_name="update-cmsobject", request_method=("PUT",))
 def put_cmsobject(request):
     cnx = request.cw_cnx
     posted = request.json
-    if posted.get('uuid') and posted['uuid'] != request.matchdict['uuid']:
-        raise HTTPConflict('ko')
-    etype = request.matchdict['etype']
+    if posted.get("uuid") and posted["uuid"] != request.matchdict["uuid"]:
+        raise HTTPConflict("ko")
+    etype = request.matchdict["etype"]
     uuid_attr = get_uuid_attr(cnx.vreg, etype)
-    uuid_value = request.matchdict['uuid']
-    LOG.debug('will update %s, %s: %s (%s)', etype, uuid_attr, uuid_value, posted.keys())
+    uuid_value = request.matchdict["uuid"]
+    LOG.debug("will update %s, %s: %s (%s)", etype, uuid_attr, uuid_value, list(posted.keys()))
     posted[uuid_attr] = uuid_value
-    section_uuid = posted.pop('parent-section', None)
+    section_uuid = posted.pop("parent-section", None)
     with cnx.security_enabled(write=False):
         entity, created = edit_object(cnx, etype, posted)
         if created and section_uuid:
-            section = cnx.find('Section', uuid=section_uuid).one()
+            section = cnx.find("Section", uuid=section_uuid).one()
             section.cw_set(children=entity)
         cnx.commit()
-    return Response('ok', status_code=201 if created else 200)
+    return Response("ok", status_code=201 if created else 200)
 
 
-@view_config(route_name='update-cmsobject', request_method=('DELETE',))
+@view_config(route_name="update-cmsobject", request_method=("DELETE",))
 def delete_cmsobject(request):
     cnx = request.cw_cnx
-    etype = request.matchdict['etype']
-    uuid_value = request.matchdict['uuid']
+    etype = request.matchdict["etype"]
+    uuid_value = request.matchdict["uuid"]
     uuid_attr = get_uuid_attr(cnx.vreg, etype)
-    LOG.debug('will delete %s, %s: %s', etype, uuid_attr, uuid_value)
+    LOG.debug("will delete %s, %s: %s", etype, uuid_attr, uuid_value)
     entity = get_by_uuid(cnx, etype, **{uuid_attr: uuid_value})
     with cnx.security_enabled(write=False):
         entity.cw_delete()
         cnx.commit()
-    return Response('ok')
+    return Response("ok")
 
 
-@view_config(route_name='update-move', request_method=('POST',))
+@view_config(route_name="update-move", request_method=("POST",))
 def move_object(request):
     cnx = request.cw_cnx
-    entity = get_by_uuid(cnx, request.matchdict['etype'], uuid=request.matchdict['uuid'])
+    entity = get_by_uuid(cnx, request.matchdict["etype"], uuid=request.matchdict["uuid"])
     try:
         try:
-            newsection = get_by_uuid(cnx, 'Section', uuid=request.json['to-section'])
+            newsection = get_by_uuid(cnx, "Section", uuid=request.json["to-section"])
         except HTTPBadRequest:
-            newsection = get_by_uuid(cnx, 'CommemoCollection', uuid=request.json['to-section'])
+            newsection = get_by_uuid(cnx, "CommemoCollection", uuid=request.json["to-section"])
     except KeyError as err:
-        raise HTTPBadRequest('property %s is missing in request body' % err.args[0])
-    if (entity.reverse_children
-            and entity.reverse_children[0].eid == newsection.eid):
+        raise HTTPBadRequest("property %s is missing in request body" % err.args[0])
+    if entity.reverse_children and entity.reverse_children[0].eid == newsection.eid:
         # entity is already in this section
-        return Response('ok')  # NOTE: return 304 NotModified ?
+        return Response("ok")  # NOTE: return 304 NotModified ?
     with cnx.security_enabled(write=False):
         newsection.cw_set(children=entity)
         cnx.commit()
-    return Response('ok')
+    return Response("ok")
 
 
-@view_config(route_name='nls-csvexport',
-             renderer='csv')
+@view_config(route_name="nls-csvexport", renderer="csv")
 def news_letter_csv_export(request):
     # override attributes of response
     cnx = request.cw_cnx
-    data = cnx.execute('Any E,D WHERE X is NewsLetterSubscriber, '
-                       'X email E, X creation_date D').rows
-    filename = 'newsletter.csv'
-    request.response.content_disposition = 'attachment;filename=' + filename
-    return {'rows': data}
+    data = cnx.execute(
+        "Any E,D WHERE X is NewsLetterSubscriber, " "X email E, X creation_date D"
+    ).rows
+    filename = "newsletter.csv"
+    request.response.content_disposition = "attachment;filename=" + filename
+    return {"rows": data}
 
 
 def includeme(config):
-    config.add_route('update-cmsobject', '/_update/{etype}/{uuid}')
-    config.add_route('update-move', '/_update/move/{etype}/{uuid}')
-    config.add_route('nls-csvexport', '/nlsexport')
+    config.add_route("update-cmsobject", "/_update/{etype}/{uuid}")
+    config.add_route("update-move", "/_update/move/{etype}/{uuid}")
+    config.add_route("nls-csvexport", "/nlsexport")
     config.scan(__name__)

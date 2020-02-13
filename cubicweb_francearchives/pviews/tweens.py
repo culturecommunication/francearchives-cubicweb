@@ -36,19 +36,19 @@ from cubicweb_francearchives import SUPPORTED_LANGS
 def sanitize_parameters_tween_factory(handler, registry):
     unauthorized_form_params = {
         # unauhtorized_param: (excepted_values)
-        '__message': None,
-        'rql': None,
-        '__login': None,
-        '__password': None,
-        '__notemplate': None,
-        '__lang': None,
-        'debug-es': None,
-        'vid': ('download',),
+        "__message": None,
+        "rql": None,
+        "__login": None,
+        "__password": None,
+        "__notemplate": None,
+        "__lang": None,
+        "debug-es": None,
+        "vid": ("download",),
     }
 
     def sanitize_parameters_tween(request):
         cwreq = request.cw_request
-        for param, value in cwreq.form.items():
+        for param, value in list(cwreq.form.items()):
             if param in unauthorized_form_params:
                 authorized_values = unauthorized_form_params[param]
                 if authorized_values is None or value not in authorized_values:
@@ -59,18 +59,17 @@ def sanitize_parameters_tween_factory(handler, registry):
 
 
 def langprefix_tween_factory(handler, registry):
-
     def langprefix_tween(request):
         cwreq = request.cw_request
         for lang in SUPPORTED_LANGS:
-            prefix = '/{}/'.format(lang)
+            prefix = "/{}/".format(lang)
             if request.path_info.startswith(prefix):
                 request.path_info = request.path_info[3:]
                 lang = prefix[1:-1]
                 cwreq.set_language(lang)
                 break
         else:
-            lang = cwreq.negotiated_language() or 'fr'
+            lang = cwreq.negotiated_language() or "fr"
             cwreq.set_language(lang)
         response = handler(request)
         response.content_language = lang
@@ -82,31 +81,33 @@ def langprefix_tween_factory(handler, registry):
 def https_tween_factory(handler, registry):
     def https_tween(request):
         cwreq = request.cw_request
-        if cwreq.vreg.config.get('base-url', '').startswith('https'):
-            request.scheme = 'https'
+        if cwreq.vreg.config.get("base-url", "").startswith("https"):
+            request.scheme = "https"
         return handler(request)
+
     return https_tween
 
 
 def script_name_factory(handler, registry):
     def script_name_factory(request):
         environ = request.environ
-        script_name = environ.get('HTTP_X_SCRIPT_NAME', '')
+        script_name = environ.get("HTTP_X_SCRIPT_NAME", "")
         if script_name:
-            environ['SCRIPT_NAME'] = script_name
-            path_info = environ['PATH_INFO']
+            environ["SCRIPT_NAME"] = script_name
+            path_info = environ["PATH_INFO"]
             if path_info.startswith(script_name):
-                environ['PATH_INFO'] = path_info[len(script_name):]
-        scheme = environ.get('HTTP_X_SCHEME', '')
+                environ["PATH_INFO"] = path_info[len(script_name) :]
+        scheme = environ.get("HTTP_X_SCHEME", "")
         if scheme:
-            environ['wsgi.url_scheme'] = scheme
+            environ["wsgi.url_scheme"] = scheme
         return handler(request)
+
     return script_name_factory
 
 
 def includeme(config):
-    config.add_tween('cubicweb_francearchives.pviews.tweens.langprefix_tween_factory')
-    config.add_tween('cubicweb_francearchives.pviews.tweens.https_tween_factory')
-    config.add_tween('cubicweb_francearchives.pviews.tweens.script_name_factory')
-    if asbool(config.registry.settings.get('francearchives.sanitize_params', True)):
-        config.add_tween('cubicweb_francearchives.pviews.tweens.sanitize_parameters_tween_factory')
+    config.add_tween("cubicweb_francearchives.pviews.tweens.langprefix_tween_factory")
+    config.add_tween("cubicweb_francearchives.pviews.tweens.https_tween_factory")
+    config.add_tween("cubicweb_francearchives.pviews.tweens.script_name_factory")
+    if asbool(config.registry.settings.get("francearchives.sanitize_params", True)):
+        config.add_tween("cubicweb_francearchives.pviews.tweens.sanitize_parameters_tween_factory")

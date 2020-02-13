@@ -7,5 +7,3 @@ polib
 pifpaf
 pytest-xdist
 https://hg.logilab.org/users/siaf/yams/archive/tip.tar.bz2#egg=yams
-# remove patched cubicweb version after upgrade to cubicweb 3.26
-https://hg.logilab.org/users/siaf/cubicweb/archive/tip.tar.bz2#egg=cubicweb

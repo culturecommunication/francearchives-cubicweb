@@ -57,22 +57,21 @@ from cubicweb.devtools.testlib import CubicWebTC
 
 class FranceArchivesViewsTC(CubicWebTC):
     vid_validators = {
-        'index': lambda: None,
+        "index": lambda: None,
     }
 
     def setup_database(self):
         with self.admin_access.cnx() as cnx:
-            with cnx.allow_all_hooks_but('es'):
-                self.section = cnx.create_entity('Section',
-                                                 title=u'the-section',
-                                                 name=u'commit')
+            with cnx.allow_all_hooks_but("es"):
+                self.section = cnx.create_entity("Section", title="the-section", name="commit")
                 cnx.commit()
 
     def test_indexview(self):
-        with self.new_access('anon').web_request() as req:
-            self.view('index', req=req)
+        with self.new_access("anon").web_request() as req:
+            self.view("index", req=req)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     from logilab.common.testlib import unittest_main
+
     unittest_main()

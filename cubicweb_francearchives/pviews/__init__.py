@@ -30,10 +30,11 @@
 # knowledge of the CeCILL-C license and that you accept its terms.
 #
 
+
 def includeme(config):
-    config.include('.renderer')
-    config.include('.tweens')
-    config.include('.esroutes')
-    config.include('.faroutes')
-    config.include('.cwroutes')
-    config.include('cubes.oaipmh.views')
+    config.include(".renderer")
+    config.include(".tweens")
+    config.include(".esroutes")
+    config.include(".faroutes")
+    config.include(".cwroutes")
+    config.include("cubicweb_oaipmh.views")

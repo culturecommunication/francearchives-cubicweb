@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ead PUBLIC "+//ISBN 1-931666-00-8//DTD ead.dtd (Encoded Archival Description (EAD) Version 2002)//EN" "ead.dtd">
+<ead audience="external">
+    <eadheader findaidstatus="unverified-partial-draft">
+        <eadid url="http://google.fr">FRAD034_000000248</eadid>
+        <filedesc>
+            <titlestmt>
+                <titleproper>Mérifons - Dossiers d'administration communale
+                    (1842-1940)</titleproper>
+                <subtitle>Répertoire numérique de la sous- série 2 O 156</subtitle>
+            </titlestmt>
+            <publicationstmt>
+                <publisher>Archives départementales de l'Hérault</publisher>
+                <address>
+                    <addressline>Montpellier</addressline>
+                </address>
+                <date>2007, mis à jour en 2018</date>
+            </publicationstmt>
+        </filedesc>
+        <profiledesc>
+            <creation>Instrument de recherche produit au moyen du logiciel Arkhéïa Aide au
+                classement de la société Anaphore sarl, version 3-3 du <date normal="2007-11-23"
+                    >vendredi 23 novembre 2007</date>. Date de l'export : <date normal="2008-08-25"
+                    >lundi 25 août 2008</date> (14:24 h)</creation>
+            <langusage>Instrument de recherche rédigé en <language langcode="fre"
+                    >français</language></langusage>
+            <descrules>Instrument de recherche rédigé conformément aux normes de description en
+                vigueur</descrules>
+        </profiledesc>
+    </eadheader>
+    <archdesc level="subseries" id="a0114881923854MB0L9">
+        <runner>Mérifons - Dossiers d'administration communale</runner>
+        <did>
+            <unitid>test extptr findingaid<extptr href="https://francearchives.fr/file/38f8190f0295966915d3c867581eaa91a08f1fe5/integration_FA_documentation_technique.pdf"/></unitid>
+            <unittitle>Mérifons - Dossiers d'administration communale (1842-1940)</unittitle>
+            <unitdate normal="1842-01-01/1940-12-31" type="inclusive">1842-1940</unitdate>
+            <physdesc>0,30 ml</physdesc>
+            <repository>Archives départementales de l'Hérault</repository>
+            <origination>Préfecture de l'Hérault</origination>
+        </did>
+        <scopecontent>
+            <p>Ce répertoire regroupe les dossiers d'administration de la commune de Mérifons.</p>
+        </scopecontent>
+        <accruals>
+            <p>Fonds clos</p>
+        </accruals>
+        <accessrestrict>
+            <p>Selon les lois et règlement en vigueur</p>
+        </accessrestrict>
+        <userestrict>
+            <p>Se référer au règlement intérieur de la salle de lecture</p>
+        </userestrict>
+        <dsc type="in-depth">
+            <c id="a011488192385Cm54CL">
+                <did>
+                    <unittitle type="titre">Administration générale de la commune</unittitle>
+                    <unitid>test lien facomponent <extptr href="https://francearchives.fr/file/38f8190f0295966915d3c867581eaa91a08f1fe5/integration_FA_documentation_technique.pdf"/></unitid>
+                </did>
+                <scopecontent audience="external">
+                    <p>Arrêtés municipaux, délibération du conseil municipal, polices d'assurances,
+                        rôles de redevances, cahiers des charges et procès-verbaux
+                        d'adjudication</p>
+                </scopecontent>
+                <c id="a011488192385sHWzQl" level="file">
+                    <did>
+                        <unitid identifier="2O/156/1">2 O 156/1</unitid>
+                        <unittitle>Services municipaux.</unittitle>
+                        <unitdate normal="1912-01-01/1930-12-31" type="inclusive"
+                            >1912-1930</unitdate>
+                    </did>
+                    <scopecontent audience="external">
+                        <p>Services scolaires.</p>
+                    </scopecontent>
+                    <c id="a011507621533b7vf8u" level="item">
+                        <did>
+                            <unitid label="Cotes extrêmes" identifier="2O/156/1/1">2 O
+                                156/1/1</unitid>
+                            <unittitle label="Intitulé de l'unité documentaire">[Commune de Mérifons
+                                : plan]. </unittitle>
+                            <physdesc label="Description physique">1 plan papier 45 x 55 cm en
+                                couleur</physdesc>
+                            <unitdate certainty="exact" normal="1912-01-01/1930-12-31"
+                                type="inclusive">[1912-1930]</unitdate>
+                        </did>
+                        <accessrestrict type="commentaire-communicabilite">
+                            <p>Accès en ligne</p>
+                        </accessrestrict>
+                        <altformavail>
+                            <p>Document numérisé consultable en ligne</p>
+                        </altformavail>
+                        <controlaccess>
+                            <subject>Biens communaux</subject>
+                            <subject>Propriété publique</subject>
+                            <subject>École</subject>
+                            <genreform>Carte et plan</genreform>
+                            <geogname>Mérifons (Hérault, France)</geogname>
+                        </controlaccess>
+                        <dao href="/FRAD034_000000248/FRAD034_2O_156_1_1_00001.jpg"/>
+                    </c>
+                </c>
+                <c id="a011488192385grYQCd" level="file">
+                    <did>
+                        <unitid identifier="2O/156/2">2 O 156/2</unitid>
+                        <unittitle>Personnel.</unittitle>
+                        <unitdate normal="1936-01-01/1939-12-31" type="inclusive"
+                            >1936-1939</unitdate>
+                    </did>
+                </c>
+                <c id="a0114881923850wLQgu" level="file">
+                    <did>
+                        <unitid identifier="2O/156/3">2 O 156/3</unitid>
+                        <unittitle>Comptabilité.</unittitle>
+                        <unitdate normal="1904-01-01/1940-12-31" type="inclusive"
+                            >1904-1940</unitdate>
+                    </did>
+                </c>
+            </c>
+            <c id="a011488192385iq8gR1">
+                <did>
+                    <unittitle type="titre">Bâtiments communaux et monuments publics</unittitle>
+                </did>
+                <scopecontent audience="external">
+                    <p>Projets, constructions, réparations et entretien, locations : arrêtés
+                        préfectoraux, délibérations du conseil municipal, rapports, procès-verbaux
+                        d'enquête, devis, plans, cahiers des charges, budget, traités de gré à gré,
+                        procès-verbaux d'adjudication et de réception des travaux, baux.</p>
+                </scopecontent>
+                <c id="a011488192385UoB4cS" level="file">
+                    <did>
+                        <unitid identifier="2O/156/4">2 O 156/4</unitid>
+                        <unittitle>Écoles et mairie.</unittitle>
+                        <unitdate normal="1909-01-01/1923-12-31" type="inclusive"
+                            >1909-1923</unitdate>
+                    </did>
+                    <scopecontent audience="external">
+                        <p>1 - Projet de construction d'une école mixte avec mairie au hameau de
+                            Malavieille (1909-1911). </p>
+                        <p>2 - Modification au projet (1911). </p>
+                        <p>3 - Financement (1912). </p>
+                        <p>4 - Approbation du projet (1910-1912). </p>
+                        <p>5 - Enquête (1910). </p>
+                        <p>6 - Promesse de vente du terrain Vigné-Lacas n°124, section B, 11 août
+                            1910 (plan, 30 décembre1909) (1909-1910). </p>
+                        <p>7 - Reprise du projet après la guerre (1919). </p>
+                        <p>8 - Révision des prix (1919). </p>
+                        <p>9 - Financement (1919-1923).</p>
+                    </scopecontent>
+                    <c id="a0115076215335MObyB" level="item">
+                        <did>
+                            <unitid label="Cotes extrêmes" identifier="2O/156/4/1">2 O
+                                156/4/1</unitid>
+                            <unittitle label="Intitulé de l'unité documentaire">Hameau de
+                                Malvieille. Construction d'une école mixte avec mairie : plan /
+                                dressé par l'architecte soussigné [signature illisible]. </unittitle>
+                            <physdesc label="Description physique">1 plan papier 29 x 40 cm en
+                                couleur</physdesc>
+                            <unitdate normal="1909-01-01/1909-12-31">1909</unitdate>
+                        </did>
+                        <accessrestrict type="commentaire-communicabilite">
+                            <p>Accès en ligne</p>
+                        </accessrestrict>
+                        <altformavail>
+                            <p>Document numérisé consultable en ligne</p>
+                        </altformavail>
+                        <controlaccess>
+                            <subject>Biens communaux</subject>
+                            <subject>Propriété publique</subject>
+                            <subject>École</subject>
+                            <genreform>Carte et plan</genreform>
+                            <geogname>Mérifons (Hérault, France)</geogname>
+                        </controlaccess>
+                        <dao href="/FRAD034_000000248/FRAD034_2O_156_4_1_00001.jpg"/>
+                    </c>
+                </c>
+                <c id="a011488192385TEldY7" level="file">
+                    <did>
+                        <unitid identifier="2O/156/5">2 O 156/5</unitid>
+                        <unittitle>Église.</unittitle>
+                        <unitdate normal="1842-01-01/1843-12-31" type="inclusive"
+                            >1842-1843</unitdate>
+                    </did>
+                    <scopecontent audience="external">
+                        <p>Cloche de l'ancienne église, remise à la suppression de l'église par
+                            Vailhé, ancien maire, à la fabrication d'Octon, plainte des habitants de
+                            Mérifons réclamant leur cloche (1842-1843).</p>
+                    </scopecontent>
+                </c>
+                <c id="a011488192385JODIdD" level="file">
+                    <did>
+                        <unitid identifier="2O/156/6">2 O 156/6</unitid>
+                        <unittitle>Four communal.</unittitle>
+                        <unitdate normal="1929-01-01/1937-12-31" type="inclusive"
+                            >1929-1937</unitdate>
+                    </did>
+                    <scopecontent audience="external">
+                        <p>1 - Réfection des fours des hameaux de Canet-le-noir et la Lieude
+                            (1929-1937). </p>
+                        <p>2 - Four de pradels (voir 2 0 156/7-2). </p>
+                    </scopecontent>
+                </c>
+            </c>
+            <c id="a0114881923853V8AlX">
+                <did>
+                    <unittitle type="titre">Travaux publics : eau, électricité et
+                        assainissement</unittitle>
+                </did>
+                <scopecontent audience="external">
+                    <p>Arrêtés préfectoraux, délibérations du conseil municipal, devis, rapports,
+                        plans, budget, cahiers des charges, procès-verbaux d'adjudications et de
+                        réception des travaux, correspondance.</p>
+                </scopecontent>
+                <c id="a011488192385ulQxUE" level="file">
+                    <did>
+                        <unitid identifier="2O/156/7">2 O 156/7</unitid>
+                        <unittitle>Adduction d'eau.</unittitle>
+                        <unitdate normal="1910-01-01/1934-12-31" type="inclusive"
+                            >1910-1934</unitdate>
+                    </did>
+                    <scopecontent audience="external">
+                        <p>1 - Projet de réparations aux fontaines (1910). </p>
+                        <p>2 - Agrandissement du réservoir de Canet le noir et réparations au four
+                            de Pradels. </p>
+                        <p>3 - Projet de réparations de la fontaine du hameau de Malavieille
+                            (1934).</p>
+                    </scopecontent>
+                </c>
+                <c id="a011488192385wRfWAG" level="file">
+                    <did>
+                        <unitid identifier="2O/156/8">2 O 156/8</unitid>
+                        <unittitle>Électricité.</unittitle>
+                        <unitdate type="inclusive" normal="1929-01-01/1934-12-31"
+                            >1929-1934</unitdate>
+                    </did>
+                    <scopecontent audience="external">
+                        <p>1 - Syndicat intercommunal d'électrification de la région de Salasc et de
+                            Roquezels, servitude de passage des lignes syndicales dans les communes
+                            de Mérifons et Villeneuvette. Différend avec Jules Maistre, propriétaire
+                            à Malmont, commune de Villeneuvette (1929-1930). </p>
+                        <p>2 - Traversée de la propriété Lacas, Etienne, n° 115-118-119, section B,
+                            à Mérifons (plan de la ligne à construire) (1929). </p>
+                        <p>3 - Éclairage de l'école du Mas Canet (1933-1934).</p>
+                    </scopecontent>
+                    <c id="a011507621533mij2f8" level="item">
+                        <did>
+                            <unitid label="Cotes extrêmes" identifier="2O/156/8/1">2 O
+                                156/8/1</unitid>
+                            <unittitle label="Intitulé de l'unité documentaire">Commune, section B
+                                de Malvieille : [extrait du plan cadastral].</unittitle>
+                            <unitdate label="Date de l'unité documentaire" certainty="exact"
+                                normal="1929-01-01/1929-12-31">[1929]</unitdate>
+                            <physdesc label="Description physique">1 plan papier 21 x 28 cm en noir
+                                et blanc</physdesc>
+                        </did>
+                        <accessrestrict type="commentaire-communicabilite">
+                            <p>Accès en ligne</p>
+                        </accessrestrict>
+                        <altformavail>
+                            <p>Document numérisé consultable en ligne</p>
+                        </altformavail>
+                        <controlaccess>
+                            <subject>Distribution électrique</subject>
+                            <subject>Production électrique</subject>
+                            <genreform>Carte et plan</genreform>
+                            <geogname>Mérifons (Hérault, France)</geogname>
+                        </controlaccess>
+                        <dao href="/FRAD034_000000248/FRAD034_2O_156_8_1_00001.jpg"/>
+                    </c>
+                </c>
+            </c>
+        </dsc>
+    </archdesc>
+</ead>

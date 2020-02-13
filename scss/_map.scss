@@ -55,9 +55,11 @@
 
 #fa-map {
   margin: auto;
+  width: 100%;
+  height: 420px;
+
   @include if-wider-than(xs) {
     width: 350px;
-    height: 417px;
   }
   @include if-wider-than(sm) {
     width: 700px;

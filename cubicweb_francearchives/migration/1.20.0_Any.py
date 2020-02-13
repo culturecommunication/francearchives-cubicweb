@@ -29,7 +29,8 @@
 # The fact that you are presently reading this means that you have had
 # knowledge of the CeCILL-C license and that you accept its terms.
 #
-sql('''
+sql(
+    """
 CREATE OR REPLACE FUNCTION update_index_entries(index_entries json, oldauth int, newauth int)
 RETURNS jsonb as $$
 DECLARE
@@ -51,23 +52,24 @@ BEGIN
   RETURN result;
 END;
 $$ language plpgsql;
-''')
+"""
+)
 commit()
 
-add_attribute('ExternalUri', 'extid')
-add_attribute('ExternalUri', 'source')
-add_attribute('ExternalUri', 'label')
+add_attribute("ExternalUri", "extid")
+add_attribute("ExternalUri", "source")
+add_attribute("ExternalUri", "label")
 
-sql('DROP TABLE IF EXISTS authority_history')
+sql("DROP TABLE IF EXISTS authority_history")
 sql(
-    'CREATE TABLE authority_history ( '
-    '  fa_stable_id varchar(64),'
-    '  type varchar(20),'
-    '  indexrole varchar(2048),'
-    '  label varchar(2048),'
-    '  autheid int,'
-    '  UNIQUE (fa_stable_id, type, label, indexrole)'
-    ')'
+    "CREATE TABLE authority_history ( "
+    "  fa_stable_id varchar(64),"
+    "  type varchar(20),"
+    "  indexrole varchar(2048),"
+    "  label varchar(2048),"
+    "  autheid int,"
+    "  UNIQUE (fa_stable_id, type, label, indexrole)"
+    ")"
 )
 commit()
 
@@ -76,45 +78,47 @@ add_attribute("Service", "thumbnail_url")
 query = "SET S thumbnail_url %(url)s WHERE S is Service, S code %(code)s"
 thumbnail_urls = [
     {
-        "url": u"https://www.archives05.fr/cgi-bin/iipsrv.fcgi?FIF=/home/httpd/ad05/diffusion/prod/app/webroot/data/files/ad05.diffusion/images/{url}&HEI=180&QLT=80&CVT=JPG",
-        "code": u"FRAD005"
+        "url": "https://www.archives05.fr/cgi-bin/iipsrv.fcgi?FIF=/home/httpd/ad05/diffusion/prod/app/webroot/data/files/ad05.diffusion/images/{url}&HEI=180&QLT=80&CVT=JPG",
+        "code": "FRAD005",
     },
     {
-        "url": u"http://hatch.vtech.fr/cgi-bin/iipsrv.fcgi?FIF=/home/httpd/ad95/data/files/images/{url}&HEI=375&QLT=80&CVT=JPG&SIZE=3598345",
-        "code": u"FRAD095"
+        "url": "http://hatch.vtech.fr/cgi-bin/iipsrv.fcgi?FIF=/home/httpd/ad95/data/files/images/{url}&HEI=375&QLT=80&CVT=JPG&SIZE=3598345",
+        "code": "FRAD095",
     },
     {
-        "url": u"http://recherche-archives.vendee.fr/data/files/ad85.diffusion/vignettes_archives/{url}",
-        "code": u"FRAD085"
+        "url": "http://recherche-archives.vendee.fr/data/files/ad85.diffusion/vignettes_archives/{url}",
+        "code": "FRAD085",
     },
     {
-        "url": u"http://cd84-import.s3.amazonaws.com/prepared_images/thumb/destination/{url}",
-        "code": u"FRAD084"
-    }
+        "url": "http://cd84-import.s3.amazonaws.com/prepared_images/thumb/destination/{url}",
+        "code": "FRAD084",
+    },
 ]
 with cnx.deny_all_hooks_but():
     for thumbnail_url in thumbnail_urls:
         rql(query, thumbnail_url)
 
 
-add_relation_type('grouped_with')
+add_relation_type("grouped_with")
 
 
 # regenerate published.related_finding_aid_relation function
 # to update published.index_relation for FAComponents
 
 
-from cubicweb_frarchives_edition.mviews import (setup_published_triggers,
-                                                formatted_ignored_cwproperties)
+from cubicweb_frarchives_edition.mviews import (
+    setup_published_triggers,
+    formatted_ignored_cwproperties,
+)
 
 from jinja2 import Environment, PackageLoader
 
 
 def get_published_tables(cnx, skipped_etypes=(), skipped_relations=()):
-    etypes = ['FindingAid']
+    etypes = ["FindingAid"]
     rtypes = {}
     rnames = set()
-    skipped_relations = ('in_state', )  # in_state is handled separately
+    skipped_relations = ("in_state",)  # in_state is handled separately
     for etype in etypes:
         if etype in skipped_etypes:
             continue
@@ -122,30 +126,32 @@ def get_published_tables(cnx, skipped_etypes=(), skipped_relations=()):
         rtypes[etype] = {}
         for rschema, targetschemas, role in eschema.relation_definitions():
             # r.rule is not None for computed relations
-            if (rschema.final or rschema.inlined or rschema.meta or
-               rschema.rule is not None or rschema.type in skipped_relations):
+            if (
+                rschema.final
+                or rschema.inlined
+                or rschema.meta
+                or rschema.rule is not None
+                or rschema.type in skipped_relations
+            ):
                 continue
             rtypes[etype].setdefault(rschema.type, []).append(role)
             rnames.add(rschema.type)
     return etypes, rtypes, rnames
 
 
-def setup_published_triggers(cnx, sql=None, sqlschema='published', bootstrap=True):
+def setup_published_triggers(cnx, sql=None, sqlschema="published", bootstrap=True):
     """Create (or replace) SQL triggers to handle filtered copied of CMS
     entities postgresql tables (and the resuired relations) that are
     in the wfs_cmsobject_published WF state.
     """
     if sql is None:
         sql = cnx.system_sql
-    skipped_etypes = ('CWProperty', 'CWUser')  # idem
-    skipped_relations = ('in_state', )  # in_state is handled separately
-    etypes, rtypes, rnames = get_published_tables(
-        cnx, skipped_etypes, skipped_relations)
-    env = Environment(
-        loader=PackageLoader('cubicweb_frarchives_edition', 'templates'),
-    )
-    env.filters['sqlstr'] = lambda x: "'{}'".format(x)
-    template = env.get_template('published.sql')
+    skipped_etypes = ("CWProperty", "CWUser")  # idem
+    skipped_relations = ("in_state",)  # in_state is handled separately
+    etypes, rtypes, rnames = get_published_tables(cnx, skipped_etypes, skipped_relations)
+    env = Environment(loader=PackageLoader("cubicweb_frarchives_edition", "templates"),)
+    env.filters["sqlstr"] = lambda x: "'{}'".format(x)
+    template = env.get_template("published.sql")
     sqlcode = template.render(
         schema=sqlschema,
         etypes=etypes,
@@ -156,6 +162,7 @@ def setup_published_triggers(cnx, sql=None, sqlschema='published', bootstrap=Tru
     if sql:
         print(sqlcode)
         sql(sqlcode)
+
 
 setup_published_triggers(cnx)
 cnx.commit()

@@ -36,8 +36,6 @@ import hashlib
 import os.path as osp
 import shutil
 
-from six import text_type as unicode
-
 from cubicweb import Binary
 
 from cubicweb_francearchives import init_bfss
@@ -45,22 +43,27 @@ from cubicweb_francearchives import init_bfss
 
 def main(cnx, directory):
     init_bfss(cnx.repo)
-    appfilesdir = cnx.vreg.config['appfiles-dir']
-    cnx.vreg.config['compute-sha1hex'] = False
-    for filepath in glob(osp.join(directory, '*.pdf')):
-        sha1 = unicode(hashlib.sha1(open(filepath).read()).hexdigest())
-        basename = 'static_%s' % osp.basename(filepath)
-        ufilepath = osp.join(appfilesdir, '%s_%s' % (sha1, basename))
-        print('create file', ufilepath)
-        cnx.create_entity('File', **{'title': unicode(basename),
-                                     'data': Binary(str(ufilepath)),
-                                     'data_format': u'application/pdf',
-                                     'data_name': unicode(basename),
-                                     'data_sha1hex': sha1,
-                                     'uuid': unicode(uuid4().hex)})
+    appfilesdir = cnx.vreg.config["appfiles-dir"]
+    cnx.vreg.config["compute-sha1hex"] = False
+    for filepath in glob(osp.join(directory, "*.pdf")):
+        sha1 = str(hashlib.sha1(open(filepath).read()).hexdigest())
+        basename = "static_%s" % osp.basename(filepath)
+        ufilepath = osp.join(appfilesdir, "%s_%s" % (sha1, basename))
+        print("create file", ufilepath)
+        cnx.create_entity(
+            "File",
+            **{
+                "title": str(basename),
+                "data": Binary(str(ufilepath)),
+                "data_format": "application/pdf",
+                "data_name": str(basename),
+                "data_hash": sha1,
+                "uuid": str(uuid4().hex),
+            }
+        )
         shutil.copy(filepath, ufilepath)
     cnx.commit()
 
 
-if __name__ == '__main__' and 'cnx' in globals():
+if __name__ == "__main__" and "cnx" in globals():
     main(cnx, __args__[0])  # noqa

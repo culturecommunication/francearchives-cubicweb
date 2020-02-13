@@ -34,90 +34,89 @@ from cubicweb import _
 
 
 def alignment_csv(req):
-    headers = (_('index_entry'), _('index_url'), _('aligned_url'))
+    headers = (_("index_entry"), _("index_url"), _("aligned_url"))
     rows = []
     rset = req.execute(
-        'Any X,XN,N,AN,A WHERE '
-        'X is IN (AgentAuthority, LocationAuthority, SubjectAuthority), '
-        'X label N, X is XE, XE name XN, '
-        'X same_as A, A is AE, AE name AN, NOT A is ExternalUri')
-    for (index_eid, index_etype, index_preflabel,
-         align_etype, align_eid) in rset.rows:
-        index_etype = index_etype[:-len('Authority')].lower()
+        "Any X,XN,N,AN,A WHERE "
+        "X is IN (AgentAuthority, LocationAuthority, SubjectAuthority), "
+        "X label N, X is XE, XE name XN, "
+        "X same_as A, A is AE, AE name AN, NOT A is ExternalUri"
+    )
+    for (index_eid, index_etype, index_preflabel, align_etype, align_eid) in rset.rows:
+        index_etype = index_etype[: -len("Authority")].lower()
         props = {
-            'index_entry': index_preflabel,
-            'index_url': req.build_url(
-                u'{}/{}'.format(index_etype, index_eid)),
-            'aligned_url': req.build_url(
-                u'{}/{}'.format(align_etype.lower(), align_eid))
+            "index_entry": index_preflabel,
+            "index_url": req.build_url("{}/{}".format(index_etype, index_eid)),
+            "aligned_url": req.build_url("{}/{}".format(align_etype.lower(), align_eid)),
         }
-        rows.append([(props[h] or u'') for h in headers])
+        rows.append([(props[h] or "") for h in headers])
     # external url
     rset = req.execute(
-        'Any X,XN,N,AU WHERE '
-        'X is IN (AgentAuthority, LocationAuthority, SubjectAuthority), '
-        'X label N, X is XE, XE name XN, '
-        'X same_as A, A is ExternalUri, A uri AU')
-    for (index_eid, index_etype, index_preflabel,
-         align_url) in rset.rows:
-        index_etype = index_etype[:-len('Authority')].lower()
+        "Any X,XN,N,AU WHERE "
+        "X is IN (AgentAuthority, LocationAuthority, SubjectAuthority), "
+        "X label N, X is XE, XE name XN, "
+        "X same_as A, A is ExternalUri, A uri AU"
+    )
+    for (index_eid, index_etype, index_preflabel, align_url) in rset.rows:
+        index_etype = index_etype[: -len("Authority")].lower()
         props = {
-            'index_entry': index_preflabel,
-            'index_url': req.build_url(u'{}/{}'.format(index_etype, index_eid)),
-            'aligned_url': align_url
+            "index_entry": index_preflabel,
+            "index_url": req.build_url("{}/{}".format(index_etype, index_eid)),
+            "aligned_url": align_url,
         }
-        rows.append([(props[h] or u'') for h in headers])
-    return {'rows': rows, 'headers': headers}
+        rows.append([(props[h] or "") for h in headers])
+    return {"rows": rows, "headers": headers}
 
 
 def all_indices(req, auth_type, etype):
-    if etype == 'AgentAuthority':
+    if etype == "AgentAuthority":
         query = (
-            '(Any A,AL,ANT,T WHERE A is AgentAuthority, A label AL, '
-            ' AN authority A, AN type ANT, AN index T)'
-            ' UNION '
+            "(Any A,AL,ANT,T WHERE A is AgentAuthority, A label AL, "
+            " AN authority A, AN type ANT, AN index T)"
+            " UNION "
             '(Any A,AL,"persname",T WHERE A is AgentAuthority, A label AL, '
-            ' T related_authority A)'
+            " T related_authority A)"
         )
-    elif etype == 'SubjectAuthority':
+    elif etype == "SubjectAuthority":
         query = (
             '(Any A,AL,"subject",T WHERE A is SubjectAuthority, A label AL, '
-            ' AN authority A, AN index T) '
-            ' UNION '
+            " AN authority A, AN index T) "
+            " UNION "
             '(Any A,AL,"subject",T WHERE A is SubjectAuthority, A label AL, '
-            ' T related_authority A)'
+            " T related_authority A)"
         )
     else:
         query = (
             '(Any A,AL,"geogname",T WHERE A is LocationAuthority, A label AL, '
-            ' AN authority A, AN index T) '
-            ' UNION '
+            " AN authority A, AN index T) "
+            " UNION "
             '(Any A,AL,"geogname",T WHERE A is LocationAuthority, A label AL, '
-            ' T related_authority A)'
+            " T related_authority A)"
         )
     return req.execute(query)
 
 
 def indices_csv(req, auth_type):
-    types = {'agent': 'AgentAuthority',
-             'subject': 'SubjectAuthority',
-             'location': 'LocationAuthority'}
+    types = {
+        "agent": "AgentAuthority",
+        "subject": "SubjectAuthority",
+        "location": "LocationAuthority",
+    }
     data = defaultdict(dict)
     for eid, preflabel, index_type, target_eid in all_indices(
-            req, auth_type, types[auth_type]).rows:
+        req, auth_type, types[auth_type]
+    ).rows:
         target = req.entity_from_eid(target_eid)
-        docs = data[eid].get('docs', [])
+        docs = data[eid].get("docs", [])
         docs.append(target.absolute_url())
-        data[eid].update({'preflabel': preflabel,
-                          'index_type': index_type,
-                          'docs': docs})
-    headers = (_('index_entry'), _('index_type'), _('documents'))
+        data[eid].update({"preflabel": preflabel, "index_type": index_type, "docs": docs})
+    headers = (_("index_entry"), _("index_type"), _("documents"))
     rows = []
-    for eid, values in data.iteritems():
+    for eid, values in data.items():
         props = {
-            'index_entry': values['preflabel'],
-            'index_type': values['index_type'],
-            'documents': '$$$'.join(values['docs']),
+            "index_entry": values["preflabel"],
+            "index_type": values["index_type"],
+            "documents": "$$$".join(values["docs"]),
         }
-        rows.append([(props[h] or u'') for h in headers])
-    return {'rows': rows, 'headers': headers}
+        rows.append([(props[h] or "") for h in headers])
+    return {"rows": rows, "headers": headers}

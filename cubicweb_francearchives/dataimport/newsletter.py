@@ -44,18 +44,18 @@ def generte_subscribers(filepath, existing):
             if row:
                 value = row[0]
                 if value:
-                    value = value.strip().decode('utf8')
+                    value = value.strip()
                     if value not in existing:
-                        yield ExtEntity('NewsLetterSubscriber',
-                                        u'NLS-{}'.format(idx),
-                                        {'email': {value}})
+                        yield ExtEntity(
+                            "NewsLetterSubscriber", "NLS-{}".format(idx), {"email": {value}}
+                        )
                         existing.add(value)
 
 
 def import_subscribers(cnx, filepath):
     store = MassiveObjectStore(cnx)
     importer = ExtEntitiesImporter(cnx.vreg.schema, store)
-    existing = flatten(cnx.execute('Any E WHERE X is NewsLetterSubscriber, X email E'))
+    existing = flatten(cnx.execute("Any E WHERE X is NewsLetterSubscriber, X email E"))
     importer.import_entities(generte_subscribers(filepath, existing))
     store.flush()
     store.commit()

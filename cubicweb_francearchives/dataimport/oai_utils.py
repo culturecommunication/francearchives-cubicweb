@@ -33,26 +33,32 @@
 
 
 # standard library imports
-from __future__ import unicode_literals
+
+
+import hashlib
 
 import os
 import os.path
 
-# library specific imports
-from cubicweb_francearchives import utils
+from sickle.iterator import OAIItemIterator
+import urllib.parse
+
+from cubicweb_francearchives.dataimport import normalize_for_filepath
 
 
 class OAIPMHWriter(object):
     """OAI-PMH writer."""
 
-    def __init__(self, ead_services_dir, service_infos):
+    def __init__(self, ead_services_dir, service_infos, subdirectories=[]):
         """Initialize OAI-PMH writer.
 
         :param str ead_services_dir: location of backup files
         :param dict service_infos: service information
+        :param list subdirectories: list of subdirectories
         """
         self.ead_services_dir = ead_services_dir
         self.service_infos = service_infos
+        self.directory = self.makedir(subdirectories)
 
     def makedir(self, subdirectories=[]):
         """Create directory(ies).
@@ -62,35 +68,97 @@ class OAIPMHWriter(object):
         :returns: directory
         :rtype: str
         """
-        directory = os.path.join(
-            self.ead_services_dir, self.service_infos["code"], *subdirectories
-        )
+        directory = os.path.join(self.ead_services_dir, self.service_infos["code"], *subdirectories)
         if not os.path.exists(directory):
             os.makedirs(directory)
         return directory
 
-    def get_file_path(self, directory, eadid):
+    def get_file_path(self, eadid):
         """Get file path.
 
-        :param str eadid: EAD ID
+        :param str eadid: EADID
 
         :returns: file path
         :rtype: str
         """
-        eadid = utils.clean_up(eadid)
+        eadid = normalize_for_filepath(eadid)
         filename = eadid + ".xml"
-        file_path = os.path.join(directory, filename)
+        # add lower test
+        postfix = "{}_".format(self.service_infos["code"])
+        if not filename.startswith(postfix):
+            if filename.startswith(postfix.lower()):
+                filename = "{}{}".format(postfix, filename.split(postfix.lower())[1])
+            else:
+                filename = "{}{}".format(postfix, filename)
+        file_path = os.path.join(self.directory, filename)
         return file_path
 
     def get_file_contents(self, *args):
         """Get file contents."""
         raise NotImplementedError
 
-    def dump(self, file_path, file_contents):
+    def dump(self, eadid, file_contents):
         """Dump file contents.
-
-        :param str file_path: filepath
+        :param str eadid: EADID
         :param str file_contents: file contents
+
+        :returns: str file_path: filepath
         """
-        with open(file_path, "w") as fp:
+        file_path = self.get_file_path(eadid)
+        with open(file_path, "wb") as fp:
             fp.write(file_contents)
+        return file_path
+
+    def add_record(self, header, metadata):
+        """Add record to list of records.
+
+        :param _Element header: header
+        :param _Element metadata: metadata
+        """
+        raise NotImplementedError
+
+
+class PniaOAIItemIterator(OAIItemIterator):
+
+    def __init__(self, sickle, params, ignore_deleted=False):
+        super(PniaOAIItemIterator, self).__init__(
+            sickle, params, ignore_deleted=ignore_deleted)
+        self._next_harvested_url(init=True)
+
+    def _next_harvested_url(self, init=False):
+        params = self.params
+        if not init and self.resumption_token and self.resumption_token.token:
+            params = {"resumptionToken": self.resumption_token.token, "verb": self.verb}
+        args = urllib.parse.urlencode(params)
+        self._harvested_url = "{}?{}".format(self.sickle.endpoint, args)
+        # self.sickle.logger.info("harvesting %s", self._harvested_url)
+
+    def _next_response(self):
+        self._next_harvested_url()
+        super(PniaOAIItemIterator, self)._next_response()
+
+    def next(self):
+        """Return the next record/header/set.
+           FranceArchives customizations:
+             - add logs about harvested uri;
+             - add `harvested_url` attribute on returned Record.
+        """
+        try:
+            record = super(PniaOAIItemIterator, self).next()
+            record.harvested_url = self._harvested_url
+            return record
+        except StopIteration:
+            raise StopIteration
+        except Exception:
+            if self.resumption_token and self.resumption_token.token:
+                self._next_response()
+            else:
+                raise StopIteration
+
+
+def compute_oai_id(base_url, identifier):
+    """Compute an unique identifier based on record identifier and OAI repository url
+    """
+    if isinstance(base_url, str):
+        base_url = base_url.encode("utf-8")
+    return "{}_{}".format(hashlib.sha1(base_url).hexdigest(), identifier)

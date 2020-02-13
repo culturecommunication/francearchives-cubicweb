@@ -29,7 +29,7 @@
 # knowledge of the CeCILL-C license and that you accept its terms.
 #
 from lxml import etree
-import HTMLParser
+import html.parser
 
 from collections import defaultdict
 
@@ -44,12 +44,13 @@ from cubicweb_francearchives.utils import is_absolute_url, remove_html_tags
 
 
 class FindingAidOAIEADXmlAdapter(AbstractXmlAdapter):
-    __regid__ = 'OAI_EAD'
-    __select__ = is_instance('FindingAid')
+    __regid__ = "OAI_EAD"
+    __select__ = is_instance("FindingAid")
     namespaces = {
-        None: 'urn:isbn:1-931666-22-9',
-        'xsi': 'http://www.w3.org/2001/XMLSchema-instance',
-        'xlink': 'http://www.w3.org/1999/xlink'}
+        None: "urn:isbn:1-931666-22-9",
+        "xsi": "http://www.w3.org/2001/XMLSchema-instance",
+        "xlink": "http://www.w3.org/1999/xlink",
+    }
 
     def __init__(self, *args, **kwargs):
         super(FindingAidOAIEADXmlAdapter, self).__init__(*args, **kwargs)
@@ -57,22 +58,22 @@ class FindingAidOAIEADXmlAdapter(AbstractXmlAdapter):
 
     @cachedproperty
     def prod_entity_url(self):
-        return u'{}/{}'.format(
-            self._cw.vreg.config.get('consultation-base-url'),
-            self.entity.rest_path())
+        return "{}/{}".format(
+            self._cw.vreg.config.get("consultation-base-url"), self.entity.rest_path()
+        )
 
     @cachedproperty
     def findingaid(self):
         query = (
-            'Any FA, D, DU, DUT, DUD, DPH, DRP, DLG, '
-            'DOR, DEX, FTP, FSP, FAR, FUR, FAD  '
-            'WHERE FA stable_id %(st)s, FA did D, D unittitle DUT, D unitid DU, '
-            'D unitdate DUD, D physdesc DPH, D repository DRP, '
-            'D lang_description DLG, D origination DOR, D extptr DEX, '
-            'X fa_header FH, FH titleproper FTP, FA scopecontent FSP, '
-            'FA accessrestrict FAR, FA userestrict FUR, FA description FAD')
-        return self._cw.execute(query, {
-            'st': self.entity.stable_id}).get_entity(0, 0)
+            "Any FA, D, DU, DUT, DUD, DPH, DRP, DLG, "
+            "DOR, DEX, FTP, FSP, FAR, FUR, FAD  "
+            "WHERE FA stable_id %(st)s, FA did D, D unittitle DUT, D unitid DU, "
+            "D unitdate DUD, D physdesc DPH, D repository DRP, "
+            "D lang_description DLG, D origination DOR, D extptr DEX, "
+            "X fa_header FH, FH titleproper FTP, FA scopecontent FSP, "
+            "FA accessrestrict FAR, FA userestrict FUR, FA description FAD"
+        )
+        return self._cw.execute(query, {"st": self.entity.stable_id}).get_entity(0, 0)
 
     @cachedproperty
     def did(self):
@@ -86,15 +87,16 @@ class FindingAidOAIEADXmlAdapter(AbstractXmlAdapter):
         if did.unitdate:
             return did.unitdate
         dates = (did.startyear, did.startyear)
-        return '-'.join([str(d) for d in dates if d])
+        return "-".join([str(d) for d in dates if d])
 
     @cachedproperty
     def digitized_versions(self):
         query = (
-            'Any FA, DAUL WHERE X stable_id %(st)s, '
-            'FA finding_aid X, FA digitized_versions DA, '
-            'DA illustration_url DAUL, NOT DA illustration_url NULL')
-        rset = self._cw.execute(query, {'st': self.findingaid.stable_id})
+            "Any FA, DAUL WHERE X stable_id %(st)s, "
+            "FA finding_aid X, FA digitized_versions DA, "
+            "DA illustration_url DAUL, NOT DA illustration_url NULL"
+        )
+        rset = self._cw.execute(query, {"st": self.findingaid.stable_id})
         dao = defaultdict(list)
         for fa, illustration_url in rset:
             dao[fa].append(illustration_url)
@@ -103,16 +105,17 @@ class FindingAidOAIEADXmlAdapter(AbstractXmlAdapter):
     @cachedproperty
     def facomponents(self):
         query = (
-            'Any FA, FH, D, DU, DUT, DUD, DPH, DRP, DLG, '
-            'DOR, DEX, FTP, FSP, FAR, FUR, FAD, XD, XDF '
-            'WHERE X stable_id %(st)s, FA finding_aid X, FA did D, '
-            'D unittitle DUT, D unitid DU, D unitdate DUD, '
-            'D physdesc DPH, D repository DRP, D lang_description DLG, '
-            'D origination DOR, D extptr DEX, '
-            'X fa_header FH, FH titleproper FTP, FA scopecontent FSP, '
-            'FA accessrestrict FAR, FA userestrict FUR, FA description FAD, '
-            'X description_format XDF, X description XD')
-        rset = self._cw.execute(query, {'st': self.findingaid.stable_id})
+            "Any FA, FH, D, DU, DUT, DUD, DPH, DRP, DLG, "
+            "DOR, DEX, FTP, FSP, FAR, FUR, FAD, XD, XDF "
+            "WHERE X stable_id %(st)s, FA finding_aid X, FA did D, "
+            "D unittitle DUT, D unitid DU, D unitdate DUD, "
+            "D physdesc DPH, D repository DRP, D lang_description DLG, "
+            "D origination DOR, D extptr DEX, "
+            "X fa_header FH, FH titleproper FTP, FA scopecontent FSP, "
+            "FA accessrestrict FAR, FA userestrict FUR, FA description FAD, "
+            "X description_format XDF, X description XD"
+        )
+        rset = self._cw.execute(query, {"st": self.findingaid.stable_id})
         return rset.entities()
 
     @property
@@ -126,60 +129,65 @@ class FindingAidOAIEADXmlAdapter(AbstractXmlAdapter):
         fa_eid = self.findingaid.eid
         # fetch all agent indexes on the FindingAid and its components
         rset = self._cw.execute(
-            ' (DISTINCT Any L, T, X WHERE A is AgentName, '
-            '  A label L, A type T, A index X, X eid %(x)s) '
-            ' UNION '
-            ' (DISTINCT Any L, T, FC WHERE A is AgentName, '
-            '  A label L, A type T, A index FC, FC finding_aid X, X eid %(x)s) ',
-            {'x': fa_eid}
+            " (DISTINCT Any L, T, X WHERE A is AgentName, "
+            "  A label L, A type T, A index X, X eid %(x)s) "
+            " UNION "
+            " (DISTINCT Any L, T, FC WHERE A is AgentName, "
+            "  A label L, A type T, A index FC, FC finding_aid X, X eid %(x)s) ",
+            {"x": fa_eid},
         )
         for label, itype, eid in rset:
             indexes[eid].append((itype, label))
         # fetch all subject indexes on the FindingAid and its components
         rset = self._cw.execute(
-            ' (DISTINCT Any L, X WHERE A is Subject, A label L, A index X, X eid %(x)s) '
-            ' UNION '
-            ' (DISTINCT Any L, FC WHERE A is Subject, A label L, '
-            '  A index FC, FC finding_aid X, X eid %(x)s)',
-            {'x': fa_eid}
+            " (DISTINCT Any L, X WHERE A is Subject, A label L, A index X, X eid %(x)s) "
+            " UNION "
+            " (DISTINCT Any L, FC WHERE A is Subject, A label L, "
+            "  A index FC, FC finding_aid X, X eid %(x)s)",
+            {"x": fa_eid},
         )
         for label, eid in rset:
-            indexes[eid].append(('subject', label))
+            indexes[eid].append(("subject", label))
         # fetch all gegonames indexes on the FindingAid and its components
         rset = self._cw.execute(
-            ' (DISTINCT Any L, X WHERE A is Geogname, A label L, A index X, X eid %(x)s) '
-            ' UNION '
-            ' (DISTINCT Any L, FC WHERE A is Geogname, A label L, '
-            '  A index FC, FC finding_aid X, X eid %(x)s)',
-            {'x': fa_eid}
+            " (DISTINCT Any L, X WHERE A is Geogname, A label L, A index X, X eid %(x)s) "
+            " UNION "
+            " (DISTINCT Any L, FC WHERE A is Geogname, A label L, "
+            "  A index FC, FC finding_aid X, X eid %(x)s)",
+            {"x": fa_eid},
         )
         for label, eid in rset:
-            indexes[eid].append(('geogname', label))
+            indexes[eid].append(("geogname", label))
         return indexes
 
     def dump(self):
         """Return an XML string representing the given agent using the OAI_DC schema."""
         # Root element
-        root_element = self.element('ead', attributes={
-            'xsi:schemaLocation': (
-                'urn:isbn:1-931666-22-9 '
-                'http://www.loc.gov/ead/ead.xsd'),
-            'audience': 'external'
-        })
+        root_element = self.element(
+            "ead",
+            attributes={
+                "xsi:schemaLocation": ("urn:isbn:1-931666-22-9 " "http://www.loc.gov/ead/ead.xsd"),
+                "audience": "external",
+            },
+        )
         ead_xml = self.ead_from_file()
         if ead_xml:
             root_element.extend(ead_xml)
         else:
             self.body_elements(root_element)
         self.findingaid.cw_clear_all_caches()
-        return etree.tostring(root_element, xml_declaration=True, method='xml',
-                              encoding=self.encoding, pretty_print=True)
+        return etree.tostring(
+            root_element,
+            xml_declaration=True,
+            method="xml",
+            encoding=self.encoding,
+            pretty_print=True,
+        )
 
     def update_original_xml(self, tree):
-        for eadid in tree.xpath('..//s:eadid',
-                                namespaces={'s': 'urn:isbn:1-931666-22-9'}):
-            if eadid.attrib.get('url') is None:
-                eadid.attrib['url'] = self.prod_entity_url
+        for eadid in tree.xpath("..//s:eadid", namespaces={"s": "urn:isbn:1-931666-22-9"}):
+            if eadid.attrib.get("url") is None:
+                eadid.attrib["url"] = self.prod_entity_url
 
     def ead_from_file(self):
         ape_file = self.findingaid.ape_ead_file
@@ -188,10 +196,11 @@ class FindingAidOAIEADXmlAdapter(AbstractXmlAdapter):
                 xmlcontent = ape_file[0].data.getvalue()
                 tree = etree.fromstring(xmlcontent)
                 self.update_original_xml(tree)
-                return cleanup_ns(tree, 'ns0').iterchildren()
+                return cleanup_ns(tree, "ns0").iterchildren()
             except Exception:
-                self.exception('failed to build ead tree for FindingAid %s',
-                               self.findingaid.dc_title())
+                self.exception(
+                    "failed to build ead tree for FindingAid %s", self.findingaid.dc_title()
+                )
         return None
 
     def body_elements(self, root_element):
@@ -199,42 +208,44 @@ class FindingAidOAIEADXmlAdapter(AbstractXmlAdapter):
         self.archdesc_element(root_element)
 
     def clean_richstring_data(self, entity, attr):
-        html = getattr(entity, attr)
-        if html:
-            html = remove_html_tags(html.replace('\n', '')).strip(' ')
-            html = HTMLParser.HTMLParser().unescape(html)
-            return html if html else None
+        html_ = getattr(entity, attr)
+        if html_:
+            html_ = remove_html_tags(html_.replace("\n", "")).strip(" ")
+            html_ = html.parser.HTMLParser().unescape(html_)
+            return html_ if html_ else None
 
     def eadheader_element(self, parent_element):
-        eadheader = self.element('eadheader', parent=parent_element)
-        self.element('eadid', parent=eadheader,
-                     text=self.findingaid.eadid,
-                     attributes={'identifier': self.findingaid.eadid,
-                                 'url': self.prod_entity_url}),
+        eadheader = self.element("eadheader", parent=parent_element)
+        self.element(
+            "eadid",
+            parent=eadheader,
+            text=self.findingaid.eadid,
+            attributes={"identifier": self.findingaid.eadid, "url": self.prod_entity_url},
+        ),
         self.filedesc_element(eadheader)
 
     def filedesc_element(self, parent_root):
-        filedesc = self.element('filedesc', parent=parent_root)
+        filedesc = self.element("filedesc", parent=parent_root)
         titleproper = self.fa_header.titleproper or self.did.unittitle
-        titlestmt = self.element('titlestmt', parent=filedesc)
-        self.element('titleproper', parent=titlestmt, text=titleproper)
+        titlestmt = self.element("titlestmt", parent=filedesc)
+        self.element("titleproper", parent=titlestmt, text=titleproper)
         self.publicationstmt_element(filedesc)
 
     def publicationstmt_element(self, parent_root):
-        publicationstmt = self.element('publicationstmt', parent=parent_root)
+        publicationstmt = self.element("publicationstmt", parent=parent_root)
         service = self.findingaid.service
         if service:
             publisher = service[0].short_name or service[0].dc_title()
         publisher = self.findingaid.publisher
         if publisher:
-            self.element('publisher', parent=publicationstmt, text=publisher)
+            self.element("publisher", parent=publicationstmt, text=publisher)
 
     def archdesc_element(self, parent_element):
-        attrs = {'level': 'fonds'}
-        archdesc = self.element('archdesc', parent=parent_element, attributes=attrs)
+        attrs = {"level": "fonds"}
+        archdesc = self.element("archdesc", parent=parent_element, attributes=attrs)
         did = self.did
         if did.extptr:
-            dao = (did.extptr, )
+            dao = (did.extptr,)
         else:
             dao = ()
         self.did_element(archdesc, self.findingaid, did, dao)
@@ -246,15 +257,17 @@ class FindingAidOAIEADXmlAdapter(AbstractXmlAdapter):
         self.components(archdesc)
 
     def did_element(self, parent_element, entity, did, dao):
-        did_elt = self.element('did', parent=parent_element)
+        did_elt = self.element("did", parent=parent_element)
         # dao
-        unitid = self.element('unitid', parent=did_elt)
+        unitid = self.element("unitid", parent=did_elt)
         extptr = None
         for link in dao:
             if is_absolute_url(link):
-                attribs = {'{%s}type' % self.namespaces['xlink']: 'simple',
-                           '{%s}href' % self.namespaces['xlink']: link}
-                extptr = self.element('extptr', parent=unitid)
+                attribs = {
+                    "{%s}type" % self.namespaces["xlink"]: "simple",
+                    "{%s}href" % self.namespaces["xlink"]: link,
+                }
+                extptr = self.element("extptr", parent=unitid)
                 extptr.attrib.update(attribs)
         if extptr is not None:
             extptr.tail = did.unitid
@@ -262,76 +275,69 @@ class FindingAidOAIEADXmlAdapter(AbstractXmlAdapter):
             unitid.text = did.unitid
         titleproper = did.unittitle
         if titleproper:
-            self.element('unittitle', parent=did_elt, text=titleproper)
+            self.element("unittitle", parent=did_elt, text=titleproper)
         dates = self.dates(did)
         if dates:
-            self.element('unitdate', parent=did_elt, text=dates)
-        physdesc = self.clean_richstring_data(did, 'physdesc')
+            self.element("unitdate", parent=did_elt, text=dates)
+        physdesc = self.clean_richstring_data(did, "physdesc")
         if physdesc:
-            self.element('physdesc', parent=did_elt, text=physdesc)
-        repository = self.clean_richstring_data(did, 'repository')
+            self.element("physdesc", parent=did_elt, text=physdesc)
+        repository = self.clean_richstring_data(did, "repository")
         if repository:
-            self.element('repository', parent=did_elt, text=repository)
+            self.element("repository", parent=did_elt, text=repository)
         self.origination(did_elt, did)
-        lang_description = self.clean_richstring_data(did, 'lang_description')
+        lang_description = self.clean_richstring_data(did, "lang_description")
         if lang_description:
-            self.element('langmaterial', parent=did_elt, text=lang_description)
+            self.element("langmaterial", parent=did_elt, text=lang_description)
 
     def relatedmaterial(self, parent_element, entity):
-        description = self.clean_richstring_data(
-            entity, 'additional_resources')
+        description = self.clean_richstring_data(entity, "additional_resources")
         if description:
             self.element(
-                'p',
-                parent=self.element('relatedmaterial', parent=parent_element),
-                text=description)
+                "p", parent=self.element("relatedmaterial", parent=parent_element), text=description
+            )
 
     def scopecontent(self, parent_element, entity):
-        description = self.clean_richstring_data(
-            entity, 'description')
+        description = self.clean_richstring_data(entity, "description")
         if description:
             self.element(
-                'p',
-                parent=self.element('scopecontent', parent=parent_element),
-                text=description)
+                "p", parent=self.element("scopecontent", parent=parent_element), text=description
+            )
 
     def accessrestrict(self, parent_element, entity):
-        accessrestrict = self.clean_richstring_data(
-            entity, 'accessrestrict')
+        accessrestrict = self.clean_richstring_data(entity, "accessrestrict")
         if accessrestrict:
             self.element(
-                'p',
-                parent=self.element('accessrestrict', parent=parent_element),
-                text=accessrestrict)
+                "p",
+                parent=self.element("accessrestrict", parent=parent_element),
+                text=accessrestrict,
+            )
 
     def userestrict(self, parent_element, entity):
-        userestrict = self.clean_richstring_data(
-            entity, 'userestrict')
+        userestrict = self.clean_richstring_data(entity, "userestrict")
         if userestrict:
             self.element(
-                'p',
-                parent=self.element('userestrict', parent=parent_element),
-                text=userestrict)
+                "p", parent=self.element("userestrict", parent=parent_element), text=userestrict
+            )
 
     def controlaccess(self, parent_element, entity):
-        controlaccess = self.element('controlaccess', parent=parent_element)
+        controlaccess = self.element("controlaccess", parent=parent_element)
         for itype, label in sorted(self.indexes[entity.eid]):
             self.element(itype, parent=controlaccess, text=label)
 
     def origination(self, parent_element, did):
-        origination = self.clean_richstring_data(
-            did, 'origination')
+        origination = self.clean_richstring_data(did, "origination")
         if origination:
-            self.element('origination', parent=parent_element, text=origination)
+            self.element("origination", parent=parent_element, text=origination)
 
     def components(self, parent_element):
         fa_components = self.facomponents
         if fa_components:
             doas = self.digitized_versions
-            dsc = self.element('dsc', parent=parent_element)
+            dsc = self.element("dsc", parent=parent_element)
             for fa_component in fa_components:
                 did = fa_component.did[0]
-                c = self.element('c', parent=dsc)
+                c = self.element("c", parent=dsc)
                 dao = [u for u in doas.get(fa_component.eid, []) if u]
                 self.did_element(c, fa_component, did, dao)
                 self.scopecontent(c, fa_component)
@@ -343,6 +349,7 @@ class FindingAidOAIEADXmlAdapter(AbstractXmlAdapter):
 
 class OAIEADDownloadView(AbstractOAIDownloadView):
     """oai_ead download view"""
-    __regid__ = 'oai_ead.export'
-    __select__ = AbstractOAIDownloadView.__select__ & is_instance('FindingAid')
-    adapter_id = 'OAI_EAD'
+
+    __regid__ = "oai_ead.export"
+    __select__ = AbstractOAIDownloadView.__select__ & is_instance("FindingAid")
+    adapter_id = "OAI_EAD"

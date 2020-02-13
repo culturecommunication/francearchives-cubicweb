@@ -37,12 +37,11 @@ import unittest
 
 from cubicweb import Binary
 from cubicweb.devtools import testlib
-from cubicweb_francearchives.cssimages import (static_css_dir,
-                                               HERO_SIZES)
+from cubicweb_francearchives.cssimages import static_css_dir, HERO_SIZES
+from cubicweb_francearchives.testutils import HashMixIn
 
 
-class ImageTests(testlib.CubicWebTC):
-
+class ImageTests(HashMixIn, testlib.CubicWebTC):
     def setup_database(self):
         self.static_dir = static_css_dir(self.config.static_directory)
 
@@ -60,64 +59,65 @@ class ImageTests(testlib.CubicWebTC):
         """do not generate thumbnailes as cssid is specified"""
         with self.admin_access.cnx() as cnx:
             ce = cnx.create_entity
-            section = ce('Section', name=u'decouvrir',
-                         title=u'Découvrir')
-            filepth = osp.join(self.datadir, 'hero-decouvrir.jpg')
+            section = ce("Section", name="decouvrir", title="Découvrir")
+            filepth = osp.join(self.datadir, "hero-decouvrir.jpg")
             orig_width, orig_height = Image.open(filepth).size
-            with open(filepth, 'r') as stream:
-                image_file = ce('File',
-                                data_name=u'hero-decouvrir.jpg',
-                                data_format=u'image/jpeg',
-                                data=Binary(stream.read()))
-                ce('CssImage', cssid=u'hero-decouvrir',
-                   caption=u'Décourvir 15', order=2,
-                   cssimage_of=section,
-                   image_file=image_file)
+            with open(filepth, "rb") as stream:
+                image_file = ce(
+                    "File",
+                    data_name="hero-decouvrir.jpg",
+                    data_format="image/jpeg",
+                    data=Binary(stream.read()),
+                )
+                ce(
+                    "CssImage",
+                    cssid="hero-decouvrir",
+                    caption="Décourvir 15",
+                    order=2,
+                    cssimage_of=section,
+                    image_file=image_file,
+                )
                 cnx.commit()
             for size, suffix in HERO_SIZES:
-                image_path = u'hero-decouvrir-%s.jpg' % suffix
+                image_path = "hero-decouvrir-%s.jpg" % suffix
                 image = Image.open(osp.join(self.static_dir, image_path))
-                self.assertEqual(image.size[0], size['w'] or orig_width)
+                self.assertEqual(image.size[0], size["w"] or orig_width)
 
     def test_dont_generate_thumbnails(self):
         """do not generate thumbnailes as cssid is not specified"""
         with self.admin_access.cnx() as cnx:
             ce = cnx.create_entity
-            with open(osp.join(self.datadir,
-                               'hero-decouvrir.jpg'), 'rb') as stream:
-                image_file = ce('File',
-                                data_name=u'hero-decouvrir.jpg',
-                                data_format=u'image/jpeg',
-                                data=Binary(stream.read()))
-                ce('Image', caption=u'Décourvir 15',
-                   image_file=image_file)
+            with open(osp.join(self.datadir, "hero-decouvrir.jpg"), "rb") as stream:
+                image_file = ce(
+                    "File",
+                    data_name="hero-decouvrir.jpg",
+                    data_format="image/jpeg",
+                    data=Binary(stream.read()),
+                )
+                ce("Image", caption="Décourvir 15", image_file=image_file)
                 cnx.commit()
             for size, suffix in HERO_SIZES:
-                image_path = u'hero-decouvrir-%s.jpg' % suffix
-                self.assertFalse(osp.isfile(
-                    osp.join(self.static_dir, image_path)))
+                image_path = "hero-decouvrir-%s.jpg" % suffix
+                self.assertFalse(osp.isfile(osp.join(self.static_dir, image_path)))
 
     def test_update_thumbnails(self):
         with self.admin_access.cnx() as cnx:
             ce = cnx.create_entity
-            sm_filename = osp.join(self.static_dir,
-                                   'hero-gerer-sm.jpg')
-            with open(osp.join(self.datadir,
-                               'hero-decouvrir.jpg'), 'rb') as stream:
-                image_file = ce('File',
-                                data_name=u'hero-decouvrir.jpg',
-                                data_format=u'image/jpeg',
-                                data=Binary(stream.read()))
-                ce('CssImage', cssid=u'hero-gerer',
-                   order=1, caption=u'Gerer',
-                   image_file=image_file)
+            sm_filename = osp.join(self.static_dir, "hero-gerer-sm.jpg")
+            with open(osp.join(self.datadir, "hero-decouvrir.jpg"), "rb") as stream:
+                image_file = ce(
+                    "File",
+                    data_name="hero-decouvrir.jpg",
+                    data_format="image/jpeg",
+                    data=Binary(stream.read()),
+                )
+                ce("CssImage", cssid="hero-gerer", order=1, caption="Gerer", image_file=image_file)
                 cnx.commit()
                 self.assertTrue(osp.isfile(sm_filename))
             self.cleanup_static_css()
             self.assertFalse(osp.isfile(sm_filename))
-            image = cnx.find('CssImage', cssid=u'hero-gerer').one()
-            with open(osp.join(self.datadir,
-                               'hero-gerer.jpg'), 'rb') as stream:
+            image = cnx.find("CssImage", cssid="hero-gerer").one()
+            with open(osp.join(self.datadir, "hero-gerer.jpg"), "rb") as stream:
                 image.image_file[0].cw_set(data=Binary(stream.read()))
                 cnx.commit()
             self.assertTrue(osp.isfile(sm_filename))
@@ -125,24 +125,23 @@ class ImageTests(testlib.CubicWebTC):
     def test_dont_update_thumbnails(self):
         with self.admin_access.cnx() as cnx:
             ce = cnx.create_entity
-            sm_filename = osp.join(self.static_dir,
-                                   'hero-gerer-sm.jpg')
-            with open(osp.join(self.datadir,
-                               'hero-decouvrir.jpg'), 'rb') as stream:
-                image_file = ce('File',
-                                data_name=u'hero-decouvrir.jpg',
-                                data_format=u'image/jpeg',
-                                data=Binary(stream.read()))
-                ce('Image', caption=u'Gerer', image_file=image_file)
+            sm_filename = osp.join(self.static_dir, "hero-gerer-sm.jpg")
+            with open(osp.join(self.datadir, "hero-decouvrir.jpg"), "rb") as stream:
+                image_file = ce(
+                    "File",
+                    data_name="hero-decouvrir.jpg",
+                    data_format="image/jpeg",
+                    data=Binary(stream.read()),
+                )
+                ce("Image", caption="Gerer", image_file=image_file)
                 cnx.commit()
                 self.assertFalse(osp.isfile(sm_filename))
-            image = cnx.find('Image').one()
-            with open(osp.join(self.datadir,
-                               'hero-gerer.jpg'), 'rb') as stream:
+            image = cnx.find("Image").one()
+            with open(osp.join(self.datadir, "hero-gerer.jpg"), "rb") as stream:
                 image.image_file[0].cw_set(data=Binary(stream.read()))
                 cnx.commit()
             self.assertFalse(osp.isfile(sm_filename))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

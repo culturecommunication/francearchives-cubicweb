@@ -28,28 +28,83 @@
 # The fact that you are presently reading this means that you have had
 # knowledge of the CeCILL-C license and that you accept its terms.
 #
+import errno
+
+import subprocess
+
 import os
+from os.path import join, exists
 
-from cubicweb.devtools import DEFAULT_PSQL_SOURCES, startpgcluster, stoppgcluster
+import tempfile
 
-pgconfig = DEFAULT_PSQL_SOURCES['system']
+from cubicweb.devtools import DEFAULT_PSQL_SOURCES, stoppgcluster
+
+
+def startpgcluster(pyfile):
+    """Start a postgresql cluster next to pyfile"""
+    datadir = join(
+        os.path.dirname(pyfile),
+        "data",
+        "database",
+        "pgdb-%s" % os.path.splitext(os.path.basename(pyfile))[0],
+    )
+    if not exists(datadir):
+        try:
+            subprocess.check_call(["initdb", "-D", datadir, "-E", "utf-8", "--locale=fr_FR.UTF-8"])
+            # PNIA custom: set --local to fr_FR.UTF-8
+
+        except OSError as err:
+            if err.errno == errno.ENOENT:
+                raise OSError(
+                    '"initdb" could not be found. '
+                    "You should add the postgresql bin folder to your PATH "
+                    "(/usr/lib/postgresql/9.1/bin for example)."
+                )
+            raise
+    datadir = os.path.abspath(datadir)
+    pgport = "5432"
+    env = os.environ.copy()
+    sockdir = tempfile.mkdtemp(prefix="cwpg")
+    DEFAULT_PSQL_SOURCES["system"]["db-host"] = sockdir
+    DEFAULT_PSQL_SOURCES["system"]["db-port"] = pgport
+    options = '-h "" -k %s -p %s' % (sockdir, pgport)
+    options += " -c fsync=off -c full_page_writes=off"
+    options += " -c synchronous_commit=off"
+    try:
+        subprocess.check_call(["pg_ctl", "start", "-w", "-D", datadir, "-o", options], env=env)
+    except OSError as err:
+        try:
+            os.rmdir(sockdir)
+        except OSError:
+            pass
+        if err.errno == errno.ENOENT:
+            raise OSError(
+                '"pg_ctl" could not be found. '
+                "You should add the postgresql bin folder to your PATH "
+                "(/usr/lib/postgresql/9.1/bin for example)."
+            )
+        raise
+
+
+pgconfig = DEFAULT_PSQL_SOURCES["system"]
 setup_module = teardown_module = lambda m: None
 
-if 'POSTGRES_HOST' in os.environ:
-    pgconfig['db-host'] = os.environ['POSTGRES_HOST']
-    pgconfig['db-port'] = os.environ['POSTGRES_PORT']
-    pgconfig['db-user'] = os.environ['POSTGRES_USER']
-    pgconfig['db-password'] = os.environ['POSTGRES_PASSWORD']
-elif 'TEST-PG-HOST' in os.environ:
-    pgconfig['db-host'] = os.environ['TEST-PG-HOST']
-    pgconfig['db-port'] = os.environ['TEST-PG-PORT']
-elif 'PGHOST' in os.environ:
-    pgconfig['db-host'] = os.environ['PGHOST']
-    pgconfig['db-port'] = os.environ['PGPORT']
+if "POSTGRES_HOST" in os.environ:
+    pgconfig["db-host"] = os.environ["POSTGRES_HOST"]
+    pgconfig["db-port"] = os.environ["POSTGRES_PORT"]
+    pgconfig["db-user"] = os.environ["POSTGRES_USER"]
+    pgconfig["db-password"] = os.environ["POSTGRES_PASSWORD"]
+elif "TEST-PG-HOST" in os.environ:
+    pgconfig["db-host"] = os.environ["TEST-PG-HOST"]
+    pgconfig["db-port"] = os.environ["TEST-PG-PORT"]
+elif "PGHOST" in os.environ:
+    pgconfig["db-host"] = os.environ["PGHOST"]
+    pgconfig["db-port"] = os.environ["PGPORT"]
 else:
+
     def setup_module(module):
         startpgcluster(module.__name__)
 
     def teardown_module(module):
-        print('tearing down module', module.__name__)
+        print("tearing down module", module.__name__)
         stoppgcluster(module.__name__)

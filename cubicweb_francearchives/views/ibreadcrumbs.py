@@ -32,48 +32,46 @@ from cubicweb.view import EntityAdapter
 from cubicweb.predicates import is_instance
 from cubicweb.uilib import cut
 
-from cubes.card.views import CardBreadCrumbsAdapter
+from cubicweb_card.views import CardBreadCrumbsAdapter
 
 
 class FindingAidBreadCrumbsAdapter(EntityAdapter):
-    __regid__ = 'IBreadCrumbs'
-    __select__ = is_instance('FindingAid', accept_none=False)
+    __regid__ = "IBreadCrumbs"
+    __select__ = is_instance("FindingAid", accept_none=False)
 
     def breadcrumbs(self, view=None, recurs=None):
         _ = self._cw._
         fa = self.entity
-        path = [(self._cw.build_url(''), _('Home'))]
+        path = [(self._cw.build_url(""), _("Home"))]
         service = fa.related_service
         if service:
-            path.append((
-                service.documents_url(),
-                service.short_name or fa.publisher))
+            path.append((service.documents_url(), service.short_name or fa.publisher))
         if fa.did[0].unitid:
-            fa_label = u'{} - {}'.format(_('Inventory'), fa.did[0].unitid)
+            fa_label = "{} - {}".format(_("Inventory"), fa.did[0].unitid)
         else:
-            fa_label = _('Inventory')
+            fa_label = _("Inventory")
         path.append((None, fa_label))
         return path
 
 
 class NominaPersonBreadCrumbsAdapter(EntityAdapter):
-    __regid__ = 'IBreadCrumbs'
-    __select__ = is_instance('Person', accept_none=False)
+    __regid__ = "IBreadCrumbs"
+    __select__ = is_instance("Person", accept_none=False)
 
     def breadcrumbs(self, view=None, recurs=None):
         _ = self._cw._
-        path = [(self._cw.build_url(''), _('Home'))]
+        path = [(self._cw.build_url(""), _("Home"))]
         if self.entity.service:
-            path.append((
-                self.entity.service[0].documents_url(),
-                self.entity.service[0].publisher()))
+            path.append(
+                (self.entity.service[0].documents_url(), self.entity.service[0].publisher())
+            )
         path.append((None, self.entity.dc_title()))
         return path
 
 
 class FAComponentBreadCrumbsAdapter(EntityAdapter):
-    __regid__ = 'IBreadCrumbs'
-    __select__ = is_instance('FAComponent', accept_none=False)
+    __regid__ = "IBreadCrumbs"
+    __select__ = is_instance("FAComponent", accept_none=False)
 
     def breadcrumbs(self, view=None, recurs=None):
         """return a list containing some:
@@ -91,26 +89,21 @@ class FAComponentBreadCrumbsAdapter(EntityAdapter):
         """
         _ = self._cw._
         fa = self.entity.finding_aid[0]
-        path = [(self._cw.build_url(''), _('Home'))]
+        path = [(self._cw.build_url(""), _("Home"))]
         service = fa.related_service
         if service:
-            path.append((
-                service.documents_url(),
-                service.short_name or fa.publisher))
+            path.append((service.documents_url(), service.short_name or fa.publisher))
         if fa.did[0].unitid:
-            fa_label = u'{} - {}'.format(_('Inventory'), fa.did[0].unitid)
+            fa_label = "{} - {}".format(_("Inventory"), fa.did[0].unitid)
         else:
-            fa_label = _('Inventory')
-        path.extend((
-            (fa.absolute_url(), fa_label),
-            (cut(self.entity.dc_title(), 40)))
-        )
+            fa_label = _("Inventory")
+        path.extend(((fa.absolute_url(), fa_label), (cut(self.entity.dc_title(), 40))))
         return path
 
 
 class SectionBreadCrumbsAdapter(EntityAdapter):
-    __regid__ = 'IBreadCrumbs'
-    __select__ = is_instance('Section', accept_none=False)
+    __regid__ = "IBreadCrumbs"
+    __select__ = is_instance("Section", accept_none=False)
 
     def breadcrumbs(self, view=None, recurs=None):
         _ = self._cw._
@@ -122,62 +115,57 @@ class SectionBreadCrumbsAdapter(EntityAdapter):
             parents = parent.reverse_children
         path.reverse()
         if recurs:
-            item_path = (self.entity.absolute_url(),
-                         self.entity.breadcrumbs_title())
+            item_path = (self.entity.absolute_url(), self.entity.breadcrumbs_title())
         else:
             item_path = (None, self.entity.breadcrumbs_title())
-        return [(self._cw.build_url(''), _('Home'))] + \
-            path + \
-            [item_path]
+        return [(self._cw.build_url(""), _("Home"))] + path + [item_path]
 
 
 class FACardBreadCrumbsAdapter(EntityAdapter):
-    __regid__ = 'IBreadCrumbs'
-    __select__ = is_instance('Card')
+    __regid__ = "IBreadCrumbs"
+    __select__ = is_instance("Card")
 
     def breadcrumbs(self, view=None, recurs=None):
         _ = self._cw._
         return [
-            (self._cw.build_url(''), _('Home')),
+            (self._cw.build_url(""), _("Home")),
             # don't use dc_title() to avoid displaying wikiid
             (None, self.entity.title),
         ]
 
 
 class CircularBreadCrumbsAdapter(EntityAdapter):
-    __regid__ = 'IBreadCrumbs'
-    __select__ = is_instance('Circular')
+    __regid__ = "IBreadCrumbs"
+    __select__ = is_instance("Circular")
 
     def breadcrumbs(self, view=None, recurs=None):
         _ = self._cw._
         return [
-            (self._cw.build_url(''), _('Home')),
-            (self._cw.build_url('circulaires'), _('Circular_plural')),
+            (self._cw.build_url(""), _("Home")),
+            (self._cw.build_url("circulaires"), _("Circular_plural")),
             (None, self.entity.dc_title()),
         ]
 
 
 class ServiceBreadCrumbsAdapter(EntityAdapter):
-    __regid__ = 'IBreadCrumbs'
-    __select__ = is_instance('Service')
+    __regid__ = "IBreadCrumbs"
+    __select__ = is_instance("Service")
 
     def breadcrumbs(self, view=None, recurs=None):
         _ = self._cw._
         paths = [
-            (self._cw.build_url(''), _('Home')),
-            (self._cw.build_url('services'),
-             _('Service Directory')),
+            (self._cw.build_url(""), _("Home")),
+            (self._cw.build_url("services"), _("Service Directory")),
             (None, self.entity.dc_title()),
         ]
         if self.entity.annex_of:
             parent = self.entity.annex_of[0]
-            paths.insert(-1,
-                         (parent.absolute_url(),
-                          parent.dc_title()),
-                         )
+            paths.insert(
+                -1, (parent.absolute_url(), parent.dc_title()),
+            )
         return paths
 
 
 def registration_callback(vreg):
-    vreg.register_all(globals().values(), __name__, (FACardBreadCrumbsAdapter,))
+    vreg.register_all(list(globals().values()), __name__, (FACardBreadCrumbsAdapter,))
     vreg.register_and_replace(FACardBreadCrumbsAdapter, CardBreadCrumbsAdapter)

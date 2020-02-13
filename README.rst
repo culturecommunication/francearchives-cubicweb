@@ -39,6 +39,11 @@ utilisation de ces fichiers à d'autres fins que de tester la présente
 application.
 
 
+Pour lancer **black** ::
+
+  black --config pyproject.toml .
+
+
 Compilier les css
 ----------------
 
@@ -105,7 +110,12 @@ Lancer les tests a11y
 Documentation supplémentaire
 ----------------------------
 
-Des éléments supplémentaires de documentation sont dans `doc/`
+Des éléments supplémentaires de documentation sont dans `doc/`, dont notamment ::
+
+* `doc_dev.rst` explique des problèmes qui peuvent être rencontrés
+  lors de l'installation ;
+
+* `doc_exploitation.rst` contient la configuration recommandée de ``pyramid``.
 
 Contributrices et contributeurs
 -------------------------------

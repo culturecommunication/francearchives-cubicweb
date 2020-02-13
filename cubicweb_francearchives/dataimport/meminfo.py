@@ -55,7 +55,7 @@ def memprint(pid=None, logger=None):
         rss = int(open("/proc/%s/statm" % pid).readline().split()[1]) * PAGESIZE
     except IOError:
         if logger is not None:
-            logger.error('unknown process', pid)
+            logger.error("unknown process", pid)
         return
     if os.path.exists("/proc/%s/smaps" % pid):  # stat
         for line in open("/proc/%s/smaps" % pid).readlines():  # open

@@ -38,23 +38,22 @@ from cubicweb_francearchives.views import twitter_account_name
 
 
 class MetaMixin(object):
-
     @cachedproperty
     def meta(self):
-        metadata = getattr(self.entity, 'metadata', ())
+        metadata = getattr(self.entity, "metadata", ())
         if metadata:
             return metadata[0]
         return None
 
     def meta_data(self):
         data = [
-            (u'title', self.title()),
-            (u'description', self.description()),
-            (u'keywords', self.keywords()),
-            (u'author', self.author()),
-            (u'subject', self.subject()),
-            (u'twitter:card', u'summary'),
-            (u'twitter:site', twitter_account_name(self._cw.vreg.config)),
+            ("title", self.title()),
+            ("description", self.description()),
+            ("keywords", self.keywords()),
+            ("author", self.author()),
+            ("subject", self.subject()),
+            ("twitter:card", "summary"),
+            ("twitter:site", twitter_account_name(self._cw.vreg.config)),
         ]
         return [(name, value) for name, value in data if value]
 
@@ -88,16 +87,16 @@ class MetaMixin(object):
 
 
 class BaseMetaAdapter(EntityAdapter, MetaMixin):
-    __regid__ = 'IMeta'
+    __regid__ = "IMeta"
 
 
-class HomePageMetadApter(Adapter, MetaMixin):
-    __regid__ = 'IMeta'
-    __select__ = match_kwargs({'homepage': True})
+class HomePageMetaAdapter(Adapter, MetaMixin):
+    __regid__ = "IMeta"
+    __select__ = match_kwargs({"homepage": True})
 
     @cachedproperty
     def meta(self):
-        return self._cw.find('Metadata', uuid=u'metadata-homepage').one()
+        return self._cw.find("Metadata", uuid="metadata-homepage").one()
 
     def title(self):
-        return self._cw.property_value('ui.site-title')
+        return self._cw.property_value("ui.site-title")

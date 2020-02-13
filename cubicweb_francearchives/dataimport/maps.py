@@ -33,7 +33,6 @@ import os.path as osp
 import csv
 import sys
 from glob import glob
-from six import text_type as unicode
 
 from collections import OrderedDict
 
@@ -41,76 +40,83 @@ from cubicweb.dataimport.importer import ExtEntity, ExtEntitiesImporter
 from cubicweb.dataimport.stores import RQLObjectStore
 from cubicweb_francearchives import init_bfss
 
-META_MAPS = 'maps.csv'
+META_MAPS = "maps.csv"
 
 
 def get_extid(etype, value):
-    return u'{}-{}'.format(etype, value)
+    return "{}-{}".format(etype, value)
 
 
 def load_meta(filepath):
-    fieldnames = OrderedDict([
-        (u'Nom_csv', 'fname'),
-        (u'Titre_document', 'title'),
-        (u'Titre_carte', 'map_title'),
-        (u'Rubrique', ('children', 'object'))])
+    fieldnames = OrderedDict(
+        [
+            ("Nom_csv", "fname"),
+            ("Titre_document", "title"),
+            ("Titre_carte", "map_title"),
+            ("Rubrique", ("children", "object")),
+        ]
+    )
     data = {}
     with open(filepath) as csvfile:
-        reader = csv.DictReader(csvfile,
-                                delimiter=',',
-                                fieldnames=fieldnames.keys())
+        reader = csv.DictReader(csvfile, delimiter=",", fieldnames=list(fieldnames.keys()))
         for line in reader:
-            entry = {fieldnames[key]: value.decode('utf-8') if value else None
-                     for key, value in line.iteritems()}
-            fname = entry.pop('fname')
+            entry = {fieldnames[key]: value if value else None for key, value in line.items()}
+            fname = entry.pop("fname")
             data[fname] = entry
     return data
 
 
 def build_extentities(directory, ref_data, maps_meta):
     extentities = []
-    for idx, filepath in enumerate(glob(osp.join(directory, '*.csv'))):
+    for idx, filepath in enumerate(glob(osp.join(directory, "*.csv"))):
         fname = osp.basename(filepath)
         if fname == META_MAPS:
             continue
         values = maps_meta.get(fname)
         if values is None:
-            print('Skip "%s" file as no associated '
-                  'entry found in maps.csv') % fname
+            print('Skip "%s" file as no associated ' "entry found in maps.csv") % fname
             continue
-        with open(filepath) as csvfile:
+        with open(filepath, "rb") as csvfile:
             filecontent = csvfile.read()
-        extid = get_extid('Map', idx)
-        meta_extid = get_extid('Metadata', idx)
-        extentities.append(ExtEntity('Metadata', meta_extid,
-                                     {'title': {values['title']}}))
-        section_extid = get_extid('Section',
-                                  values[('children', 'object')])
-        values[('children', 'object')] = section_extid
-        values = {k: {v} for k, v in values.iteritems()}
-        values.update({'map_file': {filecontent},
-                       'metadata': {meta_extid}})
-        thumbnail = fname.replace('csv', 'png')
+        extid = get_extid("Map", idx)
+        meta_extid = get_extid("Metadata", idx)
+        extentities.append(ExtEntity("Metadata", meta_extid, {"title": {values["title"]}}))
+        section_extid = get_extid("Section", values[("children", "object")])
+        values[("children", "object")] = section_extid
+        values = {k: {v} for k, v in values.items()}
+        values.update({"map_file": {filecontent}, "metadata": {meta_extid}})
+        thumbnail = fname.replace("csv", "png")
         thumbnail_path = osp.join(directory, thumbnail)
         if osp.isfile(thumbnail_path):
-            file_extid = u'File-{}'.format(extid)
-            extentities.append(ExtEntity(
-                'File', file_extid,
-                {'title': {unicode(thumbnail)},
-                 'data': {open(thumbnail_path).read()},
-                 'data_name': {unicode(thumbnail)},
-                 'data_format': {'image/png'}}))
-            img_extid = u'Image-{}'.format(extid)
+            file_extid = "File-{}".format(extid)
             extentities.append(
-                ExtEntity('Image', img_extid,
-                          {'image_file': {file_extid},
-                           'caption_format': {u'text/html'},
-                           'caption': {u'Vignette'}}))
-            values['map_image'] = {img_extid}
+                ExtEntity(
+                    "File",
+                    file_extid,
+                    {
+                        "title": {str(thumbnail)},
+                        "data": {open(thumbnail_path, "rb").read()},
+                        "data_name": {str(thumbnail)},
+                        "data_format": {"image/png"},
+                    },
+                )
+            )
+            img_extid = "Image-{}".format(extid)
+            extentities.append(
+                ExtEntity(
+                    "Image",
+                    img_extid,
+                    {
+                        "image_file": {file_extid},
+                        "caption_format": {"text/html"},
+                        "caption": {"Vignette"},
+                    },
+                )
+            )
+            values["map_image"] = {img_extid}
         else:
-            print('Thumbnail "%s" file does not exist.' %
-                  thumbnail_path)
-        extentities.append(ExtEntity('Map', extid, values))
+            print('Thumbnail "%s" file does not exist.' % thumbnail_path)
+        extentities.append(ExtEntity("Map", extid, values))
     return extentities
 
 
@@ -121,15 +127,14 @@ def import_maps(cnx, directory):
         sys.exit(1)
     init_bfss(cnx.repo)
     maps_meta = load_meta(meta_maps_filepath)
-    with cnx.allow_all_hooks_but('es'):
+    with cnx.allow_all_hooks_but("es"):
         ref_data = {}
-        for title, eid in cnx.execute('Any L, X WHERE X is Section, X title L'):
+        for title, eid in cnx.execute("Any L, X WHERE X is Section, X title L"):
             if title:
-                ref_data[get_extid('Section', title)] = eid
+                ref_data[get_extid("Section", title)] = eid
         store = RQLObjectStore(cnx)
         importer = ExtEntitiesImporter(cnx.vreg.schema, store, ref_data)
-        importer.import_entities(build_extentities(
-            directory, ref_data, maps_meta))
+        importer.import_entities(build_extentities(directory, ref_data, maps_meta))
         store.flush()
         store.commit()
         store.finish()

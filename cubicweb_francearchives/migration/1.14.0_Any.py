@@ -29,16 +29,17 @@
 # The fact that you are presently reading this means that you have had
 # knowledge of the CeCILL-C license and that you accept its terms.
 #
-add_attribute('Map', 'order')
+add_attribute("Map", "order")
 
-add_relation_definition('BaseContent', 'basecontent_service', 'Service' )
+add_relation_definition("BaseContent", "basecontent_service", "Service")
 
 
 # add Map.order to published schema
 def udpate_published_scheme(cnx):
     sql = cnx.system_sql
-    print('add order column on pusblished.cw_map')
-    sql('ALTER TABLE published.cw_map ADD cw_order INTEGER')
+    print("add order column on pusblished.cw_map")
+    sql("ALTER TABLE published.cw_map ADD cw_order INTEGER")
     cnx.commit()
+
 
 udpate_published_scheme(cnx)

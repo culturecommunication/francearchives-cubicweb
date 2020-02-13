@@ -37,9 +37,10 @@ This script updates <etype><attributes> :
  - FaComonent: "additional_resources"
 
 """
-from __future__ import print_function
+
 
 from cubicweb_francearchives.dataimport import ead
+from cubicweb_francearchives.dataimport.importer import import_filepaths
 
 from cubicweb_francearchives.dataimport.sqlutil import no_trigger
 
@@ -54,46 +55,47 @@ class FAReader(ead.Reader):
         self.add_rel = lambda self, eidfrom, rtype, eid_to: None
 
     def create_entity(self, etype, attrs):
-        if 'stable_id' in attrs:
-            eid = self.stable_id_to_eid(attrs['stable_id'])
-        if etype == 'FindingAid':
+        if "stable_id" in attrs:
+            eid = self.stable_id_to_eid(attrs["stable_id"])
+        if etype == "FindingAid":
             params = {
                 k: attrs.get(k)
-                for k in ('accessrestrict', 'userestrict', 'additional_resources',
-                          'description', 'stable_id', )
+                for k in (
+                    "accessrestrict",
+                    "userestrict",
+                    "additional_resources",
+                    "description",
+                    "stable_id",
+                )
             }
             if any(params.values()):
                 self.store.sql(
-                    'UPDATE cw_findingaid '
-                    'SET cw_additional_resources=%(additional_resources)s, '
-                    'cw_userestrict=%(userestrict)s, '
-                    'cw_accessrestrict=%(accessrestrict)s, '
-                    'cw_description=%(description)s '
-                    'WHERE cw_stable_id=%(stable_id)s',
-                    params
+                    "UPDATE cw_findingaid "
+                    "SET cw_additional_resources=%(additional_resources)s, "
+                    "cw_userestrict=%(userestrict)s, "
+                    "cw_accessrestrict=%(accessrestrict)s, "
+                    "cw_description=%(description)s "
+                    "WHERE cw_stable_id=%(stable_id)s",
+                    params,
                 )
-        elif etype == 'FAComponent':
-            params = {
-                k: attrs.get(k)
-                for k in ('additional_resources', 'description', 'stable_id')
-            }
+        elif etype == "FAComponent":
+            params = {k: attrs.get(k) for k in ("additional_resources", "description", "stable_id")}
             if any(params.values()):
                 self.store.sql(
-                    'UPDATE cw_facomponent '
-                    'SET cw_additional_resources=%(additional_resources)s, '
-                    'cw_description=%(description)s '
-                    'WHERE cw_stable_id=%(stable_id)s',
-                    params
+                    "UPDATE cw_facomponent "
+                    "SET cw_additional_resources=%(additional_resources)s, "
+                    "cw_description=%(description)s "
+                    "WHERE cw_stable_id=%(stable_id)s",
+                    params,
                 )
-        elif etype == 'EsDocument':
+        elif etype == "EsDocument":
             self.store.sql(
-                'UPDATE cw_esdocument SET cw_doc = %(doc)s WHERE cw_entity = %(entity)s',
-                attrs
+                "UPDATE cw_esdocument SET cw_doc = %(doc)s WHERE cw_entity = %(entity)s", attrs
             )
             eid = None
         else:
             eid = None
-        attrs['eid'] = eid
+        attrs["eid"] = eid
         return attrs
 
     def create_index(self, infos, target):
@@ -106,31 +108,32 @@ class FAReader(ead.Reader):
 
 
 def files_to_reimport(cnx):
-    rset = cnx.execute('DISTINCT Any FSPATH(FID) '
-                       'WHERE F findingaid_support FI, FI data FID, '
-                       'FI data_format "application/xml"')
-    for fspath, in rset:
+    rset = cnx.execute(
+        "DISTINCT Any FSPATH(FID) "
+        "WHERE F findingaid_support FI, FI data FID, "
+        'FI data_format "application/xml"'
+    )
+    for (fspath,) in rset:
         fspath = fspath.getvalue()
         yield fspath
 
 
 def reimport_content(cnx):
-    importconfig = ead.readerconfig(cnx.vreg.config,
-                                    cnx.vreg.config.appid,
-                                    nodrop=True,
-                                    esonly=False)
-    importconfig['readercls'] = FAReader
-    importconfig['update_imported'] = True
+    importconfig = ead.readerconfig(
+        cnx.vreg.config, cnx.vreg.config.appid, nodrop=True, esonly=False
+    )
+    importconfig["readercls"] = FAReader
+    importconfig["update_imported"] = True
     filepaths = []
-    print('analyzing database to extract which files should be reimported...')
+    print("analyzing database to extract which files should be reimported...")
     for fspath in files_to_reimport(cnx):
         filepaths.append(fspath)
-    print('\t=> {} files must be reimported'.format(len(filepaths)))
+    print("\t=> {} files must be reimported".format(len(filepaths)))
     if len(filepaths) == 0:
         return
-    with no_trigger(cnx, tables=('cw_findingaid', 'cw_facomponent'), interactive=False):
-        ead.import_filepaths(cnx, filepaths, importconfig)
+    with no_trigger(cnx, tables=("cw_findingaid", "cw_facomponent"), interactive=False):
+        import_filepaths(cnx, filepaths, importconfig)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     reimport_content(cnx)

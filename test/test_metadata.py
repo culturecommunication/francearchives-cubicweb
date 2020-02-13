@@ -37,117 +37,142 @@ from cubicweb.devtools.testlib import CubicWebTC
 
 
 class MetaTests(CubicWebTC):
-
     def test_newscontent_default_metadata(self):
         """tests IMeta when no Metadata entity is created"""
         with self.admin_access.cnx() as cnx:
-            newscontent = cnx.create_entity('NewsContent',
-                                            title=u'the-news',
-                                            content=u'the-content',
-                                            start_date=dt.date(2011, 1, 1))
-            meta = newscontent.cw_adapt_to('IMeta')
-            self.assertEqual(meta.meta_data(), [
-                ('title', 'the-news'),
-                (u'twitter:card', u'summary'),
-                (u'twitter:site', u'@FranceArchives'),
-            ])
+            newscontent = cnx.create_entity(
+                "NewsContent",
+                title="the-news",
+                content="the-content",
+                start_date=dt.date(2011, 1, 1),
+            )
+            meta = newscontent.cw_adapt_to("IMeta")
+            self.assertEqual(
+                meta.meta_data(),
+                [
+                    ("title", "the-news"),
+                    ("twitter:card", "summary"),
+                    ("twitter:site", "@FranceArchives"),
+                ],
+            )
 
     def test_newscontent_with_metadata(self):
         """tests IMeta when a Metadata entity is created"""
         with self.admin_access.cnx() as cnx:
-            metadata = cnx.create_entity('Metadata',
-                                         title=u'meta-title',
-                                         description=u'meta-descr',
-                                         keywords=u'kw1 kw2',
-                                         subject=u'the-subject',
-                                         creator=u'john')
-            newscontent = cnx.create_entity('NewsContent',
-                                            title=u'the-news',
-                                            content=u'the-content',
-                                            start_date=dt.date(2011, 1, 1),
-                                            metadata=metadata)
-            meta = newscontent.cw_adapt_to('IMeta')
-            self.assertEqual(meta.meta_data(), [
-                ('title', 'meta-title'),
-                ('description', 'meta-descr'),
-                ('keywords', 'kw1 kw2'),
-                ('author', 'john'),
-                ('subject', 'the-subject'),
-                (u'twitter:card', u'summary'),
-                (u'twitter:site', u'@FranceArchives'),
-            ])
+            metadata = cnx.create_entity(
+                "Metadata",
+                title="meta-title",
+                description="meta-descr",
+                keywords="kw1 kw2",
+                subject="the-subject",
+                creator="john",
+            )
+            newscontent = cnx.create_entity(
+                "NewsContent",
+                title="the-news",
+                content="the-content",
+                start_date=dt.date(2011, 1, 1),
+                metadata=metadata,
+            )
+            meta = newscontent.cw_adapt_to("IMeta")
+            self.assertEqual(
+                meta.meta_data(),
+                [
+                    ("title", "meta-title"),
+                    ("description", "meta-descr"),
+                    ("keywords", "kw1 kw2"),
+                    ("author", "john"),
+                    ("subject", "the-subject"),
+                    ("twitter:card", "summary"),
+                    ("twitter:site", "@FranceArchives"),
+                ],
+            )
 
     def test_newscontent_mix_with_metadata(self):
         """tests IMeta when a Metadata entity is created"""
         with self.admin_access.cnx() as cnx:
-            metadata = cnx.create_entity('Metadata',
-                                         description=u'meta-descr',
-                                         keywords=u'kw1 kw2')
-            newscontent = cnx.create_entity('NewsContent',
-                                            title=u'the-news',
-                                            content=u'the-content',
-                                            start_date=dt.date(2011, 1, 1),
-                                            metadata=metadata)
-            meta = newscontent.cw_adapt_to('IMeta')
-            self.assertEqual(meta.meta_data(), [
-                ('title', 'the-news'),
-                ('description', 'meta-descr'),
-                ('keywords', 'kw1 kw2'),
-                (u'twitter:card', u'summary'),
-                (u'twitter:site', u'@FranceArchives'),
-            ])
+            metadata = cnx.create_entity("Metadata", description="meta-descr", keywords="kw1 kw2")
+            newscontent = cnx.create_entity(
+                "NewsContent",
+                title="the-news",
+                content="the-content",
+                start_date=dt.date(2011, 1, 1),
+                metadata=metadata,
+            )
+            meta = newscontent.cw_adapt_to("IMeta")
+            self.assertEqual(
+                meta.meta_data(),
+                [
+                    ("title", "the-news"),
+                    ("description", "meta-descr"),
+                    ("keywords", "kw1 kw2"),
+                    ("twitter:card", "summary"),
+                    ("twitter:site", "@FranceArchives"),
+                ],
+            )
 
 
 class OpenGraphTests(CubicWebTC):
-
     def test_news_opengraph(self):
         with self.admin_access.cnx() as cnx:
-            metadata = cnx.create_entity('Metadata',
-                                         title=u'meta-title',
-                                         description=u'meta-descr',
-                                         keywords=u'kw1 kw2',
-                                         subject=u'the-subject',
-                                         creator=u'john')
-            newscontent = cnx.create_entity('NewsContent',
-                                            title=u'the-news',
-                                            content=u'the-content',
-                                            start_date=dt.date(2011, 1, 1),
-                                            metadata=metadata)
-            ogdata = newscontent.cw_adapt_to('IOpenGraph')
-            self.assertEqual(ogdata.og_data(), [
-                (u'locale', u'fr_FR'),
-                (u'site_name', u'FranceArchives'),
-                (u'url', newscontent.absolute_url()),
-                (u'title', u'meta-title'),
-                (u'description', u'meta-descr'),
-                (u'type', 'article'),
-            ])
+            metadata = cnx.create_entity(
+                "Metadata",
+                title="meta-title",
+                description="meta-descr",
+                keywords="kw1 kw2",
+                subject="the-subject",
+                creator="john",
+            )
+            newscontent = cnx.create_entity(
+                "NewsContent",
+                title="the-news",
+                content="the-content",
+                start_date=dt.date(2011, 1, 1),
+                metadata=metadata,
+            )
+            ogdata = newscontent.cw_adapt_to("IOpenGraph")
+            self.assertEqual(
+                ogdata.og_data(),
+                [
+                    ("locale", "fr_FR"),
+                    ("site_name", "FranceArchives"),
+                    ("url", newscontent.absolute_url()),
+                    ("title", "meta-title"),
+                    ("description", "meta-descr"),
+                    ("type", "article"),
+                ],
+            )
 
     def test_card_locale_opengraph(self):
         """test card locale handling"""
         with self.admin_access.cnx() as cnx:
-            card = cnx.create_entity('Card',
-                                     wikiid=u'card-de',
-                                     title=u'the-card',
-                                     content=u'some-content')
-            ogdata = card.cw_adapt_to('IOpenGraph')
-            self.assertEqual(ogdata.og_data(), [
-                (u'locale', u'de_DE'),
-                (u'site_name', u'FranceArchives'),
-                (u'url', card.absolute_url()),
-                (u'title', u'the-card'),
-                (u'type', 'article'),
-            ])
-            card.cw_set(wikiid=u'some-card')
-            ogdata = card.cw_adapt_to('IOpenGraph')
-            self.assertEqual(ogdata.og_data(), [
-                (u'locale', u'fr_FR'),  # ← lang default to fr
-                (u'site_name', u'FranceArchives'),
-                (u'url', card.absolute_url()),
-                (u'title', u'the-card'),
-                (u'type', 'article'),
-            ])
+            card = cnx.create_entity(
+                "Card", wikiid="card-de", title="the-card", content="some-content"
+            )
+            ogdata = card.cw_adapt_to("IOpenGraph")
+            self.assertEqual(
+                ogdata.og_data(),
+                [
+                    ("locale", "de_DE"),
+                    ("site_name", "FranceArchives"),
+                    ("url", card.absolute_url()),
+                    ("title", "the-card"),
+                    ("type", "article"),
+                ],
+            )
+            card.cw_set(wikiid="some-card")
+            ogdata = card.cw_adapt_to("IOpenGraph")
+            self.assertEqual(
+                ogdata.og_data(),
+                [
+                    ("locale", "fr_FR"),  # ← lang default to fr
+                    ("site_name", "FranceArchives"),
+                    ("url", card.absolute_url()),
+                    ("title", "the-card"),
+                    ("type", "article"),
+                ],
+            )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

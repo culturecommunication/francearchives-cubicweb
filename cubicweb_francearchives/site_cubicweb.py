@@ -28,7 +28,6 @@
 # The fact that you are presently reading this means that you have had
 # knowledge of the CeCILL-C license and that you accept its terms.
 #
-from six import string_types
 import json
 
 from logilab.common.configuration import REQUIRED
@@ -41,53 +40,107 @@ from yams import register_base_type
 
 
 options = (
-    ('contact-email',
-     {'type': 'string',
-      'default': REQUIRED,
-      'help': 'FranceArchive portal email used in the contact form.',
-      'group': 'pnia', 'level': 2,
-      }),
-    ('sitemap-dir',
-     {'type': 'string',
-      'default': '/tmp',
-      'help': 'directory where gen-sitemap will output sitemap files',
-      'group': 'pnia', 'level': 2,
-      }),
-    ('appfiles-dir',
-     {'type': 'string',
-      'default': '/tmp',
-      'help': 'directory where BFSS will store application files',
-      'group': 'pnia', 'level': 2,
-      }),
-    ('ead-services-dir',
-     {'type': 'string',
-      'default': REQUIRED,
-      'help': 'directory containing findinaid  original files',
-      'group': 'ir', 'level': 2,
-      }),
-    ('newsletter-cypher-seed',
-     {'type': 'string',
-      'default': u"this is a newsletter cypher seed",
-      'help': 'seed used to cypher newsletter email in confirmation email link',
-      'group': 'pnia', 'level': 2,
-      }),
-    ('consultation-base-url',
-     {'type': 'string',
-      'default': 'https://francearchives.fr',
-      'help': 'public base url to make link between synchronized entity',
-      'group': 'pnia', 'level': 2,
-      }),
+    (
+        "contact-email",
+        {
+            "type": "string",
+            "default": REQUIRED,
+            "help": "FranceArchive portal email used in the contact form.",
+            "group": "pnia",
+            "level": 2,
+        },
+    ),
+    (
+        "sitemap-dir",
+        {
+            "type": "string",
+            "default": "/tmp",
+            "help": "directory where gen-sitemap will output sitemap files",
+            "group": "pnia",
+            "level": 2,
+        },
+    ),
+    (
+        "appfiles-dir",
+        {
+            "type": "string",
+            "default": "/tmp",
+            "help": "directory where BFSS will store application files",
+            "group": "pnia",
+            "level": 2,
+        },
+    ),
+    (
+        "ead-services-dir",
+        {
+            "type": "string",
+            "default": REQUIRED,
+            "help": "directory containing findinaid  original files",
+            "group": "ir",
+            "level": 2,
+        },
+    ),
+    (
+        "eac-services-dir",
+        {
+            "type": "string",
+            "default": REQUIRED,
+            "help": "directory containing eac original files",
+            "group": "eac",
+            "level": 2,
+        },
+    ),
+    (
+        "newsletter-cypher-seed",
+        {
+            "type": "string",
+            "default": "this is a newsletter cypher seed",
+            "help": "seed used to cypher newsletter email in confirmation email link",
+            "group": "pnia",
+            "level": 2,
+        },
+    ),
+    (
+        "consultation-base-url",
+        {
+            "type": "string",
+            "default": "https://francearchives.fr",
+            "help": "public base url to make link between synchronized entity",
+            "group": "pnia",
+            "level": 2,
+        },
+    ),
+    (
+        "nginx-configs",
+        {
+            "type": "string",
+            "default": "/tmp",
+            "help": "directory where nginx redirection files are stored",
+            "group": "pnia",
+            "level": 2,
+        },
+    ),
+    (
+        "instance-type",
+        {
+            "type": "string",
+            "default": REQUIRED,
+            "help": 'Type of the instance: "cms" or "consultation"',
+            "group": "pnia",
+            "level": 2,
+        },
+    ),
 )
 
 
 class NORMALIZE_ENTRY(FunctionDescr):
     minargs = maxargs = 1
-    rtype = 'String'
-    supported_backends = ('postgres', 'sqlite')
+    rtype = "String"
+    supported_backends = ("postgres", "sqlite")
 
     def as_sql_sqlite(self, args):
         # normalize_entry is a noop for sqlite
-        return ', '.join(args)
+        return ", ".join(args)
 
 
 register_function(NORMALIZE_ENTRY)
@@ -97,8 +150,9 @@ register_function(NORMALIZE_ENTRY)
 # Json type
 #
 
+
 class JSON_AGG(AggrFunctionDescr):
-    supported_backends = ('postgres',)
+    supported_backends = ("postgres",)
 
 
 register_function(JSON_AGG)
@@ -107,24 +161,24 @@ register_function(JSON_AGG)
 def convert_json(x):
     if isinstance(x, SQLExpression):
         return x
-    elif isinstance(x, string_types):
+    elif isinstance(x, str):
         try:
             json.loads(x)
         except (ValueError, TypeError):
-            raise ValueError(u'Invalid JSON value: {0}'.format(x))
-        return SQLExpression('%(json_obj)s::json', json_obj=x)
-    return SQLExpression('%(json_obj)s::json', json_obj=json.dumps(x))
+            raise ValueError("Invalid JSON value: {0}".format(x))
+        return SQLExpression("%(json_obj)s::json", json_obj=x)
+    return SQLExpression("%(json_obj)s::json", json_obj=json.dumps(x))
 
 
 # Register the new type
-register_base_type('Json')
+register_base_type("Json")
 
 # Map the new type with PostgreSQL
-pghelper = get_db_helper('postgres')
-pghelper.TYPE_MAPPING['Json'] = 'json'
-pghelper.TYPE_CONVERTERS['Json'] = convert_json
+pghelper = get_db_helper("postgres")
+pghelper.TYPE_MAPPING["Json"] = "json"
+pghelper.TYPE_CONVERTERS["Json"] = convert_json
 
 # Map the new type with SQLite3
-sqlitehelper = get_db_helper('sqlite')
-sqlitehelper.TYPE_MAPPING['Json'] = 'text'
-sqlitehelper.TYPE_CONVERTERS['Json'] = json.dumps
+sqlitehelper = get_db_helper("sqlite")
+sqlitehelper.TYPE_MAPPING["Json"] = "text"
+sqlitehelper.TYPE_CONVERTERS["Json"] = json.dumps

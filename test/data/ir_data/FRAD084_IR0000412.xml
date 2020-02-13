@@ -1,0 +1,2133 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ead xmlns:xlink="http://www.w3.org/1999/xlink"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns="urn:isbn:1-931666-22-9"
+ xsi:schemaLocation="urn:isbn:1-931666-22-9
+ http://www.archivesportaleurope.net/Portal/profiles/apeEAD.xsd http://www.w3.org/1999/xlink
+ http://www.loc.gov/standards/xlink/xlink.xsd"
+ audience="external">
+<eadheader countryencoding="iso3166-1" dateencoding="iso8601" langencoding="iso639-2b" relatedencoding="MARC21" repositoryencoding="iso15511" scriptencoding="iso15924">
+<eadid countrycode="FR" identifier="FRAD084_IR0000412" mainagencycode="FR-FRAD084">FRAD084_IR0000412</eadid>
+<filedesc>
+<titlestmt>
+<titleproper type="fre" encodinganalog="245">Fabrique de berlingots Eysséric</titleproper>
+<subtitle>Répertoire numérique détaillé</subtitle>
+<author encodinganalog="245$c">par Sophie Imbert</author>
+</titlestmt>
+<publicationstmt>
+<publisher encodinganalog="260$b">Archives départementales de Vaucluse</publisher>
+<address>
+<addressline>Avignon</addressline>
+</address>
+<date calendar="gregorian" era="ce" normal="2016" encodinganalog="260$c">2016</date>
+</publicationstmt>
+</filedesc>
+<profiledesc>
+<creation>Instrument de recherche produit au moyen du logiciel Arkhéïa Aide au classement de la société Anaphore sarl, version 8-14.1 du <date calendar="gregorian" era="ce" normal="2019-05-29">mercredi 29 mai 2019</date>. 
+Date de l'export : <date calendar="gregorian" era="ce" normal="2019-06-26">mercredi 26 juin 2019</date> (20:34 h)</creation>
+<langusage>Instrument de recherche rédigé en <language langcode="fre" scriptcode="Latn" encodinganalog="041">français</language>
+</langusage>
+</profiledesc>
+</eadheader>
+<archdesc encodinganalog="3.1.4" relatedencoding= "ISAD(G)v2" type="Répertoire_numérique" level="fonds">
+<did>
+<unitid encodinganalog="3.1.1">74 J 1-62</unitid>
+<unittitle encodinganalog="3.1.2">Fabrique de berlingots Eysséric</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1845/2000">1845-XXe siècle</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="unités description">57</extent>
+<extent unit="ml">1.30</extent>
+</physdesc>
+<dao xlink:href="http://v-earchives.vaucluse.fr/viewer/instrument_recherche/74J_Eysseric/FRAD084_IR0000412_ronde.png" xlink:title="Couvercle d’une boîte de berlingots Eysséric, sans date (AD Vaucluse 74 J 1)"/>
+<dao xlink:title="thumbnail" xlink:href="http://cdn-earchives.vaucluse.fr/prepared_images/thumb/destination/instrument_recherche/74J_Eysseric/FRAD084_IR0000412_ronde.png"/>
+<dao xlink:href="http://v-earchives.vaucluse.fr/viewer/instrument_recherche/74J_Eysseric/74J_intro1.jpg" xlink:title="Affiche Eysséric avec mention de l&apos;année de création de l&apos;entreprise (coll. privée)"/>
+<dao xlink:title="thumbnail" xlink:href="http://cdn-earchives.vaucluse.fr/prepared_images/thumb/destination/instrument_recherche/74J_Eysseric/74J_intro1.jpg"/>
+</did>
+<bioghist encodinganalog="3.2.2">
+<head>Éléments historiques</head>
+<p>Le berlingot de Carpentras, le plus célèbre bien qu'il en existe à <extref xlink:href="https://fr.wikipedia.org/wiki/Berlingot_nantais" xlink:title="Lien vers les berlingots nantais">Nantes</extref> (Loire-Atlantique), <extref xlink:href="http://www.berlingots-cauterets.com/" xlink:title="Lien vers les berlingots de Cauterets">Cauterets</extref> (Hautes-Pyrénées), <extref xlink:href="http://www.pezenas-tourisme.fr/contenu/le-berlingot-de-pezenas/" xlink:title="Lien vers le berlingot de Pézenas">Pézenas</extref> (Hérault) et <extref xlink:href="http://www.berck-tourisme.com/voir_details.php?navig=stop&amp;pos=&amp;id_rub=8&amp;id=15" xlink:title="Lien vers les berlingots de Berck">Berck-sur-Mer</extref> (Pas-de-Calais), est un élégant bonbon de sucre rayé, à la forme de tétraèdre caractéristique. Spécialité de la maison Eysséric, il est produit à partir du sirop d'égouttage des fruits confits.</p>
+<p>L'entreprise de confiserie Eysséric a été fondée en 1851 (<extref xlink:href="http://earchives.vaucluse.fr/archives/show/FRAD084_IR0000412_FRAD084_IR0000412_de-59" xlink:title="voir la description">74 J 55</extref>) par Gustave Eysséric, brièvement associé entre 1875 et 1877 à Gratien Auguste Bertrand (<extref xlink:href="http://earchives.vaucluse.fr/archives/show/FRAD084_IR0000412_FRAD084_IR0000412_de-18" xlink:title="voir la description">74 J 9</extref>).</p>
+<p>Gustave Eysséric est à l'origine de l'industrialisation de la production du berlingot, récompensé à de nombreux salons : en 1864 à l'exposition nationale d'Angers et à l'exposition agricole de Carpentras ; en 1875 à l'exposition internationale de Paris ; en 1877 par la médaille vermeil (la plus haute récompense) de l'exposition de Vaucluse à Carpentras.</p>
+<p>Gustave Eysséric meurt en 1897, alors que ses enfants Marie, Jeanne et Gustave, ont respectivement 16, 15 et 12 ans. Il semble que ce soit la veuve de Gustave Eysséric, Antoinette Vassail, qui prenne alors les rênes de l'entreprise. Le fils de Gustave étant mort jeune (à 28 ans en 1913), l'entreprise familiale passe ensuite à la famille Olive, Léon Olive ayant épousé l'aînée des filles Eysséric, Marie. Pierre Olive-Eysséric, petit-fils du fondateur, dirige l'entreprise jusqu'à sa mort accidentelle en 1974.</p>
+<p>En 1976, la famille Eysséric cède ses actions à M. Monval, mais l'entreprise disparaît quelques années plus tard.</p>
+<p>
+<extref xlink:href="Genealogie_Eysseric.pdf" xlink:title="Généalogie de la famille Eysséric">Voir la généalogie de la famille Eysséric</extref>
+</p>
+</bioghist>
+<acqinfo encodinganalog="3.2.1">
+<head>Informations sur les modalités d'entrée</head>
+<p>Articles 1-52 : dépôt de l'<extref xlink:href="https://www.asppiv.fr/" xlink:title="site internet de l'ASPPIV">Association pour la Sauvegarde et la Promotion du Patrimoine Industriel en Vaucluse</extref> (ASPPIV) en 1998</p>
+<p>Articles 53-61 : achat en 2018 à Lucien Vakanas, brocanteur à Sault ("Les années Cassandre"), qui avait vidé le magasin Eysséric après sa fermeture</p>
+<p>Article 62 : don Blandine Silvestre en 2018</p>
+</acqinfo>
+<scopecontent encodinganalog="summary">
+<head>On trouvera dans le fonds</head>
+<p>Le fonds Eysséric est un fonds épave donnant une idée très partielle de l'histoire de la fabrique de berlingots éponyme. Les archives composant le fonds concernent tout autant le fonctionnement de la fabrique que les membres de la famille, l'histoire de cette entreprise familiale étant nécessairement étroitement liée à l'histoire des familles Eysséric puis Olive.</p>
+<p>
+<emph render="bold">Archives professionnelles</emph>
+</p>
+<p>Pour ce qui concerne la maison de confiserie, peu d'archives permettent de connaître les procédés de fabrication, hormis quelques documents techniques (<extref xlink:href="http://earchives.vaucluse.fr/archives/show/FRAD084_IR0000412_FRAD084_IR0000412_de-7" xlink:title="voir la description">74 J 16</extref>). Les archives concernent plutôt l'emballage en boîtes métalliques (<extref xlink:href="http://earchives.vaucluse.fr/archives/show/FRAD084_IR0000412_FRAD084_IR0000412_de-20" xlink:title="voir la description">74 J 1</extref>), primordial pour diffuser ce bonbon fragile, qui craint l'humidité. L'article 74 J 8 atteste néanmoins la diffusion des berlingots Eysséric jusqu'en Guadeloupe, en Egypte, en Indochine, en Afrique-Occidentale française et à Madagascar. On signalera la présence dans le fonds de gouaches vraisemblablement destinées à être reproduites sur les boîtes (<extref xlink:href="http://earchives.vaucluse.fr/archives/show/FRAD084_IR0000412_FRAD084_IR0000412_de-29" xlink:title="voir la description">74 J 2</extref>), une collection d'étiquettes, dont un échantillon seulement de chaque modèle a été conservé (<extref xlink:href="http://earchives.vaucluse.fr/archives/show/FRAD084_IR0000412_FRAD084_IR0000412_de-3" xlink:title="voir la description">74 J 3</extref> et <extref xlink:href="http://earchives.vaucluse.fr/archives/show/FRAD084_IR0000412_FRAD084_IR0000412_de-61" xlink:title="voir la description">74 J 57</extref>) et quelques affiches promotionnelles, acquises en 2018 pour compléter le fonds.</p>
+<p>Le fonds comprend également des documents comptables et bancaires (1847-1939) et quelques documents relatifs au <extref xlink:href="http://earchives.vaucluse.fr/archives/show/FRAD084_IR0000412_FRAD084_IR0000412_tt2-6" xlink:title="voir les descriptions">personnel de la fabrique</extref> : on saluera la Légion d'honneur de Rosine Moulin épouse Bernard, attribuée en 1929 pour 64 ans de services continus dans la maison Eysséric (<extref xlink:href="http://earchives.vaucluse.fr/archives/show/FRAD084_IR0000412_FRAD084_IR0000412_de-2" xlink:title="voir la description">74 J 10</extref>).</p>
+<p>Quelques liasses permettent de connaître partiellement la <extref xlink:href="http://earchives.vaucluse.fr/archives/show/FRAD084_IR0000412_FRAD084_IR0000412_tt2-4" xlink:title="voir les descriptions">stratégie commerciale de l'entreprise</extref>, surtout dans les années 1950, pour promouvoir le berlingot, "Un diamant qui se déguste !" (<extref xlink:href="http://earchives.vaucluse.fr/archives/show/FRAD084_IR0000412_FRAD084_IR0000412_de-9" xlink:title="voir la description">74 J 13</extref> et <extref xlink:href="http://earchives.vaucluse.fr/archives/show/FRAD084_IR0000412_FRAD084_IR0000412_de-6" xlink:title="voir la description">74 J 14</extref>), dans la droite ligne du slogan "les joyaux de la confiserie française" (<extref xlink:href="http://earchives.vaucluse.fr/archives/show/FRAD084_IR0000412_FRAD084_IR0000412_de-29" xlink:title="voir la description">74 J 2</extref>).</p>
+<p>
+<emph render="bold">Archives familiales</emph>
+</p>
+<p>Les archives personnelles concernent principalement Gustave Eysséric, le fondateur, et sa seconde épouse Antoinette Vassail, leurs filles et surtout leur fils Gustave, ainsi que les membres de la famille Olive : Léon Olive, avocat marseillais et époux de la fille aînée de Gustave Eysséric, Marie ; son père Camille Olive, et leur fils Pierre. Le sort de cette famille semble marqué par les accidents automobiles : Léon Olive en 1932, son fils Pierre en 1935 et 1936 (<extref xlink:href="http://earchives.vaucluse.fr/archives/show/FRAD084_IR0000412_FRAD084_IR0000412_de-30" xlink:title="voir la description">74 J 28</extref>) et celui de 1974, qui marque quasiment la fin de l'entreprise Eysséric.</p>
+<p>
+<emph render="bold">Autres documents </emph>
+</p>
+<p>Un certain nombre de documents n'ont pu être rattachés au fonds. Il s'agit essentiellement de publications, économiques et financières, culturelles ou littéraires, religieuses, historiques et politiques, etc. et de revues régionales.</p>
+</scopecontent>
+<otherfindaid encodinganalog="3.4.5">
+<head>Poursuivre votre recherche en ligne</head>
+<extref xlink:href="FRAD084_egf#de-412.xml" xlink:title="Situer &quot; Fabrique de berlingots Eysséric&quot; dans son contexte"/>
+</otherfindaid>
+<relatedmaterial encodinganalog="3.5.3">
+<head>
+</head>
+<p>
+<emph render="bold">Sources complémentaires aux archives départementales de Vaucluse</emph>
+</p>
+<p>3 U 3/469 Étiquettes et papiers d'emballage déposés auprès du tribunal de commerce de Carpentras par la fabrique Eysséric (23 octobre 1873, 23 juin 1874, 13 novembre 1924) et d'autres fabriquants de berlingots (Louis Long le 24 février 1873, Benjamin Nelson Naquet le 2 juillet 1883, Antoine Perrot le 11 février 1925).</p>
+<p>3 U 3/152 Jugement du tribunal civil de Carpentras rejetant la demande de Gustave Eysséric revendiquant la propriété exclusive du berlingot, mais condamnant Louis Long pour concurrence déloyale et contrefaçon des produits Eysséric (10 juin 1874). Gustave Eysséric avait déposé ses marques au greffe du tribunal de commerce le 23 juin 1857. Ce dépôt n'est hélas pas conservé dans les archives judiciaires.</p>
+<p>
+<emph render="bold">Sources complémentaires hors archives départementales de Vaucluse</emph>
+</p>
+<p>Bibliothèque de Carpentras :</p>
+<p>- ms 2495 Correspondance de Joseph Eysséric avec Gustave Eysséric père et fils, ses oncle et cousin.</p>
+<p>- ms 2504 Pièces diverses concernant diverses familles, dont la famille Eysséric.</p>
+<p>- ms 2505 Pièces diverses provenant de la maison Pansier.</p>
+<p>- ms 2507 Lettres de Joseph Eysséric, notamment à son oncle Gustave Eysséric, à sa tante Antoinette Vassail veuve de Gustave Eysséric.</p>
+<p>- ms 2511 Minutes de correspondance de Joseph Eysséric de 1914 à 1932 et de Mme veuve Eysséric (1936).</p>
+<p>- ms 2513 Gustave Eysséric (1885-1913), essais sur la géométrie, copie de la main de Joseph Eysséric.</p>
+</relatedmaterial>
+<bibliography encodinganalog="3.5.4">
+<head>Bibliographie</head>
+<list>
+<item>Dictionnaire biographique de Vaucluse, 1904, p. 231-235</item>
+<item>Raquillet (Henri), "La fabrique de berlingots Raquillet-Chabas à Carpentras (1909-1983)", dans Sauvegarde et promotion du patrimoine industriel en Vaucluse, cahier n°24, 1996, p.3-32.</item>
+</list>
+</bibliography>
+<processinfo encodinganalog="3.7.1">
+<head>Date de création de la description</head>
+<p>2019-06-26</p>
+</processinfo>
+<processinfo encodinganalog="3.7.1">
+<head>Date de dernière modification de la description</head>
+<p>2019-06-26</p>
+</processinfo>
+<controlaccess>
+<head>Mots-clés</head>
+<famname>Eysséric (famille)</famname>
+<famname>Olive (famille)</famname>
+<geogname>Carpentras (Vaucluse, France)</geogname>
+<name>Eysséric (fabrique de berlingots)</name>
+</controlaccess>
+<dsc type="othertype">
+<c id="FRAD084_IR0000412_tt1-1" encodinganalog="3.1.4">
+<did>
+<unittitle encodinganalog="3.1.2">Archives professionnelles</unittitle>
+</did>
+<controlaccess>
+<head>Mots-clés</head>
+<subject>confiserie</subject>
+<subject>industrie agro-alimentaire</subject>
+<subject>berlingot</subject>
+<subject>entreprise</subject>
+<corpname>Fabrique de berlingots Eysséric (Carpentras)</corpname>
+</controlaccess>
+<c id="FRAD084_IR0000412_tt2-5" encodinganalog="3.1.4">
+<did>
+<unittitle encodinganalog="3.1.2">Approvisionnements et fabrications</unittitle>
+</did>
+<c id="FRAD084_IR0000412_tt3-2" encodinganalog="3.1.4">
+<did>
+<unittitle encodinganalog="3.1.2">Emballage</unittitle>
+</did>
+<c id="FRAD084_IR0000412_de-29" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 2</unitid>
+<unittitle encodinganalog="3.1.2">Dessins pour boîte d'emballage</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1950/1968">[1950]-[1968]</unitdate>
+<dao xlink:href="http://v-earchives.vaucluse.fr/viewer/instrument_recherche/74J_Eysseric/FRAD084_74J02_01.jpg" xlink:title="Dessin pour une boîte métal Eysséric (1958) 74 J 2"/>
+<dao xlink:title="thumbnail" xlink:href="http://cdn-earchives.vaucluse.fr/prepared_images/thumb/destination/instrument_recherche/74J_Eysseric/FRAD084_74J02_01.jpg"/>
+<dao xlink:href="http://v-earchives.vaucluse.fr/viewer/instrument_recherche/74J_Eysseric/FRAD084_74J02_02.jpg" xlink:title="Dessin pour une boîte d&apos;emballage Eysséric (sans date) 74 J 2"/>
+<dao xlink:title="thumbnail" xlink:href="http://cdn-earchives.vaucluse.fr/prepared_images/thumb/destination/instrument_recherche/74J_Eysseric/FRAD084_74J02_02.jpg"/>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>- "Eysséric, créateur des berlingots de Carpentras" des Éts F. Vinatié : dessin polychrome sur carton, 20,5 x 40 cm (4 septembre 1958). </p>
+<p>- "Berlingots Eysséric Carpentras, les joyaux de la confiserie française" : dessin polychrome sur carton, 16 x 34 cm env. (sans date).</p>
+</scopecontent>
+<relatedmaterial encodinganalog="3.5.3">
+<head>
+</head>
+<p>
+<emph render="bold">Sources complémentaires aux archives départementales de Vaucluse</emph>
+</p>
+<p>Une boîte conservée sous la cote <extref xlink:href="http://earchives.vaucluse.fr/archives/show/FRAD084_IR0000412_FRAD084_IR0000412_de-20" xlink:title="voir la description">74 J 1</extref> utilise un modèle semblable pour des pastilles à la menthe.</p>
+</relatedmaterial>
+<controlaccess>
+<head>Mots-clés</head>
+<genreform>dessin</genreform>
+<corpname>Établissements F. Vinatié (Bordeaux)</corpname>
+</controlaccess>
+</c>
+<c id="FRAD084_IR0000412_de-20" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 1</unitid>
+<unittitle encodinganalog="3.1.2">Boîtes en métal pour l'emballage des bonbons Eysséric</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1851/1970">[1851]-[1970]</unitdate>
+<physdesc encodinganalog="3.1.5">
+5 boîtes
+</physdesc>
+<dao xlink:href="http://v-earchives.vaucluse.fr/viewer/instrument_recherche/74J_Eysseric/FRAD084_74J01.jpg" xlink:title="Boîtes d&apos;emballage Eysséric, vues de dessus (sans date) 74 J 1"/>
+<dao xlink:title="thumbnail" xlink:href="http://cdn-earchives.vaucluse.fr/prepared_images/thumb/destination/instrument_recherche/74J_Eysseric/FRAD084_74J01.jpg"/>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>- Petite boîte miel "Amandines au miel Eysséric Carpentras" (diam. 9 cm x 3,5 cm), de couleur dominante jaune, avec une ruche, des fleurs et des abeilles (sans date). </p>
+<p>- Petite boîte verte "Eysséric - Créateur de l'industrie des berlingots à Carpentras" (diam. 9 cm x 4 cm), avec un personnage formé par des berlingots multicolores, pour 140 gr. de berlingots assortis (sans date). </p>
+<p>- Grande boîte rouge "Eysséric - Créateur de l'industrie des berlingots à Carpentras" (diam. 14 cm x 9 cm), avec un personnage formé par des berlingots multicolores, pour 1 kg de berlingots assortis (sans date). </p>
+<p>- Petite boîte rose "Eysséric bonbons menthe" (diam. 9 cm x 4 cm), avec le dessin de différents bonbons, pour 140 gr. de bonbons (sans date). </p>
+<p>- Boîte rose haute "Pastilles à la Super Menthe Eysséric" (diam. 11 cm x 15 cm), rayée, avec le dessin de pastilles, pour 1 kg de pastilles (vers 1958).</p>
+</scopecontent>
+<relatedmaterial encodinganalog="3.5.3">
+<head>
+</head>
+<p>
+<emph render="bold">Sources complémentaires aux archives départementales de Vaucluse</emph>
+</p>
+<p>Un dessin daté de 1958 comporte le dessin de cette boîte, décliné pour les berlingots (<extref xlink:href="http://earchives.vaucluse.fr/archives/show/FRAD084_IR0000412_FRAD084_IR0000412_de-29" xlink:title="aller à la description">74 J 2</extref>).</p>
+</relatedmaterial>
+</c>
+<c id="FRAD084_IR0000412_de-62" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 58-61</unitid>
+<unittitle encodinganalog="3.1.2">Boîtes en métal pour l'emballage des bonbons Eysséric</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1851/1970">Sans date</unitdate>
+<physdesc encodinganalog="3.1.5">
+art. 58 : 2 boîtes, art. 59 : 4 boîtes, art. 60 : 4 boîtes, art. 61 : 4 boîtes.
+</physdesc>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>Art. 58 : 2 boîtes miel "Amandines au miel Eysséric Carpentras" (diam. 9 cm x 3,5 cm et diam. 11 cm x 15 cm), de couleur dominante jaune, avec une ruche, des fleurs et des abeilles (sans date).</p>
+<p>art. 59 : 4 boîtes "Berlingots Eysséric les meilleurs bonbons digestifs" (diam. 14 x 9 cm en jaune ; diam. 11 x 7 cm en jaune, rouge et bleu), texte inscrit en doré sur fond blanc sur le couvercle, petites étoiles blanches et dorées sur le corps des boîtes rouge (berlingots super menthe) et bleue (berlingots assortis) (fin XIXe s.).</p>
+<p>art. 60 : 4 boîtes rayées, deux roses et deux bleues (vers 1958). En rose, petite boîte de "pastilles assorties" (diam. 9 cm x 3,5 cm), avec le dessin de pastilles ; boîte haute "Pastilles à la Super Menthe Eysséric" (diam. 11 cm x 15 cm), avec le dessin de pastilles, pour 1 kg de pastilles. En bleu, petite boîte de "bonbons menthe" (diam. 9 cm x 4 cm), avec le dessin de bonbons en forme de fruits et pastilles ; boîte haute "Pastilles assorties Eysséric" (diam. 11 cm x 15 cm), avec le dessin de pastilles, pour 1 kg de pastilles.</p>
+<p>art. 61 : grande boîte rouge "Eysséric - Créateur de l'industrie des berlingots à Carpentras" (diam. 14 cm x 9 cm), avec un personnage formé par des berlingots multicolores, pour 1 kg de berlingots assortis (4 exemplaires, sans date).</p>
+</scopecontent>
+</c>
+<c id="FRAD084_IR0000412_de-41" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 4</unitid>
+<unittitle encodinganalog="3.1.2">Boîtes en métal pour l'emballage de bonbons</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1851/1970">[1851]-[1970]</unitdate>
+<physdesc encodinganalog="3.1.5">
+6 boîtes
+</physdesc>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>- Boîtes métalliques neutres : grande boîte ronde (diamètre 11 cm, hauteur 15 cm env.), en métal doré ; deux petites boîtes rondes (diamètre 9 cm, hauteur 3 cm env.), en métal argenté. </p>
+<p>- Boîtes métalliques de bonbons d'autres confiseurs (sans date) : deux boîtes des Éts Raquillet-Chabas, Carpentras, pleines, l'une de berlingots assortis, l'autre de pastilles à la menthe blanche (140 gr.) ; une boîte de "caramels Isicrem" des Éts A. Galliot d'Isigny ; une boîte pleine de "caramelle Dufour", Genova (Italie).</p>
+</scopecontent>
+<controlaccess>
+<head>Mots-clés</head>
+<corpname>Établissements Raquillet-Chabas (Carpentras)</corpname>
+<corpname>Établissements A. Galliot d'Isigny (Lison)</corpname>
+<corpname>Dufour (Gênes)</corpname>
+</controlaccess>
+</c>
+<c id="FRAD084_IR0000412_de-3" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 3</unitid>
+<unittitle encodinganalog="3.1.2">Étiquettes des produits de la maison Eysséric (sans date).</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1851/1970">[1851]-[1970]</unitdate>
+<dao xlink:href="http://v-earchives.vaucluse.fr/series/instrument_recherche/74J_Eysseric/FRAD084_74J03/" role="series"/>
+<dao xlink:title="thumbnail" xlink:href="http://cdn-earchives.vaucluse.fr/prepared_images/thumb/destination/instrument_recherche/74J_Eysseric/FRAD084_74J03/FRAD084_74J03_01.jpg" role="thumbnails"/>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>- "Véritables berlingots de Carpentras, parfums assortis", étiquette rectangulaire pour boîte de 250 gr., impression en vert (11 x 4,7 cm). </p>
+<p>- "Demandez partout les caramels mous G. Eysséric au lait et aux fruits supérieurs à tous", étiquettes rondes, avec un motif d'étoile, impression en orange et brun (diamètres 10 cm et 8,5 cm). </p>
+<p>- "Demandez partout les confitures de la maison G. Eysséric de Carpentras", étiquette ronde de style art déco, impression bleu marine et rose (diamètre 8 cm). </p>
+<p>- "L'idéal, berlingots de Carpentras", parfum orange, étiquette autocollante pour boîte d'un kilo, impression en rouge (14 x 6 cm). </p>
+<p>- "Berlingots Eysséric citron, le plus agréable des bonbons digestifs", mention de médailles d'or, de vermeil et de diplômes d'honneur, étiquette ovale, impression violette (6,5 x 4 cm) [1924].</p>
+<p>- "Abricots au jus", étiquette rectangulaire, avec des dessins de fruits, en couleurs (33,5 x 11 cm). </p>
+<p>- "Maison G. Eysséric", pur sucre, poids net à la fabrication 200 gr., étiquette rectangulaire, avec des dessins de fruits, en couleurs (imp. armoricaine - Nantes, 10,5 x 4 cm env.). </p>
+<p>- "Berlingots-Eysséric Carpentras", étiquettes imprimées en noir sur fond doré. Conservée en format (9 x 3 cm) pour les parfums café et menthe ; en format 9,5 x 3,5 cm pour le parfum anis.</p>
+</scopecontent>
+<appraisal encodinganalog="3,3,2">
+<head>Critères de tri</head>
+<p>Certaines étiquettes étaient présentes en grande quantité dans le fonds. Une dizaine de chacune a été conservée.</p>
+</appraisal>
+<controlaccess>
+<head>Mots-clés</head>
+<genreform>étiquette</genreform>
+</controlaccess>
+</c>
+<c id="FRAD084_IR0000412_de-61" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 57</unitid>
+<unittitle encodinganalog="3.1.2">Étiquettes des produits de la maison Eysséric</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1851/1970">Sans date</unitdate>
+<dao xlink:href="http://v-earchives.vaucluse.fr/viewer/instrument_recherche/74J_Eysseric/FRAD084_74J57/" xlink:title="Etiquettes Eysséric (sans date) 74 J 57"/>
+<dao xlink:title="thumbnail" xlink:href="http://cdn-earchives.vaucluse.fr/prepared_images/thumb/destination/instrument_recherche/74J_Eysseric/FRAD084_74J57/"/>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>- "Maison G. Eysséric", pur sucre, poids net à la fabrication 200 gr. avec la mention Pâte de coing : étiquette rectangulaire, avec des dessins de fruits, en couleurs (imp. armoricaine - Nantes, 10,5 x 4 cm env.).</p>
+<p>- "Maison G. Eysséric" : étiquette carrée, avec des dessins de fruits, en couleurs (imp. armoricaine - Nantes, 12 x 10 cm env.).</p>
+<p>- "Maison G. Eysséric", bigarreaux confits égouttés n°1 poids net 4K500 : étiquette carrée, avec un dessin de cerises, en couleurs (imp. Moullot - Marseille, 13 x 13 cm env.).</p>
+<p>- "Abricot royal de Provence", G. Eysséric berlingots Carpentras : étiquette ovale, avec un dessin d'abricots, en couleurs avec dorure (14 x 9,5 cm env.).</p>
+<p>- "Bonbons surfins, les délicieuses spécialités des berlingots Eysséric de Carpentras" : grande étiquette rectangulaire, avec le dessin d'une comtadine dégustant un bonbon devant un paysage champêtre avec une ferme, l'aqueduc de Carpentras et le mont Ventoux, en couleurs (lith. G. Arcé - Bordeaux, 36,5 x 13,5 cm env.).</p>
+<p>- "Confiture G. Eysséric", confiture d'abricots brut 1 K : grande étiquette rectangulaire, avec le dessin d'une comtadine devant l'aqueduc de Carpentras et le mont Ventoux dans un médaillon encadré par des feuillages de néflier, dans les tons bleu, rouge, beige et doré (TAC - Cognac, 32,5 x 9,5 cm env.).</p>
+<p>- "Confiture fruits assortis au sirop de fruits confits", 1 kg : grande étiquette rectangulaire, avec des dessins de fruits, en couleurs (imp. Jaclemoues - Périgueux, 33 x 11 cm env.).</p>
+</scopecontent>
+</c>
+<c id="FRAD084_IR0000412_de-52" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 5</unitid>
+<unittitle encodinganalog="3.1.2">Etiquettes d'emballages extérieurs à la fabrique Eysséric</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1851/1970">[1851]-[1970]</unitdate>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>- "Berlingots de l'établissement de Saint-Alban (Loire) bonbons digestifs rafraîchissants", impression dorée sur fond blanc (diamètre 7,5 cm env.).</p>
+<p>- "Téola marque déposée", des établissements Théolas et Jules, Avignon (22 x 7,5 cm). Les établissements Théolas et Jules, fondés en 1896, étaient spécialisés dans la charcuterie : jambon, saucisson, pâté.</p>
+<p>- Courrier publicitaire de l'imprimerie artistique Firmin et Montane à Montpellier (1932 ?), proposant l'impression d'étiquettes. Le courrier mentionne "ci-joint quelques modèles d'étiquettes". Seules deux étiquettes pour les "truffes brossées 1er choix" des établissements René Farnaud à Carpentras (18,5 x 7,5 et 14 x 4 cm) étaient encore glissées dans la lettre.</p>
+</scopecontent>
+<controlaccess>
+<head>Mots-clés</head>
+<genreform>étiquette</genreform>
+<corpname>Établissement Saint-Alban (Saint-Alban-les-Eaux)</corpname>
+<corpname>Établissements Théolas &amp; Jules (Avignon)</corpname>
+<corpname>Imprimerie artistique Firmin et Montane (Montpellier)</corpname>
+<corpname>René Farnaud (Carpentras)</corpname>
+</controlaccess>
+</c>
+</c>
+</c>
+<c id="FRAD084_IR0000412_tt2-11" encodinganalog="3.1.4">
+<did>
+<unittitle encodinganalog="3.1.2">Comptabilité</unittitle>
+</did>
+<controlaccess>
+<head>Mots-clés</head>
+<subject>comptabilité d'entreprise</subject>
+</controlaccess>
+<c id="FRAD084_IR0000412_de-33" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 6</unitid>
+<unittitle encodinganalog="3.1.2">Registre comptable</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1847/1881">1847-1881</unitdate>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>- Comptes de la fabrique (1847-1875). Parmi les fournisseurs figurent Fauchey et Laffite à Paris (régie publicitaire), Cavaillier à Grasse (parfumerie), Detwiller et Leleu à Paris (chocolats), Nissou et Pichot à Paris (étiquettes), Varaldi à Cannes (matières premières pour la parfumerie), etc.</p>
+<p>- Au rebours, comptes du personnel : M. Hermite (1847-1854), Rosine (1854), M. Astic (1851), Jules Couteron (1851), M. Azaïs (1855-1863, 1868), Jean Gaucher (1863-1864), Georges Raucheneker (1866), Sophie (1869-1873), Thérèse Vignaud (1873-1881).</p>
+</scopecontent>
+<controlaccess>
+<head>Mots-clés</head>
+<persname>Hermite</persname>
+<persname>Astic</persname>
+<persname>Couteron, Jules</persname>
+<persname>Azaïs</persname>
+<persname>Gaucher, Jean</persname>
+<persname>Raucheneker, Georges</persname>
+<persname>Vignaud, Thérèse</persname>
+<corpname>Fauchey et Laffite (Paris)</corpname>
+<corpname>Cavaillier (Grasse)</corpname>
+<corpname>Detwiller et Leleu (Paris)</corpname>
+<corpname>Nissou et Pichot (Paris)</corpname>
+<corpname>Varaldi (Cannes)</corpname>
+</controlaccess>
+</c>
+<c id="FRAD084_IR0000412_de-55" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 7</unitid>
+<unittitle encodinganalog="3.1.2">Stock en volume et en valeur</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1876/1877">1876-1877</unitdate>
+<physdesc encodinganalog="3.1.5">
+Deux cahiers
+</physdesc>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>Les rubriques de l'inventaire sont les suivantes : fruits, boîtes en fer blanc, boîtes cartonnées, caissons, boîtes perruques, boîtes blanches, papiers pliage emballage étiquettes, bureau, four, laboratoire et étuve, marchandises diverses et essences, matériel divers, magasin.</p>
+</scopecontent>
+<controlaccess>
+<head>Mots-clés</head>
+<genreform>inventaire</genreform>
+</controlaccess>
+</c>
+<c id="FRAD084_IR0000412_de-23" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 8</unitid>
+<unittitle encodinganalog="3.1.2">Documents bancaires : correspondance, circulaires, avis d'encaissement, d'acceptation, de souffrance, d'impayés, relevés de comptes</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1936/1939">1936-1939</unitdate>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>Ces documents attestent de ventes de la fabrique de fruits confits G. Eysséric à Lézignan (Aude), à Madagascar (Tananarive, Mananjary, Fianarantsoa, Tuléar), en Guadeloupe (Pointe-à-Pitre), en Egypte (Port-Saïd, Alexandrie, Le Caire), en Indochine (Hanoï, Haïphong), en Afrique-Occidentale française (Conakry). </p>
+<p>La maison Eysséric disposait de représentants à Madagascar : J. Daubier (19 novembre 1936) et R. Daltroff (8 février 1938) et en Guadeloupe : M. Winston (12 décembre 1936).</p>
+</scopecontent>
+<arrangement encodinganalog="3.3.4">
+<head>Mode de classement</head>
+<p>Classement chronologique.</p>
+</arrangement>
+<controlaccess>
+<head>Mots-clés</head>
+<persname>Daubier, J.</persname>
+<persname>Daltroff, R.</persname>
+<persname>Winston, M.</persname>
+<geogname>Lézignan-Corbières (Aude, France)</geogname>
+<geogname>Madagascar</geogname>
+<geogname>Tananarive (Madagascar)</geogname>
+<geogname>Mananjary (Madagascar)</geogname>
+<geogname>Fianarantsoa (Madagascar)</geogname>
+<geogname>Tuléar (Madagascar)</geogname>
+<geogname>Pointe-à-Pitre (Guadeloupe, France)</geogname>
+<geogname>Port-Saïd (Égypte)</geogname>
+<geogname>Alexandrie (Égypte)</geogname>
+<geogname>Le Caire (Égypte)</geogname>
+<geogname>Hanoï (Vietnam)</geogname>
+<geogname>Haïphong (Vietnam)</geogname>
+<geogname>Conakry (Guinée)</geogname>
+<geogname>Indochine (France ; 1862-1954)</geogname>
+<geogname>Afrique-Occidentale française (1895-1958)</geogname>
+<geogname>Guadeloupe (France ; département)</geogname>
+<geogname>Égypte</geogname>
+<geogname>Vietnam</geogname>
+<geogname>Guinée</geogname>
+</controlaccess>
+</c>
+</c>
+<c id="FRAD084_IR0000412_tt2-6" encodinganalog="3.1.4">
+<did>
+<unittitle encodinganalog="3.1.2">Personnel</unittitle>
+</did>
+<c id="FRAD084_IR0000412_de-18" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 9</unitid>
+<unittitle encodinganalog="3.1.2">Contentieux entre Gustave Eysséric et son associé, Gratien Auguste Bertrand, qui harcelait les ouvrières de la fabrique : brouillons de mémoire (octobre 1877).</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1877">1877</unitdate>
+<dao xlink:href="http://v-earchives.vaucluse.fr/viewer/instrument_recherche/74J_Eysseric/FRAD084_19Q4874/" xlink:title="Contrat d&apos;association entre Gustave Eysséric et Gratien Auguste Bertrand (1875) 19 Q 4874"/>
+<dao xlink:title="thumbnail" xlink:href="http://cdn-earchives.vaucluse.fr/prepared_images/thumb/destination/instrument_recherche/74J_Eysseric/FRAD084_19Q4874/"/>
+</did>
+<bioghist encodinganalog="3.2.2">
+<head>Éléments historiques</head>
+<p>Auguste Gratien Bertrand s'associe à Gustave Eysséric à compter du 1er avril 1875 (19 Q 4874) : la société est constituée pour 6 ans sous la raison sociale G. Eysséric et Cie. Son siège est à Carpentras place des Ursulines, dans la maison appartenant à M. et Mme Eysséric. M. Bertrand apporte 10 000 francs ; G. Eysséric apporte 68 000 francs en marchandise et matériel, numéraire et clientèle. Les bénéfices et pertes seront partagés par moitié ; le partage des bénéfices aura lieu après un prélèvement de 5% en faveur de chacun des associés en proportion du montant de son apport. G. Eysséric donne à bail à la société la maison de la place des Ursulines, siège de la société, et la fabrique boulevard du Musée.</p>
+<p>A.G. Bertrand quitte vraisemblablement la société Eysséric à la suite du contentieux de 1877, puisqu'en 1880 il apparaît dans un acte en tant qu'"ancien confiseur, marchand de matières premières pour chapellerie" (enregistrement de Carpentras 550/66 du 18 juin 1880).</p>
+</bioghist>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>Liste des employés cités dans le mémoire : </p>
+<p>- Marie Ripert, sous-maîtresse</p>
+<p>- Bezert, contremaître</p>
+<p>- Thérèse Auffant, épouse Bernard</p>
+<p>- Madeleine Brusset</p>
+<p>- Elisabeth Cotton</p>
+<p>- Marie Esclangon, épouse Lyon</p>
+<p>- Thérésine Esclangon</p>
+<p>- Gustave Faber</p>
+<p>- Marie Farnaud</p>
+<p>- Marie Gamet</p>
+<p>- Marie Lescalle</p>
+<p>- Joséphine Maillet</p>
+<p>- Rose Michel</p>
+<p>- Mélanie Mouletin</p>
+<p>- Reine Plantevin</p>
+<p>- Rose Raymond</p>
+<p>- Maria Soumille</p>
+<p>- Thérèse Vignau.</p>
+</scopecontent>
+<relatedmaterial encodinganalog="3.5.3">
+<head>
+</head>
+<p>
+<emph render="bold">Sources complémentaires aux archives départementales de Vaucluse</emph>
+</p>
+<p>L'association entre Gustave Eysséric et Auguste Gratien Bertrand reçue par Me Gaudibert notaire, le 31 mars 1875, ne figure pas parmi les minutes du notaire (3 E 26/2887 et 2888, 3 E 26/2940 et 2942). Mais on en trouve un résumé dans les registres de l'enregistrement de Carpentras (19 Q 4874).</p>
+</relatedmaterial>
+<controlaccess>
+<head>Mots-clés</head>
+<subject>contentieux</subject>
+<persname>Bertrand, Auguste Gratien</persname>
+<persname>Ripert, Marie</persname>
+<persname>Bezert</persname>
+<persname>Auffant épouse Bernard, Thérèse</persname>
+<persname>Bernard née Auffant, Thérèse</persname>
+<persname>Brusset, Madeleine</persname>
+<persname>Cotton, Elisabeth</persname>
+<persname>Esclangon épouse Lyon, Marie</persname>
+<persname>Lyon née Esclangon, Marie</persname>
+<persname>Esclangon, Thérésine</persname>
+<persname>Faber, Gustave</persname>
+<persname>Farnaud, Marie</persname>
+<persname>Gamet, Marie</persname>
+<persname>Lescalle, Marie</persname>
+<persname>Maillet, Joséphine</persname>
+<persname>Michel, Rose</persname>
+<persname>Mouletin, Mélanie</persname>
+<persname>Plantevin, Reine</persname>
+<persname>Raymond, Rose</persname>
+<persname>Soumille, Maria</persname>
+<persname>Vignaud, Thérèse</persname>
+<persname>Eysséric, Gustave (père)</persname>
+</controlaccess>
+</c>
+<c id="FRAD084_IR0000412_de-2" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 10</unitid>
+<unittitle encodinganalog="3.1.2">Remise de la Légion d'honneur à Rosine Moulin, veuve Bernard, ouvrière de la maison Eysséric.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1929">[1929]</unitdate>
+</did>
+<bioghist encodinganalog="3.2.2">
+<head>Éléments historiques</head>
+<p>- Marie Rose Moulin est née le 18 février 1849 à Carpentras, fille de Toussaint Moulin, cultivateur, et de Marie Anne Mulard, cultivatrice.</p>
+<p>Journalière à Carpentras, elle épouse le 27 janvier 1874 à Carpentras, Jacques Bernard, cultivateur à Carpentras, né le 20 septembre 1846 à Carpentras, fils de Jérôme Bernard et de Marie Suzanne Vidal.</p>
+<p>Elle est nommée chevalier de la Légion d'honneur par décret du 15 janvier 1929 rendu sur rapport du ministre du Travail en qualité d'ouvrière berlingotière à Carpentras.</p>
+<p>- Firmin Meyer (1899-1976) ouvre son studio de photographie d'art à Carpentras en 1927.</p>
+</bioghist>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>- Portrait de Rosine Moulin portant la Légion d'honneur, cliché signé Firmin Meyer [1929]. </p>
+<p>- Photocopie d'un article de presse publié dans <emph render="italic">Les Tablettes d'Avignon et de Provence</emph>, n°145, p. 21, sur la remise de la Légion d'honneur à la veuve Bernard, âgée de 80 ans, en récompense de 64 ans de services continus de 1865 à 1929 pour la maison Eysséric, au pliage des emballages (29 janvier 1929).</p>
+</scopecontent>
+<otherfindaid encodinganalog="3.4.5">
+<head>Poursuivre votre recherche en ligne</head>
+<extref xlink:href="http://www.culture.gouv.fr/public/mistral/leonore_fr?ACTION=RETROUVER&amp;FIELD_4=LIEU-NSS&amp;VALUE_4=CARPENTRAS%20ET%2084&amp;NUMBER=17&amp;GRP=0&amp;REQ=%28%28CARPENTRAS%20ET%2084%29%20%3aLIEU-NSS%20%29&amp;USRNAME=nobody&amp;USRPWD=4%24%2534P&amp;SPEC=9&amp;SYN=1&amp;IMLY=&amp;MAX1=1&amp;MAX2=1&amp;MAX3=100&amp;DOM=All" xlink:title="dossier de Légion d&apos;honneur de Rosine Bernard"/>
+</otherfindaid>
+<relatedmaterial encodinganalog="3.5.3">
+<head>
+</head>
+<p>
+<emph render="bold">Sources complémentaires hors archives départementales de Vaucluse</emph>
+</p>
+<p>Dossier Légion d'honneur LH/198/41</p>
+</relatedmaterial>
+<bibliography encodinganalog="3.5.4">
+<head>Bibliographie</head>
+<p>Mondon (Bernard), <emph render="italic">Autour du Ventoux, le photographe Firmin Meyer</emph>. Ed. A. Barthelemy, 2001.</p>
+</bibliography>
+<controlaccess>
+<head>Mots-clés</head>
+<genreform>photographie</genreform>
+<genreform>portrait</genreform>
+<subject>distinction honorifique</subject>
+<persname>Moulin épouse Bernard, Marie Rose</persname>
+<persname>Bernard née Moulin, Marie Rose</persname>
+<persname>Meyer, Firmin</persname>
+</controlaccess>
+</c>
+<c id="FRAD084_IR0000412_de-53" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 11</unitid>
+<unittitle encodinganalog="3.1.2">Cartes de la Confédération française des travailleurs chrétiens (CFTC) des employés de la maison Eysséric</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1948">1948</unitdate>
+<physdesc encodinganalog="3.1.5">
+10 cartes
+</physdesc>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>- Pierre Applanat, né le 17 novembre 1884, manoeuvre spécialisé - carte n°495</p>
+<p>- Jean Auzende, né le 1er novembre 1928, ouvrier en confiserie - carte n°476</p>
+<p>- Suzanne Auzende, née Fourment le 20 mars 1925, ouvrière en confiserie - carte n°477</p>
+<p>- Mosé Benedetti, né le 17 juin 1897, ouvrier qualifié en confiserie - carte n°408</p>
+<p>- Jeanne Bourgard, née le 18 novembre 1925, ouvrière en confiserie - carte n°478</p>
+<p>- Irma Capodagli, née le 26 novembre 1910, manoeuvre spécialisé en confiserie - carte n°409</p>
+<p>- Jeanne Catani, née le 6 juin 1900, employée de bureau - carte n°410</p>
+<p>- Roger Durand, né le 15 mai 1932, apprenti en confiserie - carte n°412</p>
+<p>- Georges Fayet, né le 5 juillet 1914, manoeuvre spécialisé en confiserie - carte n°413</p>
+<p>- Marguerite Grattier, née le 27 décembre 1902, ouvrière en confiserie - carte n°475</p>
+<p>- Max Jourdan, né le 23 mars 1916, directeur d'usine - carte n°415.</p>
+</scopecontent>
+<controlaccess>
+<head>Mots-clés</head>
+<persname>Benedetti, Mosé</persname>
+<persname>Capodagli, Irma</persname>
+<persname>Catani, Jeanne</persname>
+<persname>Durand, Roger</persname>
+<persname>Fayet, Georges</persname>
+<persname>Jourdan, Max</persname>
+<persname>Grattier, Marguerite</persname>
+<persname>Auzende, Jean</persname>
+<persname>Auzende née Fourment, Suzanne</persname>
+<persname>Fourment épouse Auzende, Suzanne</persname>
+<persname>Bourgard, Jeanne</persname>
+<persname>Applanat, Pierre</persname>
+<persname>Applanat, Pierre</persname>
+<corpname>Confédération française des travailleurs chrétiens</corpname>
+</controlaccess>
+</c>
+</c>
+<c id="FRAD084_IR0000412_tt2-4" encodinganalog="3.1.4">
+<did>
+<unittitle encodinganalog="3.1.2">Services commerciaux</unittitle>
+</did>
+<c id="FRAD084_IR0000412_tt3-4" encodinganalog="3.1.4">
+<did>
+<unittitle encodinganalog="3.1.2">Salons</unittitle>
+</did>
+<controlaccess>
+<head>Mots-clés</head>
+<subject>manifestation commerciale</subject>
+</controlaccess>
+<c id="FRAD084_IR0000412_de-1" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 12</unitid>
+<unittitle encodinganalog="3.1.2">Produits de la maison Eysséric : photographies</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1927/1970">[1927]-[1970]</unitdate>
+<physdesc encodinganalog="3.1.5">
+- Photographie noir et blanc, 17 x 23 cm env., 2 exemplaires. - Photographie couleurs, 9 x 13 cm environ.
+</physdesc>
+<dao xlink:href="http://v-earchives.vaucluse.fr/viewer/instrument_recherche/74J_Eysseric/FRAD084_74J12_01.jpg" xlink:title="Stand Eysséric lors d&apos;un salon, cliché Meyer-Porte (sans date) 74 J 12"/>
+<dao xlink:title="thumbnail" xlink:href="http://cdn-earchives.vaucluse.fr/prepared_images/thumb/destination/instrument_recherche/74J_Eysseric/FRAD084_74J12_01.jpg"/>
+<dao xlink:href="http://v-earchives.vaucluse.fr/viewer/instrument_recherche/74J_Eysseric/FRAD084_74J12_02.jpg" xlink:title="Berlingots Eysséric, photographie couleurs (sans date) 74 J 12"/>
+<dao xlink:title="thumbnail" xlink:href="http://cdn-earchives.vaucluse.fr/prepared_images/thumb/destination/instrument_recherche/74J_Eysseric/FRAD084_74J12_02.jpg"/>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>- Salon ou exposition : tirage papier noir et blanc signé Meyer-Porte, Carpentras.</p>
+<p>- Berlingots conditionnées en pot, sacs, tubes : tirage couleurs.</p>
+</scopecontent>
+<controlaccess>
+<head>Mots-clés</head>
+<genreform>photographie</genreform>
+<corpname>Établissements Meyer-Porte (Carpentras)</corpname>
+</controlaccess>
+</c>
+</c>
+<c id="FRAD084_IR0000412_tt3-3" encodinganalog="3.1.4">
+<did>
+<unittitle encodinganalog="3.1.2">Publicité</unittitle>
+</did>
+<controlaccess>
+<head>Mots-clés</head>
+<genreform>annonce publicitaire</genreform>
+<subject>publicité</subject>
+</controlaccess>
+<c id="FRAD084_IR0000412_de-60" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 56</unitid>
+<unittitle encodinganalog="3.1.2">Présentoir à berlingots</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1851/1970">Sans date</unitdate>
+<physdesc encodinganalog="3.1.5">
+Métal peint en janune et rouge. Le mot "Berlingots" est peint en rouge, ombragé de vert.
+<dimensions>179 x 107 cm</dimensions>
+</physdesc>
+</did>
+<custodhist encodinganalog="3.2.3">
+<head>Historique de la conservation</head>
+<p>Présentoir provenant du magasin Eysséric, selon M. Vakanas.</p>
+</custodhist>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>Présentoir métallique avec 3 pieds, comportant 3 supports horizontaux pour poser des boîtes. Au sommet un panneau ovale porte la mention "Berlingots".</p>
+</scopecontent>
+</c>
+<c id="FRAD084_IR0000412_de-63" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 62</unitid>
+<unittitle encodinganalog="3.1.2">Chapeau pointu publicitaire "berlingots Eysséric"</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1851/1970">Sans date</unitdate>
+<physdesc encodinganalog="3.1.5">
+Disque de carton de diam. 33 cm, assemblé en chapeau chinois (hauteur 8 cm env.), lettrage en blanc sur fond rouge, comportant un élastique pour le maintien sur la tête.
+<extent unit="nombre elements">2 exemplaires.</extent>
+</physdesc>
+</did>
+<otherfindaid encodinganalog="3.4.5">
+<head>Poursuivre votre recherche en ligne</head>
+<extref xlink:href="Genealogie_Eysseric.pdf"/>
+</otherfindaid>
+<relatedmaterial encodinganalog="3.5.3">
+<head>
+</head>
+<p>
+<emph render="bold">Autres ressources numériques</emph>
+</p>
+<extref xlink:href="Genealogie_Eysseric.pdf"/>
+</relatedmaterial>
+</c>
+<c id="FRAD084_IR0000412_de-57" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 53</unitid>
+<unittitle encodinganalog="3.1.2">Affiche "Berlingots Eysséric à Carpentras"</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1877/1920">Sans date</unitdate>
+<physdesc encodinganalog="3.1.5">
+Affiche ronde, imprimée en doré. Renforts avec des petites bandes de papier au verso.
+<dimensions>diamètre 74 cm</dimensions>
+</physdesc>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>"Les meilleurs bonbons digestifs".</p>
+<p>L'affiche mentionne la médaille d'argent à Paris en 1875, la médaille d'argent à Angers en 1864 et la médaille de vermeil [1877] pour la création de l'industrie des berlingots à Carpentras.</p>
+</scopecontent>
+<controlaccess>
+<head>Mots-clés</head>
+<genreform>affiche</genreform>
+</controlaccess>
+</c>
+<c id="FRAD084_IR0000412_de-58" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 54</unitid>
+<unittitle encodinganalog="3.1.2">Affiche "Berlingots Eysséric"</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1877/1920">Sans date</unitdate>
+<physdesc encodinganalog="3.1.5">
+Affiche imprimée en bleu, rouge et noir, lettrage en blanc. Bords renforcés au verso par des bandes de papier. Une déchirure sur le bord droit.
+<dimensions>83 x 63 cm</dimensions>
+</physdesc>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>L'affiche comporte deux solgans : "le meilleur bon digestif" et "berlingots Eysséric employés pour combattre le mal de mer". Elle mentionne la "médaille de vermeil à l'exposition départementale de Vaucluse de 1877 pour la création de l'industrie des berlingots à Carpentras" et les médailles à l'exposition nationale d'Angers en 1864, Carpentras en 1864 et Paris en 1875.</p>
+<p>Destinée apparemment aux distributeurs (parisiens ?), elle prévoit un emplacement pour renseigner le nom du détaillant : "Dépôt chez M. ....." suivi de "Exiger le véritable nom".</p>
+</scopecontent>
+<controlaccess>
+<head>Mots-clés</head>
+<genreform>affiche</genreform>
+</controlaccess>
+</c>
+<c id="FRAD084_IR0000412_de-59" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 55</unitid>
+<unittitle encodinganalog="3.1.2">Affiche "Un seul berlingot"</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1851/1970">Sans date</unitdate>
+<physdesc encodinganalog="3.1.5">
+Affiche imprimée en jaune, bleu et rouge. Une lacune comblée et renfort des bords par papier collé au verso. Papier très fragile. Déchirures, quelques taches.
+<dimensions>160 x 119 cm</dimensions>
+</physdesc>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>Affiche promotionnelle pour les berlingots Eysséric de Carpentras, portant la mention "Maison fondée en 1851". Elle représente la boîte de berlingots jaune, ouverte et laissant échapper des berlingots de couleur rouge.</p>
+</scopecontent>
+<controlaccess>
+<head>Mots-clés</head>
+<genreform>affiche</genreform>
+</controlaccess>
+</c>
+<c id="FRAD084_IR0000412_de-6" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 14</unitid>
+<unittitle encodinganalog="3.1.2">Publicités : papier à en-tête, affiche, tract.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1890/1977">1890-[1977]</unitdate>
+<dao xlink:href="http://v-earchives.vaucluse.fr/viewer/instrument_recherche/74J_Eysseric/FRAD084_74J14_01.jpg" xlink:title="Papier à en-tête de la fabrique Eysséric (vers 1890) 74 J 14"/>
+<dao xlink:title="thumbnail" xlink:href="http://cdn-earchives.vaucluse.fr/prepared_images/thumb/destination/instrument_recherche/74J_Eysseric/FRAD084_74J14_01.jpg"/>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>- Papier à en-tête de la "Fabrique de fruits confits G. Eysséric", vierge (vers 1890). </p>
+<p>- Affiche pour la "grande kermesse 1953", jeu "Êtes-vous Monsieur Berlingots-Eysséric ?, à gagner un louis d'or". Impression en bleu et rouge, impr. Batailler, Carpentras, 44 x 32 cm, 2 exemplaires (1953). </p>
+<p>- "Créateur de l'industrie des berlingots, Carpentras" : tract publicitaire dépliant de la S. A. Berlingots Eysséric 185, boulevard Albin-Durand, texte intérieur en anglais "A diamond for your palate". Une face en quadrichromie, une face 2 couleurs brun et noir, 21 x 14,5 cm fermé ; 21 x 26,5 cm ouvert [1977].</p>
+</scopecontent>
+<controlaccess>
+<head>Mots-clés</head>
+<genreform>affiche</genreform>
+</controlaccess>
+</c>
+<c id="FRAD084_IR0000412_de-9" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 13</unitid>
+<unittitle encodinganalog="3.1.2">Dossier (incomplet) de demande d'insertion publicitaire dans l'<emph render="italic">Annuaire</emph> et la <emph render="italic">Revue de la confiserie</emph>.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1951/1954">1951-1954</unitdate>
+<dao xlink:href="http://v-earchives.vaucluse.fr/viewer/instrument_recherche/74J_Eysseric/FRAD084_74J13_01.jpg" xlink:title="&quot;Disque&quot; de berlingots, photo Meyer, Carpentras (1953) 74 J 13"/>
+<dao xlink:title="thumbnail" xlink:href="http://cdn-earchives.vaucluse.fr/prepared_images/thumb/destination/instrument_recherche/74J_Eysseric/FRAD084_74J13_01.jpg"/>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>Correspondance entre Pierre Olive-Eysséric et A. Allonsius aux Revues et annuaires de la Confiserie, à Vincennes (décembre 1953-février 1954), modèle de prospectus (1951) et 3 photos de "disques" de berlingots signées Meyer, Carpentras. </p>
+<p>À signaler, le texte en français figurant au verso du prospectus de 1951 correspond à celui repris en anglais dans le tract publicitaire édité vers 1977 (74 J 6). </p>
+<p>Le représentant à Paris de la maison Eysséric est M. Vemian, 43, rue Saint-Augustin.</p>
+</scopecontent>
+<controlaccess>
+<head>Mots-clés</head>
+<persname>Olive-Eysséric, Pierre</persname>
+<persname>Allonsius, A.</persname>
+<persname>Meyer, Firmin</persname>
+<persname>Vemian</persname>
+</controlaccess>
+</c>
+<c id="FRAD084_IR0000412_de-21" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 15</unitid>
+<unittitle encodinganalog="3.1.2">Insertions publicitaires pour les berlingots Eysséric dans la presse et les brochures touristiques.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1952/1959">1952-1959</unitdate>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>- <emph render="italic">Le Comtadin. Organe hebdomadaire du parti radical-socialiste de l'arrondissement de Carpentras</emph>, 3 numéros (28 décembre 1951, 15 et 22 août 1952). Les trois nunméros portent un encart publicitaire, à gauche du titre, "Berlingots Eysséric Un siècle de succès 1851-1951".</p>
+<p>- <emph render="italic">Créations françaises : Le livre d'or de l'industrie et du commerce du Sud-Est</emph> / Société générale d'édition et de publicité. — Paris et Marseille, [1950-1953]. — 120 p. ; 31,5 cm. Insertions publicitaires p. 51 et 72 et dans le "Dictionnaire biographique, historique, anecdotique des principales personnalités et firmes industrielles et commerciales du Sud-Est", p. 69 (Eysséric) et p. 79 (Olive-Eysséric Pierre).</p>
+<p>- <emph render="italic">Provence. La France touristique thermale climatique</emph> / Union des fédérations des syndicats d'initiative. — Paris : Éditions Lajeunesse, 1958. — 63 p. : ill. ; 21,5 cm. L'insertion se trouve à la page 54.</p>
+<p>- <emph render="italic">Carpentras ville d'art, capitale du Comtat-venaissin</emph> / Syndicat d'initiative. — Saint-Étienne : Éditions L'essor économique, 1959. — 8 p. : ill., carte ; 16 cm. L'insertion se trouve en page centrale.</p>
+</scopecontent>
+<controlaccess>
+<head>Mots-clés</head>
+<genreform>publication périodique</genreform>
+<persname>Olive-Eysséric, Pierre</persname>
+<title>Comtadin (Le)</title>
+</controlaccess>
+</c>
+</c>
+</c>
+<c id="FRAD084_IR0000412_tt2-3" encodinganalog="3.1.4">
+<did>
+<unittitle encodinganalog="3.1.2">Documentation professionnelle</unittitle>
+</did>
+<controlaccess>
+<head>Mots-clés</head>
+<genreform>documentation</genreform>
+</controlaccess>
+<c id="FRAD084_IR0000412_de-7" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 16</unitid>
+<unittitle encodinganalog="3.1.2">Documentation technique : marques déposées, laques, emballage, vente directe, cuisson dans le vide, pompes, etc.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1927/1980">XXe siècle</unitdate>
+<dao xlink:href="http://v-earchives.vaucluse.fr/viewer/instrument_recherche/74J_Eysseric/FRAD084_74J16_01.jpg" xlink:title="Machine pour souder les boîtes en fer-blanc (vers 1928) 74 J 16"/>
+<dao xlink:title="thumbnail" xlink:href="http://cdn-earchives.vaucluse.fr/prepared_images/thumb/destination/instrument_recherche/74J_Eysseric/FRAD084_74J16_01.jpg"/>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>- Lettre d'envoi de fascicules sur les dragées, pralines et fondants de la maison L. Jacquin, à Paris. Les fascicules manquent (1917).</p>
+<p>- <emph render="italic">Les laques synthétiques "isolémail" et la protection du matériel industriel contre les attaques chimiques</emph>, brochure des ateliers spéciaux d'isolémaillage de la Société des Laques et Isolants à Lyon, extrait de L'Industrie chimique, tome 14, n°156 (12 pages, janvier 1927).</p>
+<p>- <emph render="italic">Procédé et appareillage pour faire le vide dans les boîtes en fer-blanc et pour souder les boîtes dans le vide d'air.</emph> Par Émile Brüderlin et Dr W. Wenk, impr. Werner-Riehm, Bâle, s.d., 8 pages et 1 feuille volante. A la fin, plans techniques et images de la machine pour souder les boîtes en fer-blanc. 2 exemplaires, dont l'un estampillé Bureau d'études industrielles (18, Rue aux Ours, Metz) est accompagné d'un courrier du bureau d'études en date du 13 avril 1928.</p>
+<p>- Courrier publicitaire de Gebr. Müller-Joh., glaswaren-fabrik, pour la fourniture d'articles de remplissage pour confiseurs (5 juin 1930).</p>
+<p>- Mode d'emploi de la machine à cuire dans le vide Henkella modèle VII, de la maison Berten &amp; Co, plan (1933).</p>
+<p>- <extref xlink:href="http://www.hibon.com/IS/Product.aspx-eu_fr-35197" xlink:title="Historique de l'entreprise Hibon">Pompes rotatives Hibon</extref>, Roubaix (France), brochure technique sur les pompes rotatives à liquides fluides ou épais. Parmi les applications industrielles figurent les sucreries, raffineries et transports de mélasses (brochure de 64 pages, XXe s.).</p>
+<p>- Affiche pour l'entreprise Foullon "la technique moderne au service de cent ans d'expérience" 35, rue de la Réunion Paris. Texte en rouge, photographie noir et blanc représentant des machines pour la fabrication de dragées. Affiche pliée en trois : au verso, une photo représentant une boîte de dragées ouverte et deux gravures : "La tradition", "Le printems" (31 x 67 cm, XXe s.).</p>
+</scopecontent>
+<controlaccess>
+<head>Mots-clés</head>
+<genreform>affiche</genreform>
+<genreform>catalogue de vente</genreform>
+<corpname>Berten &amp; Co (Viersen, Allemagne)</corpname>
+<corpname>Société des Laques et Isolants (Lyon)</corpname>
+<corpname>Hibon (Roubaix, Nord)</corpname>
+<corpname>Foullon (Paris)</corpname>
+<corpname>L. Jacquin (Paris)</corpname>
+<corpname>Gebrüder Müller-Joh. Glasswaren Fabrik (Taubenbach, Allemagne)</corpname>
+</controlaccess>
+</c>
+<c id="FRAD084_IR0000412_de-50" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 17</unitid>
+<unittitle encodinganalog="3.1.2">Marques déposées et technique de vente</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1926/1930">1926-1930</unitdate>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>- <emph render="italic">Les Marques de l'alimentation</emph>, n° 28 (6 pages, août-septembre 1926).</p>
+<p>"Cette revue publie chaque mois la liste alphabétique des nouvelles marques déposées pour savons, lessives, blanchiment, nettoyage, détachage, conserves et salaisons, beurre, fromages, chocolats, sucre, miel, confitures, pâtisserie-confiserie, vins, mousseux, cidres, bières, alcools, eaux-de-vie, liqueurs, eaux minérales".</p>
+<p>- <emph render="italic">La vente directe au consommateur, étude de ce procédé moderne de vente : Ce que l'on peut en attendre</emph> / Michel Chatelus ; Claude Chatelus, directeurs de la maison de publicité Pierre Argence (1930).</p>
+<p>La brochure contient une carte de visite de Paul Barry, attaché aux publications Pierre Argence, Lyon.</p>
+<p>Parmi les attestations des clients figurent Les Tisserandiers (Lyon) et Les Caveaux Rhodaniens (Châteauneuf-du-Pape).</p>
+<p>- Les Tisserandiers, 5 rue royale, Lyon : 3 tarifs (Laines à tricoter ; Blanc ; Soieries et lainages) avec échantillons, publicité, bulletins de commande vierge (vers 1931).</p>
+</scopecontent>
+<controlaccess>
+<head>Mots-clés</head>
+<persname>Barry, Paul</persname>
+<corpname>Les Tisserandiers (Lyon)</corpname>
+<corpname>Les Caveaux Rhodaniens (Châteauneuf-du-Pape, Vaucluse)</corpname>
+<corpname>Maison Pierre Argence (Lyon)</corpname>
+<name>Chatelus, Michel</name>
+<name>Chatelus, Claude</name>
+</controlaccess>
+</c>
+<c id="FRAD084_IR0000412_de-45" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 18</unitid>
+<unittitle encodinganalog="3.1.2">Abonnements presse de la maison Eysséric boulevard du Musée à Carpentras</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1951/1953">1951-1953</unitdate>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>- <emph render="italic">Bulletin trimestriel de l'Institut historique de Provence</emph>, 28e année, n°7 (mars-avril 1951), adressé à M. et Mme Léon Olive 16 boulevard du Musée à Carpentras.</p>
+<p>- <emph render="italic">Le Comtadin. Organe hebdomadaire du parti radical-socialiste de l'arrondissement de Carpentras</emph>, n°422 (31 octobre 1952), adressé à M. Olive Eysséric boulevard du Musée. Le numéro porte un encart publicitaire, à gauche du titre, "Berlingots Eysséric Un siècle de succès 1851-1951".</p>
+<p>- <emph render="italic">Les nouvelles vauclusiennes. Journal républicain d'action sociale</emph> (14 novembre 1953), adressé à "Berlingots Eysséric", boulevard du Musée.</p>
+</scopecontent>
+<controlaccess>
+<head>Mots-clés</head>
+<genreform>publication périodique</genreform>
+<title>Bulletin trimestriel de l'Institut historique de Provence</title>
+<title>Comtadin (Le)</title>
+<title>Nouvelles vauclusiennes (Les)</title>
+</controlaccess>
+</c>
+</c>
+</c>
+<c id="FRAD084_IR0000412_tt1-2" encodinganalog="3.1.4">
+<did>
+<unittitle encodinganalog="3.1.2">Archives personnelles</unittitle>
+</did>
+<otherfindaid encodinganalog="3.4.5">
+<head>Poursuivre votre recherche en ligne</head>
+<extref xlink:href="Genealogie_Eysseric.pdf" xlink:title="Généalogie de la famille Eysséric"/>
+</otherfindaid>
+<c id="FRAD084_IR0000412_tt2-10" encodinganalog="3.1.4">
+<did>
+<unittitle encodinganalog="3.1.2">Gustave Eysséric (1824-1897)</unittitle>
+</did>
+<bioghist encodinganalog="3.2.2">
+<head>Éléments historiques</head>
+<p>
+<emph render="bold">Gustave</emph> Crescent Eysséric est né le 12 mai 1824 à Carpentras.</p>
+<p>Il épouse en premières noces <emph render="bold">Françoise</emph> Adrienne Pierrette Eysséric le 14 janvier 1851, puis, après son veuvage en 1878, Eugénie <emph render="bold">Antoinette</emph> Vassail le 22 juin 1880.</p>
+<p>Il meurt le 28 février 1897.</p>
+</bioghist>
+<relatedmaterial encodinganalog="3.5.3">
+<head>
+</head>
+<p>
+<emph render="bold">Sources complémentaires aux archives départementales de Vaucluse</emph>
+</p>
+<p>- Acte de naissance de <emph render="bold">Gustave</emph> Crescent Eysséric le 12 mai 1824 : état civil de Carpentras, acte n°162.</p>
+<p>- Contrat de mariage entre Gustave Eysséric et sa première épouse Françoise Eysséric, reçu le 14 janvier 1851 par Me Bouchtay, notaire de Carpentras : 3 E 29/495, acte n°30.</p>
+<p>- Acte de mariage entre Gustave Eysséric et sa première épouse Françoise Eysséric le 14 janvier 1851 : état civil de Carpentras, acte n°5.</p>
+<p>- Contrat de mariage entre Gustave Eysséric et sa seconde épouse Antoinette Vassail, reçu le 10 juin 1880 par Mes Bouchtay et Gaudibert, notaires de Carpentras : 3 E 26/2900, acte n°214.</p>
+<p>- Acte de mariage entre Gustave Eysséric et sa seconde épouse Antoinette Vassail le 12 juin 1880 : état civil de Carpentras, acte n°35.</p>
+</relatedmaterial>
+<controlaccess>
+<head>Mots-clés</head>
+<persname>Eysséric, Françoise</persname>
+<persname>Eysséric, Gustave (père)</persname>
+</controlaccess>
+<c id="FRAD084_IR0000412_de-19" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 19</unitid>
+<unittitle encodinganalog="3.1.2">Papiers personnels</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1845/1894">1845-1894</unitdate>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>- Livret militaire de Gustave Eysséric, engagé volontaire pour 7 ans dans le corps d'ouvriers mécaniciens ou d'ouvriers chauffeurs du port de Toulon (1845-1850).</p>
+<p>- Brochure éditée à l'occasion du banquet des anciens élèves des Écoles des Arts et Métiers, organisé à Nîmes le 9 mai 1875, contenant la liste des anciens élèves présents, parmi lesquels figure (p. 7) "Eysséric Gustave, Fabricant de berlingots, à Carpentras. Châlons, 1843" (12 pages, 1875).</p>
+<p>- Offre d'expropriation pour la section de chemin de fer d'Orange à L'Isle par Carpentras. Les sommes sont offertes à "M. Eysséric Gustave, de Philippe, confiseur, boulevard du musée, 16, à Carpentras" (20 février 1883).</p>
+<p>- Documents bancaires (1888-1894).</p>
+</scopecontent>
+<controlaccess>
+<head>Mots-clés</head>
+<genreform>livret militaire</genreform>
+<persname>Eysséric, Philippe</persname>
+</controlaccess>
+</c>
+</c>
+<c id="FRAD084_IR0000412_tt2-12" encodinganalog="3.1.4">
+<did>
+<unittitle encodinganalog="3.1.2">Antoinette Vassail (1845-19--), épouse de Gustave Eysséric</unittitle>
+</did>
+<relatedmaterial encodinganalog="3.5.3">
+<head>
+</head>
+<p>
+<emph render="bold">Sources complémentaires aux archives départementales de Vaucluse</emph>
+</p>
+<p>- Acte de naissance d'Eugénie <emph render="bold">Antoinette</emph> Vassail le 29 décembre 1845 : état civil de Carpentras, acte n°480.</p>
+<p>- Contrat de mariage entre Antoinette Vassail et Gustave Eysséric, reçu le 10 juin 1880 par Mes Bouchtay et Gaudibert, notaires de Carpentras : 3 E 26/2900, acte n°214.</p>
+<p>- Acte de mariage entre Antoinette Vassail et Gustave Eysséric (veuf) le 12 juin 1880 : état civil de Carpentras, acte n°35.</p>
+</relatedmaterial>
+<controlaccess>
+<head>Mots-clés</head>
+<persname>Vassail épouse Eysséric, Antoinette</persname>
+<persname>Eysséric née Vassail, Antoinette</persname>
+</controlaccess>
+<c id="FRAD084_IR0000412_de-24" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 20</unitid>
+<unittitle encodinganalog="3.1.2">Papiers personnels et bancaires au nom de Madame Vassail, veuve Eysséric</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1884/1919">1884-1919</unitdate>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>- Agenda ayant servi à noter les dépenses domestiques de mars 1900 à janvier 1901. Contient une image pieuse de l'Enfant-Jésus miraculeux de Prague (1891) ; quelques factures de la société Fauconnet-Raffin, spécialité d'huiles d'olives (1900) ; une invitation à venir réciter le rosaire chez les Soeurs Saint-François (sans date).</p>
+<p>- Documents bancaires : reçus, opérations boursières, relevés de comptes (1884-1911) auprès de la Chambre syndicale des agents de change de Paris (1884-1895), de la Banque de France (1898-1911), de la Société générale pour favoriser le développement du commerce et de l'industrie en France (1899-1908), des fils Dreyfus et Cie à Bâle (1904-1910), du Comptoir national d'escompte de Paris (1904-1911), du Crédit lyonnais (1904-1911), de Lippmann Haramboure Birman et Cie (1906-1907), du Comptoir commercial d'escompte de Nîmes Arnaud Gaidan et Cie (1910).</p>
+<p>- Nomination de Mme G. Eysséric au titre de présidente honoraire de la congrégation de Notre-Dame-des-Sept-Douleurs de Carpentras (1919).</p>
+</scopecontent>
+<controlaccess>
+<head>Mots-clés</head>
+<genreform>image pieuse</genreform>
+<corpname>Fauconnet-Raffin (Carpentras)</corpname>
+<corpname>Congrégation Notre-Dame des Sept Douleurs (Carpentras)</corpname>
+</controlaccess>
+</c>
+</c>
+<c id="FRAD084_IR0000412_tt2-13" encodinganalog="3.1.4">
+<did>
+<unittitle encodinganalog="3.1.2">Jeanne Eysséric (1882-1952), fille de Gustave Eysséric et Antoinette Vassail, épouse de Paul Pansier</unittitle>
+</did>
+<bioghist encodinganalog="3.2.2">
+<head>Éléments historiques</head>
+<p>
+<emph render="bold">Jehanne</emph> Françoise Thérèse est née le 21 août 1882 à Carpentras.</p>
+<p>Elle épouse Marie <emph render="bold">Paul</emph> Pansier le 14 septembre 1917 à Carpentras.</p>
+<p>Elle réside au domaine de Curel, à Monteux.</p>
+<p>Elle meurt le 1er mars 1952 à Monteux.</p>
+</bioghist>
+<controlaccess>
+<head>Mots-clés</head>
+<persname>Eysséric épouse Pansier, Jeanne</persname>
+<persname>Pansier née Eysséric, Jeanne</persname>
+<persname>Pansier, Paul</persname>
+</controlaccess>
+<c id="FRAD084_IR0000412_de-42" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 21</unitid>
+<unittitle encodinganalog="3.1.2">Papiers personnels</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1900/1952">[1900]-1952</unitdate>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>- Brouillon d'une lettre de J. [Jeanne ?] Eysséric, en visite chez sa mère à Carpentras, à Madame la Supérieure de "[son] cher couvent" de Neuilly (sans date). Le brouillon est rédigé sur une publicité du Comptoir parisien des essences, parfums &amp; colorants, spécialisé dans les "colorants spéciaux pour distillateurs, confiseurs, etc. garantis d'une inocuité complète (...) produits L. Colin, médaille d'or Paris 1897" [vers 1900].</p>
+<p>- Petite aquarelle marine (11 x 7 cm), avec les initiales J. E. et J. Eysséric Carpentras (sans date).</p>
+<p>- Encaissement de titre et achat d'obligations du P.L.M. (1910).</p>
+<p>- Bulletin trimestriel de l'archiconfrérie de Sainte-Barbe, Bourges, sous pli adressé à Madame Paul Pansier, domaine de Curel, Monteux, Vaucluse (janvier-février 1952).</p>
+<p>- Livrets de condoléances et cartes de visites vraisembablement liés aux obsèques de Jeanne Eysséric [1952].</p>
+</scopecontent>
+<controlaccess>
+<head>Mots-clés</head>
+<genreform>annonce publicitaire</genreform>
+<genreform>dessin</genreform>
+<genreform>carte de visite</genreform>
+<corpname>Comptoir parisien des essences, parfums &amp; colorants</corpname>
+<corpname>Compagnie des chemins de fer de Paris à Lyon et à la Méditerranée</corpname>
+</controlaccess>
+</c>
+</c>
+<c id="FRAD084_IR0000412_tt2-2" encodinganalog="3.1.4">
+<did>
+<unittitle encodinganalog="3.1.2">Gustave Eysséric (1885-1913), fils de Gustave Eysséric et Antoinette Vassail</unittitle>
+</did>
+<bioghist encodinganalog="3.2.2">
+<head>Éléments historiques</head>
+<p>Troisième enfant et seul garçon né de l'union de Gustave Eysséric et d'Antoinette Vassail, Gustave Eysséric est né le 14 mars 1885 à Carpentras.</p>
+<p>De santé fragile, il meurt le 4 septembre 1913 à Carpentras à l'âge de 28 ans.</p>
+</bioghist>
+<relatedmaterial encodinganalog="3.5.3">
+<head>
+</head>
+<p>
+<emph render="bold">Sources complémentaires aux archives départementales de Vaucluse</emph>
+</p>
+<p>- Acte de naissance de <emph render="bold">Gustave</emph> Pierre Antoine Eysséric le 14 mars 1885 : état civil de Carpentras, acte n°51.</p>
+</relatedmaterial>
+<controlaccess>
+<head>Mots-clés</head>
+<persname>Eysséric, Gustave (fils)</persname>
+</controlaccess>
+<c id="FRAD084_IR0000412_de-11" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 22</unitid>
+<unittitle encodinganalog="3.1.2">Papiers personnels</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1893/1911">1893-1911</unitdate>
+<dao xlink:href="http://v-earchives.vaucluse.fr/viewer/instrument_recherche/74J_Eysseric/FRAD084_74J22_01.jpg" xlink:title="Carte postale du palais des papes adressée à Gustave Eysséric (1900 ?) 74 J 22"/>
+<dao xlink:title="thumbnail" xlink:href="http://cdn-earchives.vaucluse.fr/prepared_images/thumb/destination/instrument_recherche/74J_Eysseric/FRAD084_74J22_01.jpg"/>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>Notamment correspondance familiale et amicale, pendant sa scolarité au collège Saint-Joseph d'Avignon (janvier-août 1898) et lors de sa réussite à un examen à Montpellier en juin 1907 ; opérations bancaires, achat d'actions à la Société anonyme des mines de cuivre du Seibal (1905-1906), factures (1904-1911).</p>
+</scopecontent>
+<odd encodinganalog="3.6.1">
+<head>Analyse reprise de l'inventaire sommaire</head>
+<p>Quelques mentions intéressantes à signaler : </p>
+<p>- la famille séjourne à Curel, sur la commune de Monteux et à Propiac, dans la Drôme. </p>
+<p>- Gustave est de santé fragile : "<emph render="italic">Travaille sans te forcer (...) tu as les yeux et un tempérament faibles, alors il faut tout ménager</emph>" ; "<emph render="italic">sûrement [la Très Sainte Vierge] t'accordera la santé</emph>" (lettre 4, 4 mai 1898) ; "<emph render="italic">tu n'es pas fort, il faut ménager tes yeux surtout</emph>" (lettre 5, 13 mai 1898).</p>
+</odd>
+<controlaccess>
+<head>Mots-clés</head>
+<genreform>carte postale</genreform>
+<genreform>correspondance privée</genreform>
+<corpname>École libre, puis collège Saint-Joseph d'Avignon</corpname>
+<corpname>Société anonyme des mines de cuivre du Seibal (Paris)</corpname>
+<geogname>Curel, domaine de (Monteux, Vaucluse, France)</geogname>
+<geogname>Propiac (Drôme, France)</geogname>
+</controlaccess>
+</c>
+<c id="FRAD084_IR0000412_de-12" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 23-25</unitid>
+<unittitle encodinganalog="3.1.2">Scolarité et formation de Gustave Eysséric</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1898/1901">1895-1908</unitdate>
+<dao xlink:href="http://v-earchives.vaucluse.fr/viewer/instrument_recherche/74J_Eysseric/FRAD084_74J23_01.jpg" xlink:title="Billet de tombola, glissé dans le cahier de littérature latine (1900-1901) 74 J 23"/>
+<dao xlink:title="thumbnail" xlink:href="http://cdn-earchives.vaucluse.fr/prepared_images/thumb/destination/instrument_recherche/74J_Eysseric/FRAD084_74J23_01.jpg"/>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<list>
+<item>art. 23-24 Scolarité à l'école libre Saint-Joseph puis au collège Saint-Joseph d'Avignon : cahiers, copies (1897-1902).</item>
+<item>art. 25</item>
+</list>
+<p>- <emph render="italic">Werther</emph> / Johann Wolfgang von Goethe. — Paris : Albin Michel, s.d. — 192 p. ; 14 cm. — (Petite collection Michel ; 28). Ex-libris G. Eysséric 2 sept. 1905.</p>
+<p>- <emph render="italic">Cours de courbes usuelles à l'usage des élèves de la classe de première divisions C et D conforme aux programmes officiels du 31 mai 1902</emph> / E. Combette. — Paris : Félix Juven, s.d. — 98 p. ; 22 cm. Ex-libris G Eysséric 1905.</p>
+<p>- Cours d'analyse (janvier-mars 1907).</p>
+</scopecontent>
+<controlaccess>
+<head>Mots-clés</head>
+<genreform>travail scolaire</genreform>
+<subject>scolarité</subject>
+<corpname>École libre, puis collège Saint-Joseph d'Avignon</corpname>
+<name>Goethe, Johann Wolfgang von (1749-1832)</name>
+<name>Combette, E.</name>
+</controlaccess>
+</c>
+<c id="FRAD084_IR0000412_de-5" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 26</unitid>
+<unittitle encodinganalog="3.1.2">Service militaire de Gustave Eysséric.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1907">1907</unitdate>
+<dao xlink:href="http://v-earchives.vaucluse.fr/viewer/matricules-mil/FRAD084_01R1278_1905/FRAD084_01R1278_1905_0280.jpg" xlink:title="Matricule de Gustave Eysséric (classe 1905) 1 R 1278"/>
+<dao xlink:title="thumbnail" xlink:href="http://cdn-earchives.vaucluse.fr/prepared_images/thumb/destination/matricules-mil/FRAD084_01R1278_1905/FRAD084_01R1278_1905_0280.jpg"/>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>- Livret militaire : classe 1905, matricule n°659, châtain, yeux bleus, 1,72 m, en sursis pour continuation d'études jusqu'au 1er octobre 1908 (octobre 1907). </p>
+<p>- Permission de 24h pour le 1er janvier 1910 accordée par la 14e section de COA (Centre d'organisation d'artillerie ?), groupe de Perrache.</p>
+</scopecontent>
+<relatedmaterial encodinganalog="3.5.3">
+<head>
+</head>
+<p>
+<emph render="bold">Sources complémentaires aux archives départementales de Vaucluse</emph>
+</p>
+<p>Registre matricule, classe 1905, volume 2, numéro 659.</p>
+</relatedmaterial>
+<controlaccess>
+<head>Mots-clés</head>
+<genreform>livret militaire</genreform>
+</controlaccess>
+</c>
+</c>
+<c id="FRAD084_IR0000412_tt2-9" encodinganalog="3.1.4">
+<did>
+<unittitle encodinganalog="3.1.2">Marie Eysséric (1881-1975), fille de Gustave Eysséric et Antoinette Vassail, épouse de Léon Olive</unittitle>
+</did>
+<bioghist encodinganalog="3.2.2">
+<head>Éléments historiques</head>
+<p>Premier enfant de <emph render="bold">Gustave</emph> Crescent Eysséric et d'Antoinette Vassail, <emph render="bold">Marie</emph> Rose Antoinette Eysséric est née le 8 avril 1881 à Carpentras.</p>
+<p>Elle épouse Marie Joseph <emph render="bold">Léon</emph> Camille Olive à Carpentras le 10 août 1909 et décède à Carpentras le 13 octobre 1975.</p>
+</bioghist>
+<relatedmaterial encodinganalog="3.5.3">
+<head>
+</head>
+<p>
+<emph render="bold">Sources complémentaires aux archives départementales de Vaucluse</emph>
+</p>
+<p>- Acte de naissance de <emph render="bold">Marie</emph> Rose Antoinette Eysséric le 8 avril 1881 : état civil de Carpentras, acte n°81.</p>
+<p>- Acte de mariage entre Marie Eysséric et Léon Olive le 10 août 1909 : état civil de carpentras, 1 E 31/112, acte n°68.</p>
+</relatedmaterial>
+<controlaccess>
+<head>Mots-clés</head>
+<persname>Eysséric épouse Olive-Eysséric, Marie</persname>
+<persname>Olive-Eysséric née Eysséric, Marie</persname>
+</controlaccess>
+<c id="FRAD084_IR0000412_de-26" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 27</unitid>
+<unittitle encodinganalog="3.1.2">Papiers personnels</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1892/1927">1892-1927</unitdate>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>- Souvenir de première communion d'une amie de Marie Eysséric, Amélie (1892). </p>
+<p>- Petite lettre d'Alphonsine à Marie Eysséric (1896). </p>
+<p>- Signet de Jean Arditi, pour Marie et Jeanne Eysséric (1903). </p>
+<p>- Petite lettre de Gustave Eysséric à sa soeur Marie (sans date).</p>
+<p>- Titres attribués lors de la succession de son frère Gustave (1914).</p>
+<p>- Partition manuscrite : Moussorgski, <emph render="italic">Boris Godounov</emph>, acte 3, choeur des jeunes filles de Sandomir (dans une pochette kraft adressée à M. et Mme Olive-Eysséric 16, rue de la Rotonde en 1916).</p>
+<p>- Lettre adressée à Marie Olive-Eysséric 16, rue de la Rotonde, à l'occasion de la première communion de son fils Pierre, âgé de 10 ans (1927).</p>
+</scopecontent>
+<controlaccess>
+<head>Mots-clés</head>
+<genreform>partition musicale</genreform>
+<genreform>correspondance privée</genreform>
+<persname>Arditi, Jean</persname>
+<persname>Eysséric, Gustave (fils)</persname>
+<persname>Eysséric épouse Pansier, Jeanne</persname>
+<persname>Pansier née Eysséric, Jeanne</persname>
+<persname>Olive-Eysséric, Pierre</persname>
+<persname>Moussorgski , Modest</persname>
+</controlaccess>
+</c>
+</c>
+<c id="FRAD084_IR0000412_tt2-7" encodinganalog="3.1.4">
+<did>
+<unittitle encodinganalog="3.1.2">Léon Olive (1873-1950), époux de Marie Eysséric</unittitle>
+</did>
+<bioghist encodinganalog="3.2.2">
+<head>Éléments historiques</head>
+<p>Marie Joseph <emph render="bold">Léon</emph> Camille Olive est né le 7 août 1873 à Marseille, au 24 rue de la Rotonde.</p>
+<p>Avocat à Marseille, il épouse la fille aînée de la famille Eysséric, <emph render="bold">Marie</emph> Rose Antoinette, le 10 août 1909.</p>
+<p>Il est le père de Pierre ("Pierrot"), né le 10 janvier 1917.</p>
+<p>Adresse professionnelle : 68, rue Montgrand, en 1932.</p>
+<p>Adresse personnelle : 16, rue de la Rotonde, à Marseille ; 21, place Alexandre Labadie, à Marseille, à partir de 1937 environ.</p>
+<p>Décédé à Carpentras le 23 décembre 1950.</p>
+</bioghist>
+<relatedmaterial encodinganalog="3.5.3">
+<head>
+</head>
+<p>
+<emph render="bold">Sources complémentaires aux archives départementales de Vaucluse</emph>
+</p>
+<p>- Acte de mariage entre Léon Olive et Marie Eysséric le 10 août 1909 : état civil de Carpentras, 1 E 31/112, acte n°68.</p>
+<p>
+<emph render="bold">Sources complémentaires hors archives départementales de Vaucluse</emph>
+</p>
+<p>- Acte de naissance de Marie Joseph <emph render="bold">Léon</emph> Camille Olive, à Marseille, le 7 août 1873 : état civil de Marseille, acte n°488.</p>
+</relatedmaterial>
+<controlaccess>
+<head>Mots-clés</head>
+<persname>Olive, Léon</persname>
+</controlaccess>
+<c id="FRAD084_IR0000412_de-30" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 28</unitid>
+<unittitle encodinganalog="3.1.2">Activité professionnelle de Léon Olive, avocat</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1920/1939">1920-1939</unitdate>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>- Affaire Olive/Rougy : contentieux entre Camille Olive puis ses héritiers et le docteur Mathieu Rougy, locataire aux 63 et 65 du cours Pierre Puget à Marseille au sujet de travaux de réparation à la charge du locataire (1920-1936).</p>
+<p>- Affaire Olive/Borie : contentieux avec Émile Borie à la suite de l'accident de voiture de Léon Olive le 12 avril 1932 à Cavaillon (1932-1934) ; </p>
+<p>- Affaire Vence/Vitton : correspondance entre les avocats (mai 1935).</p>
+<p>- Conventions et réclamations diverses (1934-1936), notamment à la suite d'un accident automobile de Pierre Olive (1935).</p>
+<p>- Affaire Olive/Feraud : contentieux à la suite d'un accident automobile dans lequel Pierre Olive (20 ans), fils de Léon, a renversé une fillette, Rosette Feraud (1936-1938).</p>
+<p>- Tableau de l'ordre des avocats de Marseille, année judiciaire 1938-1939. Léon Olive figure parmi les avocats honoraires, demeurant 21, place Alexandre Labadié, reçu le 3 novembre 1896. Placard, 56 x 90 cm (1939).</p>
+</scopecontent>
+<controlaccess>
+<head>Mots-clés</head>
+<subject>contentieux</subject>
+<subject>accident des transports</subject>
+<persname>Rougy, Mathieu</persname>
+<persname>Borie, Émile</persname>
+<persname>Olive-Eysséric, Pierre</persname>
+<persname>Feraud, Rosette</persname>
+<persname>Olive, Camille</persname>
+</controlaccess>
+</c>
+<c id="FRAD084_IR0000412_de-14" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 29</unitid>
+<unittitle encodinganalog="3.1.2">Papiers et ouvrages personnels</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1890/1938">1890-1938</unitdate>
+<dao xlink:href="http://v-earchives.vaucluse.fr/viewer/instrument_recherche/74J_Eysseric/FRAD084_74J29_01.jpg" xlink:title="Programme de L&apos;Oiseau Bleu de Maurice Maeterlinck [1911] 74 J 29"/>
+<dao xlink:title="thumbnail" xlink:href="http://cdn-earchives.vaucluse.fr/prepared_images/thumb/destination/instrument_recherche/74J_Eysseric/FRAD084_74J29_01.jpg"/>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>- <emph render="italic">Cours d'études scientifiques à l'usage des candidats au baccalauréat ès sciences et aux écoles du gouvernement. Arithmétique</emph> / J. Dufailly. — Paris : Librairie Ch. Delagrave, 1890. — 186 p. ; 23 cm. Ex-libris L. Olive. En mauvais état.</p>
+<p>- Livret de comptes, tenu au cours de deux voyages, l'un du 11 août au 17 septembre 1909 en Suisse et à Paris, probablement pour le voyage de noces de Léon Olive et Marie Eysséric, mariés le 10 août 1909 ; l'autre à Paris et à Bruxelles du 1er au 23 juin 1911. Le couple fréquente assidûment les salles de spectacles : Kursaal de Genève, Théâtre-Français, Théâtre des Variétés, Opéra Comique, Opéra, Théâtre du Gymnase, Théâtre Réjane, Alcazar, Théâtre de la Renaissance, Théâtre des Bouffes-Parisiens, Athénée. Il voit le cirque Lilliput le 9 septembre 1909, <emph render="italic">La flûte enchantée</emph> le 15 septembre 1909 (fol. 8 verso) et, très vraisemblablement, <emph render="italic">L'Oiseau Bleu</emph> au théâtre Réjane le 4 juin 1911 (fol. 11 verso). Le 20 juin 1911, il est au Luna Park de Bruxelles. Un petit carnet contenant 2 planches d'herbier (27 août 1909 aux chutes du Rhin, 1er septembre 1909 à Belfort) et une enveloppe de l'hôtel des Capucines à Paris, où le couple a séjourné en septembre 1909.</p>
+<p>- Programme de <emph render="italic">L'Oiseau Bleu</emph> de Maurice Maeterlinck, donné au Théâtre Réjane à Paris. — Paris : Publications Willy Fischer, [1911]. — 32 p. : ill. ; 26 cm.</p>
+<p>- Articles de presse vraisemblablement découpés par Léon Olive dans <emph render="italic">Marseille-Matin</emph>, relatifs à un incident entre le député Raymond Vidal et son adversaire Lucien Richard ; aux milliards thésaurisés par les Français ; et à une visite des présidents des chambres de commerce au président du Conseil (1936).</p>
+<p>- Coupes de bois par Efisio Delino, exploitant forestier, dans les bois de Simiane appartenant à Léon Olive, aux lieudits Jean Lemaître, Pécaï, Vallon de Siège, La Gréou et Grand Vallon (1937-1938).</p>
+</scopecontent>
+<relatedmaterial encodinganalog="3.5.3">
+<head>
+</head>
+<p>
+<emph render="bold">Sources complémentaires aux archives départementales de Vaucluse</emph>
+</p>
+<p>74 J 28 Affaire Olive/Borie : contentieux à la suite d'un accident automobile entre Léon Olive et Émile Borie (1932-1934)</p>
+<p>
+<emph render="bold">Voir aussi dans cet inventaire</emph>
+</p>
+<p>
+<extref xlink:href="http://earchives.vaucluse.fr/archives/show/FRAD084_IR0000412_FRAD084_IR0000412_de-30">voir la description de l&apos;affaire Olive/Borie 74 J 28</extref>
+</p>
+</relatedmaterial>
+<controlaccess>
+<head>Mots-clés</head>
+<subject>voyage</subject>
+<subject>spectacle</subject>
+<subject>bois</subject>
+<persname>Delino, Efisio</persname>
+<persname>Eysséric épouse Olive-Eysséric, Marie</persname>
+<persname>Olive-Eysséric née Eysséric, Marie</persname>
+<persname>Vidal, Raymond</persname>
+<persname>Richard, Lucien</persname>
+<persname>Maeterlinck, Maurice</persname>
+<persname>Mozart , Wolfgang Amadeus (1756-1791)</persname>
+<corpname>Théâtre-Français (Paris)</corpname>
+<corpname>Comédie-Française (Paris)</corpname>
+<corpname>Kursaal (Genève)</corpname>
+<corpname>Théâtre des Variétés (Paris)</corpname>
+<corpname>Opéra Comique (Paris)</corpname>
+<corpname>Opéra national de Paris</corpname>
+<corpname>Théâtre du Gymnase (Paris)</corpname>
+<corpname>Théâtre Réjane (Paris)</corpname>
+<corpname>Alcazar d'été (Paris)</corpname>
+<corpname>Théâtre de la Renaissance (Paris)</corpname>
+<corpname>Théâtre des Bouffes-Parisiens</corpname>
+<corpname>Athénée (Paris)</corpname>
+<corpname>Cirque Lilliput (Paris)</corpname>
+<corpname>Luna Park (Bruxelles)</corpname>
+<geogname>Simiane-Collongue (Bouches-du-Rhône, France)</geogname>
+<geogname>Jean-Lemaître (Simiane-Collongue, Bouches-du-Rhône, France)</geogname>
+<geogname>Pécaï (Simiane-Collongue, Bouches-du-Rhône, France)</geogname>
+<geogname>Vallon de Siège (Simiane-Collongue, Bouches-du-Rhône, France)</geogname>
+<geogname>Gréou (la) (Simiane-Collongue, Bouches-du-Rhône, France)</geogname>
+<geogname>Grand Vallon (Simiane-Collongue, Bouches-du-Rhône, France)</geogname>
+<geogname>Suisse</geogname>
+<geogname>Paris (France)</geogname>
+<geogname>Bruxelles (Belgique)</geogname>
+<geogname>Belfort (Territoire-de-Belfort, France)</geogname>
+<geogname>Chutes du Rhin (Suisse)</geogname>
+<name>Dufailly, J.</name>
+<title>Oiseau Bleu (L')</title>
+<title>Flûte enchantée (La)</title>
+</controlaccess>
+</c>
+<c id="FRAD084_IR0000412_de-27" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 30</unitid>
+<unittitle encodinganalog="3.1.2">Abonnements à la presse</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1912/1952">1912-1952</unitdate>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>- Extraits de la revue <emph render="italic">L'Illustration</emph> : planches de reproduction d'oeuvres d'art en couleurs (1912-1913) et suppléments économiques et financiers de la revue, à parution hebdomadaire (avril-août 1914). Les planches d'une part et les suppléments d'autre part sont conservés dans 2 pochettes kraft dont l'une porte l'adresse d'envoi à M. et Mme L. Olive Eysséric 16, rue de la Rotonde, Marseille (1914 ?). </p>
+<p>- <emph render="italic">Alpes et Provence. Hebdomadaire des syndicats et associations agricoles</emph> (9 mai 1943), adressé à M. L. C. Olive, avocat 21, place Alexandre Labadie, à Marseille</p>
+<p>- <emph render="italic">L'agriculteur provençal. Hebdomadaire syndical, coopératif &amp; mutualiste des Alpes et Provence</emph>, 3 n° (21 mai 1950, 25 mai 1952, 20 juillet 1952), tous adressés à Monsieur L. C. Olive, avocat 21, place Alexandre Labadie, à Marseille.</p>
+</scopecontent>
+<controlaccess>
+<head>Mots-clés</head>
+<genreform>publication périodique</genreform>
+<title>Alpes et Provence</title>
+<title>Agriculteur provençal (L')</title>
+</controlaccess>
+</c>
+</c>
+<c id="FRAD084_IR0000412_tt2-8" encodinganalog="3.1.4">
+<did>
+<unittitle encodinganalog="3.1.2">Pierre Olive-Eysséric (1917-1974)</unittitle>
+</did>
+<bioghist encodinganalog="3.2.2">
+<head>Éléments historiques</head>
+<p>Fils de Marie Eysséric, elle-même fille aînée de Gustave (Crescent) Eysséric et Antoinette Vassail, et de Léon Olive, avocat à Marseille, né le 10 janvier 1917 (cf. 74 J 21).</p>
+<p>Adresse : (chez ses parents) 21, place Alexandre Labadie, à Marseille.</p>
+</bioghist>
+<controlaccess>
+<head>Mots-clés</head>
+<persname>Olive-Eysséric, Pierre</persname>
+</controlaccess>
+<c id="FRAD084_IR0000412_de-17" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 31</unitid>
+<unittitle encodinganalog="3.1.2">Papiers personnels</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1936/1942">1936-1942</unitdate>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>- Thème anglais, peut-être de Pierre Olive ? (1936).</p>
+<p>- Note de frais d'André Ducasse, professeur agrégé, pour des cours particuliers (1936-1937).</p>
+<p>- Bons de livraison de semences de pommes de terre, chez J.-B. Moutonnet, Marseille ; et d'essence, chez Fernand Caste, Marignane (1941).</p>
+<p>- "Contrat de culture de céréales secondaires" passé entre Pierre Olive et le Comité départemental des céréales des Bouches-du-Rhône pour ensemenser 3 ha d'orge et paumelle dans son exploitation agricole sise à Vitrolles (10 mars 1942).</p>
+</scopecontent>
+<relatedmaterial encodinganalog="3.5.3">
+<head>
+</head>
+<p>
+<emph render="bold">Sources complémentaires aux archives départementales de Vaucluse</emph>
+</p>
+<p>74 J 28 Réclamations diverses : accident automobile de Pierre Olive (1935) ; affaire Olive/Feraud : contentieux à la suite d'un accident automobile entre Pierre Olive et Rosette Feraud (1936-1938)</p>
+<p>
+<emph render="bold">Voir aussi dans cet inventaire</emph>
+</p>
+<p>
+<extref xlink:href="http://earchives.vaucluse.fr/archives/show/FRAD084_IR0000412_FRAD084_IR0000412_de-30">voir la description de 74 J 28</extref>
+</p>
+</relatedmaterial>
+<controlaccess>
+<head>Mots-clés</head>
+<persname>Ducasse, André</persname>
+<corpname>J.-B. Moutonnet (Marseille)</corpname>
+<corpname>Fernand Caste (Marignane, Bouches-du-Rhône)</corpname>
+<corpname>Comité départemental des céréales des Bouches-du-Rhône</corpname>
+<geogname>Vitrolles (Bouches-du-Rhône, France)</geogname>
+</controlaccess>
+</c>
+</c>
+<c id="FRAD084_IR0000412_tt2-20" encodinganalog="3.1.4">
+<did>
+<unittitle encodinganalog="3.1.2">Documents appartenant à Léon ou son fils Pierre Olive</unittitle>
+</did>
+<c id="FRAD084_IR0000412_de-15" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 32</unitid>
+<unittitle encodinganalog="3.1.2">Papiers personnels et abonnement presse</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1924/1952">1924-1952</unitdate>
+<dao xlink:href="http://v-earchives.vaucluse.fr/viewer/instrument_recherche/74J_Eysseric/FRAD084_74J31_01.jpg" xlink:title="Achat d&apos;un poste TSF Arco par Pierre Olive (1942) 74 J 32"/>
+<dao xlink:title="thumbnail" xlink:href="http://cdn-earchives.vaucluse.fr/prepared_images/thumb/destination/instrument_recherche/74J_Eysseric/FRAD084_74J31_01.jpg"/>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>- Faire-parts, essentiellement de mariage, adressés à Léon ou Pierre Olive. Les familles sont notamment des avocats et juristes marseillais. Certains faire-parts sont annotés avec les dates de réponse (classement chronologique, 1924-1937).</p>
+<p>- <emph render="italic">L'Action française. Organe du nationalisme intégral</emph>, n°366 du 31 décembre 1932, portant en première page la mention manuscrite "M. Olive".</p>
+<p>- Facture pour l'achat d'un poste de radio Arco par M. Olive, 21 place Alexandre Labadié, chez J-L. Laugier, à Marseille (1942).</p>
+<p>- Programme de la fête de l'Oratoire Saint-Léon (Don Bosco Marseille), conservé dans son bandeau d'expédition à Mme Nickels 21 rue Alexandre Labadie à Marseille (1943).</p>
+<p>- <emph render="italic">Le Comtadin. Organe hebdomadaire du parti radical-socialiste de l'arrondissement de Carpentras</emph>, n°384 du 8 février 1952, adressé à M. Olive 21, place Labadié, à Marseille. Le numéro porte un encart publicitaire, à gauche du titre, "Berlingots Eysséric Un siècle de succès 1851-1951".</p>
+</scopecontent>
+<controlaccess>
+<head>Mots-clés</head>
+<genreform>faire-part</genreform>
+<genreform>publication périodique</genreform>
+<persname>Olive, Léon</persname>
+<persname>Olive-Eysséric, Pierre</persname>
+<persname>Nickels</persname>
+<corpname>J.L. Laugier (Marseille)</corpname>
+<corpname>Oratoire Saint-Léon (Marseille)</corpname>
+<title>Action française (L')</title>
+<title>Comtadin (Le)</title>
+</controlaccess>
+</c>
+</c>
+<c id="FRAD084_IR0000412_tt2-14" encodinganalog="3.1.4">
+<did>
+<unittitle encodinganalog="3.1.2">Camille Olive, père de Léon Olive, et son épouse Lucie Gavot</unittitle>
+</did>
+<bioghist encodinganalog="3.2.2">
+<head>Éléments historiques</head>
+<p>Propriétaire rentier, Laurent <emph render="bold">Camille</emph> Olive demeure à Marseille au 24, rue de la Rotonde avec son épouse Marie Anastasie Joséphine <emph render="bold">Lucie</emph> Gavot.</p>
+<p>ll est le père de :</p>
+<p>- Eugène Marie Louis Camille Olive, né le 25 juillet 1870 à Marseille, rentier, témoin au mariage de son frère, Léon Olive, avec Marie Eysséric (1 E 31/112).</p>
+<p>- Léon Olive, né le 7 août 1873 à Marseille, époux de la fille aînée de la famille Eysséric, Marie.</p>
+<p>Il meurt vers 1933.</p>
+</bioghist>
+<relatedmaterial encodinganalog="3.5.3">
+<head>
+</head>
+<p>
+<emph render="bold">Sources complémentaires hors archives départementales de Vaucluse</emph>
+</p>
+<p>Contrat de mariage entre Camille Olive et Lucie Gavot, reçu le 2 février 1868 par Me J.J. Léon Roubaud, notaire à Marseille.</p>
+</relatedmaterial>
+<controlaccess>
+<head>Mots-clés</head>
+<persname>Olive, Camille</persname>
+</controlaccess>
+<c id="FRAD084_IR0000412_de-16" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 33</unitid>
+<unittitle encodinganalog="3.1.2">Contentieux</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1877/1903">1877-1903</unitdate>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>- Contentieux entre Lucie Gavot, épouse de Camille Olive, et la Société générale à la suite d'un important retrait de fonds sur le compte de son père Marius Gavot après son décès survenu le 20 mars 1877 (1877-1900) .</p>
+<p>- Contentieux entre Camille Olive et la Mutuelle de Valence pour le règlement du sinistre survenu dans les bois de Simiane, ravagés par un incendie en septembre 1899 (1899-1900) .</p>
+<p>- Contentieux entre Camille Olive et Aldéric Revertégat pour une dette de 6200 francs relative à la fourniture de grains et à la redevance de l'autorisation de chasser sur son domaine de Montvalon (1900-1903).</p>
+</scopecontent>
+<relatedmaterial encodinganalog="3.5.3">
+<head>
+</head>
+<p>
+<emph render="bold">Sources complémentaires aux archives départementales de Vaucluse</emph>
+</p>
+<p>74 J 28 Affaire Olive/Rougy : contentieux entre Camille Olive puis ses héritiers et le docteur Mathieu Rougy (1920-1936)</p>
+<p>
+<emph render="bold">Voir aussi dans cet inventaire</emph>
+</p>
+<p>
+<extref xlink:href="http://earchives.vaucluse.fr/archives/show/FRAD084_IR0000412_FRAD084_IR0000412_de-30">voir la description de l&apos;affaire Olive/Rougy</extref>
+</p>
+</relatedmaterial>
+<controlaccess>
+<head>Mots-clés</head>
+<subject>contentieux</subject>
+<persname>Gavot épouse Olive, Lucie</persname>
+<persname>Olive née Gavot, Lucie</persname>
+<persname>Gavot, Marius</persname>
+<persname>Revertégat, Adalric</persname>
+<geogname>Simiane-Collongue (Bouches-du-Rhône, France)</geogname>
+<geogname>Montvalon (Vitrolles, Bouches-du-Rhône, France)</geogname>
+</controlaccess>
+</c>
+<c id="FRAD084_IR0000412_de-43" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 34</unitid>
+<unittitle encodinganalog="3.1.2">Gestion des immeubles loués appartenant à Camille Olive, son épouse Lucie Gavot ou sa belle-mère veuve Gavot née Joueou</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1896/1925">1896-1925</unitdate>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>- Impositions, redevances pour les eaux du canal et l'assainissement, taxes de remplacement du droit d'octroi pour des biens situés à Marseille, Simiane, Montvalon, Valbacol, etc. (1901-1908).</p>
+<p>- Baux et loyers, revus notamment à la suite des lois du 9 mars 1918 et du 2 août 1924 ; révision de l'évaluation des propriétés bâties du fait de la loi du 22 mars 1924, pour des biens à Marseille et Simiane (1913-1924).</p>
+<p>- Demande de concession d'eau domestique de la Durance formulée par Camille Olive, propriétaire, pour son immeuble sis Grand chemin de Toulon 56a, à Marseille (1915).</p>
+</scopecontent>
+<controlaccess>
+<head>Mots-clés</head>
+<subject>eau potable</subject>
+<persname>Gavot épouse Olive, Lucie</persname>
+<persname>Olive née Gavot, Lucie</persname>
+<persname>Joueou épouse Gavot, Marie Rose Thérèse</persname>
+<persname>Gavot née Joueou, Marie Rose Thérèse</persname>
+<geogname>Marseille (Bouches-du-Rhône, France)</geogname>
+<geogname>Simiane-Collongue (Bouches-du-Rhône, France)</geogname>
+<geogname>Montvalon (Vitrolles, Bouches-du-Rhône, France)</geogname>
+<geogname>Montvalon (Vitrolles, Bouches-du-Rhône, France)</geogname>
+<geogname>Valbacol (Vitrolles, Bouches-du-Rhône, France)</geogname>
+<geogname>Durance (Provence-Alpes-Côte d'Azur, France ; cours d'eau)</geogname>
+</controlaccess>
+</c>
+<c id="FRAD084_IR0000412_de-31" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 35</unitid>
+<unittitle encodinganalog="3.1.2">Domaine de Valbacol à Vitrolles.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1904/1923">1904-1923</unitdate>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>- Location de la maison de campagne de Valbacol, domaine de Montvalon, à Alfred Meunier : état des lieux d'entrée (1904), indemnisation pour deux sinistres incendie (1923). </p>
+<p>- Extraits de la matrice cadastrale de la commune de Vitrolles à Valbacol pour des parcelles non bâties et bâtie (Valboral) dressés pour Camille Olive (1916).</p>
+</scopecontent>
+<relatedmaterial encodinganalog="3.5.3">
+<head>
+</head>
+<p>
+<emph render="bold">Sources complémentaires aux archives départementales de Vaucluse</emph>
+</p>
+<p>Le domaine de Valbacol a été acheté le 6 janvier 1904 (74 J 43)</p>
+</relatedmaterial>
+<controlaccess>
+<head>Mots-clés</head>
+<persname>Meunier, Alfred</persname>
+<geogname>Vitrolles (Bouches-du-Rhône, France)</geogname>
+<geogname>Montvalon (Vitrolles, Bouches-du-Rhône, France)</geogname>
+<geogname>Valbacol (Vitrolles, Bouches-du-Rhône, France)</geogname>
+<geogname>Valboral (Vitrolles, Bouches-du-Rhône, France)</geogname>
+</controlaccess>
+</c>
+</c>
+<c id="FRAD084_IR0000412_tt2-22" encodinganalog="3.1.4">
+<did>
+<unittitle encodinganalog="3.1.2">Autres membres des familles Eysséric et Olive</unittitle>
+</did>
+<c id="FRAD084_IR0000412_de-35" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 36</unitid>
+<unittitle encodinganalog="3.1.2">Succession litigieuse de Mme Pacquetet, veuve de Toussaint Gavot</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1900/1927">[1900]-[1927]</unitdate>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>L'actif de la succession comporte trois immeubles principaux : le domaine de la Viste à Marseille, "Rustrel-forestier" et "Rustrel-minier". La succession doit se répartir "entre onze enfants vivants ou représentés", parmi lesquels Agnès Gavot, épouse de Marcel Eysséric, ingénieur.</p>
+</scopecontent>
+<controlaccess>
+<head>Mots-clés</head>
+<persname>Pacquetet épouse Gavot</persname>
+<persname>Gavot née Pacquetet</persname>
+<persname>Gavot, Toussaint</persname>
+<persname>Gavot, Agnès</persname>
+<persname>Eysséric, Marcel</persname>
+<geogname>Viste, domaine de la (Marseille, Bouches-du-Rhône, France)</geogname>
+<geogname>Rustrel (Vaucluse, France)</geogname>
+</controlaccess>
+</c>
+<c id="FRAD084_IR0000412_de-25" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 37</unitid>
+<unittitle encodinganalog="3.1.2">Relevés de la Banque de France au nom de Joseph Marie Philippe Eysséric</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1904/1905">1904-1905</unitdate>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>Joseph Marie Philippe Eysséric demeure à Carpentras au 17, rue Duplessis.</p>
+</scopecontent>
+<controlaccess>
+<head>Mots-clés</head>
+<persname>Eysséric, Joseph Marie Philippe</persname>
+</controlaccess>
+</c>
+<c id="FRAD084_IR0000412_de-34" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 38</unitid>
+<unittitle encodinganalog="3.1.2">Contentieux relatif à la minoterie Touyon, apartenant à Rose Martignole épouse de Louis Olive</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1931/1935">1931-1935</unitdate>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>Procès de ses créanciers contre Marceau Touyon, minotier, pour le recouvrement de dettes, notamment du loyer et des charges de la minoterie Sainte-Marie. La minoterie est située au quartier Saint-Louis, 63 bd Balthazar Blanc à Marseille.</p>
+</scopecontent>
+<controlaccess>
+<head>Mots-clés</head>
+<subject>contentieux</subject>
+<persname>Touyon, Marceau</persname>
+<persname>Olive, Louis</persname>
+<persname>Martignole épouse Olive, Rose</persname>
+<persname>Olive née Martignole, Rose</persname>
+<corpname>Minoterie Sainte-Marie (Marseille)</corpname>
+</controlaccess>
+</c>
+</c>
+</c>
+<c id="FRAD084_IR0000412_tt1-3" encodinganalog="3.1.4">
+<did>
+<unittitle encodinganalog="3.1.2">Pièces sans rapport apparent avec le fonds</unittitle>
+</did>
+<c id="FRAD084_IR0000412_tt2-18" encodinganalog="3.1.4">
+<did>
+<unittitle encodinganalog="3.1.2">Documents d'archives</unittitle>
+</did>
+<c id="FRAD084_IR0000412_de-40" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 39</unitid>
+<unittitle encodinganalog="3.1.2">Scolarité (1897-1899)</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1897/1899">1897-[1899]</unitdate>
+<dao xlink:href="http://v-earchives.vaucluse.fr/viewer/instrument_recherche/74J_Eysseric/FRAD084_74J39_01.jpg" xlink:title="&quot;Règles de conduite pour les vacances&quot;, dans la 2e de couverture des &quot;Devoirs de vacances&quot; (1897) 74 J 39"/>
+<dao xlink:title="thumbnail" xlink:href="http://cdn-earchives.vaucluse.fr/prepared_images/thumb/destination/instrument_recherche/74J_Eysseric/FRAD084_74J39_01.jpg"/>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>- Copies d'élèves : J. Maubon (sans date) et D. Michel, en seconde en 1897-1898 et en classe de rhétorique en 1898-1899 (1897-[1899]). Ces copies étaient mêlées à celles de Gustave Eysséric (74 J 5), plus jeune d'un an que D. Michel. </p>
+<p>- <emph render="italic">Devoirs de vacances. 1re année de latin</emph> / E. Ragon. — Paris : Librairie Ch. Poussielgue, 1897 — 36 p. ; 16 cm.</p>
+</scopecontent>
+<controlaccess>
+<head>Mots-clés</head>
+<genreform>travail scolaire</genreform>
+<persname>Maubon, J.</persname>
+<persname>Michel, D.</persname>
+<name>Ragon, E.</name>
+</controlaccess>
+</c>
+</c>
+<c id="FRAD084_IR0000412_tt2-19" encodinganalog="3.1.4">
+<did>
+<unittitle encodinganalog="3.1.2">Publications</unittitle>
+</did>
+<controlaccess>
+<head>Mots-clés</head>
+<genreform>publication périodique</genreform>
+</controlaccess>
+<c id="FRAD084_IR0000412_de-10" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 41</unitid>
+<unittitle encodinganalog="3.1.2">Publications domestiques, publicités, cartes de voeux, iconographie</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1876/1971">1876-1971</unitdate>
+<dao xlink:href="http://v-earchives.vaucluse.fr/viewer/instrument_recherche/74J_Eysseric/FRAD084_74J41_01.jpg" xlink:title="Scène avec le père noël (sans date) 74 J 41"/>
+<dao xlink:title="thumbnail" xlink:href="http://cdn-earchives.vaucluse.fr/prepared_images/thumb/destination/instrument_recherche/74J_Eysseric/FRAD084_74J41_01.jpg"/>
+<dao xlink:href="http://v-earchives.vaucluse.fr/viewer/instrument_recherche/74J_Eysseric/FRAD084_74J41_02.jpg" xlink:title="Panier de fleurs (sans date) 74 J 41"/>
+<dao xlink:title="thumbnail" xlink:href="http://cdn-earchives.vaucluse.fr/prepared_images/thumb/destination/instrument_recherche/74J_Eysseric/FRAD084_74J41_02.jpg"/>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>- Patron de couture d'un costume de petit garçon : robe et paletot, du Magasin des Demoiselles, 51 rue Laffitte à Paris. 84 x 117 cm (1876).</p>
+<p>- Publicité pour les établissements H. Landsberg &amp; Cie, à Halluin (Nord), spécialisés en étiquettes, tableaux, affiches, cartes réclame, chromolithographies, découpures et calendriers. L'image centrale, qui avait été collée, a disparu (sans date, [1880-1910 ?]). </p>
+<p>- Calendriers : publicité de la compagnie d'assurances La Union &amp; le Phénix espagnol (1901) ; almanach des postes et des télégraphes, incomplet (1908).</p>
+<p>- <emph render="italic">Pépinières du Pont-d'Aran Eugène Revest fils Bandol (Var) </emph>, catalogue de vente d'arbres, arbustes, vignes et rosiers. — 16 p. (1927-1928). </p>
+<p>- Catalogue des établissements Revillon frères, fourrures et confections. — 30 p. (1928-1929).</p>
+<p>- Haute couture La Parisienne, 36 rue Paradis, Marseille : invitation (printemps 1933). </p>
+<p>- <emph render="italic">Comment je fais raccomodages et réparations diverses</emph> / Henriette Babet-Charton. — Paris : Société parisienne d'édition, s.d. [1934]. — 93 p. : ill. ; 18,5 cm.</p>
+<p>- La Vieille Garde, armurerie, Paris 4e : carte de voeux (1971). </p>
+<p>- Images en quadrichromie embossées et découpées, l'une représentant une scène avec le père noël, l'autre un panier de fleurs (sans date). </p>
+<p>- Image d'une sculpture de "La Vén. Jeanne d'Arc", Fournier, Toulouse (sans date). </p>
+<p>- Autocollant touristique pour Fouras-les-Bains (sans date).</p>
+<p>- <emph render="italic">La maison et le jardin pleins de vraies fleurs de Hollande à prix de malaise ! </emph>, catalogue de vente. — 24 p. (sans date). </p>
+<p>- <emph render="italic">
+<extref xlink:href="http://www.slingsby.com/About-Us.htm" xlink:title="voir l'historique de l'entreprise Slingsby">H. C. Slingsby</extref>, la première et la plus importante maison du monde pour le petit matériel roulant</emph>, catalogue de vente spécial pour l'agriculture et la campagne. — 10 p. (sans date).</p>
+</scopecontent>
+<controlaccess>
+<head>Mots-clés</head>
+<genreform>calendrier</genreform>
+<genreform>carte de voeu</genreform>
+<genreform>catalogue de vente</genreform>
+<genreform>annonce publicitaire</genreform>
+<subject>publicité</subject>
+<corpname>Établissements H. Landsberg &amp; Cie (Halluin, Nord)</corpname>
+<corpname>H. C. Slingsby (Londres)</corpname>
+<name>Babet-Charton, Henriette</name>
+</controlaccess>
+</c>
+<c id="FRAD084_IR0000412_de-4" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 40</unitid>
+<unittitle encodinganalog="3.1.2">Publications économiques et financières</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1873/1953">1873-1953</unitdate>
+</did>
+<c id="FRAD084_IR0000412_pa-10" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1">74 J 40</unitid>
+<unittitle encodinganalog="3.1.2">Le clavi-chiffre ou les trois merveilles de l'arithmétique : L'art de résoudre, à l'aide d'un seul chiffre, ou d'une simple addition, toutes les règles d'intérêt &amp; d'escompte, simples et composées, sans le secours de la division, en dix minutes d'étude / J. Graillat. Dixième édition.
+</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1873/1873">1873-1873</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">32 p.</extent>
+</physdesc>
+</did>
+<controlaccess>
+<head>Mots-clés</head>
+<name>Graillat, J.</name>
+</controlaccess>
+</c>
+<c id="FRAD084_IR0000412_pa-11" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1">74 J 40</unitid>
+<unittitle encodinganalog="3.1.2">Marchés. – Édition mise à jour au 30 décembre 1915. – Paris : Henri Charles-Lavauzelle, [1915 ?].</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1915/1915">1915-1915</unitdate>
+</did>
+<odd encodinganalog="3.6.1">
+<head>Notes ISBD</head>
+<p>Couverture seulement.</p>
+</odd>
+</c>
+<c id="FRAD084_IR0000412_pa-9" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1">74 J 40</unitid>
+<unittitle encodinganalog="3.1.2">L'illustration économique et financière ; Numéro spécial L'agriculture Le bois.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1928/1928">1928-1928</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<odd encodinganalog="3.6.1">
+<head>Notes ISBD</head>
+<p>Supplément au n° du 31 mars 1928.</p>
+</odd>
+</c>
+<c id="FRAD084_IR0000412_pa-14" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1">74 J 40</unitid>
+<unittitle encodinganalog="3.1.2">L'Actualité Financière. Revue économique et financière paraissant le samedi, n°27 du 7 juillet 1928.</unittitle>
+</did>
+<controlaccess>
+<head>Mots-clés</head>
+<title>Actualité financière (L')</title>
+</controlaccess>
+</c>
+<c id="FRAD084_IR0000412_pa-12" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1">74 J 40</unitid>
+<unittitle encodinganalog="3.1.2">Marchés coloniaux du monde, 4 numéros (janvier-mars 1951)</unittitle>
+</did>
+<controlaccess>
+<head>Mots-clés</head>
+<title>Marchés coloniaux du monde</title>
+</controlaccess>
+</c>
+<c id="FRAD084_IR0000412_pa-13" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1">74 J 40</unitid>
+<unittitle encodinganalog="3.1.2">Revue des loyers, de la propriété commerciale, des fonds de commerce, de la reconstruction et de la copropriété immobilières, 3 numéros (février-mai 1953) ; Code annoté des baux commerciaux, mise à jour au 1er janvier 1953, supplément au n° de mars 1953 de la Revue des loyers.</unittitle>
+</did>
+<controlaccess>
+<head>Mots-clés</head>
+<title>Revue des loyers</title>
+</controlaccess>
+</c>
+</c>
+<c id="FRAD084_IR0000412_de-38" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 42</unitid>
+<unittitle encodinganalog="3.1.2">Publications culturelles et littérature</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1885/1952">1885-1952</unitdate>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>- Page de titre du programme de la parodie <emph render="italic">Vers de Guignol dans Faust</emph>, donnée au Théâtre-guignol du Passage de l'Argue à Lyon. — [vers 1885]. — 22 cm.</p>
+<p>- <emph render="italic">Le Mois littéraire et pittoresque</emph>, n°76 d'avril 1905.</p>
+<p>- <emph render="italic">Annales politiques et littéraires</emph>. — Paris : Imprimerie des Annales, [1907].</p>
+<p>- <emph render="italic">La Petite illustration. Revue hebdomadaire publiant les pièces nouvelles jouées dans les théâtres de Paris, des romans inédits, des poèmes, des critiques littéraires et dramatiques et des études cinématographiques</emph>, supplément de <emph render="italic">L'Illustration</emph>, n°357 du 12 novembre 1927. Contient le texte de <emph render="italic">Ève toute nue</emph>, comédie en 3 actes de Paul Nivoix, donnée au Théâtre Michel.</p>
+<p>- <emph render="italic">L'automne d'une femme. Roman</emph> / Marcel Prévost. — Paris : Flammarion, 1936. — 78 p. ; 24 cm. — (Select-Collection).</p>
+<p>- Première de couverture de <emph render="italic">Nouvelles lettres de femmes</emph> / Marcel Prévost . — Paris : Arthème Fayard éditeur, sans date. — 24 cm. — (Modern-bibliothèque).</p>
+<p>- <emph render="italic">Radio magazine</emph>, n°822 du 16 juillet 1939.</p>
+<p>- <emph render="italic">Guide à l'usage des visiteurs du Palais des Nations</emph>. – [S.l.], mai 1952.</p>
+<p>- <emph render="italic">France. Illustration. Le monde illustré</emph>, n°376, 27 décembre 1952.</p>
+</scopecontent>
+<controlaccess>
+<head>Mots-clés</head>
+<corpname>Théâtre Michel (Paris)</corpname>
+<corpname>Théâtre-Guignol du Passage de l'Argue (Lyon)</corpname>
+<name>Prévost , Marcel (1862-1941)</name>
+<name>Nivoix, Paul</name>
+<title>Mois littéraire et pittoresque (Le)</title>
+<title>Annales politiques et littéraires</title>
+<title>Petite illustration (La)</title>
+<title>Radio magazine</title>
+<title>France. Illustration. Le monde illustré</title>
+<title>Vers de Guignol dans Faust</title>
+<geogname>Genève -- Palais des Nations (Suisse)</geogname>
+</controlaccess>
+</c>
+<c id="FRAD084_IR0000412_de-46" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 43</unitid>
+<unittitle encodinganalog="3.1.2">Publications juridiques</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1891/1944">1891-1944</unitdate>
+</did>
+<c id="FRAD084_IR0000412_pa-5" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1">74 J 43</unitid>
+<unittitle encodinganalog="3.1.2">[Memento de droit civil, 1ère année] / T. Vaquette ; F. Marin.</unittitle>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<odd encodinganalog="3.6.1">
+<head>Notes ISBD</head>
+<p>Incomplet.</p>
+</odd>
+<controlaccess>
+<head>Mots-clés</head>
+<name>Vaquette, T.</name>
+<name>Marin, F.</name>
+</controlaccess>
+</c>
+<c id="FRAD084_IR0000412_pa-1" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1">74 J 43</unitid>
+<unittitle encodinganalog="3.1.2">Memento de droit international privé permettant au candidat de revoir les matières la veille de l'examen / T. Vaquette ; A. Le Balleur.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1891/1891">1891-1891</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">48 p.</extent>
+</physdesc>
+</did>
+<controlaccess>
+<head>Mots-clés</head>
+<name>Vaquette, T.</name>
+<name>Le Balleur, A.</name>
+</controlaccess>
+</c>
+<c id="FRAD084_IR0000412_pa-4" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1">74 J 43</unitid>
+<unittitle encodinganalog="3.1.2">Synthèse des successions : Loi du 9 mars 1891, modifiant les droits de l'époux sur la succession de son conjoint décédé.</unittitle>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">8 p.</extent>
+</physdesc>
+</did>
+</c>
+<c id="FRAD084_IR0000412_pa-2" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1">74 J 43</unitid>
+<unittitle encodinganalog="3.1.2">Memento de procédure civile (voies d'exécution) permettant au candidat de revoir les matières la veille de l'examen / T. Vaquette.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1892/1892">1892-1892</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">48 p.</extent>
+</physdesc>
+</did>
+<controlaccess>
+<head>Mots-clés</head>
+<name>Vaquette, T.</name>
+</controlaccess>
+</c>
+<c id="FRAD084_IR0000412_pa-7" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1">74 J 43</unitid>
+<unittitle encodinganalog="3.1.2">Principes de droit international public rédigés conformément au noveau programme officiel à l'usage des étudiants de deuxième année / A. Pitois. Collection : Préparation aux examens de droit / A. Pitois.
+</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1892/1892">1892-1892</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">104 p.</extent>
+</physdesc>
+</did>
+<controlaccess>
+<head>Mots-clés</head>
+<name>Pitois, A.</name>
+</controlaccess>
+</c>
+<c id="FRAD084_IR0000412_pa-3" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1">74 J 43</unitid>
+<unittitle encodinganalog="3.1.2">Memento de droit civil permettant au candidat de revoir les matières la veille de l'examen / T. Vaquette ; A. Le Balleur.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1894/1894">1894-1894</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">28 p.</extent>
+</physdesc>
+</did>
+<odd encodinganalog="3.6.1">
+<head>Notes ISBD</head>
+<p>Incomplet ?.</p>
+</odd>
+<controlaccess>
+<head>Mots-clés</head>
+<name>Vaquette, T.</name>
+<name>Le Balleur, A.</name>
+</controlaccess>
+</c>
+<c id="FRAD084_IR0000412_pa-15" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1">74 J 43</unitid>
+<unittitle encodinganalog="3.1.2">Législation de la guerre de 1914-1916.</unittitle>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">224 p.</extent>
+</physdesc>
+</did>
+<odd encodinganalog="3.6.1">
+<head>Notes ISBD</head>
+<p>Mauvais état.</p>
+</odd>
+</c>
+<c id="FRAD084_IR0000412_pa-6" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1">74 J 43</unitid>
+<unittitle encodinganalog="3.1.2">Droit criminel : Résumé en tableaux synoptiques.</unittitle>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">F. V-XXXII.</extent>
+</physdesc>
+</did>
+<odd encodinganalog="3.6.1">
+<head>Notes ISBD</head>
+<p>Incomplet (manquent pages XXVII-XXX).</p>
+</odd>
+</c>
+<c id="FRAD084_IR0000412_pa-8" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1">74 J 43</unitid>
+<unittitle encodinganalog="3.1.2">Principes de droit commercial : Cours professé à l'école supérieure d'organisation professionnelle / Germain Brulliard ; Daniel Laroche.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1944/1944">1944-1944</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">245 p.</extent>
+</physdesc>
+</did>
+<controlaccess>
+<head>Mots-clés</head>
+<name>Brulliard, Germain</name>
+<name>Laroche, Daniel</name>
+</controlaccess>
+</c>
+</c>
+<c id="FRAD084_IR0000412_de-39" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 44</unitid>
+<unittitle encodinganalog="3.1.2">Revues régionales</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1908/1963">1908-1963</unitdate>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>- <emph render="italic">Les Vosges. Villes d'eaux. Cures d'air, centres de tourisme de l'Est</emph> / Syndicat d'initiative des Vosges et de Nancy. — Nancy : Impr. Berger-Levrault et Cie, 1er trimestre 1908. — 64 p. : ill., cartes ; 21,5 cm. </p>
+<p>- <emph render="italic">Massilia. Le monde Le théâtre L'actualité La mode Les sports</emph>, n°37 du 1er octobre 1909.</p>
+<p>- <emph render="italic">La Région illustrée</emph> [Saint-Etienne, Grenoble], n°4 du 1er février 1929.</p>
+<p>-<emph render="italic">La Revue de chez nous</emph> [Lyon], n°10 du 1er mars 1932.</p>
+<p>- <emph render="italic">L'Accent. Hebdomadaire illustré d'Avignon et de Provence</emph>, 7 numéros (1950-1963).</p>
+</scopecontent>
+<controlaccess>
+<head>Mots-clés</head>
+<title>Massilia</title>
+<title>Région illustrée (La)</title>
+<title>Revue de chez nous (La)</title>
+<title>Accent (L')</title>
+</controlaccess>
+</c>
+<c id="FRAD084_IR0000412_de-28" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 45</unitid>
+<unittitle encodinganalog="3.1.2">Publications historiques et politiques</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1910/1941">1910-[1941]</unitdate>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>- <emph render="italic">Le Conférencier populaire. Revue mensuelle organe de la société des conférenciers populaires</emph>, n°5 du 15 juillet 1910.</p>
+<p>- <emph render="italic">Travail et Nation. Publication bimensuelle</emph>, n°32 du 1er avril 1937.</p>
+<p>- <emph render="italic">Le Pays réel. Revue de politique intérieure</emph>, n°3 du 25 avril 1937.</p>
+<p>- <emph render="italic">Parti socialiste français : Une mystique, un programme</emph> / Parti social français. — Paris : Société d'éditions et d'abonnements (S.E.D.A.), [Entre 1936 et 1941].</p>
+</scopecontent>
+<controlaccess>
+<head>Mots-clés</head>
+<title>Conférencier populaire (Le)</title>
+<title>Travail et Nation</title>
+<title>Pays réel (Le)</title>
+</controlaccess>
+</c>
+<c id="FRAD084_IR0000412_de-22" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 46</unitid>
+<unittitle encodinganalog="3.1.2">Partitions <emph render="italic">Les Chansons à la mode</emph>
+</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1923/1925">[1923]</unitdate>
+<physdesc encodinganalog="3.1.5">
+8 pages
+</physdesc>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>Edition de propagande</p>
+<p>Sept chansons à succès propriété de Ferdinand Louis Bénech (1875-1925) : </p>
+<p>- La jolie loucheuse (chansonnette) © 1913</p>
+<p>- Serment d'amour... Folie (chanson valse) © 1912</p>
+<p>- Dans les jardins de l'Alhambra © 1923</p>
+<p>- Les roses de Cythère (légende) © 1911</p>
+<p>- Manette-Manon © 1919</p>
+<p>- Chère petite chose (fox trot) © 1923</p>
+<p>- Fiorella (chanson vénitienne) © 1912.</p>
+</scopecontent>
+<relatedmaterial encodinganalog="3.5.3">
+<head>
+</head>
+<p>
+<emph render="bold">Autres ressources numériques</emph>
+</p>
+<list>
+<item>
+<extref xlink:href="http://www.www.dutempsdescerisesauxfeuillesmortes.net/audio/ch_perdues/la_jolie_loucheuse.mp3" xlink:title="Ecouter La loucheuse (www.dutempsdescerisesauxfeuillesmortes.net)"/>
+</item>
+<item>
+<extref xlink:href="http://www.youtube.com/watch?v=513ZvvLj470" xlink:title="Ecouter Dans les jardins de l&apos;Alhambra (1924, www.youtube.com)"/>
+</item>
+<item>
+<extref xlink:href="http://www.phonobase.org/audio/MNCT_2001/CDmnct02a_11.mp3" xlink:title="Ecouter Manette-Manon (www.phonobase.org)"/>
+</item>
+</list>
+</relatedmaterial>
+<controlaccess>
+<head>Mots-clés</head>
+<genreform>chanson</genreform>
+<genreform>partition musicale</genreform>
+<persname>Bénech, Ferdinand Louis</persname>
+</controlaccess>
+</c>
+<c id="FRAD084_IR0000412_de-37" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 47</unitid>
+<unittitle encodinganalog="3.1.2">Revues militaires</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1927/1928">1927-1928</unitdate>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>- <emph render="italic">L'Officier de réserve, études et renseignements militaires. Recueil mensuel édité par l'Union nationale des officiers de réserve</emph>, 6e année, n°7 et 8 de novembre et décembre 1927.</p>
+<p>- <emph render="italic">Le Mistral, bulletin mensuel de l'association des officiers de réserve de Marseille</emph>, 6e année, n°50 d'avril 1928.</p>
+</scopecontent>
+<controlaccess>
+<head>Mots-clés</head>
+<title>Officier de réserve (L')</title>
+<title>Mistral (Le)</title>
+</controlaccess>
+</c>
+<c id="FRAD084_IR0000412_de-44" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 48</unitid>
+<unittitle encodinganalog="3.1.2">Presse</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1915/1953">1915-1953</unitdate>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>- <emph render="italic">Le Petit Marseillais. Journal politique quotidien</emph> (1er septembre 1915).</p>
+<p>- <emph render="italic">Les Échos</emph>, <emph render="italic">la grande revue commerciale française</emph> (couverture du n°276 du 30 mars 1921) ; <emph render="italic">Edition quotidienne</emph>, 2 numéros (10 avril 1930 et 11 avril 1931). </p>
+<p>- <emph render="italic">L'Ami du peuple de Paris. Grand Quotidien de Doctrine Politique et d'Information</emph> (21 janvier 1929). </p>
+<p>- <emph render="italic">Le Torero. Revue taurine française hebdomadaire en été &amp; mensuelle en hiver</emph> (5 octobre 1930). </p>
+<p>- <emph render="italic">Bulletin trimestriel de la fédération nationale des décorés de la médaille d'honneur du travail de France et des Colonies</emph> (n°1, 10 janvier 1931) </p>
+<p>- <emph render="italic">L'Oeuvre latine. Organe officiel de la Ligue d'Union Latine</emph> (Unir et fédérer les Élites Latines pour la défense et la gloire de leur civilisation), 2 numéros (mars 1931 et février 1932). </p>
+<p>- <emph render="italic">L'Union Mutuelle Nationale. Bulletin trimestriel de l'Union Mutuelle Nationale pour l'Assurance en cas de vie et décès</emph> (2e série, n°58, février 1932).</p>
+<p>- <emph render="italic">Le Flambeau des anciens combattants de l'avant. Organe du mouvement Croix de feu</emph> (9 mai 1936). </p>
+<p>- <emph render="italic">Journal de Genève. Quotidien fondé en 1826</emph>, 3 numéros (14, 15 et 18 juillet 1953).</p>
+</scopecontent>
+<controlaccess>
+<head>Mots-clés</head>
+<title>Petit Marseillais (Le)</title>
+<title>Échos (Les)</title>
+<title>Ami du peuple de Paris (L')</title>
+<title>Torero (Le)</title>
+<title>Bulletin trimestriel de la fédération nationale des décorés de la médaille d'honneur du travail de France et des Colonies</title>
+<title>Oeuvre latine (L')</title>
+<title>Union mutuelle nationale (L')</title>
+<title>Journal de Genève</title>
+</controlaccess>
+</c>
+<c id="FRAD084_IR0000412_de-8" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 49</unitid>
+<unittitle encodinganalog="3.1.2">Publications automobiles</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1933/1952">1933-1952</unitdate>
+<physdesc encodinganalog="3.1.5">
+L'autocatalogue est dérelié, en mauvais état.
+</physdesc>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>- <emph render="italic">Autocatalogue 1933. Guide pratique réparation et vente spécialement à l'usage des motoristes et motocistes. </emph> — Paris : Éd. L'officiel de l'automobile, du cycle, de la motocyclette, 1933. — 336 p. ; 31,5 cm.</p>
+<p>- <emph render="italic">Reale automobile club d'Italia. Piantine di attraversamento delle città capoluoghi di provincia</emph>. — S. l., 1937. — 50 p. : plans ; 25 cm.</p>
+<p>- <emph render="italic">L'Auto-journal</emph>, 6 numéros (1952).</p>
+</scopecontent>
+<controlaccess>
+<head>Mots-clés</head>
+<title>Auto-journal (L')</title>
+</controlaccess>
+</c>
+<c id="FRAD084_IR0000412_de-47" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 50</unitid>
+<unittitle encodinganalog="3.1.2">Publications religieuses</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1901/2000">XXe siècle</unitdate>
+<langmaterial encodinganalog="3.4.3">provençal</langmaterial>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>- Cantiques pour le temps de la Guerre, par Jean Vézère (1 feuille imprimée) : XXVII <emph render="italic">Le drapeau du Sacré-Coeur</emph> ; XXVIII <emph render="italic">Veillez, veillez, ô Sainte Geneviève ! </emph> ; XXIX <emph render="italic">Dieu avec nous ! </emph> (Limoges, 1915).</p>
+<p>- Livret de chants catholiques en français et provençal, incomplet (p.5-20, sans date) : </p>
+<list>
+<item>[chant n°2 Ave Maria] incomplet (en français) ; </item>
+<item>chant n°3 "O Marie, ô Mère chérie ! Garde au coeur des Français la foi des anciens jours..." ; </item>
+<item>chant n°4 <emph render="italic">Nous voulons Dieu ! </emph> ; </item>
+<item>chant n°5 "Prouvençau e catouli, Nosto fe, nosto fe n'a pas fali..." ; </item>
+<item>chant n°6 "Malgré l'enfer, malgré la haine, Celui qu'anime un coeur fervent...." ; </item>
+<item>chant n°7 "Sur notre beau pays de France Veille toujours, Reine des Cieux...." ; </item>
+<item>chant n°8 <emph render="italic">Au Sacré-Coeur</emph> ; </item>
+<item>chant n°9 "Pitié, mon Dieu ! C'est pour notre patrie Que nous prions au pied de cet autel..." ; </item>
+<item>chant n°10 <emph render="italic">Cantique du Martyre</emph> ; </item>
+<item>chant n°11 "Je suis chrétien : voilà ma gloire..." ; </item>
+<item>chant n°12 "Il est né le divin enfant..." ; </item>
+<item>chant n°13 "Volez, volez, anges de la prière...".</item>
+</list>
+<p>- Billet de loterie de l'Oeuvre de la Providence, orphelinat des enfants de l'étoile, 60 rue Auguste Blanqui à Marseille (1939).</p>
+<p>- <emph render="italic">Marie, la grande revue mariale du jour</emph>, publication du Centre marial canadien, Nicolet, Québec (Canada), volume VI, n°IV, n° spécial de noël consacré à Notre-Dame du Mont-Carmel (novembre-décembre 1952).</p>
+<p>- Images pieuses (sans date).</p>
+</scopecontent>
+<controlaccess>
+<head>Mots-clés</head>
+<genreform>chanson</genreform>
+<genreform>partition</genreform>
+<genreform>image pieuse</genreform>
+<persname>Vézère, Jean</persname>
+<title>Marie, la grande revue mariale du jour</title>
+</controlaccess>
+</c>
+<c id="FRAD084_IR0000412_de-48" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 51</unitid>
+<unittitle encodinganalog="3.1.2">Publications jeunesse</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1860/1960">XIXe-XXe siècles</unitdate>
+<dao xlink:href="http://v-earchives.vaucluse.fr/viewer/instrument_recherche/74J_Eysseric/FRAD084_74J51_poupees/" xlink:title="Poupées en papier (sans date) 74 J 51"/>
+<dao xlink:title="thumbnail" xlink:href="http://cdn-earchives.vaucluse.fr/prepared_images/thumb/destination/instrument_recherche/74J_Eysseric/FRAD084_74J51_poupees/"/>
+<dao xlink:href="http://v-earchives.vaucluse.fr/viewer/instrument_recherche/74J_Eysseric/FRAD084_74J51_Chaperon/" xlink:title="Le petit chaperon rouge (sans date) 74 J 51"/>
+<dao xlink:title="thumbnail" xlink:href="http://cdn-earchives.vaucluse.fr/prepared_images/thumb/destination/instrument_recherche/74J_Eysseric/FRAD084_74J51_Chaperon/"/>
+<dao xlink:href="http://v-earchives.vaucluse.fr/viewer/instrument_recherche/74J_Eysseric/FRAD084_74J51_06.jpg" xlink:title="Calendrier de l&apos;avent (sans date) 74 J 51"/>
+<dao xlink:title="thumbnail" xlink:href="http://cdn-earchives.vaucluse.fr/prepared_images/thumb/destination/instrument_recherche/74J_Eysseric/FRAD084_74J51_06.jpg"/>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>- Poupées en papier à habiller publiées par <emph render="italic">La poupée modèle, journal des petites filles </emph> 14, rue Drouot : deux planches 25 x 32 cm env. avec Louis XVI, Lapérouse, Marie Antoinette, Charlotte Corday ; Mme Élisabeth, Mme Roland, Lafayette et Mirabeau (sans date, fin du XIXe siècle ?) </p>
+<p>- <emph render="italic">Jeunesse ! </emph>, revue illustrée paraissant un jeudi sur deux, supplément au n°117 de <emph render="italic">Femina</emph>, Publications Pierre Lafitte, Paris, 1ère année, n°1, en mauvais état (30 novembre 1905).</p>
+<p>- "Les aventures du professeur Nimbus", par André Daix, quatorze comic strips découpés, publiés dans Marseille-Matin (vers 1937).</p>
+<p>- "Le Petit Chaperon Rouge" : deux planches de bande dessinée découpées dans une publicité Heudebert "Pour avoir de beaux enfants" (sans date). </p>
+<p>- Dessins d'animaux issus d'un carnet dégrafé, avec le nom des animaux en plusieurs langues : chien, coq et tigre (sans date).</p>
+<p>- Calendrier de l'Avent, signé Kerckhoff, 22 x 15 cm env. (sans date).</p>
+</scopecontent>
+<controlaccess>
+<head>Mots-clés</head>
+<genreform>bande dessinée</genreform>
+<genreform>dessin</genreform>
+<genreform>calendrier</genreform>
+<genreform>annonce publicitaire</genreform>
+<name>Daix, André</name>
+<title>Jeunesse !</title>
+</controlaccess>
+</c>
+<c id="FRAD084_IR0000412_de-54" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">74 J 52</unitid>
+<unittitle encodinganalog="3.1.2">Brochures pour des établissements d'enseignement</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1901/2000">XXe siècle</unitdate>
+</did>
+<scopecontent encodinganalog="summary">
+<head>Contenu</head>
+<p>- Collège Sainte-Barbe, établissement d'enseignement secondaire libre, Paris, place du Panthéon (année scolaire 1908-1909), 30 pages. Quelques passages sont cochés au crayon, notamment la classe de mathématiques spéciales (p. 7) et l'école préparatoire (p. 8).</p>
+<p>- Institut Jagot, enseignement et applications pratiques des sciences psychiques, Paris, rue du Dragon (sans date), 4 pages.</p>
+</scopecontent>
+<controlaccess>
+<head>Mots-clés</head>
+<corpname>Collège Sainte-Barbe (Paris)</corpname>
+<corpname>Institut Jagot (Paris)</corpname>
+</controlaccess>
+</c>
+</c>
+</c>
+</dsc>
+</archdesc>
+</ead>

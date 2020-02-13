@@ -28,7 +28,7 @@
 # The fact that you are presently reading this means that you have had
 # knowledge of the CeCILL-C license and that you accept its terms.
 #
-from __future__ import print_function
+
 
 from itertools import chain
 from datetime import datetime
@@ -41,13 +41,13 @@ from cubicweb_francearchives.xy import add_statements_to_graph, conjunctive_grap
 
 
 ETYPES_ADAPTERS = {
-    'FindingAid': ('rdf.schemaorg', 'rdf.em'),
-    'FAComponent': ('rdf.schemaorg', 'rdf.em'),
-    'BaseContent': ('rdf.schemaorg', ),
-    'NewsContent': ('rdf.schemaorg', ),
-    'CommemoCollection': ('rdf.schemaorg', ),
-    'CommemorationItem': ('rdf.schemaorg', ),
-    'Service': ('rdf.schemaorg', ),
+    "FindingAid": ("rdf.schemaorg", "rdf.em"),
+    "FAComponent": ("rdf.schemaorg", "rdf.em"),
+    "BaseContent": ("rdf.schemaorg",),
+    "NewsContent": ("rdf.schemaorg",),
+    "CommemoCollection": ("rdf.schemaorg",),
+    "CommemorationItem": ("rdf.schemaorg",),
+    "Service": ("rdf.schemaorg",),
 }
 
 
@@ -58,15 +58,14 @@ def iter_rdf_adapters(entity):
             yield adapter
 
 
-def add_entity_to_graph(graph, entity, build_dump=False,
-                        adapter_cache=None):
+def add_entity_to_graph(graph, entity, build_dump=False, adapter_cache=None):
     rdf_adapters = [iter_rdf_adapters(entity)]
     for adapter in chain(*rdf_adapters):
         add_statements_to_graph(graph, adapter)
 
 
 def _add_etype_to_graph(cnx, graph, etype, limit, offset, pb=None):
-    rql = 'Any X ORDERBY X LIMIT %s OFFSET %s WHERE X is %s' % (limit, offset, etype)
+    rql = "Any X ORDERBY X LIMIT %s OFFSET %s WHERE X is %s" % (limit, offset, etype)
     rset = cnx.execute(rql)
     # Construct graph
     for entity in rset.entities():
@@ -76,17 +75,17 @@ def _add_etype_to_graph(cnx, graph, etype, limit, offset, pb=None):
 
 
 def create_dumps_etype(cnx, output_dir, etype, formats, chunksize=2000):
-    nb_entities = cnx.execute('Any COUNT(X) WHERE X is %s' % etype)[0][0]
+    nb_entities = cnx.execute("Any COUNT(X) WHERE X is %s" % etype)[0][0]
     filenames = []
-    with progress(nb_entities, title='found %s %s' % (nb_entities, etype)) as pb:
+    with progress(nb_entities, title="found %s %s" % (nb_entities, etype)) as pb:
         pb.refresh()
         for offset in range(0, nb_entities, chunksize):
             graph = conjunctive_graph()
             _add_etype_to_graph(cnx, graph, etype, chunksize, offset, pb)
             for _format in formats:
-                filename = '%s_%06d.%s' % (etype.lower(), offset, _format)
+                filename = "%s_%06d.%s" % (etype.lower(), offset, _format)
                 filepath = os.path.join(output_dir, filename)
-                with open(filepath, 'ab') as dump_file:
+                with open(filepath, "ab") as dump_file:
                     dump_file.write(graph.serialize(format=_format))
                 filenames.append(filepath)
             # clean as much as possible to avoid memory exhaustion
@@ -96,7 +95,7 @@ def create_dumps_etype(cnx, output_dir, etype, formats, chunksize=2000):
 
 def make_archive(output_dir, label, filenames, formats):
     for _format in formats:
-        archive_name = '%s_%s.tar.gz' % (label, _format)
+        archive_name = "%s_%s.tar.gz" % (label, _format)
         with tarfile.open(os.path.join(output_dir, archive_name), "w:gz") as tar:
             for filename in filenames:
                 # add file but specify basename as the alternative filename
@@ -106,10 +105,10 @@ def make_archive(output_dir, label, filenames, formats):
 
 
 def create_dumps(cnx, config):
-    output_dir = config.get('output-dir')
-    formats = config.get('formats')
-    etypes = config.get('etypes')
-    date = datetime.now().strftime('%Y%m%d')
+    output_dir = config.get("output-dir")
+    formats = config.get("formats")
+    etypes = config.get("etypes")
+    date = datetime.now().strftime("%Y%m%d")
     output_dir = os.path.join(output_dir, date)
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)

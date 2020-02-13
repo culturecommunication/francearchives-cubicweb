@@ -28,8 +28,7 @@
 # The fact that you are presently reading this means that you have had
 # knowledge of the CeCILL-C license and that you accept its terms.
 #
-from six import text_type as unicode
-from six.moves.urllib.parse import urlparse
+from urllib.parse import urlparse
 
 from cwtags import tag as T
 
@@ -40,39 +39,41 @@ from cubicweb.view import EntityView
 from cubicweb.web.views.baseviews import InContextView
 from cubicweb.web.views.primary import PrimaryView
 from cubicweb_francearchives.views.search import PniaElasticSearchView
-from cubicweb_francearchives.views import (JinjaViewMixin,
-                                           get_template)
+from cubicweb_francearchives.views import JinjaViewMixin, get_template
 
 
 class IndexElasticSearchView(PniaElasticSearchView):
-    __regid__ = 'indexes-esearch'
+    __regid__ = "indexes-esearch"
 
     def format_results_title(self, response):
-        if response is None or response.hits.total == 0:
+        if response is None or response.hits.total.value == 0:
             return None
         return super(IndexElasticSearchView, self).format_results_title(response)
 
 
 class AuthorityPrimaryView(PrimaryView):
-    __select__ = (PrimaryView.__select__
-                  & is_instance('SubjectAuthority', 'AgentAuthority', 'LocationAuthority'))
+    __select__ = PrimaryView.__select__ & is_instance(
+        "SubjectAuthority", "AgentAuthority", "LocationAuthority"
+    )
 
     def entity_call(self, entity, **kw):
-        self._cw.form.pop('rql', None)  # remove rql form param which comes from url_rewriter
-        self._cw.form['indexentry'] = entity.eid
-        self._cw.form['restrict_to_single_etype'] = True
-        self.w(entity.view('index-abstract'))
-        self.wview('indexes-esearch')
+        self._cw.form.pop("rql", None)  # remove rql form param which comes from url_rewriter
+        self._cw.form["indexentry"] = entity.eid
+        self._cw.form["restrict_to_single_etype"] = True
+        self.w(entity.view("index-abstract"))
+        self.wview("indexes-esearch")
 
 
 class IndexInContextView(InContextView):
-    __select__ = InContextView.__select__ & is_instance('AgentName', 'Subject', 'Geogname')
+    __select__ = InContextView.__select__ & is_instance("AgentName", "Subject", "Geogname")
 
     def cell_call(self, row, col):
         entity = self.cw_rset.get_entity(row, col)
-        self.w(u'<a href="{0}">{1}</a>'.format(
-            xml_escape(entity.authority_url), xml_escape(entity.dc_title())
-        ))
+        self.w(
+            '<a href="{0}">{1}</a>'.format(
+                xml_escape(entity.authority_url), xml_escape(entity.dc_title())
+            )
+        )
 
 
 class AbstractExternalInContextView(InContextView):
@@ -81,11 +82,11 @@ class AbstractExternalInContextView(InContextView):
 
     def cell_call(self, row, col):
         entity = self.cw_rset.get_entity(row, col)
-        self.w(entity.view('urlattr', rtype=self.uri_attr))
+        self.w(entity.view("urlattr", rtype=self.uri_attr))
 
 
 class ExternalUriInContextView(InContextView):
-    __select__ = InContextView.__select__ & is_instance('ExternalUri')
+    __select__ = InContextView.__select__ & is_instance("ExternalUri")
 
     def cell_call(self, row, col):
         entity = self.cw_rset.get_entity(row, col)
@@ -94,66 +95,78 @@ class ExternalUriInContextView(InContextView):
         netloc = urlparse(url).netloc
         _ = self._cw._
         if entity.source:
-            label = u'{} : {}'.format(_(entity.source), label)
+            label = "{} : {}".format(_(entity.source), label)
         else:
-            label = u'{} : {}'.format(_(netloc), label)
-        title = u'{} {} {}'.format(_('Go to the site:'),
-                                   netloc, _('- New window'))
-        self.w(T.a(xml_escape(label), href=xml_escape(url),
-                   target="_blank", rel="nofollow noopener noreferrer",
-                   title=title))
+            label = "{} : {}".format(_(netloc), label)
+        title = "{} {} {}".format(_("Go to the site:"), netloc, _("- New window"))
+        self.w(
+            T.a(
+                xml_escape(label),
+                href=xml_escape(url),
+                target="_blank",
+                rel="nofollow noopener noreferrer",
+                title=title,
+            )
+        )
 
 
 class ConceptInContextView(AbstractExternalInContextView):
-    __select__ = (AbstractExternalInContextView.__select__
-                  & is_instance('Concept'))
-    uri_attr = 'cwuri'
+    __select__ = AbstractExternalInContextView.__select__ & is_instance("Concept")
+    uri_attr = "cwuri"
 
 
 class PersonInContextView(AbstractExternalInContextView):
-    __select__ = (AbstractExternalInContextView.__select__
-                  & is_instance('Person'))
-    uri_attr = 'document_uri'
+    __select__ = AbstractExternalInContextView.__select__ & is_instance("Person")
+    uri_attr = "document_uri"
 
 
-class AbstractPniaAgentAbstractView(EntityView, JinjaViewMixin):
+class AbstractAuthorityAbstractView(EntityView, JinjaViewMixin):
     __abstract__ = True
-    __regid__ = 'index-abstract'
-    template = get_template('index-abstract.jinja2')
+    __regid__ = "index-abstract"
+    template = get_template("index-abstract.jinja2")
 
     def entity_call(self, entity):
         properties = self.properties(entity)
         properties = [entry for entry in properties if entry[-1]]
-        self.call_template(
-            title=entity.dc_title(),
-            properties=properties)
+        self.call_template(title=entity.dc_title(), properties=properties)
+
+    def same_as_property(self, entity):
+        _ = self._cw._
+        return [
+            (
+                _("same_as_label"),
+                ", ".join(
+                    e.view("incontext") for e in entity.same_as if e.cw_etype != "ExternalId"
+                ),
+            ),
+        ]
 
     def properties(self, entity):
-        _ = self._cw._
-        properties = [
-            (_('same_as'), u', '.join(e.view('incontext') for e in
-                                      entity.same_as)),
-        ]
-        return properties
+        return self.same_as_property(entity)
 
 
-class PniaAgentAbstractView(AbstractPniaAgentAbstractView):
-    __select__ = EntityView.__select__ & is_instance('AgentAuthority')
+class AgentAuthorityAbstractView(AbstractAuthorityAbstractView):
+    __select__ = EntityView.__select__ & is_instance("AgentAuthority")
 
     def properties(self, entity):
-        _ = self._cw._
-        dates = [entity.birthyear, entity.deathyear]
-        properties = [
-            (_('dates'), ' - '.join(unicode(d) for d in dates if d)),
-            (_('same_as'), u', '.join(e.view('incontext') for e in
-                                      entity.same_as)),
-        ]
-        return properties
+        adapter = entity.cw_adapt_to("entity.main_props")
+        return adapter.properties()
 
 
-class PniaSubjectAbstractView(AbstractPniaAgentAbstractView):
-    __select__ = EntityView.__select__ & is_instance('SubjectAuthority')
+class SubjectAuthorityAbstractView(AbstractAuthorityAbstractView):
+    __select__ = EntityView.__select__ & is_instance("SubjectAuthority")
 
 
-class PniaLocationAbstractView(AbstractPniaAgentAbstractView):
-    __select__ = EntityView.__select__ & is_instance('LocationAuthority')
+class LocationAuthorityAbstractView(AbstractAuthorityAbstractView):
+    __select__ = EntityView.__select__ & is_instance("LocationAuthority")
+
+
+class AuthorityRecordView(EntityView):
+    __regid__ = "maintainer.outofcontext"
+    __select__ = EntityView.__select__ & is_instance("AuthorityRecord")
+
+    def entity_call(self, entity, **kwargs):
+        title = entity.dc_title()
+        if entity.maintainer:
+            title = "{} : {}".format(entity.maintainer[0].dc_title(), title)
+        self.w(T.a(xml_escape(title), href=xml_escape(entity.absolute_url())))

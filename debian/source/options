@@ -1,0 +1,1 @@
+extend-diff-ignore = "(^[^/]*[.]egg-info/|^node_modules/|^.sass-cache|^scss/|^.tox/|^.pytest_cache/|^dist/|^test/|^dev-requirements.txt|^tox.ini|^.babelrc|^.*.yml|^.style.yapf|^Jenkinsfile|^Makefile|^gitfilter|^package-lock.json|^sonar-project.properties)"
