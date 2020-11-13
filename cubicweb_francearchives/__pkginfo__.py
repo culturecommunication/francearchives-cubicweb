@@ -33,7 +33,7 @@
 modname = "francearchives"
 distname = "cubicweb-francearchives"
 
-numversion = (2, 3, 3)
+numversion = (2, 9, 2)
 version = ".".join(str(num) for num in numversion)
 
 license = "CeCILL-C"
@@ -43,7 +43,7 @@ description = "FranceArchives"
 web = "https://github.com/culturecommunication/francearchives-cubicweb-edition"
 
 __depends__ = {
-    "pyramid": "< 1.10",
+    "pyramid": None,
     "cubicweb[pyramid,crypto]": ">= 3.26.0,<3.27.0",
     "cubicweb-file": ">= 2.3.0",
     "cubicweb-link": ">= 1.8.0",
@@ -55,9 +55,9 @@ __depends__ = {
     "cubicweb-card": ">= 1.1.2",
     "cubicweb-sentry": None,
     "sentry-sdk": None,
-    "sickle": ">= 0.6.4",
+    "sickle": ">= 0.7.0",
     "glamconv": ">= 0.1.8",
-    "cubicweb-oaipmh": ">= 0.6.0",
+    "cubicweb-oaipmh": ">= 0.6.1",
     "cwtags": ">= 1.1.0",
     "rdflib": ">= 4.2.0",
     "rdflib-jsonld": None,
@@ -67,8 +67,9 @@ __depends__ = {
     "pillow": None,
     "requests": None,
     "urllib3": "> 1.21.1,<1.25",
-    "psycopg2": "< 2.8.0",
+    "psycopg2": None,
     "vobject": ">= 0.9.3",
+    "tqdm": None,
 }
 
 classifiers = [

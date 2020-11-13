@@ -81,8 +81,7 @@ class VocabAdapter(object):
 
 
 def conjunctive_graph():
-    """factory to build a ``ConjunctiveGraph`` and bind all namespaces
-    """
+    """factory to build a ``ConjunctiveGraph`` and bind all namespaces"""
     graph = ConjunctiveGraph()
     for vocab, rdfns in list(NS_VARS.items()):
         graph.bind(vocab, rdfns)

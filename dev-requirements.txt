@@ -1,9 +1,10 @@
-pyramid<1.10
+pyramid>=1.10
 webtest
 pytest
-pytest-xdist
 mock
 polib
 pifpaf
-pytest-xdist
+pyramid_redis_sessions
+pyramid_debugtoolbar
 https://hg.logilab.org/users/siaf/yams/archive/tip.tar.bz2#egg=yams
+logilab-common==1.4.4

@@ -7,9 +7,11 @@
     "test": "test"
   },
   "dependencies": {
+    "prettier": "^2.0.5",
     "react": "^16.0.0",
     "react-bootstrap-table": "^4.1.1",
-    "react-dom": "^16.0.0"
+    "react-dom": "^16.0.0",
+    "sticky-sidebar": "^3.3.1"
   },
   "devDependencies": {
     "async": "^2.6.0",
@@ -26,10 +28,14 @@
     "wordwrap": "^1.0.0"
   },
   "scripts": {
+    "clean": "rm -rf build",
+    "format": "prettier --check appjs",
+    "format:fix": "prettier --write appjs",
     "build": "webpack --progress",
     "a11y": "A11Y_HOST=http://localhost:8080 node pa11y-runner.js",
     "build-dev": "FA_DEV=1 webpack --progress",
-    "watch": "FA_DEV=1 webpack --progress -d --watch"
+    "watch": "FA_DEV=1 webpack --progress -d --watch",
+    "lint": "eslint --cache appjs"
   },
   "author": "LOGILAB <contact@logilab.fr>",
   "license": "CECILL-2.1"

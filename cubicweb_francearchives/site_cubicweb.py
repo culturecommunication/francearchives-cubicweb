@@ -130,6 +130,49 @@ options = (
             "level": 2,
         },
     ),
+    (
+        "enable-kibana-indexes",
+        {
+            "type": "yn",
+            "default": "yes",
+            "help": "defines if kibana indexes are used",
+            "group": "elasticsearch",
+            "level": 2,
+        },
+    ),
+    (
+        "kibana-ir-index-name",
+        {
+            "type": "string",
+            "default": "document_siaf",
+            "help": ("Name of kibana FindingAid / FAComponents Elastic Search index"),
+            "group": "elasticsearch",
+            "level": 2,
+        },
+    ),
+    (
+        "kibana-authorities-index-name",
+        {
+            "type": "string",
+            "default": "authority_siaf",
+            "help": (
+                "Name of kibana AgentAuthority, LocationAuthority, "
+                "SubjectAuthority Elastic Search index"
+            ),
+            "group": "elasticsearch",
+            "level": 2,
+        },
+    ),
+    (
+        "kibana-services-index-name",
+        {
+            "type": "string",
+            "default": "service_siaf",
+            "help": ("Name of kibana Services Elastic Search index"),
+            "group": "elasticsearch",
+            "level": 2,
+        },
+    ),
 )
 
 

@@ -37,7 +37,7 @@ from logilab.common.decorators import cachedproperty
 
 from cubicweb import _
 from cubicweb.view import EntityAdapter
-from cubicweb.predicates import is_instance
+from cubicweb.predicates import is_instance, relation_possible
 from cubicweb.entities.adapters import ITreeAdapter
 
 from cubicweb_francearchives import FIRST_LEVEL_SECTIONS
@@ -54,11 +54,34 @@ class ITemplatableApdater(EntityAdapter):
         return self.entity
 
 
-class CommemoITemplatable(ITemplatableApdater):
-    __select__ = ITemplatableApdater.__select__ & is_instance("CommemorationItem")
+class TranslatableMixIn(object):
+    def cache_entity_translations(self):
+        """update entity cache with translated value for translatable attributes"""
+        if self._cw.lang == "fr":
+            return self.entity
+        translations = self.entity.translations_in_lang()
+        for attr, value in translations.items():
+            self.entity.cw_attr_cache[attr] = value
+        return self.entity
+
+
+class ITranslatableAdapter(TranslatableMixIn, EntityAdapter):
+    __regid__ = "ITranslatable"
+    __select__ = relation_possible("translation_of", role="object")
+
+
+class ITemplatableTranslatableApdater(TranslatableMixIn, ITemplatableApdater):
+    __select__ = ITemplatableApdater.__select__ & relation_possible("translation_of", role="object")
 
     def entity_param(self):
-        entity = self.entity
+        return self.cache_entity_translations()
+
+
+class CommemoITemplatable(ITemplatableTranslatableApdater):
+    __select__ = ITemplatableTranslatableApdater.__select__ & is_instance("CommemorationItem")
+
+    def entity_param(self):
+        entity = self.cache_entity_translations()
         if entity.manif_prog:
             entity.manif_prog_content = entity.manif_prog[0].content
         else:

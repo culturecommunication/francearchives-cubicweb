@@ -55,6 +55,6 @@ class NewsLetterView(StartupView):
                         scrolling="no",
                         marginheight="0",
                         marginwidth="0",
-                        src="https://app.mailjet.com/widget/iframe/2Dpa/5MP",
+                        src="https://app.mailjet.com/widget/iframe/5Wl9/FtC",
                     )
                 )

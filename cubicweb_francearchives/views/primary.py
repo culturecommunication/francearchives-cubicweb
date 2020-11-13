@@ -41,7 +41,8 @@ from logilab.mtconverter import xml_escape
 from logilab.common.decorators import cachedproperty
 
 from cubicweb import _
-from cubicweb.predicates import is_instance, score_entity
+from cubicweb.predicates import is_instance, score_entity, relation_possible
+
 from cubicweb.schema import display_name
 from cubicweb.web.views.primary import PrimaryView, URLAttributeView
 from cubicweb.view import View, EntityView
@@ -58,10 +59,12 @@ from cubicweb_francearchives.views import (
     exturl_link,
     blank_link_title,
 )
+
+from cubicweb_francearchives import SUPPORTED_LANGS
 from cubicweb_francearchives.views.service import DeptMapForm, all_services
 from cubicweb_francearchives.entities.cms import section
-from cubicweb_francearchives.views import html_link
-from cubicweb_francearchives.utils import format_entity_attributes
+from cubicweb_francearchives.views import html_link, FaqMixin
+from cubicweb_francearchives.utils import format_entity_attributes, find_card
 
 
 class SitemapView(View, JinjaViewMixin):
@@ -108,23 +111,35 @@ class SectionPrimaryView(PrimaryView):
             parent = parents[0]
             path.append(parent.eid)
             parents = parent.reverse_children
-        self.wview("esearch", context={"section": entity, "path": list(reversed(path)),})
+        self.wview(
+            "esearch",
+            context={
+                "section": entity,
+                "path": list(reversed(path)),
+            },
+        )
 
 
 class ContentPrimaryView(PrimaryView, JinjaViewMixin):
     __abstract__ = True
     template = None
     needs_css = ("css/font-awesome.css",)
+    needs_js = ("bundle-glossary.js",)
 
     def add_css(self):
         for css in self.needs_css:
             self._cw.add_css(css)
+
+    def add_js(self):
+        for js in self.needs_js:
+            self._cw.add_js(js)
 
     def template_attrs(self, entity):
         return {"entity": entity.cw_adapt_to("ITemplatable").entity_param()}
 
     def entity_call(self, entity, **kw):
         self.add_css()
+        self.add_js()
         self.render_content(entity)
 
     def render_content(self, entity):
@@ -138,6 +153,7 @@ class RecentDataPrimaryView(ContentPrimaryView):
     def template_attrs(self, entity):
         attrs = super(RecentDataPrimaryView, self).template_attrs(entity)
         attrs["data_url"] = self._cw.data_url("/").rstrip("/")
+        main_attrs = self.main_attrs(entity)
         recents = []
         for _recent in self.related_content(entity).entities():
             if hasattr(_recent, "header"):
@@ -156,29 +172,37 @@ class RecentDataPrimaryView(ContentPrimaryView):
             )
         if recents:
             attrs["recents"] = recents
-        _ = self._cw._
-        attrs.update(
-            {
-                "_": _,
-                "date": self.entity_date(entity),
-                "default_picto_src": self._cw.uiprops["DOCUMENT_IMG"],
-                "images": self.entity_images(entity),
-                "recent_label": _(self.recent_label),
-                "all_link": {
-                    "url": self._cw.build_url(self.all_link_url),
-                    "label": _(self.all_link_label),
-                },
-                "recents": recents,
-            }
-        )
+            main_attrs.update({"recents": recents})
+        attrs.update(main_attrs)
         return attrs
+
+    def main_attrs(self, entity):
+        _ = self._cw._
+        return {
+            "_": _,
+            "date": self.entity_date(entity),
+            "default_picto_src": self._cw.uiprops["DOCUMENT_IMG"],
+            "images": self.entity_images(entity),
+            "recent_label": _(self.recent_label),
+            "all_link": {
+                "url": self._cw.build_url(self.all_link_url),
+                "label": _(self.all_link_label),
+            },
+        }
 
 
 class BaseContentPrimaryView(RecentDataPrimaryView):
     __select__ = RecentDataPrimaryView.__select__ & is_instance("BaseContent")
+    template = get_template("article.jinja2")
     all_link_url = "articles"
     all_link_label = _("See all articles")
     recent_label = _("###Recent Articles###")
+
+    def entity_call(self, entity):
+        self._cw.add_js("bundle-pnia-toc.js")
+        self._cw.add_js("ResizeSensor.js")
+        self._cw.add_js("sticky-sidebar.min.js")
+        super(BaseContentPrimaryView, self).entity_call(entity)
 
     def related_content(self, entity):
         return self._cw.execute(
@@ -393,10 +417,10 @@ class CommemorationItemPrimaryView(CommemoMixin, ContentPrimaryView):
         attrs = super(CommemorationItemPrimaryView, self).template_attrs(entity)
         _ = self._cw._
         attrs.update({"_": _, "i18n": {"year": _("year")}})
-        authors = entity.author_indexes()
+        authors = entity.cw_adapt_to("IMeta").author()
         if authors:
-            title = _("Text author:") if authors.rowcount == 1 else _("Text authors:")
-            data = _("###list_separator###").join(e.view("incontext") for e in authors.entities())
+            title = _("Text author:") if len(authors) == 1 else _("Text authors:")
+            data = _("###list_separator###").join(authors)
             attrs["authors"] = [title, data]
         return attrs
 
@@ -430,7 +454,7 @@ class CommemoCollectionPrimaryView(CommemoMixin, ContentPrimaryView):
             self.w(self._cw._("empty-commemocollection"))
             return
         else:
-            first_child = rset.one()
+            first_child = rset.one().cw_adapt_to("ITemplatable").entity_param()
         with T.div(self.w, Class="col-lg-8"):
             self.call_template(**self.template_attrs(first_child))
 
@@ -474,10 +498,11 @@ class AuthorityRecordPrimaryView(ContentPrimaryView):
         return attrs
 
 
-class FindingAidPrimaryView(ContentPrimaryView):
+class FindingAidPrimaryView(FaqMixin, ContentPrimaryView):
     __select__ = ContentPrimaryView.__select__ & is_instance("FindingAid", "FAComponent")
     needs_css = ("css/font-awesome.css",)
     template = get_template("findingaid.jinja2")
+    faq_category = "03_faq_ir"
 
     def render_content(self, entity):
         self.call_template(**self.template_attrs(entity))
@@ -498,6 +523,8 @@ class FindingAidPrimaryView(ContentPrimaryView):
                 "title": adapter.shortened_title(),
                 "main_props": adapter.properties(),
                 "default_picto_src": ";".join(default_picto_src),
+                "faqs": self.faqs_attrs(),
+                "cms": self._cw.vreg.config.get("instance-type") == "cms",
                 "_": self._cw._,
             }
         )
@@ -510,6 +537,7 @@ class FindingAidPrimaryView(ContentPrimaryView):
 class MapPrimaryView(PrimaryView):
     __select__ = PrimaryView.__select__ & is_instance("Map")
     template = get_template("map-page.jinja2")
+    needs_js = ("bundle-glossary.js",)
 
     def entity_call(self, entity):
         legends, options = {}, {"urls": {}, "colors": {}}
@@ -518,8 +546,11 @@ class MapPrimaryView(PrimaryView):
         services_map = dict([(s.dpt_code.lower(), s.name) for s in services])
         for v in entity.data():
             if v["legend"]:
+                legend = v["legend"]
+                if legend.lower() == "legende":
+                    continue
                 items[v["color"]].append((services_map.get(v["code"], ""), v.get("url")))
-                legends[v["color"]] = v["legend"]
+                legends[v["color"]] = legend
             if v["url"]:
                 options["urls"][v["code"]] = v["url"]
             if v["color"]:
@@ -568,6 +599,13 @@ class CircularPrimaryView(ContentPrimaryView):
     needs_css = ("css/font-awesome.css",)
     template = get_template("circular.jinja2")
 
+    def get_related_cirular(self, circ_id):
+        if circ_id:
+            rset = self._cw.execute("Any X WHERE X is Circular, X circ_id %(c)s", {"c": circ_id})
+            if rset:
+                return rset.one().view("incontext")
+        return circ_id
+
     def template_attrs(self, entity):
         attrs = super(CircularPrimaryView, self).template_attrs(entity)
         _ = self._cw._
@@ -608,7 +646,7 @@ class CircularPrimaryView(ContentPrimaryView):
                 format_date(entity.circular_modification_date, self._cw),
             ),
             (_("circular_abrogation_date_label"), format_date(entity.abrogation_date, self._cw)),
-            (_("circular_abrogation_text_label"), entity.abrogation_text),
+            (_("circular_abrogation_text_label"), self.get_related_cirular(entity.abrogation_text)),
             (_("circular_archival_field_label"), entity.archival_field),
             (
                 _("circular_historical_context_label"),
@@ -715,7 +753,10 @@ class UrLBasedAttributeView(URLAttributeView):
 class IndexURLAttributeView(URLAttributeView):
     """ open the url in a new tab"""
 
-    __select__ = URLAttributeView.__select__ & is_instance("Concept", "Person",)
+    __select__ = URLAttributeView.__select__ & is_instance(
+        "Concept",
+        "Person",
+    )
 
     def entity_call(self, entity, rtype="subject", **kwargs):
         url = entity.printable_value(rtype)
@@ -845,7 +886,12 @@ class PniaPersonPrimaryView(ContentPrimaryView):
             (_("death_year_label:"), entity.death_year),
             (_("dates_label:"), entity.dates_description),
             (_("locations_label:"), entity.locations_description),
+            (
+                _("indexes_label:"),
+                ", ".join(e.view("incontext") for e in entity.agent_indexes().entities()),
+            ),
         ]
+
         if entity.document_uri:
             self._cw.add_css("css/font-awesome.css")
             url = entity.document_uri
@@ -874,6 +920,203 @@ class PniaCardPrimaryView(ContentPrimaryView):
         with T.div(self.w, Class="row"):
             with T.div(self.w, Class="col-md-9"):
                 self.call_template(**self.template_attrs(entity))
+
+
+class PniaTranslationsPrimaryView(ContentPrimaryView):
+    __select__ = ContentPrimaryView.__select__ & relation_possible("translation_of", role="subject")
+    template = get_template("translation.jinja2")
+    editable = False
+
+    def get_translation(self, original, entity):
+        trads = []
+        if self.editable:
+            translations = {}
+            for res in original.i18n_rset().iter_rows_with_entities():
+                trad = res[0]
+                translations[trad.language] = trad
+            for lang in SUPPORTED_LANGS:
+                if lang == "fr":
+                    continue
+                trad = translations.get(lang)
+                if trad:
+                    state = self._cw._(trad.cw_adapt_to("IWorkflowable").state)
+                    if trad.eid != entity.eid:
+                        trad = trad.view("incontext")
+                    else:
+                        trad = trad.dc_title()
+                    trad = "{} ({})".format(trad, state)
+                else:
+                    trad = _("no translation yet exists")
+                trads.append((self._cw._(lang), trad))
+        return trads
+
+    def content_meta_props(self, entity):
+        return [(self._cw._(entity.language), "language")]
+
+    def main_props(self, entity):
+        _ = self._cw._
+        main_props = []
+        original = entity.original_entity
+        main_props.append((_("original ressource"), original.view("incontext")))
+        for attr in original.i18nfields:
+            main_props.append((_(attr), entity.printable_value(attr)))
+        return main_props
+
+    def template_attrs(self, entity):
+        attrs = super(PniaTranslationsPrimaryView, self).template_attrs(entity)
+        _ = self._cw._
+        original = entity.original_entity
+        attrs.update(
+            {
+                "_": _,
+                "editable": self.editable,
+                "original": original.view("incontext"),
+                "content_meta": self.content_meta_props(entity),
+            }
+        )
+        attrs["translations"] = self.get_translation(original, entity)
+        attrs["main_props"] = self.main_props(entity)
+        return attrs
+
+
+class GlossaryTermPrimaryView(ContentPrimaryView):
+    __select__ = ContentPrimaryView.__select__ & is_instance("GlossaryTerm")
+    template = get_template("glossaryterm.jinja2")
+
+    def content_meta_props(self, entity):
+        link = """<a href="{url}">{title}</a>""".format(
+            url=self._cw.build_url(
+                "glossaire",
+            ),
+            title=self._cw._("Glossary"),
+        )
+        return [
+            (link, "book"),
+        ]
+
+    def main_props(self, entity):
+        return []
+
+    def template_attrs(self, entity):
+        attrs = super(GlossaryTermPrimaryView, self).template_attrs(entity)
+        attrs["content_meta"] = self.content_meta_props(entity)
+        attrs["main_props"] = self.main_props(entity)
+        return attrs
+
+
+class GlossaryView(View, JinjaViewMixin):
+    __regid__ = "glossary"
+    template = get_template("glossary.jinja2")
+    title = _("Glossary")
+    editable = False
+
+    @property
+    def breadcrumbs(self):
+        b_url = self._cw.build_url
+        breadcrumbs = [(b_url(""), self._cw._("Home"))]
+        breadcrumbs.append((b_url("glossary"), self._cw._("Glossary")))
+        return breadcrumbs
+
+    def card(self):
+        card = find_card(self._cw, "glossary-card")
+        if card is not None:
+            return card
+
+    def build_glossary(self):
+        rset = self._cw.execute(
+            """Any X, L, T, D, A ORDERBY T WHERE X is GlossaryTerm, X term T,
+            X description D, X sort_letter L, X anchor A"""
+        )
+        glossary = defaultdict(list)
+        for eid, letter, term, description, sort_term in rset:
+            glossary[letter].append((eid, term, description, sort_term))
+        return glossary
+
+    def add_js(self):
+        self._cw.add_js("ResizeSensor.js")
+        self._cw.add_js("sticky-sidebar.min.js")
+        self._cw.add_js("cubes.pnia_glossary.js")
+
+    def call(self, **kw):
+        self.add_js()
+        req = self._cw
+        letters = [
+            e[0]
+            for e in req.execute(
+                "DISTINCT Any L ORDERBY L WHERE X is GlossaryTerm, X sort_letter L"
+            ).rows
+        ]
+        card = self.card()
+        attrs = {
+            "glossary": self.build_glossary(),
+            "letters": letters,
+            "card": card.content if card else None,
+            "title": card.title if card else req._(self.title),
+            "editable": self.editable,
+            "base_url": self._cw.build_url("").rstrip("/"),
+            "glossary_url": self._cw.build_url("glossaire"),
+            "_": req._,
+        }
+        self.call_template(**attrs)
+
+
+class FaqStartView(View, JinjaViewMixin):
+    __regid__ = "faq"
+    template = get_template("faq.jinja2")
+    title = _("FAQ")
+    editable = False
+
+    @property
+    def breadcrumbs(self):
+        b_url = self._cw.build_url
+        breadcrumbs = [(b_url(""), self._cw._("Home"))]
+        breadcrumbs.append((b_url("glossary"), self._cw._("FAQ")))
+        return breadcrumbs
+
+    def call(self, **kw):
+        self._cw.add_js("bundle-pnia-faq.js")
+        req = self._cw
+        rset = req.execute(
+            """Any X, Q, A, C, O ORDERBY C, O WHERE X is FaqItem,
+               X question Q, X answer A, X category C, X order O"""
+        )
+        faqs = defaultdict(list)
+        for eid, question, answer, category, order in rset:
+            faqs[category].append((eid, question, answer))
+        faqs = sorted(faqs.items(), key=lambda e: e[0])
+        attrs = {
+            "editable": self.editable,
+            "_": req._,
+            "faqs": faqs,
+            "title": req._(self.title),
+        }
+        self.call_template(**attrs)
+
+
+class FaqItemPrimaryView(ContentPrimaryView):
+    __select__ = ContentPrimaryView.__select__ & is_instance("FaqItem")
+    template = get_template("faqitem.jinja2")
+
+    def content_meta_props(self, entity):
+        link = """<a href="{url}">{title}</a>""".format(
+            url=self._cw.build_url(
+                "faq",
+            ),
+            title=self._cw._("Faq"),
+        )
+        return [
+            (link, "question"),
+        ]
+
+    def main_props(self, entity):
+        return []
+
+    def template_attrs(self, entity):
+        attrs = super(FaqItemPrimaryView, self).template_attrs(entity)
+        attrs["_"] = self._cw._
+        attrs["content_meta"] = self.content_meta_props(entity)
+        attrs["main_props"] = self.main_props(entity)
+        return attrs
 
 
 def registration_callback(vreg):

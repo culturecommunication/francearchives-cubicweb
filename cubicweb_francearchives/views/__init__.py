@@ -44,6 +44,8 @@ from yaml.parser import ParserError
 
 from cwtags import tag as T
 
+from cubicweb.uilib import cut
+
 from logilab.mtconverter import xml_escape
 from logilab.common.decorators import monkeypatch
 
@@ -51,7 +53,7 @@ from cubicweb.pyramid.core import CubicWebPyramidRequest
 from cubicweb.web.views.bookmark import BookmarksBox
 from cubicweb.web.views.boxes import SearchBox, EditBox
 from cubicweb.web.views.basecomponents import RQLInputForm, MetaDataComponent
-from cubicweb.web.views.baseviews import InContextView
+from cubicweb.web.views.baseviews import InContextView, OutOfContextView
 
 from cubicweb_francearchives.utils import is_external_link
 
@@ -244,7 +246,7 @@ def internurl_link(cnx, url, label=None, icon=None, title=None):
     return T.a(link_content, href=url)
 
 
-def exturl_link(cnx, url, label=None, icon=None):
+def exturl_link(cnx, url, label=None, icon=None, **kwargs):
     url = xml_escape(url)
     if label is None:
         label = url
@@ -259,7 +261,12 @@ def exturl_link(cnx, url, label=None, icon=None):
             _class="nowrap",
         )
     return T.a(
-        link_content, href=url, target="_blank", rel="nofollow noopener noreferrer", title=title
+        link_content,
+        href=url,
+        target="_blank",
+        rel="nofollow noopener noreferrer",
+        title=title,
+        **kwargs
     )
 
 
@@ -271,8 +278,44 @@ def blank_link_title(cnx, site):
 @monkeypatch(InContextView)
 def cell_call(self, row, col):
     entity = self.cw_rset.get_entity(row, col)
+    entity = entity.cw_adapt_to("ITemplatable").entity_param()
     desc = entity.dc_description()
     self.w(internurl_link(self._cw, entity.absolute_url(), label=entity.dc_title(), title=desc))
+
+
+@monkeypatch(OutOfContextView)  # noqa
+def cell_call(self, row, col):  # noqa
+    entity = self.cw_rset.get_entity(row, col)
+    entity = entity.cw_adapt_to("ITemplatable").entity_param()
+    desc = cut(entity.dc_description(), 50)
+    self.w(
+        '<a href="%s" title="%s">%s</a>'
+        % (xml_escape(entity.absolute_url()), xml_escape(desc), xml_escape(entity.dc_long_title()))
+    )
+
+
+class FaqMixin(object):
+    faq_category = None
+    needs_js = ("bundle-pnia-faq.js",)
+
+    def faqs_attrs(self):
+        if not self.faq_category:
+            return {}
+        rset = self._cw.execute(
+            """Any X, Q, A ORDERBY O WHERE X is FaqItem,
+               X question Q, X answer A,
+               X order O, X category %(c)s""",
+            {"c": self.faq_category},
+        )
+        if rset:
+            faqs = [(eid, question, answer) for eid, question, answer in rset]
+            return {
+                "faqs": faqs,
+                "category": self.faq_category,
+                "faq_url": self._cw.build_url("faq"),
+                "faq_label": self._cw._("See all FAQs"),
+            }
+        return {}
 
 
 def registration_callback(vreg):

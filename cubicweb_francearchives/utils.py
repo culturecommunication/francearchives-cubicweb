@@ -32,6 +32,7 @@
 """small utility functions"""
 
 
+import re
 import os.path as osp
 import string
 import urllib.parse
@@ -45,6 +46,8 @@ from logilab.database import get_db_helper
 from logilab.common.textutils import unormalize
 
 from cubicweb.uilib import remove_html_tags as cw_remove_html_tags
+
+from cubicweb_francearchives import GLOSSARY_CACHE
 
 from cubicweb_elasticsearch.es import get_connection
 
@@ -140,7 +143,10 @@ def es_dump(config, snapshot_name, delete=False):
         repository="francearchives-backups",
         snapshot=snapshot_name,
         body={
-            "indices": [config["index-name"] + "_all", config["index-name"] + "_suggest",],
+            "indices": [
+                config["index-name"] + "_all",
+                config["index-name"] + "_suggest",
+            ],
             "include_global_state": False,
         },
     )
@@ -161,7 +167,10 @@ def es_restore(config, snapshot_name, index_prefix, delete=False):
         repository="francearchives-backups",
         snapshot=snapshot_name,
         body={
-            "indices": [index_prefix + "_all", index_prefix + "_suggest",],
+            "indices": [
+                index_prefix + "_all",
+                index_prefix + "_suggest",
+            ],
             "include_global_state": False,
             "rename_pattern": ".+_([^_]+)$",
             "rename_replacement": config["index-name"] + "_$1",
@@ -241,7 +250,11 @@ def setup_published_schema(
         for col in ("eid_from", "eid_to"):
             indexes.append(
                 "create index {rtype}_{col}_idx on "
-                "{schema}.{rtype}_relation({col});".format(schema=sqlschema, rtype=rtype, col=col,)
+                "{schema}.{rtype}_relation({col});".format(
+                    schema=sqlschema,
+                    rtype=rtype,
+                    col=col,
+                )
             )
     schema_creation = ""
     if force_recreate or no_table_exists:
@@ -251,7 +264,8 @@ def setup_published_schema(
 drop schema if exists {schema} cascade;
 create schema {schema} {authorization};
         """.format(
-            schema=sqlschema, authorization="authorization %s" % user if user is not None else "",
+            schema=sqlschema,
+            authorization="authorization %s" % user if user is not None else "",
         )
     template = """
 {schema_creation}
@@ -404,3 +418,51 @@ def is_external_link(href, base_url):
     if is_absolute_url(href) and not href.startswith(base_url):
         return True
     return False
+
+
+def normalize_term(term):
+    return term.lower()
+
+
+def populate_terms_cache(req):
+    """"""
+    glossary = dict(
+        (term, (eid, desc))
+        for eid, term, desc in req.execute(
+            """(Any T, TT, D WHERE T is GlossaryTerm, T short_description D, T term TT)
+               UNION
+               (Any T, TT, D WHERE T is GlossaryTerm, T short_description D, T term_plural TT
+                , NOT T term_plural NULL)
+            """
+        ).rows
+    )
+    if not glossary:
+        return
+    keys = list(glossary.keys())
+    keys.sort(key=len, reverse=True)
+    for term in keys:
+        if not term.strip():
+            continue
+        eid, desc = glossary[term]
+        html = """<a data-content="{content}" rel="popover" class="glossary-term" data-placement="auto" href="{url}" target="_blank">{{term}}\n<i class="fa fa-question"></i>\n</a>""".format(  # noqa
+            content=xml_escape(desc), url=req.build_url("glossaire#{eid}".format(eid=eid))
+        )
+        # this don't handle accents. add it from unidecode import unidecode?
+        GLOSSARY_CACHE.append((normalize_term(term), html))
+
+
+def reveal_glossary(req, text):
+    def replace_term(matchobj):
+        term = matchobj.group(0)
+        if term:
+            return glossary[normalize_term(term)].format(term=term)
+        return term
+
+    if not GLOSSARY_CACHE:
+        populate_terms_cache(req)
+    if not GLOSSARY_CACHE:
+        return text
+    glossary = OrderedDict(GLOSSARY_CACHE)
+    substrs = (r"\b{}\b".format(t) for t in glossary.keys())
+    regexp = re.compile("|".join(substrs), re.I | re.U | re.M)
+    return regexp.sub(replace_term, text)

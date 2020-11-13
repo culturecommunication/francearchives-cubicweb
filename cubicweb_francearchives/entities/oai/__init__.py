@@ -29,14 +29,16 @@
 # knowledge of the CeCILL-C license and that you accept its terms.
 #
 from lxml import etree
+import urllib.parse
 
 from pyramid.response import Response
+
+from logilab.common.decorators import cachedproperty
 
 from cubicweb.predicates import is_instance, one_line_rset
 from cubicweb.entities import AnyEntity
 from cubicweb.web import httpcache
 from cubicweb.web.views import idownloadable
-
 
 from cubicweb_oaipmh.entities import (
     ETypeOAISetSpec,
@@ -146,10 +148,12 @@ class FindingAidSetSpec(ETypeOAISetSpec):
     def all_services(self, cnx):
         return list(
             cnx.execute(
-                "Any S,SC,SN,SSN,SN2 WHERE S is Service, S code SC, "
-                "S name SN, S short_name SSN, S name2 SN2, "
-                'S level "level-D", NOT S code NULL, '
-                "EXISTS(X is FindingAid, X service S)"
+                """Any S,SC,SN,SSN,SN2 WHERE S is Service, S code SC,
+                S name SN, S short_name SSN, S name2 SN2,
+                NOT S code NULL,
+                EXISTS(X is FindingAid, X service S,
+                X in_state ST, ST name %(st)s)""",
+                {"st": "wfs_cmsobject_published"},
             ).entities()
         )
 
@@ -176,6 +180,11 @@ class OAIRepository(AnyEntity):
         The returned tasks are sorted by their creation date.
         """
         return sorted(self.reverse_oai_repository, key=lambda t: t.creation_date)
+
+    @cachedproperty
+    def oai_params(self):
+        url = urllib.parse.urlparse(self.url)
+        return urllib.parse.parse_qs(url.query)
 
     @property
     def last_successful_import(self):

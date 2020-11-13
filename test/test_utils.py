@@ -40,6 +40,7 @@ import string
 from cubicweb.devtools.testlib import CubicWebTC
 from cubicweb.uilib import remove_html_tags
 
+from cubicweb_francearchives import GLOSSARY_CACHE
 from cubicweb_francearchives.utils import find_card
 from cubicweb_francearchives.entities.faproperties import process_html, fix_links as fa_fix_links
 from cubicweb_francearchives.views.forms import EMAIL_REGEX
@@ -47,7 +48,7 @@ from cubicweb_francearchives.dataimport import normalize_entry, clean
 from cubicweb_francearchives.views.search import PniaElasticSearchView
 from cubicweb_francearchives.utils import id_for_anchor, merge_dicts
 from cubicweb_francearchives.xmlutils import enhance_accessibility
-from cubicweb_francearchives.utils import is_absolute_url
+from cubicweb_francearchives.utils import is_absolute_url, reveal_glossary
 from cubicweb_francearchives.dataimport import normalize_for_filepath, PUNCTUATION
 
 
@@ -189,33 +190,33 @@ class UtilsTest(CubicWebTC):
         norm = normalize_entry
         self.assertEqual(norm("Charles de Gaulle"), "charles de gaulle")
         self.assertEqual(norm("Charles   de Gaulle"), "charles de gaulle")
-        self.assertEqual(norm("Charles, Gaulle (de)"), "charles de gaulle")
-        self.assertEqual(norm("Gaulle de, Charles"), "charles de gaulle")
+        self.assertEqual(norm("Charles, Gaulle (de)"), "charles gaulle de")
+        self.assertEqual(norm("Gaulle de, Charles"), "gaulle de charles")
         self.assertEqual(norm("Charles (de)   Gaulle"), "charles de gaulle")
-        self.assertEqual(norm("Charles de Gaulle (1890-1970)"), "charles de gaulle")
-        self.assertEqual(norm("Charles de Gaulle (1890 - 1970)"), "charles de gaulle")
-        self.assertEqual(norm("Charles de Gaulle (1890 - 1970)"), "charles de gaulle")
-        self.assertEqual(norm("Liszt, Franz (1811-1886)"), "franz liszt")
-        self.assertEqual(norm("Liszt (Franz)"), "franz liszt")
-        self.assertEqual(norm("debré, jean-louis (1944-....)"), "debre jeanlouis")
-        self.assertEqual(norm("DEBRE, Jean-Louis"), "debre jeanlouis")
-        self.assertEqual(norm("Debré, Jean-Louis"), "debre jeanlouis")
-        self.assertEqual(norm("Tavel... (de)"), "de tavel")
-        self.assertEqual(norm("Bonaparte, Élisa (1777-1820)"), "bonaparte elisa")
+        self.assertEqual(norm("Charles de Gaulle (1890-1970)"), "charles de gaulle 1890 1970")
+        self.assertEqual(norm("Charles de Gaulle (1890 - 1970)"), "charles de gaulle 1890 1970")
+        self.assertEqual(norm("Charles de Gaulle (1890 - 1970)"), "charles de gaulle 1890 1970")
+        self.assertEqual(norm("Liszt, Franz (1811-1886)"), "liszt franz 1811 1886")
+        self.assertEqual(norm("Liszt (Franz)"), "liszt franz")
+        self.assertEqual(norm("debré, jean-louis (1944-....)"), "debre jean louis 1944")
+        self.assertEqual(norm("DEBRE, Jean-Louis"), "debre jean louis")
+        self.assertEqual(norm("Debré, Jean-Louis"), "debre jean louis")
+        self.assertEqual(norm("Tavel... (de)"), "tavel de")
+        self.assertEqual(norm("Bonaparte, Élisa (1777-1820)"), "bonaparte elisa 1777 1820")
         # labels whose normalization is not the same in Python and PostgreSQL
         norm = normalize_entry
         self.assertEqual(norm("Deboraüde ?"), "deboraude")
-        self.assertEqual(norm("Tavel… (de)"), "de tavel.")
+        self.assertEqual(norm("Tavel… (de)"), "tavel. de")
         self.assertEqual(
             norm("Blein (Ange François Alexandre) , général"),
-            "alexandre ange blein francois general",
+            "blein ange francois alexandre general",
         )
         self.assertEqual(
-            norm("Gauthier de rougemont, chef d’escadron"), "chef d'escadron de gauthier rougemont"
+            norm("Gauthier de rougemont, chef d’escadron"), "gauthier de rougemont chef d'escadron"
         )
         self.assertEqual(
             norm("Route nationale (n° 120) -- Cantal (France)"),
-            "120 cantal france n_ nationale route",
+            "route nationale n_ 120 cantal france",
         )
         self.assertEqual(
             norm(
@@ -225,8 +226,8 @@ class UtilsTest(CubicWebTC):
                 )
             ),
             (
-                "a_ comite_ dattribution de de des des fonds france "
-                "guerre journe_e la loccasion nationale orphelins recueillis"
+                """comite_ d attribution des fonds recueillis a_ l occasion """
+                """de la journe_e nationale des orphelins de guerre france"""
             ),
         )
 
@@ -508,10 +509,13 @@ class XMlUtilsTest(CubicWebTC):
         with self.admin_access.cnx() as cnx:
             self.assertEqual(enhance_accessibility(html, cnx), expected)
 
-    def test_not_html_node(self):
+    def test_stripped_html_node(self):
         with self.admin_access.cnx() as cnx:
             html = "\xa0<p>tooo</p>"
-            self.assertEqual(enhance_accessibility(html, cnx), html)
+            self.assertEqual(enhance_accessibility(html, cnx), "<p>tooo</p>")
+
+    def test_not_html_node(self):
+        with self.admin_access.cnx() as cnx:
             html = "test<p>\xa0</p>"
             self.assertEqual(enhance_accessibility(html, cnx), html)
 
@@ -539,6 +543,40 @@ class XMlUtilsTest(CubicWebTC):
         title = "Commune de Pierre-Bénite - Archives : communales"
         expected = "commune-de-pierrebenite--archives--communales"
         self.assertEqual(id_for_anchor(title), expected)
+
+
+class GlossaryUtilsTest(CubicWebTC):
+    def setUp(self):
+        GLOSSARY_CACHE[:] = []
+        super(GlossaryUtilsTest, self).setUp()
+        with self.admin_access.repo_cnx() as cnx:
+            terms = (("Archives", None), ("Inventaire d'archives", "Inventaires d'archives"))
+            for term, pl in terms:
+                if not cnx.find("GlossaryTerm", term=term):
+                    gt = cnx.create_entity(
+                        "GlossaryTerm",
+                        term=term,
+                        term_plural=pl,
+                        short_description="%s descritpion" % term,
+                        description="%s descritpion" % term,
+                        sort_letter=term[0].lower(),
+                    )
+                    gt.cw_set(anchor=str(gt.eid))
+            cnx.commit()
+
+    def test_reveal_glossary(self):
+        with self.admin_access.repo_cnx() as cnx:
+            text = (
+                "<p>Le portail rassemble les inventaires d'archives de toute la France</p>"  # noqa
+            )
+            term = cnx.find("GlossaryTerm", term="Inventaire d'archives").one()
+            got = reveal_glossary(cnx, text).replace("&#39;", "'")
+            expected = """<p>Le portail rassemble les <a data-content="Inventaire d'archives descritpion" rel="popover" class="glossary-term" data-placement="auto" href="{url}glossaire#{term}" target="_blank">inventaires d'archives
+<i class="fa fa-question"></i>
+</a> de toute la France</p>""".format(
+                url=cnx.base_url(), term=term.eid
+            )
+            self.assertEqual(got, expected)
 
 
 if __name__ == "__main__":

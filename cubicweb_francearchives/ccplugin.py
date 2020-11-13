@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright © LOGILAB S.A. (Paris, FRANCE) 2016-2019
+# Copyright © LOGILAB S.A. (Paris, FRANCE) 2016-2020
 # Contact http://www.logilab.fr -- mailto:contact@logilab.fr
 #
 # This software is governed by the CeCILL-C license under French law and
@@ -43,7 +43,9 @@ import shutil
 from glob import glob
 from datetime import datetime
 from itertools import chain
+from functools import partial
 import csv
+import tqdm
 
 import yaml
 
@@ -65,23 +67,30 @@ from cubicweb_elasticsearch import es as cwes
 from cubicweb_elasticsearch.ccplugin import IndexInES
 from cubicweb_elasticsearch.es import indexable_entities
 
-from cubicweb_francearchives import admincnx, i18n, sitemap, init_bfss, utils, rdfdump
+from cubicweb_francearchives import admincnx, i18n, sitemap, init_bfss, utils, rdfdump, commemodump
 from cubicweb_francearchives.dataimport.dc import import_filepath as dc_import_filepath
 from cubicweb_francearchives.dataimport.directories import import_directory
 from cubicweb_francearchives.dataimport.ead import readerconfig
 from cubicweb_francearchives.dataimport.importer import import_filepaths
 from cubicweb_francearchives.dataimport import oai, es_bulk_index, log_in_db, strip_html
 from cubicweb_francearchives.entities.es import SUGGEST_ETYPES
+from cubicweb_francearchives.entities.indexes import (
+    LocationAuthority,
+    SubjectAuthority,
+    AgentAuthority,
+)
 from cubicweb_francearchives.dataimport.eac import eac_import_files
 from cubicweb_francearchives.dataimport.maps import import_maps
 from cubicweb_francearchives.dataimport.newsletter import import_subscribers
 from cubicweb_francearchives.utils import init_repository
 from cubicweb_francearchives.xmlutils import enhance_accessibility
-from cubicweb_francearchives import CMS_OBJECTS
+from cubicweb_francearchives import CMS_OBJECTS, CMS_I18N_OBJECTS
 from cubicweb_francearchives.dataimport.scripts.generate_ape_ead import generate_ape_ead_files
 from cubicweb_francearchives.scripts.nginx_confs_from_faredirects import write_nginx_confs
 from cubicweb_francearchives.scripts.reindex_authority import reindex_authority
+from cubicweb_francearchives.scripts.dead_links import run_linkchecker, clean_up_linkchecker
 
+_tqdm = partial(tqdm.tqdm, disable=None)
 
 HERE = osp.dirname(osp.abspath(__file__))
 
@@ -146,7 +155,7 @@ class PniaIndexInEs(IndexInES):
                     }
                     self.customize_data(data)
                     yield data
-            cnx.info("[{}] indexed {} {} entities".format(index_name, idx, etype))
+                cnx.info("[{}] indexed {} {} entities".format(index_name, idx, etype))
 
     def customize_data(self, data):
         self.strip_html_from_es_data(data)
@@ -544,27 +553,48 @@ class IndexESAutocomplete(Command):
                 # X grouped_with X1?
                 # as there is no simple way in RQL to count only distinct values
                 query = """
+                WITH concepts AS ({concepts})
                 SELECT at.cw_eid, at.cw_label,
                     COUNT(DISTINCT rel_index.eid_to),
                     COUNT(DISTINCT rel_auth.eid_from),
-                    COUNT(DISTINCT rel_group.eid_to)
+                    COUNT(DISTINCT rel_group.eid_to),
+                    COUNT(DISTINCT concepts.circ)
                 FROM {authtable} AS at
                     LEFT OUTER JOIN {indextable} AS it ON (it.cw_authority=at.cw_eid)
+                    LEFT OUTER JOIN same_as_relation AS sa ON (sa.eid_from=at.cw_eid)
                     LEFT OUTER JOIN related_authority_relation AS rel_auth
                                ON (rel_auth.eid_to=at.cw_eid)
                     LEFT OUTER JOIN index_relation AS rel_index
                               ON (rel_index.eid_from=it.cw_eid)
                     LEFT OUTER JOIN grouped_with_relation AS rel_group
                               ON (rel_group.eid_from=at.cw_eid)
+                    LEFT OUTER JOIN concepts
+                              ON (concepts.con=sa.eid_to)
                 GROUP BY at.cw_eid,at.cw_label"""
+                concepts = " UNION ".join(
+                    [
+                        """SELECT cw_circular.cw_eid AS circ, cw_concept.cw_eid AS con
+                        FROM cw_circular
+                        JOIN {rel}_relation ON eid_from=cw_circular.cw_eid
+                        JOIN cw_concept ON eid_to=cw_concept.cw_eid""".format(
+                            rel=rel
+                        )
+                        for rel in (
+                            "business_field",
+                            "document_type",
+                            "historical_context",
+                            "action",
+                        )
+                    ]
+                )
                 rset = cnx.system_sql(
-                    query.format(authtable=authtable, indextable=indextable)
+                    query.format(authtable=authtable, indextable=indextable, concepts=concepts)
                 ).fetchall()
                 if self.config.debug:
                     print("   > number of entities {}".format(len(rset)))
-                for autheid, label, countfa, countcomext, countgrouped in rset:
+                for autheid, label, countfa, countcomext, countgrouped, countcirculars in rset:
                     if not dry_run:
-                        count = countfa + countcomext
+                        count = countfa + countcomext + countcirculars
                         yield {
                             "_op_type": "index",
                             "_index": suggest_index_name,
@@ -1036,7 +1066,8 @@ class ReindexIRByStableId(Command):
             rset = cnx.execute(
                 """Any FSPATH(D) WHERE X is FindingAid,
                    X findingaid_support F, F data D,
-                   X stable_id %(sti)s""", {'sti': stable_id}
+                   X stable_id %(sti)s""",
+                {"sti": stable_id},
             )
             if not rset:
                 print("No Findingaid with stable_id {} found".format(stable_id))
@@ -1166,9 +1197,7 @@ class ReindexEsAuthority(Command):
 
 @CWCTL.register
 class HarvestRepos(Command):
-    """harvest OAI-PMH repositories registered in the database.
-
-    """
+    """harvest OAI-PMH repositories registered in the database."""
 
     name = "fa-harvest-oai"
     arguments = "<instance>"
@@ -1217,9 +1246,7 @@ class HarvestRepos(Command):
 
 @CWCTL.register
 class RdfDump(Command):
-    """harvest OAI-PMH repositories registered in the database.
-
-    """
+    """harvest OAI-PMH repositories registered in the database."""
 
     name = "fa-rdfdump"
     arguments = "<instance>"
@@ -1261,9 +1288,9 @@ class RdfDump(Command):
 
 class InitDatabase(Command):
     """Initialize the database **in the default namespace** but do NOT
-fill it with anything, and create entity tables for CMS entities
-and their relations in the namespace defined in the db-namespace config
-option
+    fill it with anything, and create entity tables for CMS entities
+    and their relations in the namespace defined in the db-namespace config
+    option
 
     """
 
@@ -1311,7 +1338,7 @@ option
 
         from cubicweb_francearchives.utils import setup_published_schema
 
-        etypes = list(CMS_OBJECTS) + ["CWProperty"]
+        etypes = list(CMS_OBJECTS) + CMS_I18N_OBJECTS + ["CWProperty"]
         rtypes = ("in_state", "children", "news_image")
         with cnx.cursor() as cursor:
             setup_published_schema(cursor.execute, etypes, rtypes, sqlschema=sqlschema)
@@ -1421,7 +1448,7 @@ class GenerateApeEadFiles(Command):
 @CWCTL.register
 class GenerateOaiRedirections(Command):
     """Create FindingAid and FAComponent nginx redirections files
-       from data stored in fa_redirects sql table
+    from data stored in fa_redirects sql table
     """
 
     name = "gen-fa-redirects"
@@ -1432,6 +1459,152 @@ class GenerateOaiRedirections(Command):
         appid = args.pop()
         with admincnx(appid) as cnx:
             write_nginx_confs(cnx)
+
+
+@CWCTL.register
+class FindDeadLinks(Command):
+    """Find dead links using linkchecker tool."""
+
+    name = "find-dead-links"
+    arguments = "<instance><url>"
+    min_args = max_args = 2
+
+    options = [
+        (
+            "config",
+            {"type": "string", "default": "", "help": "linkchecker configuration file path"},
+        ),
+        (
+            "output-linkchecker",
+            {"type": "string", "default": "/tmp", "help": "linkchecker output directory path"},
+        ),
+        (
+            "output-dead-links",
+            {"type": "string", "default": "/tmp", "help": "find-dead-links output file path"},
+        ),
+    ]
+
+    def run(self, args):
+        _, url = args
+        try:
+            print("run linkchecker")
+            print("this may take some time")
+            # linkchecker creates any missing directories in the user-defined path
+            output_linkchecker = os.path.join(self.config.output_linkchecker, "linkchecker-out.csv")
+            run_linkchecker(url, output_linkchecker, config=self.config.config)
+        except RuntimeError as exception:
+            print("WARNING:incomplete results:%s", str(exception))
+        # create missing directories in the user-defined path
+        os.makedirs(self.config.output_dead_links, exist_ok=True)
+        clean_up_linkchecker(output_linkchecker, os.path.normpath(self.config.output_dead_links))
+
+
+@CWCTL.register
+class ProcessOrphanAuthorities(Command):
+    """Find and delete orphan Authorities"""
+
+    name = "delete-orphan-authorities"
+    arguments = "<instance>"
+    min_args = max_args = 1
+    options = [
+        (
+            "dry-run",
+            {
+                "type": "yn",
+                "default": True,
+                "help": """set to False if you want to delete orphan authorities
+                          (LocationAuthority, SubjectAuthority, AgentAuthority)""",
+            },
+        ),
+        (
+            "etypes",
+            {
+                "type": "csv",
+                "default": "",
+                "help": "only process/delete orphan authorities of given etypes",
+            },
+        ),
+    ]
+
+    etype2class = {
+        "LocationAuthority": LocationAuthority,
+        "SubjectAuthority": SubjectAuthority,
+        "AgentAuthority": AgentAuthority,
+    }
+
+    def run(self, args):
+        appid = args.pop()
+        etypes = ("LocationAuthority", "SubjectAuthority", "AgentAuthority")
+        do_delete = not self.config.dry_run
+        with admincnx(appid) as cnx:
+            if self.config.etypes:
+                etypes = self.config.etypes
+            for etype in etypes:
+                query = self.etype2class[etype].orphan_query()
+                rset = cnx.execute(query)
+                print("Find {count} orphan {etype}".format(count=rset.rowcount, etype=etype))
+                if do_delete:
+                    print("Delete {count} orphan {etype}".format(count=rset.rowcount, etype=etype))
+                    progress_bar = _tqdm(total=rset.rowcount)
+                    for i, eid in enumerate(rset):
+                        cnx.execute(
+                            "DELETE {etype} X WHERE X eid {eid}".format(etype=etype, eid=eid[0])
+                        )
+                        if not i % 100:
+                            # commit every 100 entities to limit memory consumption
+                            cnx.commit()
+                        try:
+                            progress_bar.update()
+                        except Exception:
+                            pass
+                    cnx.commit()
+
+
+@CWCTL.register
+class CommemoDump(Command):
+    """
+    Create posgresql and csv dumps of CommemorationItems
+    """
+
+    name = "commemo-dump"
+    arguments = "<instance>"
+    min_args = max_args = 1
+    options = [
+        (
+            "output-dir",
+            {
+                "type": "string",
+                "default": "/tmp",
+                "help": ("répertoire dans lequel les archives seront créées"),
+            },
+        ),
+        (
+            "formats",
+            {
+                "type": "csv",
+                "default": ("csv", "postgres"),
+                "help": (
+                    "liste des formats dans lequel on veut sérialiser le rdf (csv ou postgres)"
+                ),
+            },
+        ),
+    ]
+
+    def run(self, args):
+        appid = args.pop()
+        if not set(self.config.formats).issubset(("csv", "postgres")):
+            print("liste des formats contient format(s) non supporté(s)")
+        with admincnx(appid) as cnx:
+            output_dir = os.path.join(
+                self.config.output_dir,
+                "francearchives_commemorations_{}".format(datetime.now().strftime("%Y%m%d")),
+            )
+            if os.path.exists(output_dir):
+                shutil.rmtree(output_dir)
+            os.makedirs(output_dir)
+            commemodump.create_dumps(cnx, output_dir, self.config.formats)
+            # remove output directory containing temporary files (pg_dump)
+            shutil.rmtree(output_dir)
 
 
 for cmdclass in (

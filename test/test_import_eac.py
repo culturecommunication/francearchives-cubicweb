@@ -227,7 +227,7 @@ class EACImportTC(PostgresTextMixin, CubicWebTC):
             )
 
     def test_patch_authorized_name_entries(self):
-        """ Test on the overloading of `build_name_entry`
+        """Test on the overloading of `build_name_entry`
         from cubicweb_eac to select the authorized name
         using a convention used by the french archive
         system.
@@ -259,7 +259,7 @@ class EACImportTC(PostgresTextMixin, CubicWebTC):
                     self.assertNotEqual(name.form_variant, "authorized")
 
     def test_remove_authority_with_sameas_relations(self):
-        """ Test on the deletion of the same_as relationships
+        """Test on the deletion of the same_as relationships
         wich link AuthorityRecords and AgentAuthorities
         """
         with self.admin_access.cnx() as cnx:

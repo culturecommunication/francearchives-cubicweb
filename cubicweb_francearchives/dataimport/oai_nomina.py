@@ -30,8 +30,14 @@
 #
 from itertools import count
 
+import logging
+
+from sickle import Sickle
+from sickle.models import Record
 
 from cubicweb.dataimport.importer import ExtEntity
+from cubicweb_francearchives.dataimport.ead import readerconfig
+from cubicweb_francearchives.dataimport.oai_utils import PniaOAIItemIterator
 
 
 def qname(tag):
@@ -42,13 +48,95 @@ def first(value):
     return next(iter(value))
 
 
+class OAIENominaRecord(Record):
+    def __init__(self, record_element, strip_ns=True):
+        self.error = None
+        try:
+            super(OAIENominaRecord, self).__init__(record_element, strip_ns=strip_ns)
+        except Exception as e:
+            self.error = e
+            return
+        self.nomina = self.xml.find(".//" + self._oai_namespace + "metadata/")
+        self.harvested_url = ""
+
+
+class OAINominaImporter(object):
+    """OAI Nomina schema importer.
+
+    :ivar dict config: server-side configuration
+    :ivar OAINominaReader reader: OAI Nomina schema reader
+    :ivar Connection cnx: connection
+    :ivar es: Elasticsearch connection
+    """
+
+    def __init__(self, store, config=None, log=None):
+        """Initialize OAI Nomina schema reader.
+
+        :param RQLObject store: store
+        :param dict config: server-side configuration
+        :param Logger log: logger
+        """
+        cwconfig = store._cnx.vreg.config
+        if log is None:
+            log = logging.getLogger("rq.task")
+        self.log = log
+        if config is None:
+            config = readerconfig(
+                cwconfig,
+                cwconfig.appid,
+                log=self.log,
+                esonly=False,
+                nodrop=True,
+                reimport=True,
+                force_delete=True,
+            )
+        self.config = config
+        self.reader = OAINominaReader()
+
+    def import_records(self, service_infos, headers, **params):
+        """Harvest data and check they contain the needed information
+        :param dict service_infos: service information
+        :param dict params: harvest parameters
+        """
+        base_url = service_infos["oai_url"]
+        oai_mapping = {
+            "ListRecords": OAIENominaRecord,
+            "GetRecord": OAIENominaRecord,
+        }
+        self.client = Sickle(
+            base_url,
+            iterator=PniaOAIItemIterator,
+            class_mapping=oai_mapping,
+            headers=headers,
+            retry_status_codes=(500, 502, 503),
+        )
+        self.client.logger = self.log
+        records = self.client.ListRecords(**params)
+        for record in records:
+            if record is None:
+                # PniaOAIItemIterator raised an error before creating a record
+                continue
+            identifier = record.header.identifier
+            url = record.harvested_url
+            if record.deleted:
+                self.log.info(
+                    "%s. The record with identifier %r is set to be deleted. Nothing is done.",
+                    url,
+                    identifier,
+                )
+                continue
+            self.log.info("%s. Oai identifier: %s", url, identifier)
+            # directly import data whitout storing it on the filesystem
+            for person in self.reader(record.nomina, service_infos):
+                yield person
+
+
 class OAINominaReader(object):
     def __init__(self):
         self.next_id = lambda c=count(1): next(c)
 
-    def __call__(self, record, cnx, service_infos):
+    def __call__(self, record, service_infos):
         """Generate extentities read from `record` etree"""
-        record = record[0]
         death_year, dates = build_dates(record)
         locations = build_locations(record)
         persons = build_persons(record, death_year, dates, locations)
@@ -93,8 +181,13 @@ def build_persons(record, death_year=None, dates=None, locations=None):
     person_data = []
     uri = record.get("uri") or None
     for person in record.findall(qname("personne")):
+        nomelt = person.find(qname("nom"))
+        if nomelt is not None and nomelt.text:
+            name = nomelt.text
+        else:
+            name = None
         data = {
-            "name": person.find(qname("nom")).text,
+            "name": name,
             "death_year": death_year,
             "dates_description": dates,
             "locations_description": locations,

@@ -44,6 +44,12 @@ from cubicweb_francearchives.entities.adapters import EntityMainPropsAdapter
 from cubicweb_francearchives.utils import cut_words, remove_html_tags
 
 
+def iter_entities(cnx, eid, rql, nb_entities, chunksize=100000):
+    for offset in range(0, nb_entities, chunksize):
+        for index_eid in cnx.execute(rql.format(offset=offset, limit=chunksize, eid=eid)):
+            yield cnx.entity_from_eid(index_eid[0])
+
+
 class ExternalUri(AnyEntity):
     __regid__ = "ExternalUri"
     fetch_attrs, cw_fetch_order = fetch_config(["label", "uri", "source", "extid"])
@@ -81,6 +87,18 @@ class AbstractIndex(AnyEntity):
         self.update_es_docs(prevauthority, auth.eid)
         self.cw_set(authority=auth)
         return auth
+
+    def iter_docs(self):
+        nb_entities = self._cw.execute(
+            """
+        Any COUNT(FA) WHERE E index FA, E eid %(e)s
+        """,
+            {"e": self.eid},
+        )[0][0]
+        rql = """Any FA LIMIT {limit} OFFSET {offset}
+                  WHERE E index FA, E eid {eid}"""
+        for entity in iter_entities(self._cw, self.eid, rql, nb_entities):
+            yield entity
 
     def update_es_docs(self, oldauth, newauth):
         # update esdocument related to FAComponent,FindingAid linked to current index
@@ -126,7 +144,7 @@ WHERE
         published_indexer = self._cw.vreg["es"].select("indexer", self._cw, published=True)
         docs = []
         published_docs = []
-        for fa in self.index:
+        for fa in self.iter_docs():
             serializable = fa.cw_adapt_to("IFullTextIndexSerializable")
             json = serializable.serialize()
             if not json:
@@ -158,6 +176,7 @@ WHERE
                             "_source": json,
                         }
                     )
+            fa.cw_clear_all_caches()
             if len(docs) > 30:
                 es_bulk_index(es, docs)
                 if published_docs:
@@ -167,6 +186,9 @@ WHERE
         es_bulk_index(es, docs)
         if published_docs:
             es_bulk_index(es, published_docs)
+        # commit here as the update (sql) may be carried on a very big
+        # number of documents, mainly FAComponents and FindingAids
+        self._cw.commit()
 
 
 class AgentName(AbstractIndex):
@@ -191,6 +213,21 @@ class Subject(AbstractIndex):
 class AbstractAuthority(AnyEntity):
     __abstract__ = True
 
+    @classmethod
+    def orphan_query(cls):
+        """
+        dont check NOT EXISTS(I authority X, I index F) as
+        unpublished IR do not exist in published schema
+        """
+        return """Any X WHERE
+                  X is {etype},
+                  NOT EXISTS(I authority X),
+                  NOT EXISTS(E related_authority X),
+                  NOT EXISTS(X grouped_with X1),
+                  NOT EXISTS(X2 grouped_with X)""".format(
+            etype=cls.cw_etype
+        )
+
     def dc_title(self):
         return self.label or self._cw._("no label")
 
@@ -210,11 +247,37 @@ class AbstractAuthority(AnyEntity):
             ).rows
         ]
 
+    def services_rset(self):
+        return self._cw.execute(
+            """
+            DISTINCT Any S WITH S BEING  (
+            (DISTINCT Any S WHERE EXISTS(A authority X, A index F, X eid %(e)s,
+             F is FindingAid, F service S))
+            UNION
+            (DISTINCT Any S WHERE EXISTS(A authority X, A index FF, X eid %(e)s,
+            FF is FAComponent, FF finding_aid F, F service S))
+            )
+            """,
+            {"e": self.eid},
+        )
+
+    def iter_indexes(self):
+        nb_entities = self._cw.execute(
+            """
+        Any COUNT(I) WHERE I authority E, E eid %(e)s
+        """,
+            {"e": self.eid},
+        )[0][0]
+        rql = """Any I WHERE I authority E, E eid {eid}"""
+        for entity in iter_entities(self._cw, self.eid, rql, nb_entities):
+            yield entity
+
     def group(self, other_auth_eids):
         req = self._cw
         grouped_with = [e.eid for e in self.reverse_grouped_with]
         grouped_auths = [self]
         for autheid in other_auth_eids:
+            self.info("[authorities] group %r into %r", autheid, self.eid)
             try:
                 autheid = int(autheid)
             except Exception:
@@ -230,8 +293,9 @@ class AbstractAuthority(AnyEntity):
             if auth.cw_etype != self.cw_etype:
                 continue
             # rewrite `index_entries` in related es docs
-            for index in auth.reverse_authority:
+            for index in auth.iter_indexes():
                 index.update_es_docs(oldauth=auth.eid, newauth=self.eid)
+                index.cw_clear_all_caches()
             kwargs = {"new": self.eid, "old": autheid}
             # redirect index entities from old authority to new authority
             req.execute(
@@ -241,12 +305,28 @@ class AbstractAuthority(AnyEntity):
             # redirect related ExternRefs and CommemorationItems from old authority to new authority
             req.execute(
                 """SET E related_authority NEW WHERE NEW eid %(new)s,
-                   E related_authority OLD, OLD eid %(old)s""",
+                   E related_authority OLD, OLD eid %(old)s, NOT EXISTS(E related_authority NEW)""",
                 kwargs,
             )
             # delete related ExternRefs and CommemorationItems from old authority
             req.execute("""DELETE E related_authority OLD WHERE OLD eid %(old)s""", kwargs)
             # set the grouped_with relation from the old authority to new
+            # reidrect related same_as from old authority to new authority
+            req.execute(
+                """SET NEW same_as S WHERE NEW eid %(new)s,
+                   OLD same_as S, OLD eid %(old)s,
+                   NOT EXISTS(NEW same_as S), NOT EXISTS(S same_as NEW)""",
+                kwargs,
+            )
+            req.execute(
+                """SET S same_as NEW WHERE NEW eid %(new)s,
+                   S same_as OLD, OLD eid %(old)s,
+                   NOT EXISTS(S same_as NEW), NOT EXISTS(NEW same_as S)""",
+                kwargs,
+            )
+            # delete delated same_as from the old authority
+            req.execute("""DELETE S same_as OLD WHERE OLD eid %(old)s""", kwargs)
+            req.execute("""DELETE OLD same_as S WHERE OLD eid %(old)s""", kwargs)
             # authority
             req.execute("SET OLD grouped_with NEW WHERE OLD eid %(old)s, NEW eid %(new)s", kwargs)
             # remove the possible grouped_with relation from the new authority
@@ -261,6 +341,8 @@ class AbstractAuthority(AnyEntity):
                 "O grouped_with OLD, OLD eid %(old)s, NEW eid %(new)s",
                 kwargs,
             )
+            self._cw.commit()
+            auth.cw_clear_all_caches()
         return grouped_auths
 
     @cachedproperty
@@ -315,6 +397,11 @@ class AbstractAuthority(AnyEntity):
                 indextable=indexes[0].cw_etype.lower(),
             )
         )
+
+    @property
+    def is_orphan(self):
+        query = self.orphan_query() + """, X eid %(eid)s"""
+        return bool(self._cw.execute(query, {"eid": self.eid}))
 
 
 class LocationAuthority(AbstractAuthority):
@@ -464,6 +551,17 @@ class AgentAuthorityMainPropsAdapter(EntityMainPropsAdapter):
 
 class SubjectAuthority(AbstractAuthority):
     __regid__ = "SubjectAuthority"
+
+    @classmethod
+    def orphan_query(cls):
+        return (
+            super(SubjectAuthority, cls).orphan_query()
+            + """,
+        NOT EXISTS(C1 business_field B, X same_as B),
+        NOT EXISTS(C2 historical_context H, X same_as H),
+        NOT EXISTS(C3 document_type D, X same_as D),
+        NOT EXISTS(C4 action A, X same_as A)"""
+        )
 
     @property
     def itypes(self):

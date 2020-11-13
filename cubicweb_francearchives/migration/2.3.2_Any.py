@@ -35,6 +35,7 @@ from cubicweb_elasticsearch.es import get_connection
 from cubicweb_francearchives.dataimport import es_bulk_index
 
 import logging
+
 LOGGER = logging.getLogger()
 
 
@@ -43,33 +44,35 @@ UNINDEX_CARDS = []
 rql("SET X do_index False WHERE X is Card, X wikiid 'alert%%'")
 rql("SET X do_index False WHERE X is Card, X wikiid ILIKE 'tableau-circulaires-%%'")
 
-UNINDEX_CARDS.extend([r[0] for r in
-                      rql("Any X WHERE X is Card, X wikiid ILIKE 'tableau-circulaires-%%'")])
-UNINDEX_CARDS.extend([r[0] for r in
-                      rql("Any X WHERE X is Card, X wikiid ILIKE 'alert%%'")])
-UNINDEX_CARDS.extend([r[0] for r in
-                      rql("Any X WHERE X is Card, X wikiid ILIKE 'newsletter%%'")])
+UNINDEX_CARDS.extend(
+    [r[0] for r in rql("Any X WHERE X is Card, X wikiid ILIKE 'tableau-circulaires-%%'")]
+)
+UNINDEX_CARDS.extend([r[0] for r in rql("Any X WHERE X is Card, X wikiid ILIKE 'alert%%'")])
+UNINDEX_CARDS.extend([r[0] for r in rql("Any X WHERE X is Card, X wikiid ILIKE 'newsletter%%'")])
 
 
-
-for lang in ('es', 'de', 'en'):
+for lang in ("es", "de", "en"):
     UNINDEX_CARDS.extend(
-        [r[0] for r in
-         rql("""Any X WHERE X wikiid ILIKE "%%-{}", X content NULL""".format(lang))])
-    rql("""DELETE Card X WHERE X wikiid ILIKE "%-{}",
-            X content NULL""".format(lang))
+        [r[0] for r in rql("""Any X WHERE X wikiid ILIKE "%%-{}", X content NULL""".format(lang))]
+    )
+    rql(
+        """DELETE Card X WHERE X wikiid ILIKE "%-{}",
+            X content NULL""".format(
+            lang
+        )
+    )
 
 commit()
 
-CMS_ES_PARAMS =  {
+CMS_ES_PARAMS = {
     "elasticsearch-locations": cnx.vreg.config["elasticsearch-locations"],
     "index-name": cnx.vreg.config["published-index-name"] + "_all",
 }
 
 
 es = get_connection(CMS_ES_PARAMS)
-index_name = CMS_ES_PARAMS['index-name']
-published_index_name = cnx.vreg.config["index-name"] + "_all",
+index_name = CMS_ES_PARAMS["index-name"]
+published_index_name = cnx.vreg.config["index-name"] + "_all"
 for eid in UNINDEX_CARDS:
     for index in (index_name, published_index_name):
         print("deleting on {}/{}".format(eid, index_name))
@@ -91,5 +94,6 @@ cnx.system_sql(
     FROM public.cw_findingaid WHERE
     public.cw_findingaid.cw_stable_id=published.cw_findingaid.cw_stable_id
     AND public.cw_findingaid.cw_website_url IS DISTINCT FROM
-    published.cw_findingaid.cw_website_url""", rollback_on_failure=False
+    published.cw_findingaid.cw_website_url""",
+    rollback_on_failure=False,
 )

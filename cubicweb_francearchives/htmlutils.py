@@ -37,9 +37,8 @@ from cubicweb.uilib import REM_ROOT_HTML_TAGS, ALLOWED_TAGS
 # allow the style attribute
 SAFE_ATTRS = html.defs.safe_attrs | {"style", "frameborder", "allowfullscreen"}
 
-
 CLEANER = clean.Cleaner(
-    allow_tags=ALLOWED_TAGS | {"iframe"},
+    allow_tags=ALLOWED_TAGS | {"iframe", "figure", "figcaption"},
     remove_unknown_tags=False,
     safe_attrs=SAFE_ATTRS,
     add_nofollow=False,
@@ -48,8 +47,7 @@ CLEANER = clean.Cleaner(
 
 
 def soup2xhtml(data, encoding):
-    """tidy html soup by allowing some element tags and return the result
-    """
+    """tidy html soup by allowing some element tags and return the result"""
     # remove spurious </body> and </html> tags, then normalize line break
     # (see http://www.w3.org/Protocols/rfc2616/rfc2616-sec3.html#sec3.7.1)
     data = REM_ROOT_HTML_TAGS.sub("", "\n".join(data.splitlines()))

@@ -25,7 +25,8 @@ node('debian_stretch') {
     }
     stage('Test') {
         timeout(time: 1, unit: 'HOURS') {
-          withEnv(["PATH+POSTGRESQL=/usr/lib/postgresql/9.6/bin"]) {
+          withEnv(["PATH+POSTGRESQL=/usr/lib/postgresql/9.6/bin",
+                   "FRARCHIVES_NO_BUILD_DATA_FILES=1"]) {
             sh 'tox -e py3'
           }
         }

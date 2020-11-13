@@ -161,7 +161,8 @@ class ServiceBreadCrumbsAdapter(EntityAdapter):
         if self.entity.annex_of:
             parent = self.entity.annex_of[0]
             paths.insert(
-                -1, (parent.absolute_url(), parent.dc_title()),
+                -1,
+                (parent.absolute_url(), parent.dc_title()),
             )
         return paths
 

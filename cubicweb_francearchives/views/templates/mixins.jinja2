@@ -2,7 +2,7 @@
   {% if image %}
   {% set legend=image.caption or image.copyright %}
   {% if legend %}
-  <figure class="image-item" role="group">
+  <figure class="image" role="group">
   {% endif %}
     <img class="img-responsive"
          src="{{ image.image_file[0].download_url() }}"
@@ -10,7 +10,7 @@
              data-defaultsrc="{{ default_picto_src }}"
     />
     {% if legend %}
-    <figcaption class="image-item-metadata">
+    <figcaption>
        {% if image.caption  %}
            <div class="image-item-legend">{{ image.caption }}</div>
        {% endif %}
@@ -47,4 +47,65 @@
     <span class="rhombus"></span>
     <span class="medium-grey-line ml20"></span>
 </div>
+{% endmacro %}
+
+{% macro faqitems(faq, category, editable, _) %}
+  {% for eid, question, answer in faq %}
+    <div class="faq_item">
+      <div class="faq_item__question collapsed" id="question{{eid}}" data-toggle="collapse" data-target="#answer{{eid}}" aria-expanded="false" aria-controls="answer{{eid}}">
+        {% if editable %}
+          <a class="edit-link" href="{{ base_url }}/faqitem/{{eid}}"><i class="fa fa-edit"></i></a>
+        {% endif %}
+        <i class="chevron-icon fa fa-chevron-right"></i>
+        {{ question }}
+      </div>
+      <div id="answer{{eid}}" class="collapse faq_item__answer" aria-labelledby="question{{eid}}" data-parent="#{{category}}">
+        <div>{{ answer }}</div>
+      </div>
+    </div>
+  {% endfor %}
+{% endmacro %}
+
+
+{% macro modalfaq(data, _) %}
+{% if data and data.faqs %}
+ <div class="faqbox">
+   <button id="faqbox-btn" class="fa fa-question" data-toggle="modal" data-target="#faqModal"
+      role="button" title="{{_('Need help?')}}">
+   </button>
+   <div class="modal fade faq-modal" id="faqModal" tabindex="-1" role="dialog" aria-labelledby="faqModal" aria-hidden="true">
+     <div class="modal-dialog" role="document">
+       <div class="modal-content faq-modal-content">
+         <div class="modal-header faq-modal-header">
+           <div style="display: flex">
+             <h5 class="modal-title" id="faqModal">
+             <i class="fa fa-question round"></i>
+             {{ "FAQ" }} : {{ _(data.category) }}</h5>
+             <button class="close" data-dismiss="modal" aria-label="Close">
+               <span aria-hidden="true">&times;</span>
+             </button>
+           </div>
+           <div style="display: flex">
+              <a href="{{ data.faq_url }}" class="faq-all-link" target="_blank">
+                {{ data.faq_label }}
+              </a>
+              <span id="faq-toggle-fold"
+                  data-label-collapse="{{ _('Unfold all') }}"
+                  data-label-expand="{{ _('Fold all') }}">
+                <i class="fa fa-angle-right"></i> {{_('Unfold all') }}
+              </span>
+          </div>
+         </div>
+         <div class="modal-body">
+           {{  faqitems(data.faqs, data.category, false, _) }}
+           <div class="faq_item_last">
+             <a href="{{ data.faq_url }}" class="faq-all-link" target="_blank">
+             {{ data.faq_label }}</a>
+           </div>
+         </div>
+       </div>
+     </div>
+   </div>
+ </div>
+{% endif %}
 {% endmacro %}

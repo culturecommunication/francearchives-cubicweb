@@ -111,14 +111,13 @@ class PublisherTermsFacet(TermsFacet):
 class PniaCWFacetedSearch(CWFacetedSearch):
     fields = [
         "did.unitid^6",
-        "title^3",
+        "title*^3",
         "did.unittitle^3",
-        "component_texts^2",
-        "content",
+        "content*",
         "name",
         "manif_prog",
         "attachment",
-        "alltext",
+        "alltext*",
     ]
     facets = {
         "cw_etype": TermsFacet(field="cw_etype", size=FACET_SIZE),
@@ -129,7 +128,7 @@ class PniaCWFacetedSearch(CWFacetedSearch):
         # custom
         "unitid": TermsFacet(field="unitid", size=FACET_SIZE),
         "commemoration_year": HistogramFacet(
-            field="commemoration_year", interval="1", min_doc_count=1
+            field="commemoration_year", interval=1, min_doc_count=1
         ),
         "year": HistogramFacet(field="year", interval=100, min_doc_count=1),
         "publisher": TermsFacet(field="publisher", size=ALL_VALUES_SIZE),
@@ -177,12 +176,12 @@ class PniaCWFacetedSearch(CWFacetedSearch):
 class PniaFCFacetedSearch(PniaCWFacetedSearch):
     fields = [
         "did.unitid^6",
-        "title^3",
+        "title*^3",
         "did.unittitle^3",
         "name^3",
-        "content^2",
-        "content",
-        "alltext",
+        "content*^2",
+        "content*",
+        "alltext*",
     ]
 
 
@@ -204,7 +203,7 @@ class PniaFAFacetedSearch(PniaCWFacetedSearch):
         "content^2",
         "acquisition_info",
         "scopecontent",
-        "alltext",
+        "alltext*",
     ]
 
 

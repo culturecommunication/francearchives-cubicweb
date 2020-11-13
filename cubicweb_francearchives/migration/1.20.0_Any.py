@@ -149,7 +149,9 @@ def setup_published_triggers(cnx, sql=None, sqlschema="published", bootstrap=Tru
     skipped_etypes = ("CWProperty", "CWUser")  # idem
     skipped_relations = ("in_state",)  # in_state is handled separately
     etypes, rtypes, rnames = get_published_tables(cnx, skipped_etypes, skipped_relations)
-    env = Environment(loader=PackageLoader("cubicweb_frarchives_edition", "templates"),)
+    env = Environment(
+        loader=PackageLoader("cubicweb_frarchives_edition", "templates"),
+    )
     env.filters["sqlstr"] = lambda x: "'{}'".format(x)
     template = env.get_template("published.sql")
     sqlcode = template.render(

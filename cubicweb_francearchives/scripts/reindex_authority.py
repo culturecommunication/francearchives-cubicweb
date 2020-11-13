@@ -34,21 +34,22 @@ this script reindex authority's related FindingAid, FAComponent
 from cubicweb_francearchives.dataimport import es_bulk_index
 
 
-def reindex_authority(cnx, eid):
-    """
-    reindex related FindingAid, FAComponent, etc for both
-    indexes
-    """
-    indexer = cnx.vreg["es"].select("indexer", cnx)
-    index_name = indexer.index_name
-    es = indexer.get_connection()
-    published_indexer = cnx.vreg["es"].select("indexer", cnx, published=True)
+def es_index(es, index_name, rset):
     docs = []
-    published_docs = []
-    for fa in cnx.execute(
-        "DISTINCT Any FA WHERE X eid %(eid)s, I authority X, I index FA", {"eid": eid}
-    ).entities():
-        serializable = fa.cw_adapt_to("IFullTextIndexSerializable")
+    for e in rset.entities():
+        if e.cw_etype in ("FAComponent", "FindingAid"):
+            print(" -> Indexing {} {} {}".format(e.cw_etype, e.eid, e.stable_id))
+        else:
+            print(" -> Indexing {} {}".format(e.cw_etype, e.eid))
+
+        serializable = e.cw_adapt_to("IFullTextIndexSerializable")
+        if not serializable:
+            print(
+                "\n -> Entity {} {} is not adaptable to IFullTextIndexSerializable".format(
+                    e.cw_etype, e.eid
+                )
+            )
+            continue
         json = serializable.serialize()
         if not json:
             continue
@@ -61,32 +62,47 @@ def reindex_authority(cnx, eid):
                 "_source": json,
             }
         )
-        if published_indexer:
-            published = True
-            if fa.cw_etype in ("FindingAid", "FAComponent"):
-                if fa.cw_etype == "FindingAid":
-                    wf = fa.cw_adapt_to("IWorkflowable")
-                else:
-                    wf = fa.finding_aid[0].cw_adapt_to("IWorkflowable")
-                published = wf and wf.state == "wfs_cmsobject_published"
-            if published:
-                published_docs.append(
-                    {
-                        "_op_type": "index",
-                        "_index": published_indexer.index_name,
-                        "_type": "_doc",
-                        "_id": serializable.es_id,
-                        "_source": json,
-                    }
-                )
-        print("docs", len(docs))
-        print("published_docs", len(published_docs))
         if len(docs) > 30:
             es_bulk_index(es, docs)
-            if len(published_docs):
-                es_bulk_index(es, published_docs)
             docs = []
-            published_docs = []
     es_bulk_index(es, docs)
-    if published_docs:
-        es_bulk_index(es, published_docs)
+
+
+def get_related_docs(cnx, adapted, published=False):
+    return cnx.execute(
+        """Any F WITH F BEING ({queries})""".format(
+            queries=" UNION ".join(adapted.related_docs_queries(published=published))
+        ),
+        {"eid": adapted.entity.eid},
+    )
+
+
+def reindex_authority(cnx, eid):
+    """
+    reindex related FindingAid, FAComponent, etc for both
+    indexes
+    """
+    indexer = cnx.vreg["es"].select("indexer", cnx)
+    unpublished_index_name = indexer.index_name
+    es = indexer.get_connection()
+    published_index_name = cnx.vreg["es"].select("indexer", cnx, published=True).index_name
+    rset = cnx.execute("Any X WHERE X eid %(eid)s", {"eid": eid})
+    if not rset:
+        print("\n -> No Authority with eid {} found".format(eid))
+        return
+    authority = rset.one()
+    adapted = authority.cw_adapt_to("ISuggestIndexSerializable")
+    for index_name, is_published in (
+        (unpublished_index_name, False),
+        (published_index_name, True),
+    ):
+        related_rset = get_related_docs(cnx, adapted, published=is_published)
+        print(
+            " -> Found {} {} related entities for {} {}".format(
+                related_rset.rowcount,
+                "published" if is_published else "draft",
+                authority.cw_etype,
+                authority.eid,
+            )
+        )
+        es_index(es, index_name, related_rset)

@@ -28,6 +28,9 @@
 # The fact that you are presently reading this means that you have had
 # knowledge of the CeCILL-C license and that you accept its terms.
 #
+
+from collections import defaultdict
+
 from urllib.parse import urlparse
 
 from cwtags import tag as T
@@ -36,19 +39,16 @@ from logilab.mtconverter import xml_escape
 
 from cubicweb.predicates import is_instance
 from cubicweb.view import EntityView
+from cubicweb.uilib import cut
+
 from cubicweb.web.views.baseviews import InContextView
 from cubicweb.web.views.primary import PrimaryView
 from cubicweb_francearchives.views.search import PniaElasticSearchView
-from cubicweb_francearchives.views import JinjaViewMixin, get_template
+from cubicweb_francearchives.views import JinjaViewMixin, get_template, blank_link_title
 
 
 class IndexElasticSearchView(PniaElasticSearchView):
     __regid__ = "indexes-esearch"
-
-    def format_results_title(self, response):
-        if response is None or response.hits.total.value == 0:
-            return None
-        return super(IndexElasticSearchView, self).format_results_title(response)
 
 
 class AuthorityPrimaryView(PrimaryView):
@@ -59,7 +59,7 @@ class AuthorityPrimaryView(PrimaryView):
     def entity_call(self, entity, **kw):
         self._cw.form.pop("rql", None)  # remove rql form param which comes from url_rewriter
         self._cw.form["indexentry"] = entity.eid
-        self._cw.form["restrict_to_single_etype"] = True
+        self._cw.form["restrict_to_single_etype"] = False
         self.w(entity.view("index-abstract"))
         self.wview("indexes-esearch")
 
@@ -94,10 +94,7 @@ class ExternalUriInContextView(InContextView):
         url = entity.uri
         netloc = urlparse(url).netloc
         _ = self._cw._
-        if entity.source:
-            label = "{} : {}".format(_(entity.source), label)
-        else:
-            label = "{} : {}".format(_(netloc), label)
+        self.w("{} : ".format(_(entity.source) or _(netloc)))
         title = "{} {} {}".format(_("Go to the site:"), netloc, _("- New window"))
         self.w(
             T.a(
@@ -113,6 +110,69 @@ class ExternalUriInContextView(InContextView):
 class ConceptInContextView(AbstractExternalInContextView):
     __select__ = AbstractExternalInContextView.__select__ & is_instance("Concept")
     uri_attr = "cwuri"
+
+    def cell_call(self, row, col):
+        entity = self.cw_rset.get_entity(row, col)
+        url = entity.printable_value("cwuri")
+        if url:
+            title = blank_link_title(self._cw, url)
+            # for now we only have data.culture.fr thesaurus
+            self.w(
+                T.a(
+                    entity.dc_title(),
+                    href=xml_escape(url),
+                    title=title,
+                    target="_blank",
+                    rel="nofollow noopener noreferrer",
+                )
+            )
+
+
+class ConceptIndexView(InContextView):
+    __select__ = InContextView.__select__ & is_instance("Concept")
+    __regid__ = "index"
+
+    def cell_call(self, row, col, subject):
+        entity = self.cw_rset.get_entity(row, col)
+        subjects = defaultdict(list, {})
+        for eid, label in self._cw.execute(
+            """Any S, NORMALIZE_ENTRY(L) WHERE X eid %(e)s,
+                   S same_as X, S label L,
+                   NOT S grouped_with S1,
+                   NOT S eid %(s)s
+                   """,
+            {"e": entity.eid, "s": subject.eid},
+        ):
+            subjects[label].append(self._cw.entity_from_eid(eid))
+        labels = [
+            r[0]
+            for r in self._cw.execute(
+                """Any NORMALIZE_ENTRY(L) ORDERBY L WHERE O label_of X,
+               O label L, X eid %(e)s""",
+                {"e": entity.eid},
+            )
+        ]
+        html = []
+        for label in labels:
+            entities = subjects.get(label, [])
+            for entity in entities:
+                serializable = entity.cw_adapt_to("ISuggestIndexSerializable")
+                doc_count = serializable.related_docs()
+                if doc_count:
+                    desc = cut(entity.dc_description(), 50)
+                    label = "{title}{count}".format(
+                        title=xml_escape(entity.dc_title()), count=" [{}]".format(doc_count)
+                    )
+                    html.append(
+                        str(
+                            T.a(
+                                label,
+                                href=xml_escape(entity.absolute_url()),
+                                title=xml_escape(desc),
+                            )
+                        )
+                    )
+        self.w(" ; ".join(html))
 
 
 class PersonInContextView(AbstractExternalInContextView):
@@ -132,14 +192,41 @@ class AbstractAuthorityAbstractView(EntityView, JinjaViewMixin):
 
     def same_as_property(self, entity):
         _ = self._cw._
-        return [
+        data = []
+        concepts = [e for e in entity.same_as if e.cw_etype == "Concept"]
+        if concepts:
+            data.append(
+                (
+                    _("same_as_label"),
+                    "data.culture.fr : {}".format(
+                        ", ".join(
+                            e.view("incontext") for e in entity.same_as if e.cw_etype == "Concept"
+                        )
+                    ),
+                ),
+            )
+        data.append(
             (
                 _("same_as_label"),
                 ", ".join(
-                    e.view("incontext") for e in entity.same_as if e.cw_etype != "ExternalId"
+                    e.view("incontext")
+                    for e in entity.same_as
+                    if e.cw_etype not in ("ExternalId", "Concept")
                 ),
             ),
-        ]
+        )
+        if self._cw.vreg.config.get("instance-type") == "cms":
+            data.append(
+                (
+                    _("See also:"),
+                    ", ".join(
+                        e.view("index", subject=entity)
+                        for e in entity.same_as
+                        if e.cw_etype == "Concept"
+                    ),
+                ),
+            )
+        return data
 
     def properties(self, entity):
         return self.same_as_property(entity)

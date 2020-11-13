@@ -73,7 +73,7 @@ respond to : %(name)s, %(email)s
 
     def publish_form(self):
         """Captcha field is hidden from humans. If captcha is filled
-           there is a bug chance that it was done by a robot"""
+        there is a bug chance that it was done by a robot"""
         form = self._cw.vreg["forms"].select("contact", self._cw)
         captcha = self._cw.form.get("captcha")
         if captcha:

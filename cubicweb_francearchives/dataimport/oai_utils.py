@@ -37,13 +37,22 @@
 
 import hashlib
 
+from lxml import etree
+
 import os
 import os.path
 
 from sickle.iterator import OAIItemIterator
+
 import urllib.parse
 
 from cubicweb_francearchives.dataimport import normalize_for_filepath
+
+
+class OAIXMLError(Exception):
+    """XML errors from OAI response"""
+
+    pass
 
 
 class OAIPMHWriter(object):
@@ -119,10 +128,8 @@ class OAIPMHWriter(object):
 
 
 class PniaOAIItemIterator(OAIItemIterator):
-
     def __init__(self, sickle, params, ignore_deleted=False):
-        super(PniaOAIItemIterator, self).__init__(
-            sickle, params, ignore_deleted=ignore_deleted)
+        super(PniaOAIItemIterator, self).__init__(sickle, params, ignore_deleted=ignore_deleted)
         self._next_harvested_url(init=True)
 
     def _next_harvested_url(self, init=False):
@@ -131,34 +138,85 @@ class PniaOAIItemIterator(OAIItemIterator):
             params = {"resumptionToken": self.resumption_token.token, "verb": self.verb}
         args = urllib.parse.urlencode(params)
         self._harvested_url = "{}?{}".format(self.sickle.endpoint, args)
-        # self.sickle.logger.info("harvesting %s", self._harvested_url)
 
     def _next_response(self):
         self._next_harvested_url()
-        super(PniaOAIItemIterator, self)._next_response()
+        try:
+            super(PniaOAIItemIterator, self)._next_response()
+        except Exception as exception:
+            if (
+                hasattr(self, "oai_response")
+                and self.oai_response
+                and hasattr(self.oai_response, "xml")
+            ):
+                if self.oai_response.xml is None:
+                    raise OAIXMLError(
+                        """{} Stop harvesting.
+                        <div>The response may not be a XML page</div>""".format(
+                            self._harvested_url
+                        )
+                    )
+            raise exception
+
+    def stop_iteration_log(self):
+        if (
+            not (self.resumption_token and self.resumption_token.token)
+            and hasattr(self, "oai_response")
+            and self.oai_response
+        ):
+            xml = self.oai_response.xml
+            if hasattr(self.oai_response, "xml") and self.oai_response.xml is not None:
+                if xml.tag == "html":
+                    body = xml.find(".//body")
+                    if body is not None:
+                        try:
+                            body = etree.tostring(body[0], encoding="utf-8")
+                            self.sickle.logger.error(body)
+                        except Exception:
+                            pass
+                    raise OAIXMLError(
+                        """Stop harvesting. No resumptionToken found in {}.
+                        Got HTML instead of XML: the service may be unavailable.
+                        """.format(
+                            self._harvested_url
+                        )
+                    )
+            elif hasattr(self.oai_response, "raw") and self.oai_response.raw:
+                if "<resumptionToken" in self.oai_response.raw:
+                    raise OAIXMLError(
+                        """Stop harvesting. No resumptionToken found in "{}".
+                        <div>The XML may not be valid</div>""".format(
+                            self._harvested_url
+                        )
+                    )
 
     def next(self):
         """Return the next record/header/set.
-           FranceArchives customizations:
-             - add logs about harvested uri;
-             - add `harvested_url` attribute on returned Record.
+        FranceArchives customizations:
+          - add logs about harvested uri;
+          - add `harvested_url` attribute on returned Record.
         """
         try:
             record = super(PniaOAIItemIterator, self).next()
             record.harvested_url = self._harvested_url
+            record.cursor, record.complete_list_size = None, None
+            if self.resumption_token:
+                record.cursor = self.resumption_token.cursor
+                record.complete_list_size = self.resumption_token.complete_list_size
             return record
         except StopIteration:
+            self.stop_iteration_log()
             raise StopIteration
         except Exception:
             if self.resumption_token and self.resumption_token.token:
                 self._next_response()
             else:
+                self.stop_iteration_log()
                 raise StopIteration
 
 
 def compute_oai_id(base_url, identifier):
-    """Compute an unique identifier based on record identifier and OAI repository url
-    """
+    """Compute an unique identifier based on record identifier and OAI repository url"""
     if isinstance(base_url, str):
         base_url = base_url.encode("utf-8")
     return "{}_{}".format(hashlib.sha1(base_url).hexdigest(), identifier)

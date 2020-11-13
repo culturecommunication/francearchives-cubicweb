@@ -241,9 +241,7 @@ class ViewsXitiTests(CubicWebTC):
         super(ViewsXitiTests, self).setUp()
         # add the xiti configuration parameters required by thi test suite
         views.load_portal_config(self.config)
-        views.PORTAL_CONFIG["xiti"] = {
-            "site": "12345",
-        }
+        views.PORTAL_CONFIG["xiti"] = {"site": "12345", "n2": "1"}
 
     def tearDown(self):
         super(ViewsXitiTests, self).tearDown()
@@ -252,30 +250,87 @@ class ViewsXitiTests(CubicWebTC):
     def test_home_chapters(self):
         with self.admin_access.web_request() as req:
             ctx = _template_context(req, "index")
-            self.assertDictEqual(ctx["xiti"], {"site": "12345", "pagename": "home",})
+            self.assertDictEqual(
+                ctx["xiti"],
+                {
+                    "site": "12345",
+                    "n2": "1",
+                    "pagename": "home",
+                },
+            )
 
     def test_no_department_map_chapters(self):
         with self.admin_access.web_request() as req:
             ctx = _template_context(req, "dpt-service-map")
-            self.assertDictEqual(ctx["xiti"], {"site": "12345", "pagename": "department_map"})
+            self.assertDictEqual(
+                ctx["xiti"], {"site": "12345", "n2": "1", "pagename": "department_map"}
+            )
 
     def test_404_chapters(self):
         with self.admin_access.web_request("some/url") as req:
             ctx = _template_context(req, "404")
-            self.assertDictEqual(ctx["xiti"], {"site": "12345", "pagename": "404::some/url",})
+            self.assertDictEqual(
+                ctx["xiti"],
+                {
+                    "site": "12345",
+                    "n2": "1",
+                    "pagename": "404::some/url",
+                },
+            )
 
     @patch("cubicweb_francearchives.views.search.PniaElasticSearchView.do_search")
     def test_search_chapters(self, _search):
         with self.admin_access.web_request("inventaires") as req:
             ctx = _template_context(req, "esearch")
-            self.assertDictEqual(ctx["xiti"], {"site": "12345", "pagename": "search::inventaires",})
+            self.assertDictEqual(
+                ctx["xiti"],
+                {
+                    "site": "12345",
+                    "n2": "1",
+                    "pagename": "search::inventaires",
+                },
+            )
 
     @patch("cubicweb_francearchives.views.search.PniaElasticSearchView.do_search")
     def test_search_chapters_service(self, _search):
         with self.admin_access.web_request("inventaires", es_publisher="FRAD084") as req:
             ctx = _template_context(req, "esearch")
             self.assertDictEqual(
-                ctx["xiti"], {"site": "12345", "pagename": "search::inventaires::frad084",}
+                ctx["xiti"],
+                {
+                    "site": "12345",
+                    "n2": "1",
+                    "pagename": "search::inventaires::frad084",
+                },
+            )
+
+    def test_findingaid_access_to_service(self):
+        with self.admin_access.cnx() as cnx:
+            fadid = cnx.create_entity("Did", unitid="maindid", unittitle="maindid-title")
+            service = cnx.create_entity(
+                "Service",
+                category="cat",
+                code="FRAD084",
+                search_form_url="http://francearchives.fr",
+            )
+            fa = cnx.create_entity(
+                "FindingAid",
+                name="the-fa",
+                stable_id="FRAD084_xxx",
+                eadid="FRAD084_xxx",
+                publisher="FRAD084",
+                service=service,
+                did=fadid,
+                fa_header=cnx.create_entity("FAHeader"),
+            )
+            self.assertEqual(
+                fa.cw_adapt_to("IPublisherInfo").serialize()["xiti"],
+                {
+                    "type": "S",
+                    "n2": "1",
+                    "access_site": "service::frad084::site_access",
+                    "thumbnail_access_site": "service::frad084::thumbnail_site_access",
+                },
             )
 
 

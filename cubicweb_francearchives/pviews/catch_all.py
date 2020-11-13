@@ -33,6 +33,7 @@ from pyramid.httpexceptions import HTTPNotFound, HTTPFound
 from pyramid.response import Response
 
 from cubicweb.pyramid.resources import ETypeResource, EntityResource
+from cubicweb import MultipleResultsError
 
 from cubicweb_francearchives.pviews.helpers import update_headers
 from cubicweb_francearchives.pviews.predicates import (
@@ -107,7 +108,14 @@ def rdf_view(context, request):
 def primary_view(context, request):
     cwreq = request.cw_request
     viewsreg = cwreq.vreg["views"]
-    entity = context.rset.one()
+    # several Files may be created for a single file in which case do not raise
+    # MultipleResultsError but display the list
+    try:
+        entity = context.rset.one()
+    except MultipleResultsError:
+        entity = context.rset.get_entity(0, 0)
+        if context.rset.description and not context.rset.description[0][0] == "File":
+            raise
     to_entity = getattr(entity, "grouped_with", None)
     if to_entity:
         raise HTTPFound(location=to_entity[0].absolute_url())
@@ -148,10 +156,22 @@ def children_relation(request):
     return dict(rset.rows)
 
 
+@view_config(
+    route_name="glossary-terms", renderer="json", http_cache=600, request_method=("GET", "HEAD")
+)
+def glossary_terms(request):
+    cwreq = request.cw_request
+    rset = cwreq.execute(
+        "Any T, D WHERE T is GlossaryTerm, T short_description D", build_descr=False
+    )
+    return dict(rset.rows)
+
+
 def includeme(config):
     config.add_view_predicate("multi_accept", MultiAcceptPredicate)
     config.add_route_predicate("segment_is_enlarged_etype", SegmentIsEnlargedETypePredicate)
     config.add_route("children-relation", "/_children")
+    config.add_route("glossary-terms", "/_glossaryterms")
     config.add_route(
         "restpath",
         "*traverse",

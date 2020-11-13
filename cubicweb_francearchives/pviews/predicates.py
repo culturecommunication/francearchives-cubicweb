@@ -31,8 +31,7 @@
 
 
 class SegmentIsEnlargedETypePredicate(object):
-    """A predicate that match if a given etype exist in schema or in its translations dict.
-    """
+    """A predicate that match if a given etype exist in schema or in its translations dict."""
 
     def __init__(self, definition, config):
         traverse_name, traverse_index, translations = definition

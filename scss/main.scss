@@ -30,6 +30,8 @@
 @import 'print.scss';
 @import 'circulartable.scss';
 @import 'eac.scss';
+@import 'glossary.scss';
+@import 'faq.scss';
 
 .responsive-img {
   max-width: 100%;
@@ -416,4 +418,8 @@ ul#breadcrumbs a {
 
 #newsletter-frame {
   min-height: 400px;
+}
+
+.dark-grey {
+  color: $dark-grey;
 }

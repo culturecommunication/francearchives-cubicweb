@@ -116,8 +116,7 @@ def update_publishers_in_database(cnx):
 
 
 def es_documents(es, index, doc_type, old_new_mapping):
-    """generate bulk-update documents to update ES according to ``old_new_mapping``
-    """
+    """generate bulk-update documents to update ES according to ``old_new_mapping``"""
     for old_pubname, new_pubname in list(old_new_mapping.items()):
         query = {"query": {"match": {"publisher": old_pubname}}}
         for doc in scan(es, index=index, doc_type=doc_type, _source=("publisher",), query=query):

@@ -32,7 +32,7 @@
 
 import logging
 from uuid import uuid4
-
+from rql import BadRQLQuery
 from cubicweb.server import hook
 
 from cubicweb.hooks.integrity import IntegrityHook, TidyHtmlFields
@@ -43,9 +43,14 @@ from cubicweb_francearchives.cssimages import HERO_SIZES
 
 from cubicweb_francearchives.cssimages import generate_thumbnails
 from cubicweb_francearchives.htmlutils import soup2xhtml
+from cubicweb_francearchives.utils import populate_terms_cache
 from cubicweb_francearchives.xmlutils import enhance_accessibility
 
 from cubicweb_varnish.hooks import PurgeUrlsOnUpdate, InvalidateVarnishCacheOp
+
+
+class AuthorityIntegrityError(Exception):
+    """raised when attempt to delete a non-orphan Authority"""
 
 
 # in cubicweb-varnish <= 0.3.0, hook class has no category.
@@ -98,6 +103,24 @@ class AuthorityRenameHook(hook.Hook):
     def __call__(self):
         if "label" in self.entity.cw_edited:
             RegisterRenamedAuthHistoryOp.get_instance(self._cw).add_data((self.entity.eid))
+
+
+class AuthorityDeleteHook(hook.Hook):
+    __regid__ = "francearchives.authority-delete"
+    __select__ = hook.Hook.__select__ & is_instance(
+        "AgentAuthority", "LocationAuthority", "SubjectAuthority"
+    )
+    events = ("before_delete_entity",)
+
+    def __call__(self):
+        if not self.entity.is_orphan:
+            raise AuthorityIntegrityError(
+                self._cw._(
+                    "Forbidden to delete a non-orphan {etype} {eid}".format(
+                        etype=self.entity.cw_etype, eid=self.entity.eid
+                    )
+                )
+            )
 
 
 class RegisterRenamedAuthHistoryOp(hook.DataOperationMixIn, hook.Operation):
@@ -204,7 +227,7 @@ class UpdateVarnishOnRelationChanges(hook.Hook):
 
 
 class DeleteSameAsAuthAgent(hook.Hook):
-    """ When an AuthorityRecord entity is beeing deleted, this hook
+    """When an AuthorityRecord entity is beeing deleted, this hook
     delete the same_as relations between the AuthorityRecord and its
     AgentAuthority.
     """
@@ -234,7 +257,9 @@ class PniaTidyHtmlFields(IntegrityHook):
             if rel.type.endswith("_format"):
                 attr = rel.type.split("_format")[0]
                 if attr in subjrels and attr in edited:
-                    attrs.append((rel.type, attr),)
+                    attrs.append(
+                        (rel.type, attr),
+                    )
         for metaattr, attr in attrs:
             value = edited[attr]
             if isinstance(value, str):  # filter out None and Binary
@@ -254,6 +279,30 @@ class PniaTidyHtmlFields(IntegrityHook):
                     # applied rgaa rules
                     value = enhance_accessibility(value, cnx)
                     edited[attr] = value
+
+
+class GlossaryStartupHook(hook.Hook):
+    """
+    populate Glossary cache on startup
+    """
+
+    __regid__ = "francearchive.glossary"
+    events = ("server_startup",)
+    category = "glossary"
+
+    def __call__(self):
+        if self.repo.config.creating:
+            # we don't want to execute the hook when we are creating database
+            return
+        with self.repo.internal_cnx() as cnx:
+            cnx.warning("remove the test below in cubicweb_francearchives > 2.8.0")
+            if not cnx.vreg.schema.get("GlossaryTerm"):
+                return
+            self.info("Creating Glossary cache")
+            try:
+                populate_terms_cache(cnx)
+            except BadRQLQuery:
+                pass
 
 
 def registration_callback(vreg):

@@ -45,8 +45,11 @@ from cubicweb_francearchives.utils import cut_words
 from cubicweb_francearchives.entities.adapters import EntityMainPropsAdapter
 
 
-from cubicweb_francearchives.utils import remove_html_tags
+from cubicweb_francearchives.utils import remove_html_tags, reveal_glossary
 from cubicweb_francearchives.xmlutils import process_html_as_xml, fix_fa_external_links
+
+from cubicweb_francearchives.views import load_portal_config
+from cubicweb_francearchives.views.xiti import pagename_from_chapters
 
 
 @process_html_as_xml
@@ -104,6 +107,10 @@ def process_title(title):
 class AbstractFAEntityMainPropsAdapter(EntityMainPropsAdapter):
     __regid__ = "entity.main_props"
     __abstract__ = True
+
+    @cachedproperty
+    def portal_config(self):
+        return load_portal_config(self._cw.vreg.config)
 
     def __init__(self, _cw, **kwargs):
         fmt = kwargs.get("fmt", {"text": "text/html", "vid": "incontext"})
@@ -268,7 +275,12 @@ class AbstractFAEntityMainPropsAdapter(EntityMainPropsAdapter):
                 properties.append(
                     (_("file_label"), attachment.cw_adapt_to("IDownloadable").download_url())
                 )
-        return [entry for entry in properties if entry[-1]]
+        properties_list = []
+        for entry in properties:
+            entry = list(entry)
+            entry[0] = reveal_glossary(self._cw, entry[0])
+            properties_list.append(entry)
+        return [entry for entry in properties_list if entry[-1]]
 
     def csv_export_props(self):
         title = self._cw._("Download shelfmark")
@@ -314,11 +326,30 @@ class FAComponentEntityMainPropsAdapter(AbstractFAEntityMainPropsAdapter):
     def pre_additional_props(self):
         _ = self._cw._
         entity = self.entity
+        kwargs = {}
+        service = entity.related_service
+        if service:
+            ixiti = service.cw_adapt_to("IXiti")
+            xiti_config = self.portal_config.get("xiti")
+            if xiti_config and ixiti is not None:
+                chapters = ixiti.chapters + [
+                    "digitized_version",
+                ]
+                kwargs = {
+                    "data-xiti-level": "C",
+                    "data-xiti-type": "S",
+                    "data-xiti-n2": xiti_config.get("n2", ""),
+                    "data-xiti-name": pagename_from_chapters(chapters),
+                }
         return [
             (
                 _("digitized_versions_label"),
                 ", ".join(
-                    str(exturl_link(self._cw, url, label=_("consult the digitized version")))
+                    str(
+                        exturl_link(
+                            self._cw, url, label=_("consult the digitized version"), **kwargs
+                        )
+                    )
                     for url in entity.digitized_urls
                 ),
             ),

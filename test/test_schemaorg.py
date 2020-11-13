@@ -125,7 +125,9 @@ class SchemaOrgFindingAidTests(PostgresTextMixin, testlib.CubicWebTC):
                     "schema:contentLocation": "fc-origination",
                     "schema:mentions": "fc-scoppecontent",
                     "schema:name": "fcdid-title",
-                    "schema:isPartof": {"@id": fa.absolute_url(),},
+                    "schema:isPartof": {
+                        "@id": fa.absolute_url(),
+                    },
                 },
             )
 
@@ -139,13 +141,18 @@ class SchemaOrgFindingAidTests(PostgresTextMixin, testlib.CubicWebTC):
             self.assertCountEqual(
                 graph,
                 [
-                    {"@id": authority.absolute_url(), "schema:sameAs": exturl.uri,},
+                    {
+                        "@id": authority.absolute_url(),
+                        "schema:sameAs": exturl.uri,
+                    },
                     {
                         "@id": fa.absolute_url(),
                         "@type": "schema:CreativeWork",
                         "schema:about": authority.absolute_url(),
                         "schema:name": "maindid-title",
-                        "schema:hasPart": {"@id": facomp.absolute_url(),},
+                        "schema:hasPart": {
+                            "@id": facomp.absolute_url(),
+                        },
                     },
                 ],
             )
@@ -454,6 +461,24 @@ class SchemaOrgCommemoCollectionTests(testlib.CubicWebTC):
             if node["@id"] == id:
                 return True
         return False
+
+
+class SchemaOrgAgenthAuthorityTests(testlib.CubicWebTC):
+    def test_agentauthority(self):
+        agent_data = {
+            "label": "Camus, Albert (1913-1960)",
+        }
+        with self.admin_access.repo_cnx() as cnx:
+            entity = cnx.create_entity("AgentAuthority", **agent_data)
+            cnx.commit()
+            graph = entity2schemaorg(entity)
+            data = json.loads(graph.decode("utf-8"))
+            # Attributes that should be set
+            self.assertEqual(data["@context"]["schema"], "http://schema.org/")
+            self.assertEqual(data["@type"], "schema:Person")
+            self.assertEqual(data["@id"], entity.absolute_url())
+            self.assertEqual(data["schema:url"], entity.absolute_url())
+            self.assertEqual(data["schema:name"], agent_data["label"])
 
 
 if __name__ == "__main__":

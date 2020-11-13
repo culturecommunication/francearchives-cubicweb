@@ -435,6 +435,71 @@ class VarnishTests(PostgresTextMixin, CubicWebTC):
                 ),
             )
 
+    @patch("cubicweb_varnish.varnishadm.VarnishCLI.execute")
+    @patch("cubicweb_varnish.varnishadm.VarnishCLI.connect")
+    def test_glossaryterm_cache_invalidation(self, _connect, cli_execute):
+        with self.admin_access.repo_cnx() as cnx:
+            term = cnx.create_entity(
+                "GlossaryTerm",
+                term="Dr Who",
+                short_description="doctor Who?",
+                sort_letter="d",
+                description="doctor Who?",
+            )
+            term.cw_set(anchor=str(term.eid))
+            cnx.commit()
+            cli_execute.reset_mock()
+            term.cw_set(description="Who?")
+            cnx.commit()
+            rest_path = term.rest_path()
+            self.assertBanned(
+                cli_execute.call_args_list, chain(lang_urls(rest_path), lang_urls("glossaire"))
+            )
+
+    @patch("cubicweb_varnish.varnishadm.VarnishCLI.execute")
+    @patch("cubicweb_varnish.varnishadm.VarnishCLI.connect")
+    def test_basecontenttranslation_cache_invalidation(self, _connect, cli_execute):
+        with self.admin_access.cnx() as cnx:
+            basecontent = cnx.create_entity("BaseContent", title="title")
+            translation = cnx.create_entity(
+                "BaseContentTranslation",
+                title="title_en",
+                language="en",
+                translation_of=basecontent,
+            )
+            cnx.commit()
+            cli_execute.reset_mock()
+            translation.cw_set(title="title")
+            cnx.commit()
+            rest_path = basecontent.rest_path()
+            self.assertBanned(
+                cli_execute.call_args_list,
+                chain(
+                    lang_urls(rest_path),
+                    lang_urls("article"),
+                    lang_urls("articles"),
+                    lang_urls("sitemap"),
+                ),
+            )
+
+    @patch("cubicweb_varnish.varnishadm.VarnishCLI.execute")
+    @patch("cubicweb_varnish.varnishadm.VarnishCLI.connect")
+    def test_faqitem_cache_invalidation(self, _connect, cli_execute):
+        with self.admin_access.repo_cnx() as cnx:
+            term = cnx.create_entity(
+                "FaqItem",
+                question="Dr Who?",
+                answer="yes, doctor Who.",
+            )
+            cnx.commit()
+            cli_execute.reset_mock()
+            term.cw_set(answer="Who?")
+            cnx.commit()
+            rest_path = term.rest_path()
+            self.assertBanned(
+                cli_execute.call_args_list, chain(lang_urls(rest_path), lang_urls("faq"))
+            )
+
 
 if __name__ == "__main__":
     unittest.main()

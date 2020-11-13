@@ -28,13 +28,17 @@
 # The fact that you are presently reading this means that you have had
 # knowledge of the CeCILL-C license and that you accept its terms.
 #
+
+from logilab.common.decorators import cachedproperty
+
 from cubicweb.predicates import is_instance
 
 from cubicweb.view import EntityAdapter
 
 from cubicweb_file.entities import FileIDownloadableAdapter
 
-from cubicweb_francearchives.utils import id_for_anchor
+from cubicweb_francearchives.views import load_portal_config
+from cubicweb_francearchives.views.xiti import pagename_from_chapters
 
 
 class FAFileAdapter(FileIDownloadableAdapter):
@@ -61,6 +65,7 @@ class FAFileAdapter(FileIDownloadableAdapter):
 
 
 class IPublisherInfoAdapter(EntityAdapter):
+    __regid__ = "IPublisherInfo"
     __abstract__ = True
 
     @property
@@ -79,16 +84,31 @@ class IPublisherInfoAdapter(EntityAdapter):
     def publisher_label(self):
         return self._cw._("Conservation institutions: ")
 
+    @cachedproperty
+    def portal_config(self):
+        return load_portal_config(self._cw.vreg.config)
+
     def serialize(self):
         _ = self._cw._
         service = self.service
         publisher_params = {}
         if service:
-            contact_url = "{}#{}".format(service.absolute_url(), id_for_anchor(service.dc_title()))
+            contact_url = service.url_anchor
             publisher_params = {
                 "contact_url": contact_url,
                 "contact_label": _("Contact_label"),
             }
+            ixiti = service.cw_adapt_to("IXiti")
+            xiti_config = self.portal_config.get("xiti")
+            if xiti_config and ixiti is not None:
+                publisher_params["xiti"] = {
+                    "type": "S",
+                    "n2": xiti_config.get("n2", ""),
+                    "access_site": pagename_from_chapters(ixiti.chapters + ["site_access"]),
+                    "thumbnail_access_site": pagename_from_chapters(
+                        ixiti.chapters + ["thumbnail_site_access"]
+                    ),
+                }
         publisher_params["title"] = self.publisher_title
         publisher_params["title_label"] = self.publisher_label
         if self.bounce_url:
@@ -99,12 +119,10 @@ class IPublisherInfoAdapter(EntityAdapter):
 
 
 class IRIPublisherInfoAdapter(IPublisherInfoAdapter):
-    __regid__ = "IPublisherInfo"
     __select__ = is_instance("FindingAid", "FAComponent")
 
 
 class AuthorityRecordIPublisherInfoAdapter(IPublisherInfoAdapter):
-    __regid__ = "IPublisherInfo"
     __select__ = IPublisherInfoAdapter.__select__ & is_instance("AuthorityRecord")
 
     @property

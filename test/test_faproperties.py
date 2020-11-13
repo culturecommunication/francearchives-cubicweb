@@ -52,8 +52,7 @@ class FaPropertiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
             )
             cnx.commit()
             filepath = self.datapath("ir_data/FRAD051_est_ead_affichage.xml")
-            service_infos = {"code": service.code, "eid": service.eid}
-            self.import_filepath(cnx, filepath, service_infos=service_infos)
+            self.import_filepath(cnx, filepath)
             fa = cnx.find("FindingAid").one()
             self.assertTrue(fa.related_service.eid, service.eid)
             self.assertFalse(fa.did[0].extptr)
@@ -73,8 +72,7 @@ class FaPropertiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
             )
             cnx.commit()
             filepath = self.datapath("ir_data/FRAD051_est_ead_affichage.xml")
-            service_infos = {"code": service.code, "eid": service.eid}
-            self.import_filepath(cnx, filepath, service_infos=service_infos)
+            self.import_filepath(cnx, filepath)
             fc_rql = "Any X WHERE X is FAComponent, X did D, D unitid %(u)s"
             fa = cnx.find("FindingAid").one()
             self.assertFalse(fa.did[0].extptr)
@@ -96,14 +94,34 @@ class FaPropertiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
             )
             cnx.commit()
             filepath = self.datapath("ir_data/FRAD034_000000248.xml")
-            service_infos = {"code": service.code, "eid": service.eid}
-            self.import_filepath(cnx, filepath, service_infos=service_infos)
+            self.import_filepath(cnx, filepath)
             fa = cnx.find("FindingAid").one()
             self.assertTrue(fa.related_service.eid, service.eid)
             expected_fa_extptr = "http://google.fr"
             self.assertFalse(fa.did[0].extptr)
             self.assertEqual(expected_fa_extptr, fa.website_url)
             self.assertEqual(expected_fa_extptr, fa.bounce_url)
+
+    def test_facomponent_external_link_for_bounce_url(self):
+        """Test FindingAid bounce_url from extptr with "external_link" type
+
+        Trying: importing file containing 1 FAComponent having two unitids:
+           with extptr child
+        Expecting: the <unitidtype="external_link"><extptr> is choosen as FAComponent bounce_url
+        """
+        with self.admin_access.cnx() as cnx:
+            cnx.create_entity(
+                "Service", code="FRAD037", category="L", search_form_url="http://francearchives.fr"
+            )
+            cnx.commit()
+            filepath = self.datapath("ir_data/FRAD037_E_3E18_excerpt.xml")
+            self.import_filepath(cnx, filepath)
+            fc_rql = "Any X WHERE X is FAComponent, X did D, D unitid %(u)s"
+            fc = cnx.execute(fc_rql, {"u": "3E18/2"}).one()
+            expected = "https://archives.touraine.fr/ark:/37621/gq7m1w4nrxf9"
+            self.assertEqual(expected, fc.did[0].extptr)
+            self.assertEqual(expected, fc.bounce_url)
+            self.assertEqual("3E18/2", fc.did[0].unitid)
 
     def test_facomponent_inherited_bounce_url_from_findingaid(self):
         """Test FAComponent bounce_url. If FAComponent does not have extptr, it must inherit
@@ -114,13 +132,12 @@ class FaPropertiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
         eadid tag's URL attribute
         """
         with self.admin_access.cnx() as cnx:
-            service = cnx.create_entity(
+            cnx.create_entity(
                 "Service", code="FRAD034", category="L", search_form_url="http://francearchives.fr"
             )
             cnx.commit()
             filepath = self.datapath("ir_data/FRAD034_000000248.xml")
-            service_infos = {"code": service.code, "eid": service.eid}
-            self.import_filepath(cnx, filepath, service_infos=service_infos)
+            self.import_filepath(cnx, filepath)
             fa = cnx.find("FindingAid").one()
             expected_fa_extptr = "http://google.fr"
             self.assertEqual(expected_fa_extptr, fa.bounce_url)
@@ -136,13 +153,12 @@ class FaPropertiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
         Expecting: bounce_url is extptr
         """
         with self.admin_access.cnx() as cnx:
-            service = cnx.create_entity(
+            cnx.create_entity(
                 "Service", code="FRAD034", category="L", search_form_url="http://francearchives.fr"
             )
             cnx.commit()
             filepath = self.datapath("ir_data/FRAD034_000000248.xml")
-            service_infos = {"code": service.code, "eid": service.eid}
-            self.import_filepath(cnx, filepath, service_infos=service_infos)
+            self.import_filepath(cnx, filepath)
             fa = cnx.find("FindingAid").one()
             expected_fa_extptr = "http://google.fr"
             self.assertFalse(fa.did[0].extptr)
@@ -162,17 +178,16 @@ class FaPropertiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
         Expecting: bounce_url is formatted search_form_url
         """
         with self.admin_access.cnx() as cnx:
-            service = cnx.create_entity(
+            cnx.create_entity(
                 "Service",
                 code="FRAD039",
                 category="L",
                 website_url="http://www.archives39.fr/",
-                search_form_url="http://archives39.fr/search?query=%(unitid)s&search-query=&search-query=1",  # noqa
+                search_form_url="http://archives39.fr/search?query={unitid}&search-query=&search-query=1",  # noqa
             )
             cnx.commit()
             filepath = self.datapath("ir_data/FRAD039_3P_Inventaire.xml")
-            service_infos = {"code": service.code, "eid": service.eid}
-            self.import_filepath(cnx, filepath, service_infos=service_infos)
+            self.import_filepath(cnx, filepath)
             fa = cnx.find("FindingAid").one()
             expected_fa_extptr = "http://archives39.fr/search?query=3P&search-query=&search-query=1"
             self.assertEqual(expected_fa_extptr, fa.bounce_url)
@@ -186,14 +201,12 @@ class FaPropertiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
             self.assertEqual(expected, fc.bounce_url)
 
     def test_facomponent_proper_bounced_url_2(self):
-        """ <did/unitid/extptr> was found for a FAComponent
-        """
+        """<did/unitid/extptr> was found for a FAComponent"""
         with self.admin_access.cnx() as cnx:
-            service = cnx.create_entity("Service", code="FRAD034", category="L")
+            cnx.create_entity("Service", code="FRAD034", category="L")
             cnx.commit()
             filepath = self.datapath("ir_data/FRAD063_000051242.xml")
-            service_infos = {"code": service.code, "eid": service.eid}
-            self.import_filepath(cnx, filepath, service_infos=service_infos)
+            self.import_filepath(cnx, filepath)
             fa = cnx.find("FindingAid").one()
             self.assertEqual(fa.did[0].extptr, "ark:/72847/vta1a56e5e06dfce452")
             self.assertFalse(fa.website_url)
@@ -213,11 +226,10 @@ class FaPropertiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
         Expecting: FAComponent's bounce_url is FindingAid's extptr
         """
         with self.admin_access.cnx() as cnx:
-            service = cnx.create_entity("Service", code="FRAD034", category="L")
+            cnx.create_entity("Service", code="FRAD034", category="L")
             cnx.commit()
             filepath = self.datapath("ir_data/FRAD034_000000248_extptr_on_fa.xml")
-            service_infos = {"code": service.code, "eid": service.eid}
-            self.import_filepath(cnx, filepath, service_infos=service_infos)
+            self.import_filepath(cnx, filepath)
             fa = cnx.find("FindingAid").one()
             self.assertEqual(
                 fa.did[0].extptr,
@@ -244,10 +256,7 @@ class FaPropertiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
                 "Service", code="FRBNF", category="L", thumbnail_url="{url}.thumbnail"
             )
             cnx.commit()
-            service_infos = {"code": service.code, "eid": service.eid}
-            self.import_filepath(
-                cnx, self.datapath("ir_data/FRBNF_EAD000096744.xml"), service_infos=service_infos
-            )
+            self.import_filepath(cnx, self.datapath("ir_data/FRBNF_EAD000096744.xml"))
             fc_rql = "Any X WHERE X is FAComponent, X did D, D unitid %(u)s"
             fc = cnx.execute(fc_rql, {"u": "2011/001/0474"}).one()
             self.assertEqual(fc.related_service.eid, service.eid)
@@ -262,13 +271,9 @@ class FaPropertiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
         Expecting: dao tag URL is used
         """
         with self.admin_access.cnx() as cnx:
-            service = cnx.create_entity("Service", code="FRBNF", category="L")
+            cnx.create_entity("Service", code="FRBNF", category="L")
             cnx.commit()
-            self.import_filepath(
-                cnx,
-                self.datapath("ir_data/FRBNF_EAD000096744.xml"),
-                service_infos={"code": service.code, "eid": service.eid},
-            )
+            self.import_filepath(cnx, self.datapath("ir_data/FRBNF_EAD000096744.xml"))
             fa_component = cnx.execute(
                 "Any X WHERE X is FAComponent, X did D, D unitid %(unitid)s",
                 {"unitid": "2011/001/0474"},
@@ -306,11 +311,9 @@ class FaPropertiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
         path = "ir_data/FRAD084_IR0000412.xml"
         with self.admin_access.cnx() as cnx:
             # thumbnail_url is not set
-            service = cnx.create_entity("Service", category=category, name=name, code=code)
+            cnx.create_entity("Service", category=category, name=name, code=code)
             cnx.commit()
-            self.import_filepath(
-                cnx, self.datapath(path), {"name": name, "eid": service.eid, "code": code,}
-            )
+            self.import_filepath(cnx, self.datapath(path))
             fc = cnx.execute(fc_rql, {"u": "74 J 2"}).one()
             # one of the dao tags' URL is used
             self.assertTrue(fc.illustration_url in expected)
@@ -323,7 +326,7 @@ class FaPropertiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
         Expecting: absolute URL takes precedence and is not formatted
         """
         with self.admin_access.cnx() as cnx:
-            service = cnx.create_entity(
+            cnx.create_entity(
                 "Service",
                 code="FRAD040",
                 category="L",
@@ -331,8 +334,7 @@ class FaPropertiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
             )
             cnx.commit()
             filepath = self.datapath("ir_data/FRAD040_000020FI__fiche_img.xml")
-            service_infos = {"code": service.code, "eid": service.eid}
-            self.import_filepath(cnx, filepath, service_infos=service_infos)
+            self.import_filepath(cnx, filepath)
             fc_rql = "Any X WHERE X is FAComponent, X did D, D unitid %(u)s"
             fc = cnx.execute(fc_rql, {"u": "20 FI 2"}).one()
             expected = "http://www.archives.landes.fr/ark:/35227/e005a4e62d8b8759/5a4e62d8bf8b7"
@@ -346,13 +348,12 @@ class FaPropertiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
         """
         thumbnail_dest = "http://{url}"
         with self.admin_access.cnx() as cnx:
-            service = cnx.create_entity(
+            cnx.create_entity(
                 "Service", code="FRAD040", category="L", thumbnail_dest=thumbnail_dest
             )
             cnx.commit()
             filepath = self.datapath("ir_data/FRAD040_000020FI__fiche_img.xml")
-            service_infos = {"code": service.code, "eid": service.eid}
-            self.import_filepath(cnx, filepath, service_infos=service_infos)
+            self.import_filepath(cnx, filepath)
             rql = "Any X WHERE X is FAComponent, X did D, D unitid %(unitid)s"
             fa_component = cnx.execute(rql, {"unitid": "20 FI 9"}).one()
             expected = thumbnail_dest.format(url="example.com")
@@ -367,18 +368,40 @@ class FaPropertiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
         """
         thumbnail_url = "http://{url}"
         with self.admin_access.cnx() as cnx:
-            service = cnx.create_entity(
-                "Service", code="FRAD040", category="L", thumbnail_url=thumbnail_url
-            )
+            cnx.create_entity("Service", code="FRAD040", category="L", thumbnail_url=thumbnail_url)
             cnx.commit()
             filepath = self.datapath("ir_data/FRAD040_000020FI__fiche_img.xml")
-            service_infos = {"code": service.code, "eid": service.eid}
-            self.import_filepath(cnx, filepath, service_infos=service_infos)
+            self.import_filepath(cnx, filepath)
             rql = "Any X WHERE X is FAComponent, X did D, D unitid %(unitid)s"
             fa_component = cnx.execute(rql, {"unitid": "20 FI 9"}).one()
             expected = thumbnail_url.format(url="example.com")
             self.assertEqual(fa_component.thumbnail_dest, fa_component.bounce_url)
             self.assertEqual(fa_component.illustration_url, expected)
+
+    def test_facomponent_search_form_url_missing_data(self):
+        """Test FAComponent bounce_url.
+
+        Trying: FAComponent has not unitid and search_form_url is set on its related service
+        Expecting: bounce_url is website_url
+        """
+        with self.admin_access.cnx() as cnx:
+            service = cnx.create_entity(
+                "Service",
+                code="FRAD039",
+                category="L",
+                website_url="http://www.archives39.fr/",
+                search_form_url="http://archives39.fr/search?query={unitid}&search-query=&search-query=1",  # noqa
+            )
+            cnx.commit()
+            filepath = self.datapath("ir_data/FRAD039_3P_Inventaire.xml")
+            self.import_filepath(cnx, filepath)
+            unitid = "3Pplan6802/4"
+            fc_rql = "Any X WHERE X is FAComponent, X did D, D unitid %(u)s"
+            fc = cnx.execute(fc_rql, {"u": unitid}).one()
+            # set fc unitid to None
+            fc.did[0].cw_set(unitid=None)
+            cnx.commit()
+            self.assertEqual(service.website_url, fc.bounce_url)
 
 
 if __name__ == "__main__":

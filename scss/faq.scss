@@ -1,0 +1,180 @@
+
+.faqview h1 {
+  text-align: center
+}
+
+.faq-tools {
+  margin-left: 1em;
+  text-align: right;
+}
+
+.faq_category {
+  margin: 1rem 1rem 3rem 1rem;
+
+  &__title {
+    padding: 1em;
+  }
+
+  &__title h2 {
+   margin: 0em;
+   font-size: 130%;
+   text-transform: uppercase;
+   font-weight: 400;
+   letter-spacing: 2px;
+  }
+
+}
+
+.faq_item {
+   padding-top: 1rem;
+
+  &__question {
+    border-bottom: 1px dotted #cbcbcb;
+    position: relative;
+    padding-bottom: 20px;
+    font-size: 14px;
+    padding-left: 0;
+    color: $dark-grey;
+    padding-left: 0;
+    display: flex;
+    cursor: pointer;
+
+  }
+
+  &__question p {
+    margin: 0;
+    padding: 0;
+  }
+
+  &__question:hover {
+    text-decoration: none;
+  }
+
+  &__question .chevron-icon {
+    width: 35px;
+    height: 14px;
+    padding-top: 3px;
+    transform: rotate(90deg);
+  }
+
+  &__question.collapsed .chevron-icon {
+    transform: none;
+  }
+
+  &__answer {
+    padding: 1rem;
+  }
+
+}
+
+#faq-toggle-fold {
+  cursor: pointer;
+  border-bottom: none;
+}
+
+/* modal */
+#faqbox-btn {
+  @extend %sticky-btn;
+  padding: 0.7em 0.9em;
+}
+
+#faqbox-btn:hover {
+  @extend %sticky-btn-hover;
+}
+
+.faqbox {
+  position: fixed;
+  bottom: 60px;
+  right: 30px;
+  z-index: 9999;
+  line-height: 1.7;
+}
+
+.faqbox .faq_item {
+  border: 1px solid #cbcbcb;
+  padding: 20px 20px 22px;
+  margin-bottom: 1em;
+}
+
+.faq_item_last {
+  padding: 10px 20px 11px;
+  margin-bottom: 1em;
+}
+
+.faqbox .faq_item__question {
+  font-size: 14px;
+}
+
+.faqbox .faq_item__question.collapsed {
+  border: none;
+  padding-bottom: 0;
+}
+
+.faqbox .faq_item__answer {
+  @include if-wider-than(md) {
+    font-size: 14px;
+  }
+}
+
+.faq-modal {
+  left: inherit;
+  top: inherit;
+  bottom: 100px;
+}
+
+.faq-modal-header {
+  position: sticky;
+  z-index: 9999;
+  background-color: $royal-blue;
+  color: #fff;
+  top: 0;
+}
+
+.faq-modal-header a, .faq-modal-header span {
+  border-bottom: none;
+  color: #fff;
+}
+
+.faq-modal-header .close {
+  opacity: inherit;
+  margin-left: auto;
+}
+
+.faq-modal-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  border-radius: 4px;
+  height: calc(70vh - 54px);
+  padding: 0px
+}
+
+.faq-all-link {
+  padding: 10px 0px 11px;
+  display: block;
+  border-bottom: none;
+}
+
+.modal-body .faq-all-link {
+  text-align: center;
+}
+
+.modal-header #faq-toggle-fold {
+  padding: 10px 0px 11px;
+  display: block;
+  border-bottom: none;
+  margin-left: auto;
+}
+
+
+i.round, button.round {
+  display: inline-block;
+  border-radius: 60px;
+  box-shadow: 0px 0px 2px #000;
+  padding: 0.4em 0.6em;
+  border: 2px solid #fff;
+  margin-right: 5px;
+}

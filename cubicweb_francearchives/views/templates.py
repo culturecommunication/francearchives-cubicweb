@@ -141,7 +141,7 @@ class PniaMainTemplate(JinjaViewMixin, basetemplates.TheMainTemplate):
 
     def alert(self):
         alert = find_card(self._cw, "alert")
-        if alert is not None:
+        if alert is not None and alert.content.strip():
             return alert.content
 
     def heroimages(self, view):
@@ -196,6 +196,7 @@ class PniaMainTemplate(JinjaViewMixin, basetemplates.TheMainTemplate):
             "heroimages": heroimages,
             "vtimeline": view.__regid__ == "pnia.vtimeline" if view else False,
             "sn": self.sn_data(),
+            "cms": self._cw.vreg.config.get("instance-type") == "cms",
             "footer": {
                 # NOTE: those links will need to be editable in the CMS
                 "mcc_url": "http://www.culturecommunication.gouv.fr/",
@@ -233,10 +234,13 @@ class PniaMainTemplate(JinjaViewMixin, basetemplates.TheMainTemplate):
                 ixiti = entity.cw_adapt_to("IXiti")
                 if ixiti is not None:
                     xiti_chapters = ixiti.chapters
+        elif hasattr(view, "breadcrumbs"):
+            ctx["breadcrumbs"] = view.breadcrumbs
         xiti_config = self.portal_config.get("xiti")
         if xiti_config:  # cms shouldn't have xiti config
             ctx["xiti"] = {
                 "site": xiti_config.get("site"),
+                "n2": xiti_config.get("n2", ""),
                 "pagename": pagename_from_chapters(xiti_chapters),
             }
         langswitch_comp = self._cw.vreg["components"].select(

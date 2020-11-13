@@ -100,7 +100,11 @@ class NewsTests(PostgresTextMixin, HashMixIn, EditRoutesMixin, PyramidCWTest):
         content = '<h1 style="border: 1px solid red; padding-bottom: 1em">Hello</h1>'
         self.webapp.put_json(
             "/_update/NewsContent/{}".format(uuid),
-            {"title": "news-1-2", "content": content, "content_format": "text/html",},
+            {
+                "title": "news-1-2",
+                "content": content,
+                "content_format": "text/html",
+            },
         )
         with self.admin_access.cnx() as cnx:
             rset = cnx.find("NewsContent", title="news-1")
@@ -154,7 +158,11 @@ class NewsTests(PostgresTextMixin, HashMixIn, EditRoutesMixin, PyramidCWTest):
             "/_update/NewsContent/{}".format(uuid),
             {
                 "metadata": [
-                    {"cw_etype": "Metadata", "title": "meta-news2", "uuid": metadata_uuid,}
+                    {
+                        "cw_etype": "Metadata",
+                        "title": "meta-news2",
+                        "uuid": metadata_uuid,
+                    }
                 ],
             },
         )
@@ -348,7 +356,12 @@ class NewsTests(PostgresTextMixin, HashMixIn, EditRoutesMixin, PyramidCWTest):
                 "circ_id": "circ1",
                 "status": "revoked",
                 "title": "circ2",
-                "historical_context": [{"cw_etype": "Concept", "cwuri": "uri2",}],
+                "historical_context": [
+                    {
+                        "cw_etype": "Concept",
+                        "cwuri": "uri2",
+                    }
+                ],
             },
         )
         with self.admin_access.cnx() as cnx:
@@ -384,7 +397,12 @@ class NewsTests(PostgresTextMixin, HashMixIn, EditRoutesMixin, PyramidCWTest):
                 "circ_id": "circ1",
                 "status": "revoked",
                 "title": "circ2",
-                "business_field": [{"cw_etype": "Concept", "cwuri": "uri",}],
+                "business_field": [
+                    {
+                        "cw_etype": "Concept",
+                        "cwuri": "uri",
+                    }
+                ],
             },
         )
         with self.admin_access.cnx() as cnx:
@@ -479,12 +497,21 @@ class NewsTests(PostgresTextMixin, HashMixIn, EditRoutesMixin, PyramidCWTest):
             news = cnx.find("NewsContent", uuid="123456").one()
             self.assertEqual(news.modification_date.year, 2015)
         self.webapp.put_json(
-            "/_update/NewsContent/123456", {"title": "news-1", "content": "<h1>Hello</h1>",}
+            "/_update/NewsContent/123456",
+            {
+                "title": "news-1",
+                "content": "<h1>Hello</h1>",
+            },
         )
         with self.admin_access.cnx() as cnx:
             news = cnx.find("NewsContent", uuid="123456").one()
             self.assertEqual(news.modification_date.year, 2015)
-        self.webapp.put_json("/_update/NewsContent/123456", {"title": "news-2",})
+        self.webapp.put_json(
+            "/_update/NewsContent/123456",
+            {
+                "title": "news-2",
+            },
+        )
         with self.admin_access.cnx() as cnx:
             news = cnx.find("NewsContent", uuid="123456").one()
             self.assertEqual(news.modification_date.year, dt.datetime.now().year)
@@ -508,8 +535,18 @@ class NewsTests(PostgresTextMixin, HashMixIn, EditRoutesMixin, PyramidCWTest):
                 "circ_id": "circ1",
                 "status": "revoked",
                 "title": "circ2",
-                "historical_context": [{"cw_etype": "Concept", "cwuri": "uri",}],
-                "business_field": [{"cw_etype": "Concept", "cwuri": "uri",}],
+                "historical_context": [
+                    {
+                        "cw_etype": "Concept",
+                        "cwuri": "uri",
+                    }
+                ],
+                "business_field": [
+                    {
+                        "cw_etype": "Concept",
+                        "cwuri": "uri",
+                    }
+                ],
             },
         )
         with self.admin_access.cnx() as cnx:
@@ -530,7 +567,12 @@ class NewsTests(PostgresTextMixin, HashMixIn, EditRoutesMixin, PyramidCWTest):
                 "status": "revoked",
                 "title": "circ1",
                 "additional_link": [
-                    {"cw_etype": "Link", "uuid": "link1", "url": "url1", "title": "link1",}
+                    {
+                        "cw_etype": "Link",
+                        "uuid": "link1",
+                        "url": "url1",
+                        "title": "link1",
+                    }
                 ],
             },
         )
@@ -546,7 +588,12 @@ class NewsTests(PostgresTextMixin, HashMixIn, EditRoutesMixin, PyramidCWTest):
                 "status": "revoked",
                 "title": "circ1",
                 "additional_link": [
-                    {"cw_etype": "Link", "uuid": "link2", "url": "url2", "title": "link2",}
+                    {
+                        "cw_etype": "Link",
+                        "uuid": "link2",
+                        "url": "url2",
+                        "title": "link2",
+                    }
                 ],
             },
         )
@@ -575,7 +622,13 @@ class NewsTests(PostgresTextMixin, HashMixIn, EditRoutesMixin, PyramidCWTest):
                 "cw_etype": "Section",
                 "title": "sect-2",
                 "name": "sect-2",
-                "children": [{"cw_etype": "BaseContent", "uuid": "654321", "title": "the-object",}],
+                "children": [
+                    {
+                        "cw_etype": "BaseContent",
+                        "uuid": "654321",
+                        "title": "the-object",
+                    }
+                ],
             },
         )
         with self.admin_access.cnx() as cnx:
@@ -592,7 +645,10 @@ class MoveTests(EditRoutesMixin, PyramidCWTest):
             sect2_uuid = cnx.create_entity("Section", title="sect-2", name="sect-2").uuid
             cnx.commit()
         self.webapp.post_json(
-            "/_update/move/BaseContent/{}".format(article_uuid), {"to-section": sect2_uuid,}
+            "/_update/move/BaseContent/{}".format(article_uuid),
+            {
+                "to-section": sect2_uuid,
+            },
         )
         with self.admin_access.cnx() as cnx:
             article = cnx.find("BaseContent").one()
@@ -608,7 +664,10 @@ class MoveTests(EditRoutesMixin, PyramidCWTest):
             ).uuid
             cnx.commit()
         self.webapp.post_json(
-            "/_update/move/BaseContent/{}".format(article_uuid), {"to-section": sect1_uuid,}
+            "/_update/move/BaseContent/{}".format(article_uuid),
+            {
+                "to-section": sect1_uuid,
+            },
         )
         with self.admin_access.cnx() as cnx:
             article = cnx.find("BaseContent").one()

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ead xmlns="urn:isbn:1-931666-22-9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:default="urn:isbn:1-931666-22-9" audience="external" xsi:schemaLocation="urn:isbn:1-931666-22-9 http://www.loc.gov/ead/ead.xsd http://www.w3.org/1999/xlink http://www.loc.gov/standards/xlink/xlink.xsd">
+  <eadheader findaidstatus="edited-partial-draft">
+    <eadid>FRAD037_E_3E18 </eadid>
+    <filedesc>
+      <titlestmt>
+        <titleproper>3E18 - Études notariales de Tauxigny et Cormery (avant 1900)</titleproper>
+        <subtitle/>
+        <author/>
+      </titlestmt>
+      <editionstmt>
+        <p>Encodé en EAD et corrigé en juillet 2018</p>
+      </editionstmt>
+      <publicationstmt>
+        <publisher>Archives départementales d'Indre-et-Loire</publisher>
+        <address>
+          <addressline>6 rue des Ursulines</addressline>
+          <addressline>Tours</addressline>
+          <addressline/>
+          <addressline/>
+        </address>
+        <date normal="2010-10-01/2010-10-31">octobre 2010</date>
+      </publicationstmt>
+    </filedesc>
+    <profiledesc>
+      <creation>Encodé en juillet 2018 par Jean-Baptiste Legoff, chargé d'études documentaires.</creation>
+      <langusage>Français</langusage>
+      <descrules>Conforme à la norme ISAD(G) et aux règles d'application de la DTD EAD (version 2002)</descrules>
+    </profiledesc>
+  </eadheader>
+  <archdesc id="a0115320056579ajr0b" level="item">
+    <did>
+      <unittitle>Études de Tauxigny et Cormery</unittitle>
+      <unitdate normal="1581-01-01/1899-12-31" type="inclusive">1581-1899</unitdate>
+      <physdesc>
+        <extent label="Metrage lineaire" unit="ml">85,16</extent>
+      </physdesc>
+      <repository>Archives départementales d'Indre-et-Loire</repository>
+    </did>
+    <acqinfo>
+      <p>Dépôt du 1er avril 1968 et versements des 4 décembre 1987, 15 janvier 1988, 3 mai 1995, 29 juin 2004 et 23 novembre 2017.Le dernier versement, représentant 18,86 mètres linéaires, a permis d'intégrer les minutes de l'étude de Cormery de 1872 à 1899 et celles de l'étude de Tauxigny de 1886 à 1899.</p>
+    </acqinfo>
+    <note type="mnesysinternal">
+      <p/>
+    </note>
+    <bioghist>
+      <p><archref href="ea8e3ce6-5975-4355-b4ff-0c107936162d" title="" altrender="icon_pdf" role="media">Généalogie des études</archref> (fin XIXe-XXe s.).</p>
+    </bioghist>
+    <dsc type="in-depth">
+      <c id="a0115320056577FhvDq" level="item">
+        <did>
+          <unittitle>Étude de Tauxigny</unittitle>
+          <unitdate normal="1602-01-01/1886-12-31" type="inclusive">1602-1886</unitdate>
+          <physdesc>
+            <extent label="Metrage lineaire" unit="ml">29,65</extent>
+          </physdesc>
+        </did>
+        <relatedmaterial>
+          <p>Des pièces de procédure (XVIIIe s.), des dossiers de clients (XVIIe-XIXe s.) ainsi que des dossiers personnels de notaires (XIXe s.) sont classés et conservés sous la cote 204 J.</p>
+        </relatedmaterial>
+        <note type="mnesysinternal">
+          <p/>
+        </note>
+        <c id="a011532005657bhzdcZ" level="item">
+          <did>
+            <unittitle>Saint-Bauld</unittitle>
+          </did>
+          <c id="a011532005657zwu3Po" level="item">
+            <did>
+              <unittitle>Étude royale à Saint-Bauld</unittitle>
+              <unitdate normal="1622-01-01/1660-12-31" type="inclusive">1622-1660</unitdate>
+            </did>
+            <c id="a0115320056577HAL6R" level="item">
+              <did>
+                <unittitle>(Louis) BOISSEAU, notaire royal à Loches, résidant à Saint-Bauld (1622-juillet 1660).</unittitle>
+              </did>
+              <controlaccess>
+                <geogname>Saint-Bauld (Indre-et-Loire, France)</geogname>
+                <persname>Boisseau, Louis (notaire à Saint-Bauld, 1622-juillet 1660)</persname>
+              </controlaccess>
+              <c id="a011532005657Q5VL8H" level="item">
+                <did>
+                  <unittitle>Minutes</unittitle>
+                </did>
+                <c id="a011532005657UEJhy8" level="item">
+                  <did>
+                    <unittitle>1633-1635</unittitle>
+                    <unitid identifier="3E/18/2">3E18/2</unitid>
+                    <unitdate normal="1633-01-01/1635-12-31" type="inclusive">1633-1635</unitdate>
+                    <unitid type="other">
+                      <extptr href="https://archives.touraine.fr/ark:/37621/other"/>
+                    </unitid>
+                     <unitid type="external_link">
+                      <extptr href="https://archives.touraine.fr/ark:/37621/gq7m1w4nrxf9"/>
+                    </unitid>
+                  </did>
+                  <controlaccess>
+                    <genreform>minute notariale</genreform>
+                  </controlaccess>
+                </c>
+              </c>
+            </c>
+          </c>
+        </c>
+      </c>
+    </dsc>
+  </archdesc>
+</ead>

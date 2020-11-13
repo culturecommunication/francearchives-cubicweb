@@ -39,6 +39,7 @@ from yams.buildobjs import (
     String,
     RichString,
     Int,
+    Boolean,
 )
 from cubicweb import _
 from cubicweb.schema import WorkflowableEntityType
@@ -78,8 +79,7 @@ class FAHeader(EntityType):
 
 
 class FindingAid(EntityType):
-    """A descriptive document created to allow retrieval within an archive.
-    """
+    """A descriptive document created to allow retrieval within an archive."""
 
     name = String(required=True, unique=True, fulltextindexed=True, indexed=True)
     eadid = String(required=True, fulltextindexed=True)
@@ -172,6 +172,10 @@ class OAIRepository(EntityType):
     name = String(maxsize=128, description=_("human-readable name for the repository"))
     service = SubjectRelation("Service", cardinality="1*", inlined=True)
     url = String(maxsize=512, description=_("OAI-PMH ListRecords url"))
+    # "Index policy: normalize indexes labels"
+    should_normalize = Boolean(default=True)
+    # "Index policy: consider indexes within the service
+    context_service = Boolean(default=True)
 
 
 class OAIImportTask(WorkflowableEntityType):

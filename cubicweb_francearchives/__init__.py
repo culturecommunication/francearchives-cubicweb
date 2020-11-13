@@ -64,6 +64,8 @@ from cubicweb_francearchives.htmlutils import soup2xhtml
 psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
 psycopg2.extensions.register_type(psycopg2.extensions.UNICODEARRAY)
 
+GLOSSARY_CACHE = []
+
 
 def get_user_agent():
     def format_version(numversion):
@@ -79,6 +81,7 @@ def get_user_agent():
 
 # safety belt to register a custom, hard-coded list of indexable types to avoid
 # indexing Files, EmailAddress (or any unwanted entity type) by mistake
+
 es.INDEXABLE_TYPES = [
     "Section",
     "CommemorationItem",
@@ -94,6 +97,9 @@ es.INDEXABLE_TYPES = [
     "FindingAid",
     "FAComponent",
     "File",
+    "BaseContentTranslation",
+    "SectionTranslation",
+    "CommemorationItemTranslation",
 ]
 
 
@@ -126,6 +132,14 @@ CMS_OBJECTS = (
     "ExternRef",
     "Map",
 )
+
+ES_CMS_I18N_OBJECTS = (
+    "SectionTranslation",
+    "BaseContentTranslation",
+    "CommemorationItemTranslation",
+)
+
+CMS_I18N_OBJECTS = ES_CMS_I18N_OBJECTS + ("FaqItemTranslation",)
 
 FIRST_LEVEL_SECTIONS = {"decouvrir", "comprendre", "gerer"}
 
@@ -185,16 +199,20 @@ class FABfssStorage(storages.BytesFileSystemStorage):
         """an entity using this storage for attr has been deleted.
         Francearchives customization:
           while deleting a CWFile, only delete the referenced file from FS
-          if there is no other CWFile referencing the same filepath
+          if there is no other CWFile referencing the same filepath (e.g same cw_data)
         """
         fpath = self.current_fs_path(entity, attr)
         if fpath is not None:
             sys_source = entity._cw.repo.system_source
             sql_query = """
-            SELECT count(cw_eid) FROM cw_file f
-            WHERE encode(f.cw_data, 'escape')=%(fpath)s
-                   AND not cw_eid=%(eid)s;"""
-            attrs = {"fpath": fpath, "eid": entity.eid}
+            SELECT count(f.cw_eid) FROM cw_file f
+            JOIN cw_file f1 ON f.cw_{attr}=f1.cw_{attr}
+            WHERE f1.cw_eid =%(eid)s
+                  AND f.cw_eid!=%(eid)s;
+            """.format(
+                attr=attr
+            )
+            attrs = {"eid": entity.eid}
             cu = sys_source.doexec(entity._cw, sql_query, attrs)
             res = cu.fetchone()[0]
             # only delete the file if there is no more cw_files referencing the same
@@ -232,13 +250,16 @@ def check_static_css_dir(repo):
         return
     directory = static_css_dir(repo.config.static_directory)
     if not osp.isdir(directory):
+        repo.critical(
+            "static css files directory {} does not exist. Trying to create it".format(directory)
+        )
         try:
             os.makedirs(directory)
         except Exception:
-            repo.critical('could not create static css files directory "static/css"')
+            repo.critical("could not create static css files directory {}".format(directory))
             raise
     if not os.access(directory, os.W_OK):
-        raise ValueError('directory "static_css" is not writable')
+        raise ValueError('static css directory "{}" is not writable'.format(directory))
 
 
 def includeme(config):

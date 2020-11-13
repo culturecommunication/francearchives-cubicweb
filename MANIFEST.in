@@ -1,10 +1,11 @@
-recursive-include cubicweb_francearchives *.py *.css *.js *.jinja2 *.jpg *.json *.csv *.ttf *.otf *.eot *.svg *.xsl *.xslt *.html *.png *.woff *.woff2 *.xml *.yaml *.txt *.ico .editorconfig .jshintrc *.po *.pot *.scss
+recursive-include cubicweb_francearchives *.py *.css *.js *.jinja2 *.jpg *.json *.csv *.ttf *.otf *.eot *.svg *.xsl *.xslt *.html *.png *.woff *.woff2 *.xml *.yaml *.txt *.ico .editorconfig .jshintrc *.po *.pot *.scss *.md
 recursive-include doc *.html *.rst *.yaml
 recursive-include a11y *.js *.json
 recursive-include appjs *.js
 include pyproject.toml
-recursive-include sphinx *.rst *.bat *.py
+recursive-include sphinx *.rst *.bat *.py Makefile
 include package.json
+include package-lock.json
 include LICENCE.txt Licence_CeCILL-C_V1-en.txt
 include francearchives_screenshot.jpg
 include *.js
@@ -16,14 +17,18 @@ include cubicweb_francearchives/data/css/francearchives.bundle.css.map
 # build from npm
 include cubicweb_francearchives/data/bundle-circular-table.js
 include cubicweb_francearchives/data/bundle-pnialocation-map.js
+include cubicweb_francearchives/data/bundle-pnia-toc.js
+include cubicweb_francearchives/data/bundle-pnia-faq.js
+include cubicweb_francearchives/data/bundle-glossary.js
 prune scss
 prune debian
-prune gitfilter
-prune sonar-project.properties
-prune .babelrc
-prune .eslintrc.yml
-prune .gitlab-ci.yml
-prune .style.yapf
-prune dev-requirements.txt
-prune tox.ini
-prune Makefile
+exclude gitfilter
+exclude sonar-project.properties
+exclude .babelrc
+exclude .eslintrc.yml
+exclude .prettierrc
+exclude .gitlab-ci.yml
+exclude .style.yapf
+exclude dev-requirements.txt
+exclude tox.ini
+exclude Makefile

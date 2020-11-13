@@ -200,7 +200,6 @@
           </div>
         </form>
       </section>
-
       {% if homepage %}
       {% include "homepage.jinja2" %}
       {% endif %}
@@ -225,6 +224,11 @@
       </div>
       {% endif %}
       {{ page_content }}
+      {% if cms and faqs %}
+      {% from "./mixins.jinja2" import modalfaq %}
+      {{  modalfaq(faqs, _) }}
+      {% endif %}
+
     </main>
     {% else %}
     </header>

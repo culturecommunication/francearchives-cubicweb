@@ -55,7 +55,12 @@ from cubicweb_francearchives.dataimport import (
     service_infos_from_filepath,
     load_services_map,
 )
-from cubicweb_francearchives.dataimport.ead import Reader, capture_exception
+from cubicweb_francearchives.dataimport.ead import (
+    Reader,
+    capture_exception,
+    service_infos_for_es_doc,
+)
+
 from cubicweb_francearchives.dataimport.stores import create_massive_store
 from cubicweb_francearchives.dataimport.scripts.generate_ape_ead import (
     generate_ape_ead_from_other_sources,
@@ -67,8 +72,7 @@ CSV_METADATA_CACHE = {}
 
 
 def parse_dc_csv(fpath):
-    """Generate a data dict by CSV entry of `fpath`
-    """
+    """Generate a data dict by CSV entry of `fpath`"""
     with open(fpath) as csvfile:
         dcreader = csv.DictReader(csvfile)
         for row in dcreader:
@@ -81,18 +85,18 @@ def parse_dc_csv(fpath):
 
 def csv_metadata_without_cache(filepath, metadata_filepath=None):
     """if import is done from cms interface:
-      - dont look for the metadata in the same direcrtory
-      - dont use the cache"""
+    - dont look for the metadata in the same direcrtory
+    - dont use the cache"""
     filename = osp.basename(filepath)
     if not metadata_filepath:
         return default_csv_metadata(remove_extension(filename))
-    return load_metadata_file(metadata_filepath)[filename]
+    return load_metadata_file(metadata_filepath, csv_filename=filename)[filename]
 
 
 def csv_metadata_from_cache(filepath, metadata_filepath=None):
     """if import is done from CWCcommand `import_dc`:
-       - look for the metadata in the same direcrtory
-       - use the cache"""
+    - look for the metadata in the same direcrtory
+    - use the cache"""
     if metadata_filepath:
         return load_metadata_file(metadata_filepath)[osp.basename(filepath)]
     directory = osp.dirname(filepath)
@@ -113,13 +117,13 @@ def csv_metadata_from_cache(filepath, metadata_filepath=None):
 
 
 class CSVReader(Reader):
-    """ expected columns for FAComoponents are:
-        ['identifiant_cote', 'date1', 'date2',
-         'description', 'format', 'langue', 'index_collectivite',
-         'index_lieu', 'conditions_acces', 'index_personne',
-         'identifiant_URI', 'origine', 'conditions_utilisation',
-         'source_complementaire', 'titre', 'type', 'source_image',
-         'index_matiere']
+    """expected columns for FAComoponents are:
+    ['identifiant_cote', 'date1', 'date2',
+     'description', 'format', 'langue', 'index_collectivite',
+     'index_lieu', 'conditions_acces', 'index_personne',
+     'identifiant_URI', 'origine', 'conditions_utilisation',
+     'source_complementaire', 'titre', 'type', 'source_image',
+     'index_matiere']
     """
 
     def cleaned_rows(self, filepath):
@@ -156,22 +160,31 @@ class CSVReader(Reader):
         sha1 = usha1(open(filepath).read())
         if not self.config["esonly"] and self.ignore_filepath(filepath, sha1):
             return []
-        f = self.create_file(filepath, sha1=sha1)
-        if f is None:
+        fa_support = self.create_file(filepath, sha1=sha1)
+        if fa_support is None:
             return []
         if not self.config.get("dc_no_cache"):
             metadata = csv_metadata_without_cache(filepath, metadata_filepath)
         else:
             metadata = csv_metadata_from_cache(filepath, metadata_filepath)
         self.update_authorities_cache(service_infos.get("eid"))
-        fa_es_doc = self.import_findingaid(service_infos, filepath, metadata, fa_support=f)
+        creation_date = self.creation_date_from_filepath(filepath)
+        metadata["creation_date"] = creation_date
+        fa_es_doc = self.import_findingaid(service_infos, metadata, fa_support)
         es_docs = [fa_es_doc]
+        # findingaid_attrs should probably not be based on es_documents, but
+        # so far it contains all needed values except "service" needed for "index_entries"
+        # method
+        findingaid_attrs = {k: v for k, v in fa_es_doc["_source"].items()}
+        findingaid_attrs.update(
+            {"service": service_infos.get("eid"), "creation_date": creation_date}
+        )
         for order, row in enumerate(self.cleaned_rows(filepath)):
-            es_docs.append(self.import_facomponent(row, fa_es_doc["_source"], order))
+            es_docs.append(self.import_facomponent(row, findingaid_attrs, order, service_infos))
         self.delete_from_filename(filepath)
         return es_docs
 
-    def import_facomponent(self, entry, findingaid_data, order):
+    def import_facomponent(self, entry, findingaid_data, order, service_infos):
         fa_stable_id = findingaid_data["stable_id"]
         cote = entry["identifiant_cote"]
         did_attrs = {
@@ -203,6 +216,7 @@ class CSVReader(Reader):
             "userestrict_format": "text/html",
             "component_order": order,
         }
+        comp_attrs["creation_date"] = findingaid_data["creation_date"]
         comp_data = self.create_entity("FAComponent", clean_values(comp_attrs))
         comp_eid = comp_data["eid"]
         # add daos
@@ -220,6 +234,8 @@ class CSVReader(Reader):
             scopecontent=strip_html(comp_attrs.get("scopecontent")),
             index_entries=self.index_entries(entry, comp_eid, findingaid_data),
             digitized=bool(daodef),
+            digitized_versions=daodef,
+            **service_infos_for_es_doc(self.store._cnx, service_infos),
         )
         self.create_entity("EsDocument", {"doc": json_dumps(es_doc["_source"]), "entity": comp_eid})
         return es_doc

@@ -32,26 +32,11 @@ import unittest
 
 from cubicweb.devtools.testlib import CubicWebTC
 from cubicweb_francearchives import Authkey
-from cubicweb_francearchives.testutils import PostgresTextMixin, EADImportMixin
+from cubicweb_francearchives.testutils import PostgresTextMixin, EADImportMixin, create_findingaid
 from cubicweb_francearchives.utils import merge_dicts
 from cubicweb_francearchives.dataimport.sqlutil import delete_from_filename
 
 from pgfixtures import setup_module, teardown_module  # noqa
-
-
-def create_findingaid(cnx, eadid, service):
-    return cnx.create_entity(
-        "FindingAid",
-        name=eadid,
-        stable_id="stable_id{}".format(eadid),
-        eadid=eadid,
-        publisher="publisher",
-        did=cnx.create_entity(
-            "Did", unitid="unitid {}".format(eadid), unittitle="title {}".format(eadid)
-        ),
-        fa_header=cnx.create_entity("FAHeader"),
-        service=service,
-    )
 
 
 def get_authority_history(cnx):
@@ -173,8 +158,8 @@ class GroupAuthoritiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
 
     def test_service_strict_new_authorities(self):
         """Trying: import a FindingAid with index_policy == 'service/strict'
-                   and 3 similar subjects
-           Expecting: 3 new SubjectAuthorities are created
+                and 3 similar subjects
+        Expecting: 3 new SubjectAuthorities are created
         """
         with self.admin_access.cnx() as cnx:
             self.import_filepath(
@@ -182,14 +167,10 @@ class GroupAuthoritiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
                 self.datapath("ir_data/FRAD092_subject.xml"),
                 autodedupe_authorities="service/strict",
             )
-            expected = [
-                "Léningrad",
-                "leningrad",
-                "LeninGrad (1924-1991)",
-            ]
+            expected = ["Léningrad", "leningrad", "LeninGrad?"]
             self.assertCountEqual(
                 expected,
-                [l[0] for l in cnx.execute("Any L WHERE X is SubjectAuthority, X label L")],
+                [label[0] for label in cnx.execute("Any L WHERE X is SubjectAuthority, X label L")],
             )
             fc = cnx.find("FindingAid").one()
             #  main_auth = the fist authority found in XML
@@ -234,8 +215,8 @@ class GroupAuthoritiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
 
     def test_service_normalize_new_authorities(self):
         """Trying: import a FindingAid with index_policy == 'service/normalize'
-                   and 3 similar subjects (Léningrad, leningrad, LeninGrad (1924-1991))
-           Expecting: 1 new SubjectAuthority is created
+                and 3 similar subjects (Léningrad, leningrad, LeninGrad (1924-1991))
+        Expecting: 1 new SubjectAuthority is created
         """
         with self.admin_access.cnx() as cnx:
             self.import_filepath(
@@ -410,14 +391,14 @@ class GroupAuthoritiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
                 autodedupe_authorities="global/normalize",
             )
             all_authorities = self.reader.all_authorities
-            for data in (("LocationAuthority", "france paris", None),):
+            for data in (("LocationAuthority", "paris france", None),):
                 self.assertEqual(all_authorities[hash(data)], loc2.eid)
             for eid in (loc1.eid, loc3.eid, loc4.eid):
                 self.assertNotIn(eid, list(all_authorities.values()))
 
     def test_grouped_location_history(self):
-        """ In case locations authorities are grouped,
-            only the target autheid must be kept in authority_history
+        """In case locations authorities are grouped,
+        only the target autheid must be kept in authority_history
         """
         with self.admin_access.cnx() as cnx:
             ce = cnx.create_entity
@@ -1119,111 +1100,109 @@ class AuthoritiesHistoryTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
             renamed_bergbieten = cnx.find("LocationAuthority", eid=renamed_bergbieten.eid).one()
             self.assertEqual(4, len(renamed_bergbieten.reverse_authority))
 
+    def test_group_locations_with_same_as(self):
+        """
+        Trying: Create two LocationAuthority BERGBIETEN with the same same_as reference
+                Group the second BERGBIETEN into the first.
+        Expecting: the grouped BERGBIETEN has no more same_as.
+        """
+        with self.admin_access.cnx() as cnx:
+            service = cnx.create_entity("Service", code="FRAD067", category="L")
+            bergbieten1 = self.create_bergbieten(cnx)
+            cnx.commit()
+            fa = create_findingaid(cnx, "test2", service)
+            index = cnx.create_entity("Geogname", label="BERGBIETEN", index=fa)
+            bergbieten2 = cnx.create_entity(
+                "LocationAuthority", label="Bergbieten (Bas-Rhin, France)", reverse_authority=index
+            )
+            cnx.create_entity(
+                "ExternalUri",
+                uri="https://fr.wikipedia.org/wiki/BERGBIETEN",
+                same_as=(bergbieten1.eid, bergbieten2.eid),
+            )
+            cnx.commit()
+            bergbieten1 = cnx.find("LocationAuthority", eid=bergbieten1.eid).one()
+            bergbieten2 = cnx.find("LocationAuthority", eid=bergbieten2.eid).one()
+            self.assertEqual(1, len(bergbieten1.same_as))
+            self.assertEqual(1, len(bergbieten2.same_as))
+            bergbieten1.group([bergbieten2.eid])
+            cnx.commit()
+            bergbieten1 = cnx.find("LocationAuthority", eid=bergbieten1.eid).one()
+            bergbieten2 = cnx.find("LocationAuthority", eid=bergbieten2.eid).one()
+            self.assertEqual(1, len(bergbieten1.same_as))
+            self.assertEqual(0, len(bergbieten2.same_as))
 
-class IndexHookTests(PostgresTextMixin, CubicWebTC):
+
+class AuthoritiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
+    readerconfig = merge_dicts({}, EADImportMixin.readerconfig, {"nodrop": False})
+
     def setUp(self):
-        super(IndexHookTests, self).setUp()
+        super(AuthoritiesTests, self).setUp()
         with self.admin_access.cnx() as cnx:
-            self.service = cnx.create_entity("Service", code="FRAD054", category="foo")
+            self.service = cnx.create_entity("Service", code="FRAD017", category="foo")
             cnx.commit()
-            self.location_label = "Nancy (Meurthe-et-Moselle, France)"
 
-    def test_grouped_authority_indexes(self):
+    def test_normalized_labels_normalize(self):
+        """
+        Trying: import a IR with spelling writing of Oléron, île d'(Charente-Maritime ; France
+                under `service/normalize` policy.
+        Expecting: Only one Oléron authority is created
+        """
         with self.admin_access.cnx() as cnx:
-            ce = cnx.create_entity
-            loc1 = ce("LocationAuthority", label="location 1")
-            loc2 = ce("LocationAuthority", label="location 2")
-            loc3 = ce("LocationAuthority", label="location 3")
-            fa1 = create_findingaid(cnx, "eadid1", self.service)
-            ce("Geogname", label="index location 1", index=fa1, authority=loc1)
-            fa2 = create_findingaid(cnx, "eadid2", self.service)
-            ce("Geogname", label="index location 2", index=fa2, authority=loc2)
-            fa3 = create_findingaid(cnx, "eadid3", self.service)
-            ce("Geogname", label="index location 3", index=fa3, authority=loc3)
-            cnx.commit()
-            loc2.group((loc3.eid,))
-            loc1.group((loc2.eid,))
-            cnx.commit()
-            loc1 = cnx.find("LocationAuthority", eid=loc1).one()
-            loc2 = cnx.find("LocationAuthority", eid=loc2).one()
-            loc3 = cnx.find("LocationAuthority", eid=loc3).one()
-            for fa in (fa1, fa2, fa3):
-                fa = cnx.find("FindingAid", eid=fa).one()
-                fa_index = fa.reverse_index[0]
-                self.assertEqual(fa_index.authority[0].eid, loc1.eid)
+            for filepath in (
+                "frad017_258j.xml",
+                "frad017_12fi_rome_stdenis.xml",
+                "frad017_cartespostales1418-v2.xml",
+            ):
+                self.import_filepath(
+                    cnx,
+                    self.datapath("ir_data/{}".format(filepath)),
+                    service_info={"code": self.service.code, "eid": self.service.eid},
+                    autodedupe_authorities="service/normalize",
+                )
+            oleron = cnx.execute(
+                """Any X, L WHERE X is LocationAuthority,
+                       X label L, X label ILIKE 'oléron%'"""
+            ).one()
+            expected = [
+                "Oléron, île d' (Charente-Maritime, France )",
+                "Oléron, île d' (Charente-Maritime, France)",
+                "Oléron, île d'(Charente-Maritime ; France)",
+            ]
+            for index in oleron.reverse_authority:
+                self.assertIn(index.label, expected)
+            self.assertEqual(3, len(oleron.reverse_authority))
 
-    def test_grouped_authority_check_simple_cycle(self):
+    def test_normalized_labels_strict(self):
+        """
+        Trying: import a IR with different spelling of Oléron, île d'(Charente-Maritime ; France
+                under `service/strict` policy.
+        Expecting: 3 Oléron authorites are created
+        """
         with self.admin_access.cnx() as cnx:
-            ce = cnx.create_entity
-            loc1 = ce("LocationAuthority", label="location 1")
-            loc2 = ce("LocationAuthority", label="location 2")
-            cnx.commit()
-            loc1.group((loc2.eid,))
-            cnx.commit()
-            loc1 = cnx.find("LocationAuthority", eid=loc1).one()
-            loc2 = cnx.find("LocationAuthority", eid=loc2).one()
-            self.assertEqual(loc1.eid, loc2.grouped_with[0].eid)
-            loc2.group((loc1.eid,))
-            cnx.commit()
-            loc1 = cnx.find("LocationAuthority", eid=loc1).one()
-            loc2 = cnx.find("LocationAuthority", eid=loc2).one()
-            self.assertEqual(loc2.eid, loc1.grouped_with[0].eid)
-            self.assertEqual((), loc2.grouped_with)
-
-    def test_grouped_authority_check_pipeline(self):
-        with self.admin_access.cnx() as cnx:
-            ce = cnx.create_entity
-            loc1 = ce("LocationAuthority", label="location 1")
-            loc2 = ce("LocationAuthority", label="location 2")
-            loc3 = ce("LocationAuthority", label="location 3")
-            cnx.commit()
-            loc2.group((loc1.eid,))
-            cnx.commit()
-            loc1 = cnx.find("LocationAuthority", eid=loc1).one()
-            loc2 = cnx.find("LocationAuthority", eid=loc2).one()
-            loc3 = cnx.find("LocationAuthority", eid=loc3).one()
-            self.assertEqual(loc2.eid, loc1.grouped_with[0].eid)
-            self.assertEqual((), loc2.grouped_with)
-            self.assertEqual((), loc3.grouped_with)
-            loc2.group((loc3.eid,))
-            cnx.commit()
-            loc1 = cnx.find("LocationAuthority", eid=loc1).one()
-            loc2 = cnx.find("LocationAuthority", eid=loc2).one()
-            loc3 = cnx.find("LocationAuthority", eid=loc3).one()
-            self.assertEqual(loc2.eid, loc1.grouped_with[0].eid)
-            self.assertEqual((), loc2.grouped_with)
-            self.assertEqual(loc2.eid, loc3.grouped_with[0].eid)
-            loc1.group((loc2.eid,))
-            cnx.commit()
-            loc1 = cnx.find("LocationAuthority", eid=loc1).one()
-            loc2 = cnx.find("LocationAuthority", eid=loc2).one()
-            loc3 = cnx.find("LocationAuthority", eid=loc3).one()
-            self.assertEqual(loc1.eid, loc2.grouped_with[0].eid)
-            self.assertEqual(loc1.eid, loc3.grouped_with[0].eid)
-            self.assertEqual((), loc1.grouped_with)
-
-    def test_grouped_authority_check_inhertied(self):
-        with self.admin_access.cnx() as cnx:
-            ce = cnx.create_entity
-            loc1 = ce("LocationAuthority", label="location 1")
-            loc2 = ce("LocationAuthority", label="location 2")
-            loc3 = ce("LocationAuthority", label="location 3")
-            cnx.commit()
-            loc2.group((loc3.eid,))
-            loc1.group((loc2.eid,))
-            cnx.commit()
-            loc1 = cnx.find("LocationAuthority", eid=loc1).one()
-            loc2 = cnx.find("LocationAuthority", eid=loc2).one()
-            loc3 = cnx.find("LocationAuthority", eid=loc3).one()
-            self.assertEqual(loc1.eid, loc2.grouped_with[0].eid)
-            self.assertEqual(loc1.eid, loc3.grouped_with[0].eid)
-            loc2.group((loc1.eid,))
-            cnx.commit()
-            loc1 = cnx.find("LocationAuthority", eid=loc1).one()
-            loc2 = cnx.find("LocationAuthority", eid=loc2).one()
-            loc3 = cnx.find("LocationAuthority", eid=loc3).one()
-            self.assertEqual(loc2.eid, loc1.grouped_with[0].eid)
-            self.assertEqual(loc2.eid, loc3.grouped_with[0].eid)
+            for filepath in (
+                "frad017_258j.xml",
+                "frad017_12fi_rome_stdenis.xml",
+                "frad017_cartespostales1418-v2.xml",
+            ):
+                self.import_filepath(
+                    cnx,
+                    self.datapath("ir_data/{}".format(filepath)),
+                    service_info={"code": self.service.code, "eid": self.service.eid},
+                    autodedupe_authorities="service/strict",
+                )
+            rset = cnx.execute(
+                """Any X, L WHERE X is LocationAuthority,
+                       X label L, X label ILIKE 'oléron%'"""
+            )
+            expected = [
+                "Oléron, île d' (Charente-Maritime, France )",
+                "Oléron, île d' (Charente-Maritime, France)",
+                "Oléron, île d'(Charente-Maritime ; France)",
+            ]
+            for eid, label in rset:
+                self.assertIn(label, expected)
+            self.assertEqual(3, rset.rowcount)
 
 
 if __name__ == "__main__":

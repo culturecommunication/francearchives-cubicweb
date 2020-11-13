@@ -97,8 +97,7 @@ class EACOptimizedExtEntitiesImporter(OptimizedExtEntitiesImporter):
 
 
 class EACCPFImporter(dataimport.EACCPFImporter):
-    """Override eac cube's EACCPFImporter to add a validator.
-    """
+    """Override eac cube's EACCPFImporter to add a validator."""
 
     def check_notice_validity(self, extid2eid):
         control = self._elem_find(self._root, "eac:control")
@@ -117,8 +116,8 @@ class EACCPFImporter(dataimport.EACCPFImporter):
 
     def build_name_entry(self, element):
         """Build a NameEntry external entity.
-           Entities need to be filtered because of the yield chain of the
-           original function which yields the entity and its children
+        Entities need to be filtered because of the yield chain of the
+        original function which yields the entity and its children
         """
         for entity in super(EACCPFImporter, self).build_name_entry(element):
             if entity.etype == "NameEntry":
@@ -133,8 +132,7 @@ class EACCPFImporter(dataimport.EACCPFImporter):
 
 
 class EACImportService(eac.EACImportService):
-    """Override eac cube's EACCPFService
-    """
+    """Override eac cube's EACCPFService"""
 
     def external_entities_generator(self, stream, import_log):
         return EACCPFImporter(stream, import_log, self._cw._)

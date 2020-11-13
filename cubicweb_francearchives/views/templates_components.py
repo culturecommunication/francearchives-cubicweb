@@ -47,7 +47,7 @@ class PniaLangSwitchComponent(Component):
         base_url = self._cw.base_url()
         path = self._cw.url(includeparams=True)
         path = path[len(base_url) :]
-        if cur_lang and path.startswith(cur_lang):
+        if cur_lang and path.startswith(cur_lang + "/"):
             path = path[len(cur_lang) :]
         return "%s%s/%s" % (base_url, lang, path)
 

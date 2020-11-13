@@ -109,7 +109,7 @@ def dump_csv(po_files, output_filename):
     :param output_filename: the CSV output filename
     """
     langs = list(cwfa.SUPPORTED_LANGS)
-    with open(output_filename, "wb") as outf:
+    with open(output_filename, "w") as outf:
         writer = csv.writer(outf)
         headers = ["msgctxt", "msgid"] + langs
         writer.writerow(headers)
@@ -118,7 +118,7 @@ def dump_csv(po_files, output_filename):
         for entries in zip(*all_po_entries):
             csv_row = []
             for lang, entry in zip(langs, entries):
-                csv_row.append(entry.msgstr.encode("utf-8"))
+                csv_row.append(entry.msgstr)
                 substitutions_consistent(entry.msgid, entry.msgstr)
             csv_row = [entry.msgctxt, entry.msgid] + csv_row
             csv_rows.append(csv_row)

@@ -39,6 +39,7 @@ import os.path as osp
 import unicodedata
 from datetime import datetime
 from contextlib import contextmanager
+from psycopg2.errorcodes import READ_ONLY_SQL_TRANSACTION
 
 import sentry_sdk
 
@@ -54,6 +55,8 @@ from cubicweb import Binary
 from cubicweb.dataimport.importer import ExtEntity, ExtEntitiesImporter
 from cubicweb.devtools.fake import FakeRequest
 
+from cubicweb_francearchives.entities import compute_file_data_hash
+
 from cubicweb_francearchives.dataimport.meminfo import memprint
 from cubicweb_francearchives.utils import remove_html_tags
 from cubicweb_francearchives.utils import pick
@@ -67,7 +70,7 @@ RELFILES_DIR = "RELFILES"
 OAIPMH_DC_PATH = "oaipmh/dc"
 OAIPMH_EAD_PATH = "oaipmh/ead"
 
-NO_PUNCT_MAP = dict.fromkeys(ord(c) for c in string.punctuation)
+NO_PUNCT_MAP = dict.fromkeys((ord(c) for c in string.punctuation), " ")
 
 
 def _build_transmap():
@@ -147,7 +150,11 @@ def log_cmd_in_db(cnx, cmd_name, logger=None, stop=False):
                 {"cmd_name": cmd_name},
             )
         sqlcnx.commit()
-    except Exception:
+    except Exception as error:
+        if error.pgcode == READ_ONLY_SQL_TRANSACTION:
+            if logger:
+                logger.warning("can not insert log on command in a read-only db")
+            return
         import traceback
 
         traceback.print_exc()
@@ -157,13 +164,23 @@ def log_cmd_in_db(cnx, cmd_name, logger=None, stop=False):
 
 
 def normalize_entry(entry):
-    entry = re.sub(r"\(\s*[\d.]+\s*-\s*[\d.]+\s*\)", "", entry)
+    r"""
+     - unaccent
+     - replace punctuation by ' '
+     - lower
+     - remove mutiple whitespaces
+    remove previously operations :
+    1. do not remove dates between parentheses as it is too dangerous on agents
+       entry = re.sub(r"\(\s*[\d.]+\s*-\s*[\d.]+\s*\)", "", entry)
+    2. do not sort words as it is too dangerous on agents
+       entry = " ".join(sorted(entry.split()))
+    """
     if isinstance(entry, bytes):
-        entry = entry.translate(None, string.punctuation)
-    else:  # unicode
+        entry = entry.translate(" ", string.punctuation)
+    else:
         entry = entry.translate(NO_PUNCT_MAP).translate(TRANSMAP)
     entry = entry.lower()
-    return " ".join(sorted(entry.split()))
+    return " ".join(entry.split())
 
 
 def remove_extension(identifier):
@@ -211,6 +228,7 @@ class IndexImporterMixin(object):
 
     def _init_authorities(self):
         autodedupe_authorities = self.index_policy.get("autodedupe_authorities")
+        self.log.info("Start initiating authorities with index policy: %r", autodedupe_authorities)
         if not autodedupe_authorities:
             self.global_authorities = {}
             return
@@ -291,7 +309,7 @@ class IndexImporterMixin(object):
         }
 
     def update_authorities_cache(self, service_eid):
-        """ This will update `all_authorities` attribute.
+        """This will update `all_authorities` attribute.
 
         To perform this update we use authorities linked to service (one
         with `service_eid`) through FindingAid or through FAComponent via FindingAid
@@ -307,8 +325,10 @@ class IndexImporterMixin(object):
             return
         if should_normalize == "normalize":
             label = "NORMALIZE_ENTRY(a.cw_label)"
+            a1label = "NORMALIZE_ENTRY(a1.cw_label)"
         else:
             label = "a.cw_label"
+            a1label = "a1.cw_label"
         template = """
         SELECT DISTINCT a.cw_eid, {label}, '{etype}'
         FROM
@@ -327,7 +347,7 @@ class IndexImporterMixin(object):
           JOIN cw_findingaid fa ON fa.cw_eid = fac.cw_finding_aid
         WHERE fa.cw_service = %(s)s
         UNION
-        SELECT DISTINCT a.cw_eid, a1.cw_label, '{etype}'
+        SELECT DISTINCT a.cw_eid, {a1label}, '{etype}'
         FROM
            {authtable} a
            JOIN grouped_with_relation ga ON a.cw_eid=ga.eid_to
@@ -337,7 +357,7 @@ class IndexImporterMixin(object):
            JOIN cw_findingaid fa ON fa.cw_eid = i.eid_to
         WHERE fa.cw_service = %(s)s
         UNION
-        SELECT DISTINCT a.cw_eid, a1.cw_label, '{etype}'
+        SELECT DISTINCT a.cw_eid, {a1label}, '{etype}'
         FROM
           {authtable} a
           JOIN grouped_with_relation ga ON a.cw_eid=ga.eid_to
@@ -350,7 +370,7 @@ class IndexImporterMixin(object):
          """
         q = (
             " union ".join(
-                template.format(etype=e, authtable=at, indextable=it, label=label)
+                template.format(etype=e, authtable=at, indextable=it, label=label, a1label=a1label)
                 for e, at, it in (
                     ("LocationAuthority", "cw_locationauthority", "cw_geogname"),
                     ("SubjectAuthority", "cw_subjectauthority", "cw_subject"),
@@ -366,7 +386,7 @@ class IndexImporterMixin(object):
             WHERE
               p.cw_service = %(s)s
             UNION
-            SELECT DISTINCT a.cw_eid, a1.cw_label, 'AgentAuthority'
+            SELECT DISTINCT a.cw_eid, {a1label}, 'AgentAuthority'
             FROM
               cw_agentauthority a
               JOIN grouped_with_relation ga ON a.cw_eid=ga.eid_to
@@ -375,12 +395,16 @@ class IndexImporterMixin(object):
             WHERE
               p.cw_service = %(s)s
         """.format(
-                label=label
+                label=label, a1label=a1label
             )
         )
         self.all_authorities = self.global_authorities.copy()
         sql = self.store._cnx.system_sql
-        self.log.info("start fetching authorities for service with eid %s", service_eid)
+        self.log.info(
+            "Start fetching authorities for service with eid %s with index policy: %r",
+            service_eid,
+            autodedupe_authorities,
+        )
         for autheid, authlabel, authtype in sql(q, {"s": service_eid}).fetchall():
             self.all_authorities[hash((authtype, authlabel, service_eid))] = autheid
         self.log.info("end fetching authorities %s", service_eid)
@@ -478,8 +502,8 @@ class CSVIntegrityError(Exception):
     pass
 
 
-def load_metadata_file(filename):
-    """ expected columns are:
+def load_metadata_file(metadata_filepath, csv_filename=None):
+    """expected columns are:
     ['identifiant_URI', 'date1' 'date2',
     'description', 'format', 'langue', 'index_collectivite',
     'index_lieu', 'conditions_acces', 'index_personne', 'origine',
@@ -489,9 +513,11 @@ def load_metadata_file(filename):
     all_metadata = {}
     csv_empty_value = 'Missing required value for column "{col}", row "{row}"'
     csv_missing_col = 'The required column "{col}" is missing'
+    wrong_idfile = 'The "{rn}" was not found in "identifiant_fichier" column of "{mf}"'
     mandatory_columns = ("identifiant_fichier", "titre")
     errors = []
-    with open(filename) as f:
+    csv_filenames = []
+    with open(metadata_filepath) as f:
         reader = csv.DictReader(f)
         for i, row in enumerate(reader):
             if i == 0:
@@ -507,6 +533,7 @@ def load_metadata_file(filename):
                     if not row[col]
                 ]
             )
+            csv_filenames.append(row["identifiant_fichier"].strip())
             if not errors:
                 row = clean_row(row)
                 for indextype in (
@@ -519,6 +546,8 @@ def load_metadata_file(filename):
                 # extension is not removed from 'identifiant_fichier' but
                 # probaly should be as it is dont in default_csv_metadata
                 all_metadata[row["identifiant_fichier"].strip()] = row
+    if csv_filename and csv_filename not in csv_filenames:
+        errors.append(wrong_idfile.format(mf=osp.basename(metadata_filepath), rn=csv_filename))
     if errors:
         raise CSVIntegrityError(" ;\n ".join(errors))
     return all_metadata
@@ -613,7 +642,8 @@ class ExtentityWithIndexImporter(IndexImporterMixin, OptimizedExtEntitiesImporte
         log=None,
     ):
         if log is None:
-            self.log = LOGGER
+            log = LOGGER
+        self.log = log
         self.index_policy = index_policy
         # XXX, redundant with ExtEntitiesImporter's __init__ but required by
         # `_init_authorities()`
@@ -754,15 +784,14 @@ def clean_values(values):
 def usha1(content):
     if isinstance(content, str):
         content = content.encode("utf-8")
-    return str(hashlib.sha1(content).hexdigest())
+    return compute_file_data_hash(content)
 
 
 YEAR_RE = re.compile("[0-9]{4}")
 
 
 def get_year(date):
-    """Extract a year from a string representing a date
-    """
+    """Extract a year from a string representing a date"""
     if not date:
         return
     year = YEAR_RE.findall(date)
@@ -875,7 +904,9 @@ def capture_exception(exc, filepath):
 def load_services_map(cnx):
     services = {}
     rset = cnx.execute(
-        "Any X, C, N, N2, SN WHERE X is Service, " "X code C, X name N, X name2 N2, X short_name SN"
+        """Any X, C, N, N2, SN, L WHERE X is Service,
+        X code C, X name N, X name2 N2, X short_name SN,
+        X level L"""
     )
     for service in rset.entities():
         code = service.code
@@ -892,16 +923,43 @@ def service_infos_from_filepath(filepath, services_map):
     infos = None
     for service_code, service in services_map.items():
         if filename.upper().startswith("{}_".format(service_code)):
-            infos = {"code": service_code, "name": service.publisher(), "eid": service.eid}
+            infos = {
+                "code": service_code,
+                "name": service.publisher(),
+                "title": service.dc_title(),
+                "level": service.level,
+                "eid": service.eid,
+            }
             break
     if infos is None:
         service_code = default_service_name(filename).upper()
         infos = {
             "code": service_code,
             "name": service_code,
+            "title": service_code,
+            "level": None,
             "eid": None,
         }
     return infos
+
+
+def service_infos_from_service_code(service_code, services_map):
+    service = services_map.get(service_code)
+    if service:
+        return {
+            "code": service_code,
+            "name": service.publisher(),
+            "title": service.dc_title(),
+            "level": service.level,
+            "eid": service.eid,
+        }
+    return {
+        "code": service_code,
+        "name": service_code,
+        "title": service_code,
+        "level": None,
+        "eid": None,
+    }
 
 
 def default_service_name(name):

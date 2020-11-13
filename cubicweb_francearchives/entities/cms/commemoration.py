@@ -32,7 +32,8 @@ from logilab.common.decorators import cachedproperty
 
 from cubicweb.entities import fetch_config
 
-from cubicweb_francearchives.entities.cms import CmsObject
+from cubicweb_francearchives.entities.cms import CmsObject, TranslatableCmsObject, TranslationMixin
+from cubicweb_francearchives.entities.cms import RelatedAutorityIndexableMixin
 
 
 class CommemoCollection(CmsObject):
@@ -49,9 +50,15 @@ class CommemoCollection(CmsObject):
         return self.dc_title()
 
 
-class CommemorationItem(CmsObject):
+class CommemorationItem(RelatedAutorityIndexableMixin, TranslatableCmsObject):
     __regid__ = "CommemorationItem"
     image_rel_name = "commemoration_image"
+    i18nfields = ("title", "subtitle", "content")
+
+    def dc_title(self):
+        if self._cw.lang == "fr":
+            return self.title
+        return self.cw_adapt_to("ITemplatable").entity_param().title
 
     @cachedproperty
     def collection(self):
@@ -63,6 +70,11 @@ class CommemorationItem(CmsObject):
     def author_indexes(self):
 
         return self._cw.execute(
-            "DISTINCT Any X, XL WHERE E eid %(e)s, " "E related_authority X, X label XL",
+            "DISTINCT Any X, XL WHERE E eid %(e)s, "
+            "E related_authority X, X label XL, X is AgentAuthority",
             {"e": self.eid},
         )
+
+
+class CommemorationItemTranslation(TranslationMixin, CmsObject):
+    __regid__ = "CommemorationItemTranslation"

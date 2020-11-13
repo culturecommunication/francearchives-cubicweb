@@ -1,0 +1,65 @@
+<section class="glossaryview">
+  {% block head %}
+    <h1>{{ title }}</h1>
+  {% endblock %}
+  {% if card %}
+    <div class="glossary-card">{{ card }}</div>
+    {% if card and editable %}
+      <a href="{{ base_url }}/glossary-card" class="edit-link">{{ _('Edit the card') }} <i class="fa fa-edit"></i></a>
+    {% endif %}
+  {% endif %}
+
+  <div class="row glossary-content">
+    <div class="hidden-xs col-sm-3 col-md-2">
+      <div class="glossary-alphabet-sticky">
+        <div class="glossary-alphabet">
+        {% for letter in letters%}
+          <a href="#{{ letter }}">{{ letter }} </a>
+          {% if not loop.last %}
+            <i class="rhombus"></i>
+          {% endif %}
+        {% endfor %}
+        </div>
+      </div>
+    </div>
+    <div class="hidden-sm hidden-md hidden-lg hidden-xl">
+      <div class="glossary-alphabet">
+      {% for letter in letters%}
+         <a href="#{{ letter }}">{{ letter }} </a>
+         {% if not loop.last %}
+           <i class="rhombus"></i>
+         {% endif %}
+       {% endfor %}
+       </div>
+    </div>
+
+    <div class="col-sm-9 col-md-10 glossary-items">
+    {% for letter in letters %}
+      <h2 id="{{ letter }}" class="glossary-letter">{{ letter }}</h2>
+      {% for eid, term, description, anchor in glossary[letter] %}
+        {% set link= glossary_url+ "#" + anchor %}
+        <div class="glossary-item" id="{{ anchor }}">
+          <div class="glossary-item__term">{{ term }}
+            {% if editable %}
+            <a class="edit-link" href="{{ base_url }}/glossaryterm/{{eid}}"><i class="fa fa-edit"></i></a>
+            {% endif %}
+          </div>
+          <div class="glossary-item__definition">{{ description }}</div>
+          {% if editable %}
+          <div class="glossary-item__edition well">
+            <p>
+              <span class="glossary-item__edition_label">{{_('Copy the glossary term link') }}</span>
+               <a href="{{link}}">{{link}}</a>
+            <p>
+            <p>
+              <span class="glossary-item__edition_label">{{_('Edit the glossary term') }}</span>
+              <a href="{{ base_url }}/glossaryterm/{{eid}}">{{ base_url }}/glossaryterm/{{eid}}</a>
+            </p>
+          </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    {% endfor %}
+    </div>
+  </div>
+</section>

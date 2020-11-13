@@ -69,7 +69,7 @@ class CSVRenderer(object):
 
 class PrettyJSON(JSON):
     def __call__(self, info):
-        """ Returns a pretty JSON-encoded string if ``pretty``
+        """Returns a pretty JSON-encoded string if ``pretty``
         is present in ``request.params``"""
 
         def _render(value, system):

@@ -202,7 +202,7 @@ class IFullTextIndexSerializableTC(
     @patch("elasticsearch.client.Elasticsearch.index")
     def test_is_a_publication(self, index, exists):
         """es_json['cw_etype'] of BaseContent which is a publication
-           (in `publication` section) must be Publication
+        (in `publication` section) must be Publication
         """
         with self.admin_access.cnx() as cnx:
             service = cnx.create_entity("Service", category="cat", name="Service", short_name="s1")
@@ -223,7 +223,7 @@ class IFullTextIndexSerializableTC(
     @patch("elasticsearch.client.Elasticsearch.index")
     def test_is_not_a_publication(self, index, exists):
         """es_json['cw_type'] of BaseContent which is not a publication
-           (not in `publication` section) must be BaseContent
+        (not in `publication` section) must be BaseContent
         """
         with self.admin_access.cnx() as cnx:
             service = cnx.create_entity("Service", category="cat", name="Service", short_name="s1")
@@ -265,6 +265,65 @@ class IFullTextIndexSerializableTC(
             cnx.commit()
             es_json = basecontent.cw_adapt_to("IFullTextIndexSerializable").serialize()
             self.assertEqual(es_json["publisher"], ["s1", "s2"])
+
+    @patch("elasticsearch.client.indices.IndicesClient.exists")
+    @patch("elasticsearch.client.Elasticsearch.index")
+    def test_translated_basecontent(self, index, exists):
+        with self.admin_access.cnx() as cnx:
+            basecontent = cnx.create_entity(
+                "BaseContent", title="programme", content="<h1>31 juin</h1>"
+            )
+            cnx.commit()
+            translation = cnx.create_entity(
+                "BaseContentTranslation",
+                language="en",
+                title="program",
+                content="<h1>31 june</h1>",
+                translation_of=basecontent,
+            )
+            basecontent = cnx.find("BaseContent", eid=basecontent.eid).one()
+            translation = cnx.find("BaseContentTranslation", eid=translation.eid).one()
+            es_json = basecontent.cw_adapt_to("IFullTextIndexSerializable").serialize()
+            tes_json = translation.cw_adapt_to("IFullTextIndexSerializable").serialize()
+            for attr, value in (
+                ("cw_etype", "BaseContent"),
+                ("eid", basecontent.eid),
+                ("content", "31 juin"),
+                ("content_en", "31 june"),
+                ("title", "programme"),
+                ("title_en", "program"),
+            ):
+                self.assertEqual(tes_json[attr], value)
+                self.assertEqual(es_json[attr], value)
+
+    @patch("elasticsearch.client.indices.IndicesClient.exists")
+    @patch("elasticsearch.client.Elasticsearch.index")
+    def test_delete_translated_basecontent(self, index, exists):
+        with self.admin_access.cnx() as cnx:
+            basecontent = cnx.create_entity(
+                "BaseContent", title="programme", content="<h1>31 juin</h1>"
+            )
+            cnx.commit()
+            translation = cnx.create_entity(
+                "BaseContentTranslation",
+                language="en",
+                title="program",
+                content="<h1>31 june</h1>",
+                translation_of=basecontent,
+            )
+            cnx.commit()
+            translation.cw_delete()
+            basecontent = cnx.find("BaseContent", eid=basecontent.eid).one()
+            es_json = basecontent.cw_adapt_to("IFullTextIndexSerializable").serialize()
+            for attr, value in (
+                ("cw_etype", "BaseContent"),
+                ("eid", basecontent.eid),
+                ("content", "31 juin"),
+                ("title", "programme"),
+            ):
+                self.assertEqual(es_json[attr], value)
+            for attr in ("content_en", "title_en"):
+                self.assertNotIn(attr, es_json)
 
     @patch("elasticsearch.client.indices.IndicesClient.exists")
     @patch("elasticsearch.client.Elasticsearch.index")
@@ -320,6 +379,52 @@ class IFullTextIndexSerializableTC(
 
     @patch("elasticsearch.client.indices.IndicesClient.exists")
     @patch("elasticsearch.client.Elasticsearch.index")
+    def test_translated_section(self, index, exists):
+        """
+        Trying: create a Section and its spanish Translation
+        Expecting: Translation's IFullTextIndexSerializable adapter returns the Section
+        """
+        with self.admin_access.cnx() as cnx:
+            section = cnx.create_entity(
+                "Section",
+                title="rubirque",
+                subtitle="test",
+                short_description="court",
+                content="<p>content</p>",
+            )
+            cnx.commit()
+            translation = cnx.create_entity(
+                "SectionTranslation",
+                language="es",
+                title="tema",
+                subtitle="prueba",
+                content="<p>contenido</p>",
+                short_description="corto",
+                translation_of=section,
+            )
+            cnx.commit()
+            section = cnx.find("Section", eid=section.eid).one()
+            translation = cnx.find("SectionTranslation", eid=translation.eid).one()
+            tes_json = translation.cw_adapt_to("IFullTextIndexSerializable").serialize()
+            ses_json = section.cw_adapt_to("IFullTextIndexSerializable").serialize()
+            for attr, value in (
+                ("cw_etype", "Section"),
+                ("eid", section.eid),
+                ("content", "content"),
+                ("content_es", "contenido"),
+                ("title", "rubirque"),
+                ("title_es", "tema"),
+                ("subtitle_es", "prueba"),
+                ("short_description_es", "corto"),
+            ):
+                self.assertEqual(tes_json[attr], value)
+                self.assertEqual(ses_json[attr], value)
+            for attr in ("subtitle", "short_description"):
+                self.assertNotIn(attr, tes_json)
+                self.assertNotIn(attr, ses_json)
+
+    @patch("elasticsearch.client.indices.IndicesClient.exists")
+    @patch("elasticsearch.client.Elasticsearch.index")
     def test_map_esdoc(self, index, exists):
         with self.admin_access.cnx() as cnx:
             s1 = cnx.create_entity("Section", title="s1", name="s1")
@@ -363,6 +468,47 @@ class IFullTextIndexSerializableTC(
                 },
                 esdoc,
             )
+
+    @patch("elasticsearch.client.indices.IndicesClient.exists")
+    @patch("elasticsearch.client.Elasticsearch.index")
+    def test_translated_commemo(self, index, exists):
+        with self.admin_access.cnx() as cnx:
+            ce = cnx.create_entity
+            commemo = ce(
+                "CommemorationItem",
+                title="commemoration",
+                alphatitle="commemoration",
+                subtitle="sous-titre",
+                content="contenu",
+                commemoration_year=1500,
+                collection_top=ce("CommemoCollection", title="Moyen Age", year=1500),
+            )
+            cnx.commit()
+            translation = cnx.create_entity(
+                "CommemorationItemTranslation",
+                language="de",
+                title="Gedenkschrift",
+                subtitle="Untertitel",
+                content="<h1>Inhalt</h1>",
+                translation_of=commemo,
+            )
+            cnx.commit()
+            commemo = cnx.find("CommemorationItem", eid=commemo.eid).one()
+            translation = cnx.find("CommemorationItemTranslation", eid=translation.eid).one()
+            es_json = commemo.cw_adapt_to("IFullTextIndexSerializable").serialize()
+            tes_json = translation.cw_adapt_to("IFullTextIndexSerializable").serialize()
+            for attr, value in (
+                ("cw_etype", "CommemorationItem"),
+                ("eid", commemo.eid),
+                ("title", "commemoration"),
+                ("title_de", "Gedenkschrift"),
+                ("subtitle", "sous-titre"),
+                ("subtitle_de", "Untertitel"),
+                ("content", "contenu"),
+                ("content_de", "Inhalt"),
+            ):
+                self.assertEqual(es_json[attr], value)
+                self.assertEqual(tes_json[attr], value)
 
 
 class ISuggestIndexSerializableTC(EsSerializableMixIn, PostgresTextMixin, testlib.CubicWebTC):

@@ -35,6 +35,7 @@ from cubicweb_elasticsearch.es import get_connection
 from cubicweb_francearchives.dataimport import es_bulk_index
 
 import logging
+
 LOGGER = logging.getLogger()
 
 
@@ -43,37 +44,36 @@ UNINDEX_CARDS = []
 rql("SET X do_index False WHERE X is Card, X wikiid ILIKE 'alert%%'")
 rql("SET X do_index False WHERE X is Card, X wikiid ILIKE 'tableau-circulaires-%%'")
 
-UNINDEX_CARDS.extend([r[0] for r in
-                      rql("Any X WHERE X is Card, X wikiid ILIKE 'tableau-circulaires-%%'")])
-UNINDEX_CARDS.extend([r[0] for r in
-                      rql("Any X WHERE X is Card, X wikiid ILIKE 'alert%%'")])
-UNINDEX_CARDS.extend([r[0] for r in
-                      rql("Any X WHERE X is Card, X wikiid ILIKE 'newsletter%%'")])
-
-
-
-for lang in ('es', 'de', 'en'):
-    UNINDEX_CARDS.extend(
-        [r[0] for r in
-         rql("""Any X WHERE X wikiid ILIKE "%%-{}", X content NULL""".format(lang))])
-    rql("""DELETE Card X WHERE X wikiid ILIKE "%-{}",
-            X content NULL""".format(lang))
-
 UNINDEX_CARDS.extend(
-    [r[0] for r in
-     rql('Any X WHERE X wikiid "cgu-fr"')
-    ])
+    [r[0] for r in rql("Any X WHERE X is Card, X wikiid ILIKE 'tableau-circulaires-%%'")]
+)
+UNINDEX_CARDS.extend([r[0] for r in rql("Any X WHERE X is Card, X wikiid ILIKE 'alert%%'")])
+UNINDEX_CARDS.extend([r[0] for r in rql("Any X WHERE X is Card, X wikiid ILIKE 'newsletter%%'")])
+
+
+for lang in ("es", "de", "en"):
+    UNINDEX_CARDS.extend(
+        [r[0] for r in rql("""Any X WHERE X wikiid ILIKE "%%-{}", X content NULL""".format(lang))]
+    )
+    rql(
+        """DELETE Card X WHERE X wikiid ILIKE "%-{}",
+            X content NULL""".format(
+            lang
+        )
+    )
+
+UNINDEX_CARDS.extend([r[0] for r in rql('Any X WHERE X wikiid "cgu-fr"')])
 rql('DELETE Card X WHERE X wikiid "cgu-fr"')
 commit()
 
-CMS_ES_PARAMS =  {
+CMS_ES_PARAMS = {
     "elasticsearch-locations": cnx.vreg.config["elasticsearch-locations"],
 }
 
 
 es = get_connection(CMS_ES_PARAMS)
-index_name =  cnx.vreg.config["index-name"] + "_all",
-published_index_name = cnx.vreg.config["published-index-name"] + "_all",
+index_name = cnx.vreg.config["index-name"] + "_all"
+published_index_name = cnx.vreg.config["published-index-name"] + "_all"
 for eid in UNINDEX_CARDS:
     for index in (index_name, published_index_name):
         print("deleting on {}/{}".format(eid, index_name))
