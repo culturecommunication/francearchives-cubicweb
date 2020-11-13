@@ -226,7 +226,8 @@ class AgentAuthority(EntityRDFAdapter):
                 if dateinfo and dateinfo["isdate"] and not dateinfo["isbc"]:
                     yield ("schema", dtype, dateinfo["timestamp"], {})
             yield ("schema", "description", info["description"], {})
-        yield ("schema", "givenName", entity.label, {})
+        yield ("schema", "name", entity.label, {})
+        yield ("schema", "url", self.uri, {})
 
     def extra_statements(self):
         for url in self.entity.same_as_refs:
@@ -395,9 +396,9 @@ class FindingAid2EDM(EDMComponentMixin, EntityRDFAdapter):
         for stmt in super(FindingAid2EDM, self).properties():
             yield stmt
         entity = self.entity
-        yield ("dcterms", "publisher", entity.publisher, {})
+        yield ("dcterms", "publisher", entity.publisher, {})  # should be an URI ?
         if entity.service:
-            yield ("dcterms", "publisher", entity.service[0].absolute_url(), {})
+            yield ("dcterms", "publisher", entity.service[0].absolute_url(), None)
         if entity.fa_header[0].lang_code:
             yield ("dcterms", "language", entity.fa_header[0].lang_code, {})
 

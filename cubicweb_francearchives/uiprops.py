@@ -43,6 +43,7 @@ PNIA_JAVASCRIPTS = [
     data("jquery-3.1.1.min.js"),
     data("jquery-typeahead/jquery.typeahead.min.js"),
     data("cubes.pnia_portal.js"),
+    data("js/bootstrap.min.js"),
 ]  # noqa
 
 # to be removed

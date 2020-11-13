@@ -56,14 +56,17 @@ def process_html_as_xml(func):
         if not html:
             return None
         # security belt
-        eid = kwargs.get("eid")
-        if not html.startswith("<"):
+        stripped = html.strip()
+        if not stripped:
             return html
-        if html.startswith("<body"):
+        if not stripped.startswith("<"):
+            return html
+        if stripped.startswith("<body"):
             return html
         try:
             fragments = lxml_html.fragments_fromstring(html)
         except Exception as err:
+            eid = kwargs.get("eid")
             log("Invalid html: {}".format(err), eid)
             return html
         if fragments:

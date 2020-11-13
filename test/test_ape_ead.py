@@ -41,6 +41,8 @@ import unittest
 from lxml import etree
 
 from cubicweb.devtools.testlib import CubicWebTC
+
+
 from cubicweb_francearchives.dataimport.ead import transform_ape_ead_file
 from cubicweb_francearchives.dataimport.eadreader import preprocess_ead
 
@@ -69,7 +71,9 @@ class ApeEadTransformationTest(PostgresTextMixin, CubicWebTC):
             shutil.rmtree(appdir)
 
     def get_elements(
-        self, tree, tag,
+        self,
+        tree,
+        tag,
     ):
         return tree.xpath("//e:{}".format(tag), namespaces={"e": tree.nsmap[None]})
 
@@ -93,9 +97,29 @@ class ApeEadTransformationTest(PostgresTextMixin, CubicWebTC):
             elts = self.get_elements(tree, tag)
             self.assertEqual(len(elts), nb)
 
+    def test_ape_ead_conversion_countrycode(self):
+        """Test countrycode attributes on <eadid>
+
+        Trying: generate an ape_ead file
+        Expecting: countrycode attributes is correctly set
+        """
+        filepath = "ead_complet.xml"
+        ape_filepath = self.ape_ead_filepath(filepath)
+        fa_url = "https://francearchives.fr/1234"
+        tree = preprocess_ead(self.datapath(self.ape_ead_dir, filepath))
+        transform_ape_ead_file(fa_url, tree, ape_filepath)
+        # test ead source file
+        # test ape_ead resulting  file
+        filepath = self.datapath(osp.join("ape_ead_data"), ape_filepath)
+        # use etree.parse to let lxml handle file and encoding
+        tree = etree.parse(filepath).getroot()  # returns _ElementTree use getroot() to get Element
+        eadid = tree.xpath("//e:eadid", namespaces={"e": tree.nsmap[None]})[0]
+        print(eadid.attrib)
+        self.assertEqual(eadid.attrib["countrycode"], "FR")
+
     def test_ape_full_ead_conversion(self):
         """test the newly generated ape file as exactly the same as the witness
-           ape file (ape_ead_complet_expected.xml)
+        ape file (ape_ead_complet_expected.xml)
         """
         self.maxDiff = 0
         filepath = "ead_complet.xml"

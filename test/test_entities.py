@@ -159,13 +159,12 @@ class EntitiesTC(HashMixIn, testlib.CubicWebTC):
                 service=serviceid,
                 fa_header=cnx.create_entity("FAHeader"),
             )
-            self.assertEqual(fa.bounce_url, search_form_url % {"unitid": fadid.unitid})
+            self.assertEqual(fa.bounce_url, search_form_url.format(unitid=fadid.unitid))
 
     def test_bounce_url_eadid(self):
         with self.admin_access.cnx() as cnx:
             search_form_url = (
-                "https://www.archives71.fr/arkotheque/inventaires/"
-                "ead_ir_consult.php?ref=%(eadid)s"
+                "https://www.archives71.fr/arkotheque/inventaires/" "ead_ir_consult.php?ref={eadid}"
             )
             serviceid = cnx.create_entity(
                 "Service",
@@ -185,7 +184,9 @@ class EntitiesTC(HashMixIn, testlib.CubicWebTC):
                 service=serviceid,
                 fa_header=cnx.create_entity("FAHeader"),
             )
-            self.assertEqual(fa.bounce_url, search_form_url % {"eadid": fa.eadid.replace(" ", "+")})
+            self.assertEqual(
+                fa.bounce_url, search_form_url.format(eadid=fa.eadid.replace(" ", "+"))
+            )
 
     def test_section(self):
         with self.admin_access.cnx() as cnx:
@@ -445,16 +446,17 @@ class AdapterTests(testlib.CubicWebTC):
             ):
                 self.assertIn(data, got)
 
-    def test_card_newsletter(self):
+    def test_card_no_esindex(self):
         """Test serializing Card which should not be indexed in ElasticSearch (do_index is False).
 
         Trying: adapting Card to IFullTextIndexSerializable and calling serialize() method
         Expecting: empty dict
         """
         with self.admin_access.cnx() as cnx:
-            cnx.create_entity("Card", title="foo", wikiid="bar", do_index=False)
-            newsletter = cnx.execute("Any X WHERE X is Card, X do_index False").one()
-            adapter = newsletter.cw_adapt_to("IFullTextIndexSerializable")
+            card = cnx.create_entity("Card", title="foo", wikiid="bar", do_index=False)
+            cnx.commit()
+            card = cnx.find("Card", eid=card.eid).one()
+            adapter = card.cw_adapt_to("IFullTextIndexSerializable")
             self.assertEqual(adapter.serialize(), {})
 
 

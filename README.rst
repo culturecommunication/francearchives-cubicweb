@@ -21,31 +21,50 @@ cubicweb-francearchives is released under the terms of the CeCiLL v2 license.
 La licence complète peut être trouvée dans ce dépot `LICENCE.txt` et
 https://cecill.info/licences/Licence_CeCILL_V2.1-fr.html
 
-Tests
+
+Black
 -----
-
-Pour lancer les tests ::
-
-  tox
-
-Les données utilisées pour les tests ne correspondent pas aux données
-réelles.
-
-Ces fichiers ne doivent pas être utilisés dans un autre but que celui
-de tester la présente application. Le ministère de la Culture décline
-toute responsabilité sur les problèmes et inconvénients, de quelque
-nature qu'ils soient, qui pourraient survenir en raison d'une
-utilisation de ces fichiers à d'autres fins que de tester la présente
-application.
-
 
 Pour lancer **black** ::
 
   black --config pyproject.toml .
 
+Ajouter **black** dans les hooks **hg** ::
+
+créer le script `path_hook` (exemple de code) ::
+
+  #!/bin/sh
+  for fpath in $(hg status --no-status --modified --added | grep ".py$") ; do
+    black ${fpath}
+  done
+
+et appeler le ̀.hg\hgrc` du projet ::
+
+  [hooks]
+  precommit = path_to_hook
+  pre-amend = path_to_hook
+
+
+il est possible d'intégrer la config utilisée pour le projet ::
+
+  #!/bin/sh
+  for fpath in $(hg status --no-status --modified --added | grep ".py$") ; do
+    black --config $1 ${fpath}
+  done
+
+
+et appeler le ̀.hg\hgrc` du projet ::
+
+  [hooks]
+  precommit = path_to_hook pyproject.toml
+  pre-amend = path_to_hook pyproject.toml
+
+
 
 Compilier les css
-----------------
+-----------------
+
+Il est nécessaire d'installer l'outil ``ruby-sass``.
 
 1. Pour compiler la feuille des styles unique utiliser la commande suivante :
 
@@ -96,8 +115,60 @@ Example::
     cubicweb.auth.authtkt.persistent.secure = no
     cubicweb.session.secret = the-secret
 
+
+Tests
+-----
+Lancer les tests avec tox
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Vous aurez besoin de :
+
+ * elasticsearch version 7.x installable en suivant ce guide https://www.elastic.co/guide/en/elasticsearch/reference/current/getting-started-install.html
+ * ``sudo apt-get install poppler-utils`` (pour ``pdftotext``)
+ * ``sudo apt-get install ruby-sass`` (pour ``sass``)
+
+Pour lancer les tests ::
+
+  tox
+
+Pour lancer les tests en parallèle sur plusieurs CPUs, installez `pytest-xdist`.
+
+Les données utilisées pour les tests ne correspondent pas aux données
+réelles.
+
+Ces fichiers ne doivent pas être utilisés dans un autre but que celui
+de tester la présente application. Le ministère de la Culture décline
+toute responsabilité sur les problèmes et inconvénients, de quelque
+nature qu'ils soient, qui pourraient survenir en raison d'une
+utilisation de ces fichiers à d'autres fins que de tester la présente
+application.
+
+**ElasticSearch et Pifpaf**
+
+``pifpaf`` est utilisé pour permettre à ``tox`` de se servir des services installés en
+local. Pour que ``pifpaf`` arrive à lancer ``elasticsearch`` il faut ::
+
+ 1. Ajouter le compte utilisateur servant a lancer ``tox`` au groupe ``elasticsearch``::
+
+    usermod -a -G elasticsearch USER
+
+ 2. Modifier les permissions de `/etc/elasticsearch` ::
+
+    chmod +rx /etc/elasticsearch
+    chmod -R +r /etc/elasticsearch
+    chmod +r /etc/default/elasticsearch
+
+ 3. Modifier les permissions du dossier ``/var/log/elasticsearch``::
+
+    chmod 774 /var/log/elasticsearch
+
+ 4. Modifier les permissions du fichier ``/var/log/elasticsearch/gc.log``::
+
+    chown USER /var/log/elasticsearch/gc.log
+    chmod 664 /var/log/elasticsearch/gc.log
+
 Lancer les tests a11y
-----------------------
+~~~~~~~~~~~~~~~~~~~~~
 
 1. Installer pa11y
 
@@ -106,6 +177,7 @@ Lancer les tests a11y
 2. Lancer les tests
 
    BASEURL=<host:port>/fr  node a11y/test.js
+
 
 Documentation supplémentaire
 ----------------------------

@@ -54,7 +54,7 @@ from cubicweb.web.views.primary import PrimaryView
 from cubes.skos.views import ConceptPrimaryView
 
 from cubicweb_francearchives.entities import DOC_CATEGORY_ETYPES
-from cubicweb_francearchives.views import get_template, rebuild_url, format_number
+from cubicweb_francearchives.views import get_template, rebuild_url, format_number, FaqMixin
 from cubicweb_francearchives.views.search.facets import (
     FACETED_SEARCHES,
     PniaCWFacetedSearch,
@@ -69,7 +69,7 @@ ETYPES_MAP = {
 }
 
 
-class PniaElasticSearchView(ElasticSearchView):
+class PniaElasticSearchView(FaqMixin, ElasticSearchView):
     no_term_msg = _("Contenu")
     title_count_templates = (_("No result"), _("1 result"), _("{count} results"))
     display_results_info = True
@@ -82,6 +82,7 @@ class PniaElasticSearchView(ElasticSearchView):
         ("commemorations", _("Commemorations")),
         ("services", _("archive-services-label")),
     )
+    faq_category = "02_faq_search"
 
     @cachedproperty
     def cached_search_response(self):
@@ -166,6 +167,7 @@ class PniaElasticSearchView(ElasticSearchView):
             "heroimages": False,
             "breadcrumbs": self.breadcrumbs(),
             "meta": [("robots", "noindex")],
+            "faqs": self.faqs_attrs(),
         }
 
     def format_results_title(self, response):
@@ -637,6 +639,7 @@ class SearchCmsChildrenView(PniaElasticSearchWithContextView):
         w = self.w
         entity = self._cw.find("Section", eid=self._cw.form["ancestors"]).one()
         with T.div(w, Class="section-context"):
+            entity = entity.cw_adapt_to("ITemplatable").entity_param()
             with T.h1(self.w):
                 self.w(T.span(entity.title, Class="section-title"))
                 subtitle = entity.printable_value("subtitle")
@@ -754,6 +757,16 @@ class FAInContextView(InContextView):
             self.w(
                 '<a href="%s">%s</a>' % (xml_escape(entity.absolute_url()), xml_escape(cut_title))
             )
+
+
+class ServiceInContextView(InContextView):
+    __select__ = InContextView.__select__ & is_instance("Service")
+
+    def cell_call(self, row, col, es_response=None, **kwargs):
+        entity = self.cw_rset.get_entity(row, col)
+        self.w(
+            "<a href={}>{}</a>".format(xml_escape(entity.url_anchor), xml_escape(entity.dc_title()))
+        )
 
 
 def registration_callback(vreg):

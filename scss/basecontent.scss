@@ -148,12 +148,188 @@
   }
 }
 
-.image-item {
-  margin-bottom: 1em;
+figure.image {
+  display: inline-block;
+  margin: 0 2px;
+
+  img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin-right: 1em;
+  }
 }
 
-.image-item-metadata {
+figure.align-left {
+  float: left;
+
+  img {
+    margin-right: 1em;
+    margin-left: 0em;
+  }
+}
+
+figure.align-right {
+  float: right;
+
+  img {
+    margin-left: 1em;
+    margin-right: 0;
+  }
+}
+
+figure.image figcaption {
+  max-width: 80%;
   font-size: 0.9em;
+  text-align: center;
   margin-top: 1em;
   margin-right: 1em;
+}
+
+/* Toc */
+
+.toc-col {
+ text-align: left;
+ /* border: 1px solid #e3e3e3;
+ border-radius: 4px;
+ font-size: 110%; */
+}
+
+.sticky-toc {
+ background-color: #f5f5f5;
+}
+
+.ui-toc {
+ background-color: #f5f5f5;
+ padding: 1.5em 1em;
+}
+
+
+.toc-label {
+  border: none;
+  white-space: nowrap;
+  color: $royal-blue;
+  font-weight: 700;
+  @extend .lovelo;
+}
+
+.tocbox {
+  max-width: 100%;
+  overflow: auto;
+ /* max-width: 45vw;
+  width: 25vw;
+  max-height: 70vh; */
+}
+
+.tocbox {
+  max-height: calc(85vh - 100px);
+  padding: 5px 0;
+}
+
+ul.toc, ul.toc-links {
+  margin-top: 0.5em;
+  padding-left: 0;
+}
+
+ul.toc li, ul.toc ul {
+  margin: 0;
+  padding: 0;
+}
+
+ul.toc, ul.toc ul, ul.toc-links {
+  list-style: none;
+}
+
+ul.toc a, ul.toc-links a{
+  color: $dark-dodger-blue;
+  color: #333;
+  text-decoration: none;
+  border-bottom: 0;
+  display: block;
+  padding-top: 5px;
+  @include if-wider-than(lg) {
+    font-size: 90%;
+  }
+ /* overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: pre; */
+}
+
+.toc li a:hover, .toc li a:active,
+.toc li.active a, .toc li.active:hover a{
+  color: black;
+  text-decoration: none;
+  background-color: transparent;
+}
+
+.toc li.active>a, .toc li.active:hover>a,
+.toc li>a:hover {
+  border-left: 2px solid #000000;
+}
+
+.toc>li.active>a, .toc>li.active:hover>a,
+.toc>li>a:hover {
+  padding-left: 18px;
+}
+
+.toc-links>li>a {
+  padding-left: 10px;
+}
+
+.toc>li>a {
+  padding-left: 20px;
+}
+
+.toc>li>ul>li.active>a,
+.toc>li>ul>li.active:hover>a,
+.toc>li>ul>li>a:hover {
+  padding-left: 30px;
+}
+
+.toc>li>ul>li>a {
+  padding-left: 32px;
+}
+
+.toc>li>ul>li>ul>li.active>a,
+.toc>li>ul>li>ul>li.active:hover>a,
+.toc>li>ul>li>ul>li>a:hover {
+  padding-left: 42px;
+}
+
+.toc>li>ul>li>ul>li>a {
+  padding-left: 44px;
+}
+
+.toc>li>ul>li>ul>li>ul>li.active>a,
+.toc>li>ul>li>ul>li>ul>li.active:hover>a,
+.toc>li>ul>li>ul>li>ul>li>a:hover {
+  padding-left: 54px;
+}
+
+.toc>li>ul>li>ul>li>ul>li>a {
+  padding-left: 56px;
+}
+
+.toc>li>ul>li>ul>li>ul>li>ul>li.active>a,
+.toc>li>ul>li>ul>li>ul>li>ul>li.active:hover>a,
+.toc>li>ul>li>ul>li>ul>li>ul>li>a:hover {
+  padding-left: 66px;
+}
+
+.toc>li>ul>li>ul>li>ul>li>ul>li>a {
+  padding-left: 68px;
+}
+
+.toc>li>ul>li>ul>li>ul>li>ul>li>ul>li.active>a,
+.toc>li>ul>li>ul>li>ul>li>ul>li>ul>li.active:hover>a,
+.toc>li>ul>li>ul>li>ul>li>ul>li>ul>li>a:hover {
+  padding-left: 78px;
+}
+
+.toc>li>ul>li>ul>li>ul>li>ul>li>ul>li>a {
+  padding-left: 80px;
+}
+
+.toggle-menu, .article-to-top, .article-to-bottom {
+  cursor: pointer;
 }

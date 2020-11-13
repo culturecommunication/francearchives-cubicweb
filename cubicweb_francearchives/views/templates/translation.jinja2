@@ -1,0 +1,39 @@
+<section id="document" class="{{ entity.cw_etype.lower() }}-view">
+  {% block head %}
+    <h1>
+    <span class="dark-grey">{{_("translation_of").capitalize() }}</span>
+    "{{ original }}"
+    </h1>
+  {% endblock %}
+    <div class="content-metadata">
+       {% for data, icon in content_meta %}
+         <div class="content-metadata-item">
+            <i class="fa fa-{{ icon }}" aria-hidden="true"></i>
+            <span> {{ data }} </span>
+         </div>
+       {% endfor %}
+    </div>
+  {% for propname, value in main_props %}
+  <div class="row indexes-values">
+     <div class="col-md-3"><h2 class="no-style">{{ propname }}</h2></div>
+     <div class="col-md-9">{{ value }}</div>
+  </div>
+  {% endfor %}
+
+
+ {% if editable %}
+   <h2>
+     <i class="fa fa-language" aria-hidden="true"></i>
+     <span>{{_("See other translations")}}
+   </h2>
+   <div class="well">
+   {% for lang, trad in translations %}
+      <div class="row indexes-values">
+        <div class="col-md-3"><h2 class="no-style">{{ lang }}</h2></div>
+        <div class="col-md-9">{{ trad }}</div>
+      </div>
+   {% endfor %}
+    </div>
+ {% endif %}
+
+</section>

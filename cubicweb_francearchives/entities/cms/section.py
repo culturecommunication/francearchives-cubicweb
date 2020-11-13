@@ -32,8 +32,13 @@
 """cubicweb-pnia-content section management"""
 
 from cubicweb.entities import fetch_config
+from cubicweb.predicates import is_instance
 
-from cubicweb_francearchives.entities.cms import CmsObject
+from cubicweb_francearchives.entities.cms import CmsObject, TranslatableCmsObject, TranslationMixin
+from cubicweb_francearchives.entities.es import (
+    TranslatableIndexSerializableMixin,
+    PniaIFullTextIndexSerializable,
+)
 
 
 def get_children(cnx, section_eid):
@@ -54,19 +59,26 @@ def get_children(cnx, section_eid):
     return children
 
 
-class Section(CmsObject):
+class Section(TranslatableCmsObject):
     __regid__ = "Section"
     rest_attr = "eid"
     fetch_attrs, cw_fetch_order = fetch_config(
         ["order", "title", "subtitle", "content", "short_description"], order="DESC"
     )
+    i18nfields = ("title", "subtitle", "content", "short_description")
 
     def dc_title(self):
-        titles = [self.title, self.subtitle]
+        if self._cw.lang != "fr":
+            entity = self.cw_adapt_to("ITemplatable").entity_param()
+        else:
+            entity = self
+        titles = [entity.title, entity.subtitle]
         return " - ".join(t for t in titles if t)
 
     def breadcrumbs_title(self):
-        return self.title
+        if self._cw.lang == "fr":
+            return self.title
+        return self.cw_adapt_to("ITemplatable").entity_param().title
 
     def is_commemo_section(self):
         return self.reverse_children and self.reverse_children[0].cw_etype == "CommemoCollection"
@@ -81,3 +93,22 @@ class Section(CmsObject):
     def image(self):
         images = self.reverse_cssimage_of or self.section_image
         return images[0] if images else None
+
+
+class SectionTranslation(TranslationMixin, CmsObject):
+    __regid__ = "SectionTranslation"
+
+    @property
+    def summary_policy(self):
+        return self.original_entity.summary_policy
+
+
+class SectionIFullTextIndexSerializable(
+    TranslatableIndexSerializableMixin, PniaIFullTextIndexSerializable
+):
+    __select__ = PniaIFullTextIndexSerializable.__select__ & is_instance("Section")
+
+    def serialize(self, complete=True, **kwargs):
+        data = super(SectionIFullTextIndexSerializable, self).serialize(complete)
+        data.update(self.add_translations(complete=complete, **kwargs))
+        return data

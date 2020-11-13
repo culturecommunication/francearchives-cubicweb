@@ -29,6 +29,7 @@
 # knowledge of the CeCILL-C license and that you accept its terms.
 #
 """cubicweb-francearcihves tests for postgres utils"""
+import string
 
 from cubicweb.devtools import testlib  # noqa
 from cubicweb.devtools import PostgresApptestConfiguration
@@ -48,28 +49,29 @@ class SQLUtilsBaseTC(PostgresTextMixin, testlib.CubicWebTC):
             for label, expected in (
                 ("Charles de Gaulle", "charles de gaulle"),
                 ("Charles   de Gaulle", "charles de gaulle"),
-                ("Charles, Gaulle (de)", "charles de gaulle"),
-                ("Gaulle de, Charles", "charles de gaulle"),
+                ("Charles, Gaulle (de)", "charles gaulle de"),
+                ("Gaulle de, Charles", "gaulle de charles"),
                 ("Charles (de)   Gaulle", "charles de gaulle"),
-                ("Charles de Gaulle (1890-1970)", "charles de gaulle"),
-                ("Charles de Gaulle (1890 - 1970)", "charles de gaulle"),
-                ("Charles de Gaulle (1890 - 1970)", "charles de gaulle"),
-                ("Liszt, Franz (1811-1886)", "franz liszt"),
-                ("Liszt (Franz)", "franz liszt"),
-                ("debré, jean-louis (1944-....)", "debre jeanlouis"),
-                ("DEBRE, Jean-Louis", "debre jeanlouis"),
-                ("Debré, Jean-Louis", "debre jeanlouis"),
-                ("Tavel... (de)", "de tavel"),
-                ("Bonaparte, Élisa (1777-1820)", "bonaparte elisa"),
+                ("Charles de Gaulle (1890-1970)", "charles de gaulle 1890 1970"),
+                ("Charles de Gaulle (1890 - 1970)", "charles de gaulle 1890 1970"),
+                ("Charles de Gaulle (1890 - 1970)", "charles de gaulle 1890 1970"),
+                ("Liszt, Franz (1811-1886)", "liszt franz 1811 1886"),
+                ("Liszt (Franz)", "liszt franz"),
+                ("Guerre d'Algérie (1954-1962)", "guerre d algerie 1954 1962"),
+                ("debré, jean-louis (1944-....)", "debre jean louis 1944"),
+                ("DEBRE, Jean-Louis", "debre jean louis"),
+                ("Debré, Jean-Louis", "debre jean louis"),
+                ("Tavel... (de)", "tavel de"),
+                ("Bonaparte, Élisa (1777-1820)", "bonaparte elisa 1777 1820"),
                 ("Deboraüde ?", "deboraude"),
-                ("Tavel… (de)", "de tavel."),
+                ("Tavel… (de)", "tavel. de"),
                 (
                     "Blein (Ange François Alexandre) , général",
-                    "alexandre ange blein francois general",
+                    "blein ange francois alexandre general",
                 ),
                 (
                     "Route nationale (n° 120) -- Cantal (France)",
-                    "120 cantal france n_ nationale route",
+                    "route nationale n_ 120 cantal france",
                 ),
                 (
                     (
@@ -77,10 +79,11 @@ class SQLUtilsBaseTC(PostgresTextMixin, testlib.CubicWebTC):
                         """de la journée nationale des orphelins de guerre (France)"""
                     ),
                     (
-                        "a_ comite_ dattribution de de des des fonds france "
-                        "guerre journe_e la loccasion nationale orphelins recueillis"
+                        """comite_ d attribution des fonds recueillis a_ l occasion """
+                        """de la journe_e nationale des orphelins de guerre france"""
                     ),
                 ),
+                ("Punctuation {}".format(string.punctuation), "punctuation"),
             ):
                 got = cnx.system_sql(query, {"label": label}).fetchall()[0][0]
                 self.assertEqual(expected, got)
@@ -96,8 +99,8 @@ class SQLUtilsBaseTC(PostgresTextMixin, testlib.CubicWebTC):
                 (
                     "Gauthier de rougemont, chef d’escadron",
                     [
-                        "chef de d'escadron gauthier rougemont",
-                        "chef d'escadron de gauthier rougemont",
+                        "gauthier de rougemont chef d'escadron",
+                        "gauthier de rougemont chef d escadron",
                     ],
                 ),
             ):

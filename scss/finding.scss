@@ -44,11 +44,14 @@
 }
 
 .indexes-values {
-  h2 {
+  h2, h2>a {
     color: $dark-grey;
-    font-weight: bold;
   }
 
+  h2 {
+    font-weight: bold;
+  }
+ 
   &__title {
     font-weight: bold;
   }

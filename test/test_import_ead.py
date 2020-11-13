@@ -29,6 +29,9 @@
 # knowledge of the CeCILL-C license and that you accept its terms.
 #
 import unittest
+
+from datetime import datetime
+
 from io import StringIO
 
 from lxml import etree
@@ -44,8 +47,15 @@ from cubicweb.devtools.testlib import BaseTestCase, CubicWebTC
 from cubicweb.dataimport.stores import RQLObjectStore
 
 from cubicweb_francearchives.testutils import PostgresTextMixin, EADImportMixin, HashMixIn
+from cubicweb_francearchives.testutils import format_date
 from cubicweb_francearchives.utils import merge_dicts, pick
-from cubicweb_francearchives.dataimport import ead, eadreader, usha1, load_services_map
+from cubicweb_francearchives.dataimport import (
+    ead,
+    eadreader,
+    usha1,
+    load_services_map,
+    service_infos_from_filepath,
+)
 from cubicweb_francearchives.dataimport.sqlutil import delete_from_filename
 
 from pgfixtures import setup_module, teardown_module  # noqa
@@ -121,7 +131,11 @@ class EADTests(BaseTestCase, HashMixIn):
         reader = eadreader.EADXMLReader(tree)
         self.assertEqual(
             pick(reader.fa_properties["did"], "unitdate", "startyear", "stopyear"),
-            {"unitdate": "XIXe-XXe siècles", "startyear": 1801, "stopyear": 2000,},
+            {
+                "unitdate": "XIXe-XXe siècles",
+                "startyear": 1801,
+                "stopyear": 2000,
+            },
         )
 
     def test_parse_date_range(self):
@@ -147,6 +161,24 @@ class EADTests(BaseTestCase, HashMixIn):
         comp_ids = [cnode.get("id") for cnode, cprops in reader.walk()]
         self.assertEqual(comp_ids, ["tt1-1", "tt2", "tt2-1", "tt2-1-3"])
 
+    def test_type_external_link(self):
+        """Test using <unitid>'s <exptr> tag as first choice if
+        <untid> tag has attribute type="external_link".
+
+        Trying: importing file containing 1 FAComponent having <unitid type="external_link">
+        and FAComponents without
+        Expecting: former FAComponent's exptr_link is <exptr> tag's content and latter
+        FAComponents' exptr_link values are not set
+        """
+        tree = eadreader.preprocess_ead(self.datapath("ir_data/FRAD037_E_3E18_excerpt.xml"))
+        for c in tree.xpath("//c"):
+            did = c.find("did")
+            extptr = eadreader.did_infos(did)["extptr"]
+            if c.attrib.get("id") == "a011532005657UEJhy8":
+                self.assertEqual(extptr, "https://archives.touraine.fr/ark:/37621/gq7m1w4nrxf9")
+            else:
+                self.assertIsNone(extptr)
+
 
 class EADNodropImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
     readerconfig = merge_dicts({}, EADImportMixin.readerconfig, {"nodrop": False})
@@ -166,6 +198,18 @@ class EADNodropImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
 
 
 class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
+    def setup_database(self):
+        super(EADImporterTC, self).setup_database()
+        with self.admin_access.cnx() as cnx:
+            cnx.create_entity(
+                "Service",
+                category="?",
+                name="Les Archives Nationales",
+                short_name="Les AN",
+                code="fran",
+            )
+            cnx.commit()
+
     def test_record_id(self):
         with self.admin_access.cnx() as cnx:
             ce = cnx.create_entity
@@ -400,7 +444,11 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
                 if e.did[0].unittitle.startswith("Inventaire après dissolution"):
                     fc = e
             index_entries = [
-                (ie.authority[0].cw_etype, ie.authority[0].label, ie.type,)
+                (
+                    ie.authority[0].cw_etype,
+                    ie.authority[0].label,
+                    ie.type,
+                )
                 for ie in fc.reverse_index
             ]
             expected = [
@@ -499,20 +547,10 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
 
     def test_services_normalization(self):
         with self.admin_access.cnx() as cnx:
-            service = cnx.create_entity(
-                "Service",
-                category="?",
-                name="Les Archives Nationales",
-                short_name="Les AN",
-                code="fran",
-            )
             cnx.commit()
-            self.import_filepath(
-                cnx,
-                self.datapath("FRAN_IR_022409.xml"),
-                {"name": "Les AN", "eid": service.eid, "code": "FRAN",},
-            )
+            self.import_filepath(cnx, self.datapath("FRAN_IR_022409.xml"))
             fa = cnx.find("FindingAid").one()
+            service = cnx.find("Service", code="fran").one()
             self.assertEqual(fa.related_service.eid, service.eid)
             self.assertEqual(fa.publisher, "Les AN")
 
@@ -694,6 +732,11 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
             self.assertIn(expected, fa.description)
 
     def test_concept_alignment(self):
+        """
+        Trying: create a Concept in "thesaurus W" with `poIssON` label and import an IR with
+        `poisson` and `Poisson` labeled subjects under "service/strict" index policy
+        Expecting: both SubjectAuthorities are related to the `poIssON` concept
+        """
         with self.admin_access.cnx() as cnx:
             scheme = cnx.create_entity("ConceptScheme", title="thesaurus W")
             c1 = cnx.create_entity("Concept", in_scheme=scheme)
@@ -708,19 +751,39 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
                 "Label", label="poIssON", language_code="fr", kind="alternative", label_of=c2
             )
             cnx.commit()
-            self.import_filepath(cnx, self.datapath("FRAN_IR_0261167_excerpt.xml"))
+            self.import_filepath(
+                cnx,
+                self.datapath("FRAN_IR_0261167_excerpt.xml"),
+                autodedupe_authorities="service/strict",
+            )
             same_as_rset = cnx.execute("Any X WHERE X is SubjectAuthority, X same_as C")
             self.assertEqual(len(same_as_rset), 2)
             poisson = cnx.find("SubjectAuthority", label="Poisson").one()
             self.assertEqual(poisson.same_as[0].eid, c2.eid)
 
-    def test_dao(self):
+    def test_digitized_versions_in_es_docs(self):
         url = "https://www.siv.archives-nationales.culture.gouv.fr/mm/media/download/FRDAFAN85_OF9v173541_L-min.jpg"  # noqa
         with self.admin_access.cnx() as cnx:
             self.import_filepath(cnx, self.datapath("FRAN_IR_051016_excerpt.xml"))
             fc = cnx.find("FAComponent", component_order=0).one()
             self.assertEqual(len(fc.digitized_versions), 2)
             self.assertEqual(fc.illustration_url, url)
+            adapter = fc.cw_adapt_to("IFullTextIndexSerializable")
+            self.assertEqual(
+                [
+                    {
+                        "illustration_url": None,
+                        "role": "UNKNOWN",
+                        "url": "https://www.siv.archives-nationales.culture.gouv.fr/siv/rechercheconsultation/consultation/multimedia/Galerie.action?mediaParam==?UTF-8?B?RlJEQUZBTjg1X09GOXYxNzM1NDFfTC5qcGcjRlJEQUZBTjg1X09GOXYxNzM1NDVfTC5qcGc=?=&udTitle==?UTF-8?B?UExBTi1ERS1MQS1UT1VS?=&xpointer=&mmName",  # noqa
+                    },
+                    {
+                        "illustration_url": url,
+                        "role": "thumbnail",
+                        "url": None,
+                    },
+                ],
+                adapter.serialize()["digitized_versions"],
+            )
 
     def test_daogrp(self):
         with self.admin_access.cnx() as cnx:
@@ -784,7 +847,7 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
                 index_entries[0],
                 {
                     "type": "subject",
-                    "normalized": "des et jmo journal marches operations",
+                    "normalized": "journal des marches et operations jmo",
                     "label": "Journal des marches et opérations (JMO)",
                     "role": "index",
                     "authority": rset.one().eid,
@@ -804,8 +867,8 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
             self.assertIn("Service historique", fa.did[0].origination)
 
     def test_name_stable_id_pdf_with_metadata(self):
-        """ stable_id is based in the filename with extension:
-            - column 'identifiant_fichier' of metadata file with extension:"""
+        """stable_id is based in the filename with extension:
+        - column 'identifiant_fichier' of metadata file with extension:"""
         with self.admin_access.cnx() as cnx:
             self.import_filepath(cnx, self.datapath("FRSHD_PUB_00000345_0001.pdf"))
             fa = cnx.find("FindingAid").one()
@@ -958,9 +1021,7 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
             self.assertEqual(len(cnx.find("FAComponent")), 1)
 
     def test_import_pdffiles_symlink(self):
-        """test that the symlink to the appfiles-dir is set for the pdf file
-
-        """
+        """test that the symlink to the appfiles-dir is set for the pdf file"""
         with self.admin_access.cnx() as cnx:
             filepath = self.datapath("ir_data/FRMAEE/PDF/FRMAEE_1BIP_1919-1994.pdf")
             self.import_filepath(cnx, filepath)
@@ -980,7 +1041,7 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
             cnx.create_entity("LocationAuthority", label="Dunkerque (Nord, France)")
             cnx.commit()
             filepath = self.datapath("ir_data/FRANMT/PDF/FRANMT_3_AQ_INV.pdf")
-            es_docs = self.import_filepath(cnx, filepath, {"code": "FRANMT"})
+            es_docs = self.import_filepath(cnx, filepath)
             self.assertEqual(1, len(cnx.find("FindingAid")))
             for es_doc in es_docs:
                 self.assertIn("index_entries", list(es_doc["_source"].keys()))
@@ -988,15 +1049,51 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
                     self.assertIn("authority", index_entry)
                     self.assertIn("role", index_entry)
 
+    def test_creation_date_in_es_docs(self):
+        """Test integrating new creation_date attribute in ElasticSearch index.
+
+        Trying: importing new FindingAid
+        Expecting: FindingAid and FAComponent have creation_date attribute
+        """
+        with self.admin_access.cnx() as cnx:
+            fa_es_doc, comp_es_doc = self.import_filepath(
+                cnx, self.datapath("FRAN_IR_0261167_excerpt.xml")
+            )
+            fa = cnx.find(eid=fa_es_doc["_source"]["eid"], etype="FindingAid").one()
+            self.assertEqual(
+                format_date(fa.creation_date), format_date(fa_es_doc["_source"]["creation_date"])
+            )
+            facomp = cnx.find(eid=comp_es_doc["_source"]["eid"], etype="FAComponent").one()
+            self.assertEqual(
+                format_date(facomp.creation_date),
+                format_date(comp_es_doc["_source"]["creation_date"]),
+            )
+
+    def test_AN_sortdate(self):
+        """Test for sortdate index
+        Trying: import and reimport a FindingAid
+        Expecting: an FAComponent with len(did.startyear) < 4  has no es["sortdate"]
+        """
+        with self.admin_access.cnx() as cnx:
+            self.import_filepath(cnx, self.datapath("ir_data/FRAN_IR_000061.xml"))
+            fc = cnx.execute(
+                "Any F WHERE F is FAComponent, F stable_id %(f)s",
+                {"f": "8ead84a4a13d701875c5bed694154d42d2ae8b8e"},
+            ).one()
+            self.assertEqual(fc.did[0].startyear, 149)
+            doc = fc.cw_adapt_to("IFullTextIndexSerializable").serialize()
+            self.assertEqual(doc["sortdate"], None)
+
 
 class EADreImportTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
     readerconfig = merge_dicts(
         {}, EADImporterTC.readerconfig, {"reimport": True, "nodrop": False, "force_delete": True}
     )
 
-    def test_index_reimport(self):
+    def setup_database(self):
+        super(EADreImportTC, self).setup_database()
         with self.admin_access.cnx() as cnx:
-            service = cnx.create_entity(
+            cnx.create_entity(
                 "Service",
                 category="?",
                 name="Les Archives Nationales",
@@ -1004,19 +1101,17 @@ class EADreImportTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
                 code="fran",
             )
             cnx.commit()
-            kwargs = {
-                "name": "Les AN",
-                "eid": service.eid,
-                "code": "FRAN",
-            }
+
+    def test_index_reimport(self):
+        with self.admin_access.cnx() as cnx:
             fpath = "FRAN_IR_050263.xml"
-            self.import_filepath(cnx, self.datapath(fpath), kwargs)
+            self.import_filepath(cnx, self.datapath(fpath))
             hugo = cnx.execute(
                 "Any X WHERE X is AgentAuthority, X label %(l)s", {"l": "Hugo, Victor"}
             ).one()
             self.assertEqual(len(hugo.reverse_authority[0].index), 1)
             # reimport the same file
-            self.import_filepath(cnx, self.datapath(fpath), kwargs)
+            self.import_filepath(cnx, self.datapath(fpath))
             # we shell have only one AgentAuthority for Hugo, Victor
             new_hugo = cnx.execute(
                 "Any X WHERE X is AgentAuthority, X label %(l)s", {"l": "Hugo, Victor"}
@@ -1025,7 +1120,7 @@ class EADreImportTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
 
     def test_files_after_reimport(self):
         """reimport a version of FRMAEE_0001MA030.xml without
-           `fa_references_files` and check that old files are deleted"""
+        `fa_references_files` and check that old files are deleted"""
         with self.admin_access.cnx() as cnx:
             self.assertFalse(cnx.find("File").rowcount)
             filepath = self.datapath("ir_data/FRMAEE/FRMAEE_0001MA030.xml")
@@ -1088,7 +1183,7 @@ class EADreImportTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
 
     def test_failed_reimport(self):
         """tests that a previously imported FindingAid is not deleted after a failed
-reimport"""
+        reimport"""
         with self.admin_access.cnx() as cnx:
             filepath = self.datapath("ir_data/FRMAEE_OK/FRMAEE_0001MA001.xml")
             self.import_filepath(cnx, filepath)
@@ -1121,7 +1216,7 @@ class EADFullMigrationTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
 
     def test_authorities(self):
         with self.admin_access.cnx() as cnx:
-            service = cnx.create_entity(
+            cnx.create_entity(
                 "Service",
                 category="?",
                 name="Les Archives Nationales",
@@ -1129,13 +1224,8 @@ class EADFullMigrationTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
                 code="fran",
             )
             cnx.commit()
-            kwargs = {
-                "name": "Les AN",
-                "eid": service.eid,
-                "code": "FRAN",
-            }
             fpath = "FRAN_IR_050263.xml"
-            self.import_filepath(cnx, self.datapath(fpath), kwargs)
+            self.import_filepath(cnx, self.datapath(fpath))
             authority_eids = cnx.execute(
                 "Any X WHERE X is IN (AgentAuthority, " "SubjectAuthority, LocationAuthority)"
             ).rows
@@ -1145,7 +1235,7 @@ class EADFullMigrationTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
 
             cnx.commit()
             self.assertEqual(0, cnx.execute(index_rql).rowcount)
-            self.import_filepath(cnx, self.datapath(fpath), kwargs)
+            self.import_filepath(cnx, self.datapath(fpath))
             self.assertEqual(73, cnx.execute(index_rql).rowcount)
             # we shell still have the same authorities
             new_authority_eids = cnx.execute(
@@ -1192,7 +1282,9 @@ class ESOnlyTests(PostgresTextMixin, CubicWebTC):
     def import_filepath(self, cnx, filepath):
         store = RQLObjectStore(cnx)
         r = ead.Reader(self.readerconfig, store)
-        return r.import_filepath(filepath, load_services_map(cnx))
+        services_map = load_services_map(cnx)
+        service_infos = service_infos_from_filepath(filepath, services_map)
+        return r.import_filepath(filepath, service_infos)
 
     def test_esonly_indexation(self):
         with self.admin_access.cnx() as cnx:
@@ -1233,6 +1325,18 @@ class ESOnlyTests(PostgresTextMixin, CubicWebTC):
             self.assertEqual(fa_es_doc["_source"]["originators"], ["Direction de l'eau"])
             self.assertEqual(comp_es_doc["_source"]["originators"], ["Direction de l'eau"])
 
+    def test_dates_in_es_docs(self):
+        with self.admin_access.cnx() as cnx:
+            es_docs = self.import_filepath(cnx, self.datapath("FRAN_IR_0261167_excerpt.xml"))
+            self.assertEqual(len(es_docs), 2)
+            fa_es_doc, comp_es_doc = es_docs
+            startyear, stopyear = 1922, 2001
+            self.assertEqual(fa_es_doc["_source"]["year"], startyear)
+            self.assertEqual(fa_es_doc["_source"]["startyear"], startyear)
+            self.assertEqual(fa_es_doc["_source"]["stopyear"], 2001)
+            self.assertEqual(fa_es_doc["_source"]["sortdate"], "{}-01-01".format(startyear))
+            self.assertEqual(fa_es_doc["_source"]["dates"], {"gte": startyear, "lte": stopyear})
+
 
 class ReimportESonlyTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
     readerconfig = merge_dicts({}, EADImportMixin.readerconfig, {"esonly": True})
@@ -1258,6 +1362,73 @@ class ReimportESonlyTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
                     for i in fa_es_doc["_source"]["index_entries"]
                     if i["label"] == "Direction de l'eau"
                 ][0]["authority"],
+            )
+
+    def test_es_attributes(self):
+        with self.admin_access.cnx() as cnx:
+            self.readerconfig = dict(self.readerconfig, esonly=False)
+            fa_docs, comp_docs = self.import_filepath(
+                cnx, self.datapath("FRAN_IR_0261167_excerpt.xml")
+            )
+            service = fa_docs["_source"].pop("service")
+            self.assertEqual(set(service.keys()), {"code", "eid", "level", "title"})
+            self.assertEqual(
+                set(fa_docs["_source"].keys()),
+                {
+                    "name",
+                    "eadid",
+                    "fatype",
+                    "description",
+                    "acquisition_info",
+                    "index_entries",
+                    "stable_id",
+                    "publisher",
+                    "scopecontent",
+                    "originators",
+                    "cw_etype",
+                    "titleproper",
+                    "author",
+                    "fa_stable_id",
+                    "did",
+                    "eid",
+                    "year",
+                    "dates",
+                    "stopyear",
+                    "startyear",
+                    "sortdate",
+                    "escategory",
+                    "creation_date",
+                },
+            )
+            service = comp_docs["_source"].pop("service")
+            self.assertEqual(set(service.keys()), {"code", "eid", "level", "title"})
+            self.assertEqual(
+                set(comp_docs["_source"].keys()),
+                {
+                    "name",
+                    "eadid",
+                    "fatype",
+                    "stable_id",
+                    "description",
+                    "acquisition_info",
+                    "scopecontent",
+                    "did",
+                    "year",
+                    "dates",
+                    "stopyear",
+                    "startyear",
+                    "sortdate",
+                    "publisher",
+                    "digitized",
+                    "digitized_versions",
+                    "index_entries",
+                    "originators",
+                    "fa_stable_id",
+                    "cw_etype",
+                    "eid",
+                    "escategory",
+                    "creation_date",
+                },
             )
 
 
@@ -1310,6 +1481,100 @@ class ReimportTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
             self.import_filepath(cnx, self.datapath("FRAN_IR_022409.xml"), reimport=True)
             rset = cnx.find("FindingAid")
             self.assertEqual(len(rset), 1)
+
+    def test_delete_from_filename(self):
+        with self.admin_access.cnx() as cnx:
+            self.readerconfig = dict(self.readerconfig, reimport=True, force_delete=True)
+            filename = "FRAD085_2C_disparu d'Algérie.xml"
+            self.import_filepath(cnx, self.datapath(filename))
+            eid = cnx.find("FindingAid").one().eid
+            self.import_filepath(cnx, self.datapath(filename))
+            self.assertNotEqual(eid, cnx.find("FindingAid").one().eid)
+
+    def test_creation_date_ead_import(self):
+        """Test FindingAid, FAComponent creation date is keept between reimports
+
+        Trying: import and reimport a FindingAid
+        Expecting: reimported FindingAid and FAComponent have original creation_date
+        """
+        with self.admin_access.cnx() as cnx:
+            filepath = "FRAN_IR_0261167_excerpt.xml"
+            fmt = "%a %b %d %H:%M:%S %Y"
+            self.readerconfig = dict(self.readerconfig, reimport=True, force_delete=True)
+            fa_es_doc, comp_es_doc = self.import_filepath(cnx, self.datapath(filepath))
+            creation_date = datetime(1914, 4, 5)
+            fa_old = cnx.find("FindingAid").one()
+            adapter = fa_old.cw_adapt_to("IFullTextIndexSerializable")
+            self.assertEqual(
+                format_date(fa_old.creation_date),
+                format_date(adapter.serialize()["creation_date"]),
+            )
+            comp_old = cnx.find("FAComponent").one()
+            adapter = comp_old.cw_adapt_to("IFullTextIndexSerializable")
+            self.assertEqual(
+                format_date(comp_old.creation_date),
+                format_date(adapter.serialize()["creation_date"]),
+            )
+            fa_old.cw_set(creation_date=creation_date)
+            comp_old.cw_set(creation_date=creation_date)
+            cnx.commit()
+            fa_old_date = cnx.find("FindingAid").one().creation_date
+            self.assertEqual(
+                creation_date.strftime(fmt),
+                fa_old_date.strftime(fmt),
+            )
+            # reimport the file
+            fa_es_doc, comp_es_doc = self.import_filepath(cnx, self.datapath(filepath))
+            fa = cnx.find("FindingAid").one()
+            comp = cnx.find("FAComponent").one()
+            self.assertNotEqual(fa_old.eid, fa.eid)
+            self.assertNotEqual(comp_old.eid, comp.eid)
+            self.assertEqual(fa_old_date, fa.creation_date)
+            adapter = fa.cw_adapt_to("IFullTextIndexSerializable")
+            self.assertEqual(
+                format_date(adapter.serialize()["creation_date"]),
+                format_date(fa.creation_date),
+            )
+            self.assertEqual(fa_old_date, fa.creation_date)
+            self.assertEqual(creation_date.strftime(fmt), comp.creation_date.strftime(fmt))
+            adapter = comp.cw_adapt_to("IFullTextIndexSerializable")
+            self.assertEqual(
+                format_date(comp.creation_date), format_date(adapter.serialize()["creation_date"])
+            )
+
+    def test_creation_date_pdf_import(self):
+        """Test FindingAid creation date is keept between reimports
+
+        Trying: import and reimport a FindingAid
+        Expecting: reimported FindingAid has original creation_date
+        """
+        with self.admin_access.cnx() as cnx:
+            filepath = "FRSHD_PUB_00000345_0001.pdf"
+            fmt = "%a %b %d %H:%M:%S %Y"
+            self.readerconfig = dict(self.readerconfig, reimport=True, force_delete=True)
+            self.import_filepath(cnx, self.datapath(filepath))[0]
+            fi_old = cnx.find("FindingAid").one()
+            adapter = fi_old.cw_adapt_to("IFullTextIndexSerializable")
+            self.assertEqual(
+                format_date(fi_old.creation_date),
+                format_date(adapter.serialize()["creation_date"]),
+            )
+            creation_date = datetime(1914, 4, 5)
+            fi_old.cw_set(creation_date=creation_date)
+            cnx.commit()
+            self.assertEqual(
+                creation_date.strftime(fmt),
+                cnx.find("FindingAid").one().creation_date.strftime(fmt),
+            )
+            self.import_filepath(cnx, self.datapath(filepath))[0]
+            fi = cnx.find("FindingAid").one()
+            self.assertNotEqual(fi_old.eid, fi.eid)
+            self.assertEqual(creation_date.strftime(fmt), fi.creation_date.strftime(fmt))
+            adapter = fi.cw_adapt_to("IFullTextIndexSerializable")
+            self.assertEqual(
+                format_date(fi.creation_date),
+                format_date(adapter.serialize()["creation_date"]),
+            )
 
 
 class DeleteTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
@@ -1440,14 +1705,14 @@ class EADXMLReaderTests(BaseTestCase):
             {
                 "authfilenumber": None,
                 "label": "Jean-Michel",
-                "normalized": "jeanmichel",
+                "normalized": "jean michel",
                 "role": "index",
                 "type": "persname",
             },
             {
                 "authfilenumber": None,
                 "label": "garonne (cours d'eau)",
-                "normalized": "cours deau garonne",
+                "normalized": "garonne cours d eau",
                 "role": "index",
                 "type": "geogname",
             },
@@ -1503,7 +1768,7 @@ class EADXMLReaderTests(BaseTestCase):
             {
                 "authfilenumber": None,
                 "label": "unicode control character",
-                "normalized": "character control unicode",
+                "normalized": "unicode control character",
                 "role": "index",
                 "type": "subject",
             },
@@ -1514,21 +1779,21 @@ class EADXMLReaderTests(BaseTestCase):
             {
                 "authfilenumber": None,
                 "label": "jean-Michel",
-                "normalized": "jeanmichel",
+                "normalized": "jean michel",
                 "role": "index",
                 "type": "persname",
             },
             {
                 "authfilenumber": None,
                 "label": "Jean-Paul",
-                "normalized": "jeanpaul",
+                "normalized": "jean paul",
                 "role": "index",
                 "type": "persname",
             },
             {
                 "authfilenumber": None,
                 "label": "Garonne (cours d'eau)",
-                "normalized": "cours deau garonne",
+                "normalized": "garonne cours d eau",
                 "role": "index",
                 "type": "geogname",
             },
@@ -1579,7 +1844,7 @@ class EADXMLReaderTests(BaseTestCase):
                 {
                     "authfilenumber": "FRAN_NP_006122",
                     "label": "Direction de l'eau",
-                    "normalized": "de direction leau",
+                    "normalized": "direction de l eau",
                     "role": "originator",
                     "type": "corpname",
                 }

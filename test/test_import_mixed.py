@@ -55,7 +55,8 @@ class MixedImportTC(EADImportMixin, OaiSickleMixin, PostgresTextMixin, CubicWebT
     def init_config(cls, config):
         super(MixedImportTC, cls).init_config(config)
         config.set_option(
-            "consultation-base-url", "https://francearchives.fr",
+            "consultation-base-url",
+            "https://francearchives.fr",
         )
         config.set_option("ead-services-dir", "/tmp")
 
@@ -72,7 +73,7 @@ class MixedImportTC(EADImportMixin, OaiSickleMixin, PostgresTextMixin, CubicWebT
 
     def test_reimport_oai_over_ead(self):
         """import an IR by oai over en existing ead-imported IR.
-           Only one IR must be created.
+        Only one IR must be created.
         """
         with self.admin_access.cnx() as cnx:
             # import ead
@@ -92,7 +93,7 @@ class MixedImportTC(EADImportMixin, OaiSickleMixin, PostgresTextMixin, CubicWebT
 
     def test_reimport_ead_over_oai(self):
         """import an IR by ead over en existing oai-imported IR.
-           Only one IR must be created.
+        Only one IR must be created.
         """
         with self.admin_access.cnx() as cnx:
             # import ead

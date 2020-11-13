@@ -28,53 +28,58 @@
  * knowledge of the CeCILL-C license and that you accept its terms.
  */
 
+/* global L, PruneClusterForLeaflet, PruneCluster*/
+
 function buildMap() {
     const mapElement = document.querySelector('#fa-map'),
-          map = L.map('fa-map'),
-          settings = {
+        map = L.map('fa-map'),
+        settings = {
             tileProvider:
                 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
             tileAttribution:
-                'Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community',
-        };
-    const bounds = new L.LatLngBounds();
+                'Esri &mdash; Sources: Esri, HERE, Garmin, Intermap, increment P Corp., GEBCO, USGS, FAO, NPS, NRCAN, GeoBase, IGN, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), (c) OpenStreetMap contributors, and the GIS User Community',
+        }
+    const bounds = new L.LatLngBounds()
     L.tileLayer(settings.tileProvider, {
         attribution: settings.tileAttribution,
         minZoom: 3,
-        scrollWheelZoom: false
-    }).addTo(map);
+        scrollWheelZoom: false,
+    }).addTo(map)
 
-    function createDashIcon(data, category) {
+    function createDashIcon() {
         return L.icon({
-            iconUrl: mapElement.dataset.iconUrl
-        });
+            iconUrl: mapElement.dataset.iconUrl,
+        })
     }
     fetch(mapElement.dataset.markerurl, {credentials: 'same-origin'})
-        .then(response => response.json())
-        .then(markers => {
+        .then((response) => response.json())
+        .then((markers) => {
             if (!markers.length) {
-                return;
+                return
             }
-            const pruneCluster = new PruneClusterForLeaflet();
+            const pruneCluster = new PruneClusterForLeaflet()
             for (let marker of markers) {
-                const mapMarker = new PruneCluster.Marker(marker.lat, marker.lng);
-                let docLabel = 'documents';
-                bounds.extend(L.latLng(marker.lat, marker.lng));
+                const mapMarker = new PruneCluster.Marker(
+                    marker.lat,
+                    marker.lng,
+                )
+                let docLabel = 'documents'
+                bounds.extend(L.latLng(marker.lat, marker.lng))
                 if (marker.count === 1) {
-                    docLabel = 'document';
+                    docLabel = 'document'
                 }
                 if (marker.dashLabel) {
-                    mapMarker.data.icon = createDashIcon;
+                    mapMarker.data.icon = createDashIcon
                 }
                 mapMarker.data.popup = `<div class="map-authority">
                  <a class="map-authority__title" href="${marker.url}">${marker.label}</a>
                  <span class="map-authority__desc">${marker.count} ${docLabel}</span>
-                </div>`;
-                pruneCluster.RegisterMarker(mapMarker);
+                </div>`
+                pruneCluster.RegisterMarker(mapMarker)
             }
-            map.addLayer(pruneCluster);
-            map.fitBounds(bounds);
-        });
+            map.addLayer(pruneCluster)
+            map.fitBounds(bounds)
+        })
 }
 
-document.addEventListener('DOMContentLoaded', () => buildMap());
+document.addEventListener('DOMContentLoaded', () => buildMap())

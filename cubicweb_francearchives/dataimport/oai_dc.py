@@ -47,7 +47,6 @@ from cubicweb.utils import json_dumps
 
 from cubicweb_oaipmh import utcnow
 
-from cubicweb_francearchives import get_user_agent
 from cubicweb_francearchives.dataimport import (
     usha1,
     clean_values,
@@ -60,12 +59,11 @@ from cubicweb_francearchives.dataimport import (
     es_bulk_index,
     oai_utils,
     OAIPMH_DC_PATH,
-    load_services_map,
 )
 
 from cubicweb_francearchives.dataimport.dc import CSVReader
 
-from cubicweb_francearchives.dataimport.ead import readerconfig
+from cubicweb_francearchives.dataimport.ead import readerconfig, service_infos_for_es_doc
 from cubicweb_francearchives.dataimport.sqlutil import delete_from_filename
 
 
@@ -231,6 +229,8 @@ class OAIDCImporter(object):
         self.config = config
         self.reader = OAIDCReader(self.config, store)
         self.cnx = self.reader.store._cnx
+        self.complete_list_size = None
+        self.downloaded = 0
         indexer = self.cnx.vreg["es"].select("indexer", self.cnx)
         self.es = indexer.get_connection()
 
@@ -243,32 +243,45 @@ class OAIDCImporter(object):
             if record is None:
                 # PniaOAIItemIterator raised an error before creating a record
                 continue
+            self.downloaded += 1
             identifier = record.header.identifier
             # eadid is caclulated from header.setSpec()
             eadid = record.header.setSpecs
-            url = record.harvested_url
+            try:
+                cursor = int(record.cursor) + 1
+            except Exception:
+                cursor = self.downloaded
+            if self.complete_list_size is None:
+                try:
+                    self.complete_list_size = int(record.complete_list_size)
+                except TypeError:
+                    pass
+            urlinfo = "<div>{url}<div><div>(record {cur} out of {lsz}).</div>".format(
+                url=record.harvested_url, cur=cursor, lsz=self.complete_list_size or "?"
+            )
             if record.deleted:
-                self.log.info("%s. The record with identifier is to be deleted: %r",
-                              url, identifier)
+                self.log.info(
+                    "%s The record with identifier is to be deleted: %r", urlinfo, identifier
+                )
                 oaipmh_writer.add_record(record)
                 continue
             if eadid:
                 eadid = eadid[0].strip()
             if not eadid:
-                warning = "%s. Ignoring identifier %r because unspecified setSpec"
-                self.log.warning(warning, url, identifier)
+                warning = "%s Ignoring identifier %r because unspecified setSpec"
+                self.log.warning(warning, urlinfo, identifier)
                 continue
             if not record.metadata.get("title"):
-                warning = "%s. Ignoring identifier %r because unspecified dc_title"
-                self.log.warning(warning, url, identifier)
+                warning = "%s Ignoring identifier %r because unspecified dc_title"
+                self.log.warning(warning, urlinfo, identifier)
                 continue
             if not eadid.startswith(service_code):
                 msg = (
-                    '%s. EADID value "%r" found for record %r is not valid:'
-                    "value does not starts with service_code"
+                    '%s EADID value "%r" found for record %r is not valid:'
+                    "value does not starts with service_code. Import it anyway."
                 )
-                self.log.warning(msg, url, eadid, identifier)
-            self.log.info("%s. Downloaded identifier: %s, eadid: %s", url, identifier, eadid)
+                self.log.warning(msg, urlinfo, eadid, identifier)
+            self.log.info("%s Oai identifier: %s, eadid: %s", urlinfo, identifier, eadid)
             oaipmh_writer.add_record(record)
 
     def download_from_file(self, filepath, oaipmh_writer, service_code):
@@ -285,20 +298,16 @@ class OAIDCImporter(object):
         for record_element in records:
             oaipmh_writer.add_record(OAIDCRecord(record_element))
 
-    def import_records(self, service_infos, from_file=False, **params):
+    def harvest_records(self, service_infos, from_file=False, headers=None, **params):
         """Import records.
 
         :param dict service_infos: service information
         :param bool from_file: data origin (True for file, False for harvesting)
+        :param dict headers: headers for harvest
         :param dict params: harvest parameters
         """
-        print("import_records", from_file, service_infos, params)
+        print("import_records", service_infos, from_file, headers, params)
         store = self.reader.store
-        if "code" in service_infos and "name" not in service_infos:
-            services_map = load_services_map(store._cnx)
-            service = services_map.get(service_infos["code"])
-            if service:
-                service_infos.update({"name": service.publisher(), "eid": service.eid})
         oaipmh_writer = OAIDCWriter(
             store._cnx.vreg.config["ead-services-dir"],
             service_infos,
@@ -306,32 +315,49 @@ class OAIDCImporter(object):
         )
         base_url = service_infos["oai_url"]
         if not from_file:
-            headers = {"User-Agent": get_user_agent()}
             oai_mapping = {
                 "ListRecords": OAIDCRecord,
                 "GetRecord": OAIDCRecord,
             }
-            self.client = Sickle(
+            client = Sickle(
                 base_url,
                 iterator=oai_utils.PniaOAIItemIterator,
                 class_mapping=oai_mapping,
                 headers=headers,
+                retry_status_codes=(500, 502, 503),
             )
-            self.client.logger = self.log
-            records = self.client.ListRecords(**params)
+            client.logger = self.log
+            records = client.ListRecords(**params)
             try:
                 self.download_records(records, oaipmh_writer, service_infos["code"])
+            except oai_utils.OAIXMLError as error:
+                self.log.error(error)
             except Exception as exception:
-                self.log.error(
-                    ("Could not import records: %s. Harvesting aborded."), exception,
-                )
+                self.log.error(("Could not import records: %s. Harvesting aborted.", exception))
                 if not oaipmh_writer.oai_records:
                     return
         else:
             self.download_from_file(base_url, oaipmh_writer, service_infos["code"])
-        self.log.info("downloaded %s record(s)", len(oaipmh_writer.oai_records))
+        if self.complete_list_size is None:
+            self.log.warning(
+                """Downloaded %s records.
+                No information about records list size (completeListSize) could be found""",
+                self.downloaded,
+            )
+        else:
+            if self.downloaded < self.complete_list_size:
+                self.log.error(
+                    "only {} out of {} records have been downloaded".format(
+                        self.downloaded, self.complete_list_size
+                    )
+                )
+            else:
+                self.log.info("downloaded all {} record(s)".format(self.complete_list_size))
         if oaipmh_writer.oai_records:
-            es_docs = self._import_records(oaipmh_writer, service_infos, from_file)
+            # import records in the database
+            self.reader.update_authorities_cache(service_infos.get("eid"))
+
+            es_docs = self.import_records(oaipmh_writer, service_infos, from_file)
             if from_file:
                 # in this case only return es_docs as
                 # flush/commit and es_bulk_index are done in
@@ -345,8 +371,8 @@ class OAIDCImporter(object):
         else:
             self.log.info("no records found")
 
-    def _import_records(self, oaipmh_writer, service_infos, from_file):
-        """ Import records in the database
+    def import_records(self, oaipmh_writer, service_infos, from_file):
+        """Import records in the database
         :param OAIDCWriter oaipmh_writer: write harvester content in fs files
         :param dict service_infos: service information
         """
@@ -380,8 +406,7 @@ class OAIDCImporter(object):
 
 
 class OAIDCReader(CSVReader):
-    """OAI DC schema reader.
-    """
+    """OAI DC schema reader."""
 
     def __init__(self, config, store):
         super(CSVReader, self).__init__(config, store)
@@ -397,19 +422,24 @@ class OAIDCReader(CSVReader):
     def import_record(self, header, metadata, oaipmh_writer, service_infos):
         """Generate extentities read from `record` etree"""
         eadid = header["eadid"]
+        filepath = oaipmh_writer.get_file_path(eadid)
+        creation_date = self.creation_date_from_filepath(filepath)
         fa_key = usha1(eadid)
         fa_es_doc = self._created_fa.get(fa_key)
         es_docs = []
         if fa_es_doc is None:
             # directory exists, will not be overwritten
-            filepath = oaipmh_writer.get_file_path(eadid)
             findingaid_support = self.create_file(filepath)
+            self.delete_from_filename(filepath)
             ir_name, stable_id = self.process_existing_findingaids(eadid, findingaid_support)
             header.update({"stable_id": stable_id, "irname": ir_name})
+            metadata["creation_date"] = creation_date
             fa_es_doc = self.import_findingaid(header, metadata, service_infos, findingaid_support)
             self._created_fa[fa_key] = fa_es_doc
             es_docs.append(fa_es_doc)
-        es_doc = self.import_facomponent(metadata, fa_es_doc["_source"], header["identifier"])
+        fa_data = fa_es_doc["_source"].copy()
+        fa_data.update({"service": service_infos.get("eid"), "creation_date": creation_date})
+        es_doc = self.import_facomponent(metadata, fa_data, header["identifier"], service_infos)
         if es_doc:
             es_docs.append(es_doc)
         return es_docs
@@ -455,11 +485,13 @@ class OAIDCReader(CSVReader):
             "findingaid_support": findingaid_support["eid"],
             "oai_id": oai_utils.compute_oai_id(service_infos["oai_url"], header["identifier"]),
         }
+        fa_attrs["creation_date"] = metadata["creation_date"]
         fa_data = self.create_entity("FindingAid", clean_values(fa_attrs))
         fa_es_attrs = {
             "name": fa_data["name"],
             "fa_stable_id": fa_data["stable_id"],
             "scopecontent": strip_html(fa_attrs.get("scopecontent")),
+            **service_infos_for_es_doc(self.store._cnx, service_infos),
         }
         es_doc = self.build_complete_es_doc(
             "FindingAid", fa_data, did_data, index_entries={}, **fa_es_attrs
@@ -477,7 +509,7 @@ class OAIDCReader(CSVReader):
             dao.append({"illustration_url": illustration_url})
         return dao
 
-    def import_facomponent(self, metadata, findingaid_data, identifier):
+    def import_facomponent(self, metadata, findingaid_data, identifier, service_infos):
         fa_stable_id = findingaid_data["stable_id"]
         unittitle = " ; ".join(metadata["title"])
         # Use <header><identifier> to compute the stable_id
@@ -511,6 +543,7 @@ class OAIDCReader(CSVReader):
             "userestrict": self.richstring_html(metadata["rights"], "userestrict"),
             "userestrict_format": "text/html",
         }
+        comp_attrs["creation_date"] = findingaid_data.get("creation_date")
         comp_data = self.create_entity("FAComponent", clean_values(comp_attrs))
         # add daos
         comp_eid = comp_data["eid"]
@@ -518,6 +551,8 @@ class OAIDCReader(CSVReader):
         for daodef in daodefs:
             digit_ver_attrs = self.create_entity("DigitizedVersion", clean_values(daodef))
             self.add_rel(comp_eid, "digitized_versions", digit_ver_attrs["eid"])
+        else:
+            digit_ver_attrs = {}
         indexes = self.index_entries(
             {
                 "index_personne": metadata["contributor"],
@@ -535,9 +570,11 @@ class OAIDCReader(CSVReader):
             fa_stable_id=fa_stable_id,
             publisher=findingaid_data["publisher"],
             index_entries=indexes,
-            digitized=bool(daodef),
+            digitized=bool(daodefs),
+            digitized_versions=daodefs,
+            **service_infos_for_es_doc(self.store._cnx, service_infos),
         )
-        self.create_entity("EsDocument", {"doc": json_dumps(es_doc), "entity": comp_eid})
+        self.create_entity("EsDocument", {"doc": json_dumps(es_doc["_source"]), "entity": comp_eid})
         return es_doc
 
 
@@ -545,4 +582,4 @@ def import_oai_dc_filepath(store, filepath, service_infos, config=None):
     base_url = "file://{}".format(filepath)
     service_infos["oai_url"] = base_url
     importer = OAIDCImporter(store, config)
-    return importer.import_records(service_infos, from_file=True)
+    return importer.harvest_records(service_infos, from_file=True)

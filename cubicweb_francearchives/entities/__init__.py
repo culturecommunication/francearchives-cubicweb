@@ -95,8 +95,7 @@ class Card(BaseCard):
 
 
 def system_source_absolute_url(self, *args, **kwargs):
-    """override default absolute_url to avoid calling cw_metainformation
-    """
+    """override default absolute_url to avoid calling cw_metainformation"""
     # use *args since we don't want first argument to be "anonymous" to
     # avoid potential clash with kwargs
     if args:
@@ -114,6 +113,10 @@ def system_source_absolute_url(self, *args, **kwargs):
 def systemsource_entity(cls):
     setattr(cls, "absolute_url", system_source_absolute_url)
     return cls
+
+
+def compute_file_data_hash(value):
+    return str(hashlib.sha1(value).hexdigest())
 
 
 class FAFile(BaseFile):
@@ -158,11 +161,11 @@ class FAFile(BaseFile):
         if value is None and self.data is not None:
             value = self.data.getvalue()
         if value is not None:
-            return str(hashlib.sha1(value).hexdigest())
+            return compute_file_data_hash(value)
 
     def check_hash(self, hash_value, value):
         """rewrite v.2.0.1 cubicweb_file.entity.check_hash method to
-           be complient with the `compute_hash` method implementatio
+        be complient with the `compute_hash` method implementatio
         """
         return hash_value == self.compute_hash(value)
 

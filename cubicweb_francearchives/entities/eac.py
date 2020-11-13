@@ -81,7 +81,7 @@ class AuthorityRecord(eac.AuthorityRecord):
 
     @property
     def authorized_nameentiry(self):
-        """ Initialize the NameEntry of "authorized" form variant, if any; otherwise any
+        """Initialize the NameEntry of "authorized" form variant, if any; otherwise any
         NameEntry.
         """
         if self._authorized_nameentiry is None:
@@ -98,8 +98,7 @@ class AuthorityRecord(eac.AuthorityRecord):
         return self.authorized_nameentiry.parts
 
     def other_names_rset(self):
-        """Get all declared NameEntries for this AuthorityRecord other then the authorized one
-        """
+        """Get all declared NameEntries for this AuthorityRecord other then the authorized one"""
         return self._cw.execute(
             """
         Any X, P, SD, ED ORDERBY SD, ED, P WHERE
@@ -112,8 +111,7 @@ class AuthorityRecord(eac.AuthorityRecord):
         )
 
     def parallel_names_rset(self):
-        """Get all declared ParallelNames for this AuthorityRecord
-        """
+        """Get all declared ParallelNames for this AuthorityRecord"""
         return self._cw.execute(
             """
         Any P WHERE P is ParallelNames,
@@ -473,7 +471,7 @@ class PlaceEntry(eac.PlaceEntry):
     def dc_long_title(self):
         title = self.name
         info = self.local_type or ""
-        geo = ", ".join([str(l) for l in (self.latitude, self.longitude) if l])
+        geo = ", ".join([str(d) for d in (self.latitude, self.longitude) if d])
         if geo:
             info = " ; ".join([info, geo]) if info else geo
         if info:

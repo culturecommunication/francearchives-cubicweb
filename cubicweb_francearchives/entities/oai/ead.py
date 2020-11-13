@@ -42,6 +42,9 @@ from cubicweb_francearchives.entities.oai import AbstractOAIDownloadView
 from cubicweb_francearchives.dataimport.eadreader import cleanup_ns
 from cubicweb_francearchives.utils import is_absolute_url, remove_html_tags
 
+OAI_IDENTIFIER_SCHEMA_LOCATION = "urn:isbn:1-931666-22-9"
+OAI_IDENTIFIER_SCHEMA_LOCATION_XSD = "http://www.loc.gov/ead/ead.xsd"
+
 
 class FindingAidOAIEADXmlAdapter(AbstractXmlAdapter):
     __regid__ = "OAI_EAD"
@@ -70,7 +73,7 @@ class FindingAidOAIEADXmlAdapter(AbstractXmlAdapter):
             "WHERE FA stable_id %(st)s, FA did D, D unittitle DUT, D unitid DU, "
             "D unitdate DUD, D physdesc DPH, D repository DRP, "
             "D lang_description DLG, D origination DOR, D extptr DEX, "
-            "X fa_header FH, FH titleproper FTP, FA scopecontent FSP, "
+            "FA fa_header FH, FH titleproper FTP, FA scopecontent FSP, "
             "FA accessrestrict FAR, FA userestrict FUR, FA description FAD"
         )
         return self._cw.execute(query, {"st": self.entity.stable_id}).get_entity(0, 0)
@@ -160,22 +163,30 @@ class FindingAidOAIEADXmlAdapter(AbstractXmlAdapter):
             indexes[eid].append(("geogname", label))
         return indexes
 
-    def dump(self):
+    def dump(self, as_xml=False):
         """Return an XML string representing the given agent using the OAI_DC schema."""
         # Root element
-        root_element = self.element(
-            "ead",
-            attributes={
-                "xsi:schemaLocation": ("urn:isbn:1-931666-22-9 " "http://www.loc.gov/ead/ead.xsd"),
-                "audience": "external",
-            },
+        root_element = self.ead_from_file()
+        oai_identifier = "{0} {1}".format(
+            OAI_IDENTIFIER_SCHEMA_LOCATION, OAI_IDENTIFIER_SCHEMA_LOCATION_XSD
         )
-        ead_xml = self.ead_from_file()
-        if ead_xml:
-            root_element.extend(ead_xml)
+        if root_element:
+            nsmap = root_element.nsmap
+            nsmap["xsi"] = "http://www.w3.org/2001/XMLSchema-instance"
+            root_element.set("audience", "external")
+            root_element.set(etree.QName(nsmap["xsi"], "schemaLocation"), oai_identifier)
         else:
+            root_element = self.element(
+                "ead",
+                attributes={
+                    "xsi:schemaLocation": oai_identifier,
+                    "audience": "external",
+                },
+            )
             self.body_elements(root_element)
         self.findingaid.cw_clear_all_caches()
+        if as_xml:
+            return root_element
         return etree.tostring(
             root_element,
             xml_declaration=True,
@@ -188,6 +199,8 @@ class FindingAidOAIEADXmlAdapter(AbstractXmlAdapter):
         for eadid in tree.xpath("..//s:eadid", namespaces={"s": "urn:isbn:1-931666-22-9"}):
             if eadid.attrib.get("url") is None:
                 eadid.attrib["url"] = self.prod_entity_url
+            if eadid.attrib.get("countrycode") is None:
+                eadid.attrib["countrycode"] = "FR"
 
     def ead_from_file(self):
         ape_file = self.findingaid.ape_ead_file
@@ -196,7 +209,7 @@ class FindingAidOAIEADXmlAdapter(AbstractXmlAdapter):
                 xmlcontent = ape_file[0].data.getvalue()
                 tree = etree.fromstring(xmlcontent)
                 self.update_original_xml(tree)
-                return cleanup_ns(tree, "ns0").iterchildren()
+                return cleanup_ns(tree, "ns0")
             except Exception:
                 self.exception(
                     "failed to build ead tree for FindingAid %s", self.findingaid.dc_title()

@@ -35,6 +35,6 @@ rules:
   no-use-before-define: [2, "nofunc"]
   eqeqeq: [1]
   comma-dangle: ["error", "always-multiline"]
-  space-before-function-paren: ["error", "never"]
+  space-before-function-paren: ["error", {"anonymous": "ignore", "named": "never"}]
 plugins:
   - react

@@ -251,7 +251,9 @@ def did_infos(did, log=None):
     unitid = did.find("unitid")
     extptr_link = None
     if unitid is not None:
-        extptr = unitid.find("extptr")
+        extptr = did.find("unitid[@type='external_link']//extptr")
+        if extptr is None:
+            extptr = unitid.find("extptr")
         if extptr is not None:
             extptr_link = extptr.get("{http://www.w3.org/1999/xlink}href") or extptr.get("href")
         unitid = " ".join(unitid.xpath(".//text()")).strip()

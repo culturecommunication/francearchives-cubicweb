@@ -39,8 +39,7 @@ _ = str
 
 
 class FooterAction(action.Action):
-    """footer actions infos are displayed in the page footer.
-    """
+    """footer actions infos are displayed in the page footer."""
 
     __abstract__ = True
     category = "pnia-footer"

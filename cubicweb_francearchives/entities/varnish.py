@@ -31,7 +31,7 @@
 
 from collections import defaultdict
 
-from cubicweb.predicates import is_instance
+from cubicweb.predicates import is_instance, relation_possible
 
 from cubicweb_varnish.entities import IVarnishAdapter
 
@@ -102,7 +102,13 @@ class CmsObjectsVarnish(FAVarnishMixin, IVarnishAdapter):
     __select__ = IVarnishAdapter.__select__ & is_instance(
         *(
             set(schema_cms.CMS_OBJECTS)
-            - {"CommemorationItem", "Section", "Service", "Circular", "NewsContent",}
+            - {
+                "CommemorationItem",
+                "Section",
+                "Service",
+                "Circular",
+                "NewsContent",
+            }
         )
     )
 
@@ -242,3 +248,36 @@ class AuthorityImageVarnishAdapter(IVarnishAdapter):
     @extend_with_lang_prefixes
     def urls_to_purge(self):
         return [self.entity.rest_path()]
+
+
+class GlossaryTermVarnishAdapter(IVarnishAdapter):
+    __select__ = IVarnishAdapter.__select__ & is_instance("GlossaryTerm")
+
+    def glossary(self):
+        return ["/glossaire"]
+
+    @extend_with_lang_prefixes
+    def urls_to_purge(self):
+        return [self.entity.rest_path()] + self.glossary()
+
+
+class TranslationEntitiesVarnishAdapter(IVarnishAdapter):
+    __select__ = IVarnishAdapter.__select__ & relation_possible("translation_of", role="subject")
+
+    def urls_to_purge(self):
+        entity = self.entity.original_entity
+        if entity:
+            adapter = entity.cw_adapt_to("IVarnish")
+            if adapter:
+                return adapter.urls_to_purge()
+
+
+class FaqItemVarnishAdapter(IVarnishAdapter):
+    __select__ = IVarnishAdapter.__select__ & is_instance("FaqItem")
+
+    def faq(self):
+        return ["/faq"]
+
+    @extend_with_lang_prefixes
+    def urls_to_purge(self):
+        return [self.entity.rest_path()] + self.faq()

@@ -89,7 +89,13 @@ def align(cnx):
     for bano_id, num, voie, lat, lng in load_bano():
         normalized = normalize_entry(voie)
         bano_labels[normalized].append(
-            {"bano_id": bano_id, "num": num, "voie": voie, "lat": lat, "lng": lng,}
+            {
+                "bano_id": bano_id,
+                "num": num,
+                "voie": voie,
+                "lat": lat,
+                "lng": lng,
+            }
         )
 
     unmatched = matched = 0

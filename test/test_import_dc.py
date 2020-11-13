@@ -29,6 +29,7 @@
 # knowledge of the CeCILL-C license and that you accept its terms.
 #
 
+from datetime import datetime
 import unittest
 from lxml import etree
 
@@ -38,9 +39,9 @@ from cubicweb.devtools import testlib
 
 from cubicweb.dataimport.stores import RQLObjectStore
 
-from cubicweb_francearchives.testutils import PostgresTextMixin
+from cubicweb_francearchives.testutils import PostgresTextMixin, format_date
 from cubicweb_francearchives.utils import pick
-from cubicweb_francearchives.dataimport import dc, usha1
+from cubicweb_francearchives.dataimport import dc, usha1, CSVIntegrityError, load_services_map
 
 from pgfixtures import setup_module, teardown_module  # noqa
 
@@ -170,11 +171,14 @@ class CSVDCImportTC(CSVImportMixIn, PostgresTextMixin, testlib.CubicWebTC):
             config["esonly"] = True
             store = RQLObjectStore(cnx)
             importer = dc.CSVReader(config, store)
-            services_infos = {}
-            es_docs = [e["_source"] for e in importer.import_filepath(services_infos, fpath)]
+            services_map = load_services_map(cnx)
+            es_docs = [e["_source"] for e in importer.import_filepath(services_map, fpath)]
             self.assertEqual(len(es_docs), 4)
-            fa_docs = [e for e in es_docs if e["cw_etype"] == "FindingAid"]
-            self.assertEqual(len(fa_docs), 1)
+            fa_docs = [
+                e for e in es_docs if e["stable_id"] == "d8e6d65766871576a026b2a75b3fc2fa349d6040"
+            ]
+            service = fa_docs[0].pop("service")
+            self.assertEqual(set(service.keys()), {"code", "eid", "level", "title"})
             self.assertEqual(
                 set(fa_docs[0].keys()),
                 {
@@ -191,6 +195,11 @@ class CSVDCImportTC(CSVImportMixIn, PostgresTextMixin, testlib.CubicWebTC):
                     "index_entries",
                     "scopecontent",
                     "eadid",
+                    "creation_date",
+                    "sortdate",
+                    "startyear",
+                    "stopyear",
+                    "dates",
                 },
             )
 
@@ -201,8 +210,8 @@ class CSVDCImportTC(CSVImportMixIn, PostgresTextMixin, testlib.CubicWebTC):
             config["esonly"] = True
             store = RQLObjectStore(cnx)
             importer = dc.CSVReader(config, store)
-            services_infos = {}
-            es_docs = [e["_source"] for e in importer.import_filepath(services_infos, fpath)]
+            services_map = load_services_map(cnx)
+            es_docs = [e["_source"] for e in importer.import_filepath(services_map, fpath)]
             es_docs = [e for e in es_docs if e["cw_etype"] == "FAComponent"]
             self.assertEqual(len(es_docs), 3)
             es_doc = [e for e in es_docs if e["did"]["unitid"] == "TRA13680001"][0]
@@ -222,6 +231,13 @@ class CSVDCImportTC(CSVImportMixIn, PostgresTextMixin, testlib.CubicWebTC):
                     "eadid",
                     "scopecontent",
                     "digitized",
+                    "digitized_versions",
+                    "creation_date",
+                    "sortdate",
+                    "startyear",
+                    "stopyear",
+                    "dates",
+                    "service",
                 },
             )
             es_index_entries = es_doc["index_entries"]
@@ -230,16 +246,22 @@ class CSVDCImportTC(CSVImportMixIn, PostgresTextMixin, testlib.CubicWebTC):
             es_doc = pick(es_doc, *(set(es_doc) - {"extid", "stable_id"}))
             # ensure `index_entries` list is alway in same order
             es_doc["index_entries"] = sorted(es_doc["index_entries"], key=lambda k: k["normalized"])
+            self.assertTrue(es_doc.pop("creation_date"))
             self.assertEqual(
                 es_doc,
                 {
                     "cw_etype": "FAComponent",
+                    "dates": {"gte": 1500, "lte": 1500},
                     "did": {
                         "unitid": "TRA13680001",
                         "unittitle": "Recueil de traités (1368-1408)",
                         "eid": None,
                     },
                     "digitized": True,
+                    "digitized_versions": {
+                        "illustration_url": "img1",
+                        "url": "http://www.diplomatie.gouv.fr/traites/affichetraite.do?accord=TRA13680001",  # noqa
+                    },
                     "eadid": None,
                     "eid": None,
                     "escategory": "archives",
@@ -247,7 +269,7 @@ class CSVDCImportTC(CSVImportMixIn, PostgresTextMixin, testlib.CubicWebTC):
                     "index_entries": [
                         {
                             "label": "Clermont-Ferrand",
-                            "normalized": "clermontferrand",
+                            "normalized": "clermont ferrand",
                             "type": "geogname",
                             "role": "index",
                             "authority": None,
@@ -282,6 +304,10 @@ class CSVDCImportTC(CSVImportMixIn, PostgresTextMixin, testlib.CubicWebTC):
                     "publisher": "FRMAEE",
                     "scopecontent": "Validit\xe9 du trait\xe9 : historique.",
                     "year": 1500,
+                    "sortdate": "1500-01-01",
+                    "startyear": 1500,
+                    "stopyear": 1500,
+                    "service": {"eid": None, "level": "None", "code": "FRMAEE", "title": "FRMAEE"},
                 },
             )
 
@@ -459,6 +485,16 @@ class CSVDCImportTC(CSVImportMixIn, PostgresTextMixin, testlib.CubicWebTC):
                 fa = cnx.find("FindingAid", eadid="FRAD092_9FI_cartes-postales").one()
                 self._test_medatadata_csv(cnx, service, fa=fa)
 
+    def test_metadata_csv_wrong_identifier(self):
+        """
+        Trying: process a fname which not exists in "identifiant_fichier" column of metadata.csv
+        Expecting: CSVIntegrityError is raised
+        """
+        fname = "FRAD092_9F2_cartes-postales.csv"
+        metadata_filepath = self.csv_filepath("metadata.csv")
+        with self.assertRaises(CSVIntegrityError):
+            dc.csv_metadata_without_cache(fname, metadata_filepath)
+
     def test_metadata_csv_reimport(self):
         with self.admin_access.cnx() as cnx:
             service = cnx.create_entity(
@@ -506,10 +542,11 @@ class CSVDCImportTC(CSVImportMixIn, PostgresTextMixin, testlib.CubicWebTC):
                 self.assertEqual(
                     eadid.attrib["url"], "https://francearchives.fr/{}".format(fa.rest_path())
                 )
+                self.assertEqual(eadid.attrib["countrycode"], "FR")
 
     def test_name_stable_id_dc_with_metadata(self):
-        """ stable_id is based in the filename with extension:
-            - column 'identifiant_fichier' of metadata file with extension:"""
+        """stable_id is based in the filename with extension:
+        - column 'identifiant_fichier' of metadata file with extension:"""
         with self.admin_access.cnx() as cnx:
             with cnx.allow_all_hooks_but("es"):
                 fpath = self.csv_filepath("FRAD092_9FI_cartes-postales.csv")
@@ -615,6 +652,67 @@ class CSVDCReImportTC(CSVImportMixIn, PostgresTextMixin, testlib.CubicWebTC):
                 # reimport the same file
                 dc.import_filepath(cnx, config, fpath, meta_fpath)
                 self._test_medatadata_csv(cnx, service)
+
+    def test_creation_date_dc_import(self):
+        """Test FindingAid, FAComponent creation date is keept between reimports
+
+        Trying: import and reimport a FindingAid
+        Expecting: reimported FindingAid and FAComponent have original creation_date
+        """
+        with self.admin_access.cnx() as cnx:
+            cnx.create_entity(
+                "Service", code="FRAD092", short_name="AD 92", level="level-D", category="foo"
+            )
+            cnx.commit()
+            fpath = self.csv_filepath("FRAD092_9FI_cartes-postales.csv")
+            meta_fpath = self.csv_filepath("metadata.csv")
+            config = self.readerconfig.copy()
+            dc.import_filepath(cnx, config, fpath, meta_fpath)
+            fa_old = cnx.execute("Any X WHERE X is FindingAid").one()
+            comp_stable_id = "e3de7aefc6f62dfea3a5026232d5f295f388cedf"
+            comp_old = cnx.execute("Any X WHERE X stable_id %(s)s", {"s": comp_stable_id}).one()
+            # FindingAid
+            adapter = fa_old.cw_adapt_to("IFullTextIndexSerializable")
+            self.assertEqual(
+                format_date(adapter.serialize()["creation_date"]),
+                format_date(fa_old.creation_date),
+            )
+            creation_date = datetime(1914, 4, 5)
+            fmt = "%a %b %d %H:%M:%S %Y"
+            fa_old.cw_set(creation_date=creation_date)
+            comp_old.cw_set(creation_date=creation_date)
+            cnx.commit()
+            fa_old = cnx.execute("Any X WHERE X is FindingAid").one()
+            fa_old_date = fa_old.creation_date
+            comp_old_date = comp_old.creation_date
+            self.assertEqual(
+                creation_date.strftime(fmt),
+                fa_old_date.strftime(fmt),
+            )
+            adapter = fa_old.cw_adapt_to("IFullTextIndexSerializable")
+            self.assertEqual(
+                format_date(adapter.serialize()["creation_date"]),
+                format_date(fa_old.creation_date),
+            )
+            # reimport the same file
+            config.update({"dc_no_cache": False, "reimport": True, "force_delete": True})
+            dc.import_filepath(cnx, config, fpath, meta_fpath)
+            fa = cnx.execute("Any X WHERE X is FindingAid").one()
+            self.assertNotEqual(fa_old.eid, fa.eid)
+            adapter = fa.cw_adapt_to("IFullTextIndexSerializable")
+            self.assertEqual(
+                format_date(adapter.serialize()["creation_date"]),
+                format_date(fa.creation_date),
+            )
+            self.assertEqual(fa_old_date, fa.creation_date)
+            # FAComponent
+            comp = cnx.execute("Any X WHERE X stable_id %(s)s", {"s": comp_stable_id}).one()
+            adapter = comp.cw_adapt_to("IFullTextIndexSerializable")
+            self.assertEqual(
+                format_date(adapter.serialize()["creation_date"]),
+                format_date(comp.creation_date),
+            )
+            self.assertEqual(comp.creation_date, comp_old_date)
 
 
 if __name__ == "__main__":

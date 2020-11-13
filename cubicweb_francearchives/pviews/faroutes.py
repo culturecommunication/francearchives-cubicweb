@@ -168,6 +168,15 @@ def alignment_csv_view(request):
     return alignment_csv(request.cw_request)
 
 
+@view_config(route_name="glossary", request_method=("GET", "HEAD"))
+def glossary_view(request):
+    cwreq = request.cw_request
+    rset = cwreq.execute("Any X, T, D WHERE X is GlossaryTerm, X term T, X short_description D")
+    viewsreg = cwreq.vreg["views"]
+    view = viewsreg.select("glossary", cwreq, rset=rset)
+    return Response(viewsreg.main_template(cwreq, "main-template", rset=rset, view=view))
+
+
 @view_config(route_name="indices-csv", request_method=("GET", "HEAD"), renderer="csv")
 def indices_csv_view(request):
     auth_type = request.matchdict["type"]
@@ -203,6 +212,43 @@ def virtualexhibitsview(request):
     viewsreg = cwreq.vreg["views"]
     view = viewsreg.select("esearch", cwreq, rset=None)
     return Response(viewsreg.main_template(cwreq, "main-template", rset=None, view=view))
+
+
+@view_config(route_name="facomponents", request_method=("GET", "HEAD"))
+def facomponents_view(request):
+    cwreq = request.cw_request
+    cwreq.form.setdefault("vid", "esearch")
+    cwreq.form.setdefault("es_cw_etype", "FAComponent")
+    viewsreg = cwreq.vreg["views"]
+    view = viewsreg.select("esearch", cwreq, rset=None)
+    return Response(viewsreg.main_template(cwreq, "main-template", rset=None, view=view))
+
+
+@view_config(route_name="findingaids", request_method=("GET", "HEAD"))
+def findingaids_view(request):
+    cwreq = request.cw_request
+    cwreq.form.setdefault("vid", "esearch")
+    cwreq.form.setdefault("es_cw_etype", "FindingAid")
+    viewsreg = cwreq.vreg["views"]
+    view = viewsreg.select("esearch", cwreq, rset=None)
+    return Response(viewsreg.main_template(cwreq, "main-template", rset=None, view=view))
+
+
+@view_config(route_name="faq", request_method=("GET", "HEAD"))
+def faq_view(request):
+    cwreq = request.cw_request
+    if cwreq.vreg.config.get("instance-type") != "cms":
+        card = find_card(cwreq, "faq")
+        if card is None:
+            raise HTTPNotFound()
+        rset = card.as_rset()
+        viewsreg = cwreq.vreg["views"]
+        view = viewsreg.select("primary", cwreq, rset=rset)
+    else:
+        rset = cwreq.execute("Any X, A, Q WHERE X is FaqItem, X question Q, X answer A")
+        viewsreg = cwreq.vreg["views"]
+        view = viewsreg.select("faq", cwreq, rset=rset)
+    return Response(viewsreg.main_template(cwreq, "main-template", rset=rset, view=view))
 
 
 @view_config(route_name="service-documents", request_method=("GET", "HEAD"))
@@ -263,7 +309,7 @@ def circulars_csv_view(request):
     )
     rows = []
     for json_values in rset:
-        rows.append([v or "" for l, v in json_values[0]])
+        rows.append([v or "" for li, v in json_values[0]])
     headers = [cwreq._(e[0]) for e in json_values[0]]
     return {"rows": rows, "headers": headers}
 
@@ -288,22 +334,34 @@ REWRITE_RULES = [
     (
         "commemocoll-timeline",
         r"/commemo/recueil-{year:\d+}/timeline",
-        {"vid": "pnia.vtimeline", "rql": "Any X WHERE X is CommemoCollection, X year %(year)s",},
+        {
+            "vid": "pnia.vtimeline",
+            "rql": "Any X WHERE X is CommemoCollection, X year %(year)s",
+        },
     ),
     (
         "commemocoll",
         r"/commemo/recueil-{year:\d+}/",
-        {"vid": "primary", "rql": "Any X WHERE X is CommemoCollection, X year %(year)s",},
+        {
+            "vid": "primary",
+            "rql": "Any X WHERE X is CommemoCollection, X year %(year)s",
+        },
     ),
     (
         "commemoitem",
         r"/commemo/recueil-{year:\d+}/{commemo:\d+}",
-        {"vid": "primary", "rql": "Any X WHERE X commemoration_year %(year)s, X eid %(commemo)s",},
+        {
+            "vid": "primary",
+            "rql": "Any X WHERE X commemoration_year %(year)s, X eid %(commemo)s",
+        },
     ),
     (
         "annuaire",
         r"/annuaire/{eid:\d+}",
-        {"vid": "primary", "rql": "Any X WHERE X is Service, X eid %(eid)s",},
+        {
+            "vid": "primary",
+            "rql": "Any X WHERE X is Service, X eid %(eid)s",
+        },
     ),
     (
         "topsection",
@@ -417,10 +475,18 @@ def includeme(config):
     for route, path, context in REWRITE_RULES:
         config.add_route(route, path, factory=partial(rqlrequest_factory, **context))
         config.add_view(rqlbased_view, route_name=route, request_method=("GET", "HEAD"))
-    config.add_route(
-        "entrypoint-card",
-        "/{wiki:(faq|cgu|open_data|about|emplois|privacy_policy|legal_notices|accessibility|newsletter)}",  # noqa
+    wiki_words = (
+        "cgu",
+        "open_data",
+        "about",
+        "emplois",
+        "privacy_policy",
+        "legal_notices",
+        "accessibility",
+        "newsletter",
+        "glossary-card",
     )
+    config.add_route("entrypoint-card", "/{{wiki:({})}}".format("|".join(wiki_words)))
     config.add_view(card_view, route_name="entrypoint-card", request_method=("GET", "HEAD"))
     for path, vid in (
         ("sitemap", "sitemap"),
@@ -446,6 +512,10 @@ def includeme(config):
     config.add_route("fa-map", "/carte-inventaires")
     config.add_route("fa-map-json", "/fa-map.json")
     config.add_route("virtualexhibits", "/expositions")
+    config.add_route("facomponents", "/facomponent")
+    config.add_route("findingaids", "/findingaid")
+    config.add_route("faq", "/faq")
     config.add_route("circulars-csv", "/circulaires.csv")
-    config.add_notfound_view(startup_view_factory("404", status_code=404), append_slash=True)
+    config.add_route("glossary", "/glossaire")
+    config.add_notfound_view(startup_view_factory("404", status_code=404), append_slash=HTTPFound)
     config.scan(__name__)

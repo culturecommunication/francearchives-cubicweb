@@ -169,7 +169,7 @@ id="6" uri="">
         reader = oai_nomina.OAINominaReader()
         extentities = []
         for doc in documents:
-            extentities.extend(reader(etree.parse(doc).getroot(), None, {"name": "LE_SERVICE"}))
+            extentities.extend(reader(etree.parse(doc).getroot()[0], {"name": "LE_SERVICE"}))
         self.assertEqual(len(extentities), 2)
         extentities = [(ee.etype, ee.extid, ee.values) for ee in extentities]
         self.assertCountEqual(
@@ -272,7 +272,7 @@ id="6" uri="">
                 }
                 entities = chain(
                     *(
-                        reader(etree.parse(document).getroot(), None, service_infos)
+                        reader(etree.parse(document).getroot()[0], service_infos)
                         for document in documents
                     )
                 )

@@ -10,6 +10,9 @@ const config = module.exports = {
     entry: {
         'circular-table': ['./circular-table'],
         'pnialocation-map': ['./pnialocation-map'],
+        'glossary': ['./glossary'],
+        'pnia-toc': ['./pnia-toc'],
+        'pnia-faq': ['./pnia-faq'],
     },
     module: {
         loaders: [

@@ -231,9 +231,15 @@ def delete_from_es(cnx, stable_ids):
     :param Connection cnx: CubicWeb database connection
     :param dict stable_ids: stable IDs and related document types
     """
-    cms_indexer = cnx.vreg["es"].select("indexer", cnx)
-    portal_indexer = cnx.vreg["es"].select("indexer", cnx, published=True)
-    for indexer in (cms_indexer, portal_indexer):
+    indexers = (
+        # cms_indexer
+        cnx.vreg["es"].select("indexer", cnx),
+        # portal_indexer
+        cnx.vreg["es"].select("indexer", cnx, published=True),
+    )
+    if cnx.vreg.config["enable-kibana-indexes"]:
+        indexers += (cnx.vreg["es"].select("kibana-ir-indexer", cnx),)
+    for indexer in indexers:
         es = indexer.get_connection()
         es_docs = []
         for doc_type, ids in list(stable_ids.items()):

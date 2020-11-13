@@ -147,7 +147,7 @@ class TestOAIPMHWriter(unittest.TestCase):
         path = self.PATH.format(**self.SERVICE_INFOS)
         eadid = "FRAD123 F 1-1423"
         service_code = self.SERVICE_INFOS["code"]
-        file_path = os.path.join(path, "FRAD123_F_1-1423.xml".format(code=service_code))
+        file_path = os.path.join(path, "{code}_F_1-1423.xml".format(code=service_code))
         oai_writer = oai_utils.OAIPMHWriter(
             self.EAD_SERVICES_DIR, self.SERVICE_INFOS, subdirectories=["oaipmh"]
         )

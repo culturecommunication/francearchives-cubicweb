@@ -108,6 +108,7 @@ class PniaTextSearchResultView(EntityView):
 
     def cell_call(self, row, col, es_response=None):
         entity = self.cw_rset.get_entity(row, col)
+        entity = entity.cw_adapt_to("ITemplatable").entity_param()
         self.w(self.template.render(self.template_context(entity, es_response)))
 
     def properties(self, entity):
@@ -157,6 +158,13 @@ class CircularSearchResultView(PniaTextSearchResultView):
 
 class ServiceSearchResultView(PniaTextSearchResultView):
     __select__ = PniaTextSearchResultView.__select__ & is_instance("Service")
+
+    def template_context(self, entity, es_response, max_highlights=3):
+        template_context = super().template_context(
+            entity, es_response, max_highlights=max_highlights
+        )
+        template_context["entity"]["url"] = xml_escape(entity.url_anchor)
+        return template_context
 
     def properties(self, entity):
         website_link, email_link = None, None

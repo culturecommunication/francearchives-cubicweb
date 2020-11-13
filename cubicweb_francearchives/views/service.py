@@ -75,9 +75,8 @@ class SocialNetworkUrLAttributeView(URLAttributeView):
 
 class DeptMapForm(object):
     template = get_template("dpt-map-form.jinja2")
-    map_defaults = {
-        "disabledRegions": ["986", "97133"],
-    }
+
+    map_defaults = {"disabledRegions": ["97133"]}
 
     def __init__(self, custom_settings=None):
         self.map_settings = merge_dicts({}, self.map_defaults, custom_settings or {})

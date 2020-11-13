@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright © LOGILAB S.A. (Paris, FRANCE) 2016-2019
+# Copyright © LOGILAB S.A. (Paris, FRANCE) 2016-2020
 # Contact http://www.logilab.fr -- mailto:contact@logilab.fr
 #
 # This software is governed by the CeCILL-C license under French law and

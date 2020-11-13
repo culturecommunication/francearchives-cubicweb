@@ -185,3 +185,9 @@ msgstr ""
 
 msgid "start_date"
 msgstr ""
+
+msgid "Collapse the toc"
+msgstr ""
+
+msgid "Need help?"
+msgstr ""

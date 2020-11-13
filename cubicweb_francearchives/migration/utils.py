@@ -31,9 +31,96 @@
 
 """ migration helpers"""
 
+from cubicweb_francearchives.utils import table_exists
+
 
 def alter_published_table(cnx, table, column, attrtype):
     cnx.system_sql(
-        str("ALTER TABLE published.cw_%s ADD cw_%s %s" % (table, column, attrtype)),
+        str("ALTER TABLE published.cw_%s ADD  IF NOT EXISTS cw_%s %s" % (table, column, attrtype)),
         rollback_on_failure=False,
     )
+
+
+def drop_column_from_published_table(cnx, table, column):
+    cnx.system_sql(
+        str("ALTER TABLE published.cw_%s DROP COLUMN cw_%s" % (table, column)),
+        rollback_on_failure=False,
+    )
+
+
+def update_etypes_in_published_schema(
+    sql, etypes=None, rtypes=(), user=None, sqlschema="published", dumpfiles=None, verbose=True
+):
+    """Add or update etype related table in schema (named "published" by default) in
+    which we find filtered copied of CMS entities postgresql tables
+    (and the required relations) that are in the
+    wfs_cmsobject_published WF state.
+
+    This schema can be used by the "read-only" application (using the
+    "db-namespace" config option).
+    """
+    # create tables which does not exist in the dedicated namespace (schema) for entities that have
+    # a publication workflow and their relations
+    # XXX use jinja2 instead
+    create_tables = []
+    for etype in etypes:
+        tablename = "cw_" + etype.lower()
+        if table_exists(sql, tablename, sqlschema):
+            continue
+        create_tables.append(
+            "create table if not exists {schema}.{table} as "
+            "  select * from {table} where null;".format(table=tablename, schema=sqlschema)
+        )
+        create_tables.append(
+            "alter table {schema}.{table} "
+            "  add primary key (cw_eid);".format(table="cw_" + etype.lower(), schema=sqlschema)
+        )
+
+    # XXX should we introspect the cw schema to get these rtypes?
+    indexes = []
+    for rtype in rtypes:
+        tablename = rtype + "_relation"
+        if table_exists(sql, tablename, sqlschema):
+            continue
+        create_tables.append(
+            "create table if not exists {schema}.{table} as "
+            "  select * from {table} where null;".format(table=tablename, schema=sqlschema)
+        )
+        create_tables.append(
+            "alter table {schema}.{table} "
+            "  add primary key (eid_from, eid_to);".format(
+                table=rtype + "_relation", schema=sqlschema
+            )
+        )
+        # create indexes on those relation tables
+        for col in ("eid_from", "eid_to"):
+            indexes.append(
+                "create index {rtype}_{col}_idx on "
+                "{schema}.{rtype}_relation({col});".format(
+                    schema=sqlschema,
+                    rtype=rtype,
+                    col=col,
+                )
+            )
+    template = """
+{schema_creation}
+
+{create_tables}
+
+{indexes}
+"""
+    sqlcode = template.format(
+        schema_creation="",
+        create_tables="\n".join(create_tables),
+        indexes="\n".join(indexes),
+    )
+    if dumpfiles:
+        with open(osp.join(dumpfiles, "setup.sql"), "w") as fobj:
+            fobj.write(sqlcode)
+    if not sqlcode.strip():
+        print("-> no sqlcode to execute")
+        return
+    if sql:
+        if verbose:
+            print(sqlcode)
+        sql(sqlcode)

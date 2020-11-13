@@ -109,13 +109,10 @@ def generate_sitemaps(req, size_threshold=10 * 1000 * 1000, nb_entries_threshold
     nb_entries = 0
     for entity in iter_entities(req):
         # encode in utf-8 here to have the exact size
-        sitemap_entry = (
-            SITEMAP_ENTRY
-            % {
-                "loc": entity.absolute_url(),
-                "lastmod": entity.modification_date.strftime("%Y-%m-%d"),
-            }
-        ).encode("utf-8")
+        sitemap_entry = SITEMAP_ENTRY % {
+            "loc": entity.absolute_url(),
+            "lastmod": entity.modification_date.strftime("%Y-%m-%d"),
+        }
         size += len(sitemap_entry)
         if nb_entries >= nb_entries_threshold or size >= size_threshold:
             buf.write("\n</urlset>")
@@ -162,12 +159,12 @@ def sitemap_index_writer(output_dir, baseurl):
     except GeneratorExit:
         buf.write("</sitemapindex>")
         index_filename = "sitemap_index.xml"
-        with open(osp.join(output_dir, index_filename), "w") as sitemap_file:
-            sitemap_file.write(buf.getvalue())
+        with open(osp.join(output_dir, index_filename), "wb") as sitemap_file:
+            sitemap_file.write(buf.getvalue().encode("utf8"))
         sitemaps.insert(0, "Sitemap: {}{}".format(baseurl, index_filename))
-        with open(osp.join(output_dir, "robots.txt"), "w") as robots:
+        with open(osp.join(output_dir, "robots.txt"), "wb") as robots:
             robots.write(
-                """User-agent: *
+                b"""User-agent: *
 Disallow: /fr/search
 Disallow: /en/
 Disallow: /es/
@@ -175,7 +172,7 @@ Disallow: /de/
 
 %s
 """
-                % "\n".join(sitemaps)
+                % "\n".join(sitemaps).encode("utf8")
             )
 
 
@@ -184,7 +181,7 @@ def dump_sitemaps(req, output_dir, size_threshold=10 * 1000 * 1000, nb_entries_t
     for index, buf in enumerate(generate_sitemaps(req, size_threshold, nb_entries_threshold)):
         basename = "sitemap%s.xml.gz" % (index + 1)
         sitemap_file = gzip.open(osp.join(output_dir, basename), "wb")
-        sitemap_file.write(buf.getvalue())
+        sitemap_file.write(buf.getvalue().encode("utf8"))
         sitemap_file.close()
         index_writer.send(basename)
 

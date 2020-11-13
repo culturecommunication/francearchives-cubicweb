@@ -63,7 +63,7 @@ class OpenGraphMixin(object):
             ("description", self.meta.description()),
             ("type", self.og_type),
         ]
-        data.extend([("author", a) for a in self.authors()])
+        data.extend([("{}:author".format(self.og_type), a) for a in self.authors()])
         data.extend([("image", i) for i in self.images()])
         return [(name, value) for name, value in data if value]
 
@@ -106,7 +106,8 @@ class CommemorationItemOpenGrapAdpater(OpenGrapAdpater):
     __select__ = OpenGrapAdpater.__select__ & is_instance("CommemorationItem")
 
     def authors(self):
-        return [a.dc_title() for a in self.entity.author_indexes().entities()]
+        if self.meta:
+            return self.meta.author()
 
 
 class CardOpenGraphAdapter(OpenGrapAdpater):

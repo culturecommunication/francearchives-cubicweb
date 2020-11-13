@@ -50,6 +50,18 @@ from esfixtures import teardown_module  # noqa
 
 
 class ElasticSearchTC(HashMixIn, EsSerializableMixIn, CubicWebTC):
+    def setup_database(self):
+        super().setup_database()
+        with self.admin_access.cnx() as cnx:
+            subject_authority = cnx.create_entity("SubjectAuthority", label="foo")
+            cnx.create_entity("Subject", label="foo", authority=subject_authority)
+            scheme = cnx.create_entity("ConceptScheme", title="foo")
+            concept = cnx.create_entity("Concept", same_as=(subject_authority,), in_scheme=scheme)
+            cnx.create_entity(
+                "Label", language_code="fr", kind="preferred", label="foo", label_of=concept
+            )
+            cnx.commit()
+
     def create_indexable_entries(self, cnx):
         ce = cnx.create_entity
         ce("AgentAuthority", label="Charles de Gaulles")
@@ -111,8 +123,13 @@ class ElasticSearchTC(HashMixIn, EsSerializableMixIn, CubicWebTC):
     @patch("elasticsearch.client.Elasticsearch.index")
     def test_externref_index(self, index, exists, create):
         with self.admin_access.cnx() as cnx:
+            loc = cnx.create_entity("LocationAuthority", label="Paris")
             extref = cnx.create_entity(
-                "ExternRef", reftype="Virtual_exhibit", title="externref-title", url="http://toto"
+                "ExternRef",
+                reftype="Virtual_exhibit",
+                title="externref-title",
+                url="http://toto",
+                related_authority=loc,
             )
             cnx.commit()
             indexer = cnx.vreg["es"].select("indexer", cnx)
@@ -125,6 +142,10 @@ class ElasticSearchTC(HashMixIn, EsSerializableMixIn, CubicWebTC):
                 ("cw_etype", "Virtual_exhibit"),
                 ("reftype", "virtual_exhibit"),
                 ("cwuri", extref.cwuri),
+                (
+                    "index_entries",
+                    [{"authority": loc.eid, "label": loc.label, "normalized": "Paris"}],
+                ),
             ):
                 self.assertEqual(kwargs["body"][arg_name], expected_value)
             index.reset_mock()
@@ -136,6 +157,11 @@ class ElasticSearchTC(HashMixIn, EsSerializableMixIn, CubicWebTC):
             self.assertEqual(kwargs["doc_type"], "_doc")
             self.assertEqual(kwargs["body"]["cw_etype"], "Virtual_exhibit")
             self.assertEqual(kwargs["body"]["title"], new_title)
+            extref.cw_set(related_authority=None)
+            cnx.commit()
+            self.assertTrue(index.called)
+            args, kwargs = index.call_args
+            self.assertEqual(kwargs["body"]["index_entries"], [])
 
     @patch("elasticsearch.client.indices.IndicesClient.create")
     @patch("elasticsearch.client.indices.IndicesClient.exists")
@@ -197,6 +223,51 @@ class ElasticSearchTC(HashMixIn, EsSerializableMixIn, CubicWebTC):
     @patch("elasticsearch.client.indices.IndicesClient.create")
     @patch("elasticsearch.client.indices.IndicesClient.exists")
     @patch("elasticsearch.client.Elasticsearch.index")
+    def test_index_commemo_with_authority(self, index, exists, create):
+        with self.admin_access.cnx() as cnx:
+            ce = cnx.create_entity
+            subject = ce("SubjectAuthority", label="Moyen Age")
+            collection = ce("CommemoCollection", title="Moyen Age", year=1500)
+            cnx.commit()
+            indexer = cnx.vreg["es"].select("indexer", cnx)
+            indexer.get_connection()
+            self.assertTrue(index.called)
+            index.reset_mock()
+            commemo_item = ce(
+                "CommemorationItem",
+                title="Commemoration",
+                alphatitle="commemoration",
+                content="content<br />commemoration",
+                commemoration_year=1500,
+                related_authority=subject,
+                collection_top=collection,
+            )
+            cnx.commit()
+            for args, kwargs in index.call_args_list:
+                if kwargs["doc_type"] == "_doc":
+                    break
+            else:
+                self.fail("index not called on CommemorationItem")
+            self.assertEqual(kwargs["doc_type"], "_doc")
+            self.assertEqual(kwargs["body"]["cw_etype"], "CommemorationItem")
+            self.assertEqual(
+                kwargs["body"]["index_entries"],
+                [{"authority": subject.eid, "label": subject.label, "normalized": "Moyen Age"}],
+            )
+            index.reset_mock()
+            commemo_item.cw_set(related_authority=None)
+            cnx.commit()
+            commemo_item = cnx.entity_from_eid(commemo_item.eid)
+            self.assertFalse(commemo_item.related_authority)
+            indexer = cnx.vreg["es"].select("indexer", cnx)
+            indexer.get_connection()
+            self.assertTrue(index.called)
+            args, kwargs = index.call_args
+            self.assertEqual(kwargs["body"]["index_entries"], [])
+
+    @patch("elasticsearch.client.indices.IndicesClient.create")
+    @patch("elasticsearch.client.indices.IndicesClient.exists")
+    @patch("elasticsearch.client.Elasticsearch.index")
     def test_index_single_base_content(self, index, exists, create):
         with self.admin_access.cnx() as cnx:
             basecontent = cnx.create_entity("BaseContent", title="program", content="31 juin")
@@ -223,17 +294,50 @@ class ElasticSearchTC(HashMixIn, EsSerializableMixIn, CubicWebTC):
     @patch("elasticsearch.client.indices.IndicesClient.create")
     @patch("elasticsearch.client.indices.IndicesClient.exists")
     @patch("elasticsearch.client.Elasticsearch.index")
+    def test_index_base_content_with_authority(self, index, exists, create):
+        with self.admin_access.cnx() as cnx:
+            agent = cnx.create_entity("AgentAuthority", label="Jean Valjean")
+            basecontent = cnx.create_entity(
+                "BaseContent", title="program", content="31 juin", related_authority=agent
+            )
+            cnx.commit()
+            agent = cnx.entity_from_eid(agent.eid)
+            indexer = cnx.vreg["es"].select("indexer", cnx)
+            indexer.get_connection()
+            self.assertTrue(index.called)
+            args, kwargs = index.call_args
+            self.assertEqual(
+                kwargs["body"]["index_entries"],
+                [{"authority": agent.eid, "label": agent.label, "normalized": "Jean Valjean"}],
+            )
+            index.reset_mock()
+            # remove authority
+            basecontent.cw_set(related_authority=None)
+            cnx.commit()
+            indexer = cnx.vreg["es"].select("indexer", cnx)
+            indexer.get_connection()
+            self.assertTrue(index.called)
+            args, kwargs = index.call_args
+            self.assertEqual(kwargs["body"]["index_entries"], [])
+
+    @patch("elasticsearch.client.indices.IndicesClient.create")
+    @patch("elasticsearch.client.indices.IndicesClient.exists")
+    @patch("elasticsearch.client.Elasticsearch.index")
     def test_index_circular_file(self, index, exists, create):
         with self.admin_access.cnx() as cnx:
             signing_date = dt.date(2001, 6, 6)
             with open(osp.join(self.datadir, "pdf.pdf"), "rb") as pdf:
                 ce = cnx.create_entity
+                concept = cnx.execute("Any X WHERE X is Concept").one()
+                cnx.execute("Any X WHERE X is Subject").one()
+                subject_authority = cnx.execute("Any X WHERE X is SubjectAuthority").one()
                 circular = ce(
                     "Circular",
                     circ_id="circ01",
                     title="Circular",
                     signing_date=signing_date,
                     status="in-effect",
+                    business_field=concept,
                 )
                 attachement = ce(
                     "File",
@@ -257,6 +361,13 @@ class ElasticSearchTC(HashMixIn, EsSerializableMixIn, CubicWebTC):
                 ("cwuri", circular.cwuri),
             ):
                 self.assertEqual(kwargs["body"][arg_name], expected_value)
+            self.assertEqual(len(kwargs["body"]["index_entries"]), 1)
+            self.assertDictEqual(
+                kwargs["body"]["index_entries"][0],
+                {
+                    "authority": subject_authority.eid,
+                },
+            )
             # modify the pdf
             index.reset_mock()
             new_title = "New title"

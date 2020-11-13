@@ -124,7 +124,8 @@ def main(serivces):
                     fi_attrs,
                 )
             fas = rql(  # noqa
-                "Any F, SI WHERE F finding_aid X, " "F stable_id SI, " "X eid %(e)s", {"e": fi.eid},
+                "Any F, SI WHERE F finding_aid X, " "F stable_id SI, " "X eid %(e)s",
+                {"e": fi.eid},
             )
             print("found %s FAComponents" % len(fas))
             for fa in fas.entities():

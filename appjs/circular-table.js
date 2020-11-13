@@ -27,88 +27,101 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL-C license and that you accept its terms.
  */
-import {render} from 'react-dom';
-import {Component, createElement as ce} from 'react';
 
-import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table';
+/* global data */
 
+import {render} from 'react-dom'
+import {Component, createElement as ce} from 'react'
+
+import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table'
 
 function titleFormat(cell) {
-    return ce('a', {href: cell[1]}, cell[0]);
+    return ce('a', {href: cell[1]}, cell[0])
 }
-
 
 function statusFormat(cell) {
     return ce('div', {
         className: `circular-status circular-status-${cell[1]} circular-status--block`,
         title: cell[0],
-    });
+    })
 }
 
-
-function caretRender(direction, fieldName) {
-    const carets = [];
-    let selected = false;
+function caretRender(direction) {
+    const carets = []
+    let selected = false
     if (direction === 'asc') {
-        selected = true;
-        carets.push(ce('i', {className: 'fa fa-caret-up'}));
+        selected = true
+        carets.push(ce('i', {className: 'fa fa-caret-up'}))
     } else if (direction === 'desc') {
-        selected = true;
-        carets.push(ce('i', {className: 'fa fa-caret-down'}));
+        selected = true
+        carets.push(ce('i', {className: 'fa fa-caret-down'}))
     } else {
         carets.push(
             ce('i', {className: 'fa fa-caret-up'}),
-            ce('i', {className: 'fa fa-caret-down'})
+            ce('i', {className: 'fa fa-caret-down'}),
         )
     }
-    return ce('span', {
-        className: `circulartable_caret ${selected ? 'circulartable_caret-selected' : ''}`,
-    }, ...carets);
+    return ce(
+        'span',
+        {
+            className: `circulartable_caret ${
+                selected ? 'circulartable_caret-selected' : ''
+            }`,
+        },
+        ...carets,
+    )
 }
 
-
-const ALL_BUSINESS_FIELDS_DEFAULT = '-- tous --';
-const ALL_BUSINESS_FIELDS = [ALL_BUSINESS_FIELDS_DEFAULT].concat(Array.from(new Set(
-    data.reduce((acc, value) => acc.concat(value.business_fields), [])
-)).sort());
-const ALL_BUSINESS_FIELDS_OPTIONS = ALL_BUSINESS_FIELDS.map(
-    (b, idx) => ce('option', {key: `bfield-${idx}`, value: b}, b)
-);
-
+const ALL_BUSINESS_FIELDS_DEFAULT = '-- tous --'
+const ALL_BUSINESS_FIELDS = [ALL_BUSINESS_FIELDS_DEFAULT].concat(
+    Array.from(
+        new Set(
+            data.reduce((acc, value) => acc.concat(value.business_fields), []),
+        ),
+    ).sort(),
+)
+const ALL_BUSINESS_FIELDS_OPTIONS = ALL_BUSINESS_FIELDS.map((b, idx) =>
+    ce('option', {key: `bfield-${idx}`, value: b}, b),
+)
 
 class CircularTable extends Component {
-
     constructor(props) {
-        super(props);
+        super(props)
         this.state = {
             selectedData: data,
             selectedBF: ALL_BUSINESS_FIELDS_DEFAULT,
-        };
-        this.updateBF = this.updateBF.bind(this);
+        }
+        this.updateBF = this.updateBF.bind(this)
     }
 
     updateBF(ev) {
-        ev.preventDefault();
-        const selectedBF = ev.target.value;
-        console.log('ev.value', selectedBF);
+        ev.preventDefault()
+        const selectedBF = ev.target.value
         this.setState({
             selectedBF,
-            selectedData: (selectedBF === ALL_BUSINESS_FIELDS_DEFAULT ? data :
-                data.filter(d => d.business_fields.includes(selectedBF))),
-        });
+            selectedData:
+                selectedBF === ALL_BUSINESS_FIELDS_DEFAULT
+                    ? data
+                    : data.filter((d) =>
+                          d.business_fields.includes(selectedBF),
+                      ),
+        })
     }
 
     render() {
-        const {selectedBF, selectedData} = this.state;
+        const {selectedBF, selectedData} = this.state
         return ce(
-            'div', null,
+            'div',
+            null,
             ce('span', null, 'Sélectionner un domaine (thésaurus) : '),
             ce(
-                'select', {value: selectedBF, onChange: this.updateBF},
-                ALL_BUSINESS_FIELDS_OPTIONS
+                'select',
+                {value: selectedBF, onChange: this.updateBF},
+                ALL_BUSINESS_FIELDS_OPTIONS,
             ),
             ce(
-                BootstrapTable, {
+                BootstrapTable,
+                {
                     data: selectedData,
                     striped: true,
                     hover: true,
@@ -139,30 +152,65 @@ class CircularTable extends Component {
                         ],
                     },
                 },
-                ce(TableHeaderColumn, {isKey: true, dataField: 'eid', hidden: true}),
-                ce(TableHeaderColumn, {dataField: 'kind', with: '10%', dataSort: true, caretRender}, 'Nature'),
-                ce(TableHeaderColumn, {dataField: 'code', with: '10%', dataSort: true, caretRender}, 'Code'),
                 ce(TableHeaderColumn, {
-                    dataField: 'date',
-                    with: '10%',
-                    dataSort: true,
-                    caretRender,
-                    dataFormat(cell) {
-                        if (!cell) {
-                            return;
-                        }
-                        const [year, month, day] = cell.split('-');
-                        return `${day}/${month}/${year}`;
-                    }}, 'Date'),
-                ce(TableHeaderColumn, {dataField: 'title', dataFormat: titleFormat, width: '65%'}, 'Titre'),
-                ce(TableHeaderColumn, {dataField: 'status', dataFormat: statusFormat, width: '5%'}, 'Statut'),
+                    isKey: true,
+                    dataField: 'eid',
+                    hidden: true,
+                }),
+                ce(
+                    TableHeaderColumn,
+                    {
+                        dataField: 'kind',
+                        with: '10%',
+                        dataSort: true,
+                        caretRender,
+                    },
+                    'Nature',
+                ),
+                ce(
+                    TableHeaderColumn,
+                    {
+                        dataField: 'code',
+                        with: '10%',
+                        dataSort: true,
+                        caretRender,
+                    },
+                    'Code',
+                ),
+                ce(
+                    TableHeaderColumn,
+                    {
+                        dataField: 'date',
+                        with: '10%',
+                        dataSort: true,
+                        caretRender,
+                        dataFormat(cell) {
+                            if (!cell) {
+                                return
+                            }
+                            const [year, month, day] = cell.split('-')
+                            return `${day}/${month}/${year}`
+                        },
+                    },
+                    'Date',
+                ),
+                ce(
+                    TableHeaderColumn,
+                    {dataField: 'title', dataFormat: titleFormat, width: '65%'},
+                    'Titre',
+                ),
+                ce(
+                    TableHeaderColumn,
+                    {
+                        dataField: 'status',
+                        dataFormat: statusFormat,
+                        width: '5%',
+                    },
+                    'Statut',
+                ),
             ),
-        );
+        )
     }
-
 }
 
-render(
-    ce(CircularTable),
-    document.getElementById('bs-table-container')
-);
+render(ce(CircularTable), document.getElementById('bs-table-container'))

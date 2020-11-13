@@ -506,6 +506,20 @@ function initScrollBtn() {
   });
 }
 
+function initXitiSLinks() {
+    const xitiSLinksSelector ="a[data-xiti-name]";
+    $(document).on('click', xitiSLinksSelector, function () {
+        const ds = this.dataset;
+        return xt_click(this, ds.xitiLevel, ds.xitiN2, ds.xitiName, ds.xitiType);
+    });
+    $(document).on('keypress', xitiSLinksSelector, function (event) {
+        if (!/(13)/.test(e.keyCode)) return;
+        const ds = this.dataset;
+        return xt_click(this, ds.xitiLevel, ds.xitiN2, ds.xitiName, ds.xitiType);
+    });
+}
+
+
 $('document').ready(function(){
     setupEscapeButton();
     resizeHeroImages();
@@ -522,10 +536,18 @@ $('document').ready(function(){
     setupSitemap();
     setupAncestorsFacet();
     setupAriaOnSearchInputRadio();
-    initScrollBtn()
+    initScrollBtn();
+    initXitiSLinks();
 });
 
 window.onresize = function() {
     resizeHeroImages();
 }
 
+
+$(function () {
+    document.querySelectorAll('[rel="popover"]').forEach(function(pop) {
+       // XXX quid of existing link if (pop.parentNode.tagName.toLocaleLowerCase() != 'a')
+       $(pop).popover({trigger: "hover", html:true});
+    });
+})

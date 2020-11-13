@@ -54,7 +54,10 @@ class PniaIndexer(Indexer):
                     "type": "elision",
                     "articles": ["l", "m", "t", "qu", "n", "s", "j", "d"],
                 },
-                "my_ascii_folding": {"type": "asciifolding", "preserve_original": True,},
+                "my_ascii_folding": {
+                    "type": "asciifolding",
+                    "preserve_original": True,
+                },
             },
             "analyzer": {
                 "default": {
@@ -93,7 +96,34 @@ class PniaIndexer(Indexer):
                         "type": {"type": "keyword"},
                     },
                 },
+                "title_en": {"type": "text", "copy_to": "alltext_en", "analyzer": "english"},
+                "title_es": {"type": "text", "copy_to": "alltext_en", "analyzer": "spanish"},
+                "title_de": {"type": "text", "copy_to": "alltext_en", "analyzer": "german"},
+                "subtitle_en": {"type": "text", "copy_to": "alltext_en", "analyzer": "english"},
+                "subtitle_es": {"type": "text", "copy_to": "alltext_en", "analyzer": "spanish"},
+                "subtitle_de": {"type": "text", "copy_to": "alltext_en", "analyzer": "german"},
+                "content_en": {"type": "text", "copy_to": "alltext_en", "analyzer": "english"},
+                "content_es": {"type": "text", "copy_to": "alltext_en", "analyzer": "spanish"},
+                "content_de": {"type": "text", "copy_to": "alltext_en", "analyzer": "german"},
+                "short_description_en": {
+                    "type": "text",
+                    "copy_to": "alltext_en",
+                    "analyzer": "english",
+                },
+                "short_description_es": {
+                    "type": "text",
+                    "copy_to": "alltext_en",
+                    "analyzer": "spanish",
+                },
+                "short_description_de": {
+                    "type": "text",
+                    "copy_to": "alltext_en",
+                    "analyzer": "german",
+                },
                 "alltext": {"type": "text"},
+                "alltext_en": {"type": "text", "analyzer": "english"},
+                "alltext_de": {"type": "text", "analyzer": "spanish"},
+                "alltext_es": {"type": "text", "analyzer": "german"},
                 "escategory": {"type": "keyword"},
                 # FindingAid, FAComponent
                 "originators": {"type": "keyword", "copy_to": "alltext"},
@@ -115,6 +145,27 @@ class PniaIndexer(Indexer):
                 # ExternRef
                 "reftype": {"type": "keyword"},
                 "in_state": {"type": "keyword"},
+                "creation_date": {"type": "date"},
+                # FindingAid, FAComponent
+                "dates": {"type": "integer_range"},
+                "startyear": {"type": "date", "format": "yyyy"},
+                "stopyear": {"type": "date", "format": "yyyy"},
+                "sortdate": {"type": "date", "format": "yyyy-MM-dd"},
+                "service": {
+                    "properties": {
+                        "eid": {"type": "integer"},
+                        "code": {"type": "keyword"},
+                        "level": {"type": "keyword"},
+                        "title": {"type": "keyword"},
+                    }
+                },
+                "digitized_versions": {
+                    "properties": {
+                        "url": {"type": "keyword"},
+                        "role": {"type": "keyword"},
+                        "illustration_url": {"type": "keyword"},
+                    }
+                },
             },
         }
         return mapping
@@ -127,7 +178,10 @@ class PniaIndexer(Indexer):
     def settings(self):
         settings = Indexer.settings.copy()
         settings.update(
-            {"settings": self.analyser_settings, "mappings": self.mapping,}
+            {
+                "settings": self.analyser_settings,
+                "mappings": self.mapping,
+            }
         )
         return settings
 
@@ -192,6 +246,24 @@ class PniaIFullTextIndexSerializable(IFullTextIndexSerializable):
         return data
 
 
+class TranslatableIndexSerializableMixin(object):
+    def add_translations(self, complete=True, **kwargs):
+        data = {}
+        translations = self.entity.reverse_translation_of
+        if not translations:
+            return data
+        eschema = translations[0].e_schema
+        indexables = [attr.type for attr in eschema.indexable_attributes()]
+        for lang, values in self.entity.translations(**kwargs).items():
+            for attribute, value in values.items():
+                if attribute not in indexables:
+                    continue
+                if value and eschema.has_metadata(attribute, "format"):
+                    value = remove_html_tags(value)
+                data["{attr}_{lang}".format(attr=attribute, lang=lang)] = value
+        return data
+
+
 class ISuggestIndexSerializable(EntityAdapter):
     __regid__ = "ISuggestIndexSerializable"
     __select__ = is_instance(*SUGGEST_ETYPES)
@@ -214,55 +286,76 @@ class ISuggestIndexSerializable(EntityAdapter):
     def es_doc_type(self):
         return "_doc"
 
+    def related_docs_queries(self, published=False):
+        """Get queries to compute the number of related
+        documents.
+
+        :param bool published: whether published documents should be included
+
+        :returns: list of queries
+        :rtype: list
+        """
+        if published:
+            state = ", F in_state S, S name '{}'".format("wfs_cmsobject_published")
+        else:
+            state = ""
+        queries = [
+            """(DISTINCT Any F WHERE EXISTS(A authority X, A index F),
+            X eid %(eid)s, F is FindingAid{state})""",
+            """(DISTINCT Any FA WHERE EXISTS(A authority X, A index FA, X eid %(eid)s),
+            FA finding_aid F{state})""",
+            """(DISTINCT Any F WHERE EXISTS(F? related_authority X),
+            X eid %(eid)s{state})""",
+        ]
+        if self.entity.cw_etype == "SubjectAuthority":
+            queries.append(
+                """(DISTINCT Any F WHERE
+                              EXISTS (F business_field B, X same_as B)
+                              OR EXISTS(F historical_context H, X same_as H)
+                              OR EXISTS(F document_type D, X same_as D)
+                              OR EXISTS(F action A, X same_as A),
+                              X eid %(eid)s{state})"""
+            )
+        return [query.format(state=state) for query in queries]
+
     def published_docs(self):
         """compute the number of related published :
-           - FindingAids
-           - FAComponents
-           - Entities related by `related_authority`
+        - FindingAids
+        - FAComponents
+        - Circulars
+        - Entities related by `related_authority` relation
         """
         return self._cw.execute(
-            """
-        Any COUNT(F) WITH F BEING (
-          (DISTINCT Any F WHERE A authority X, A index F,
-            X eid %(eid)s, F is FindingAid, F in_state S, S name %(state)s)
-        UNION
-          (DISTINCT Any FA WHERE A authority X, A index FA, X eid %(eid)s,
-           FA finding_aid F, F in_state S, S name %(state)s)
-        UNION
-          (DISTINCT Any B WHERE B? related_authority X,
-           B in_state S, S name %(state)s, X eid %(eid)s)
-        )""",
-            {"eid": self.entity.eid, "state": "wfs_cmsobject_published"},
+            """Any COUNT(F) WITH F BEING ({queries})""".format(
+                queries=" UNION ".join(self.related_docs_queries(published=True))
+            ),
+            {"eid": self.entity.eid},
         )[0][0]
 
     def all_docs(self):
         """compute the number of all related :
-           - FindingAids
-           - FAComponents
-           - Entities related by `related_authority`
+        - FindingAids
+        - FAComponents
+        - Circulars
+        - Entities related by `related_authority`
         """
         return self._cw.execute(
-            """
-        Any COUNT(F) WITH F BEING (
-            (DISTINCT Any F WHERE A authority X, A index F, X eid %(eid)s)
-            UNION
-            (DISTINCT Any F WHERE F? related_authority X, X eid %(eid)s)
-            )""",
+            """Any COUNT(F) WITH F BEING ({queries})""".format(
+                queries=" UNION ".join(self.related_docs_queries())
+            ),
             {"eid": self.entity.eid},
         )[0][0]
 
     def grouped(self):
         query = """
-            Any COUNT(X1) GROUPBY X, L WHERE X eid {eid},
-            X label L, B? related_authority X,
-            X grouped_with X1?"""
+            Any COUNT(X1) WHERE X eid {eid}, X grouped_with X1?"""
         return bool(self._cw.execute(query.format(eid=self.entity.eid))[0][0])
 
     def related_docs(self, published=False):
         """compute the number of related FindingAids and FAComponents:
-           - total number if published == False
-           - number of published entities if published == True
-           flag groupped auhtorities"""
+        - total number if published == False
+        - number of published entities if published == True
+        flag groupped auhtorities"""
         if published:
             docs = self.published_docs()
         else:

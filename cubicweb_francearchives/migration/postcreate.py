@@ -159,14 +159,9 @@ RETURNS varchar AS $$
 DECLARE
         normalized varchar;
 BEGIN
- normalized := regexp_replace(entry, '\(\s*[\d.]+\s*-\s*[\d.]+\s*\)', '');
- normalized := translate(normalized, E'!"#$%&()*+,-./:;<=>?@[\\]^_`{|}~\'', '');
+ normalized := translate(entry, E'!"#$%&()*+,-./:;<=>?@[\\]^_`{|}~\'', '                                ');
  normalized := translate(normalized, E'\xc2\xa0\xc2\xb0\u2026\u0300\u0301', ' _.__');
- normalized := btrim(unaccent(lower(normalized)));
-
- SELECT string_agg(T.word, ' ') INTO normalized
- FROM (SELECT unnest(string_to_array(normalized, ' ')) AS word ORDER BY 1) AS T;
-
+ normalized := btrim(regexp_replace(unaccent(lower(normalized)), '\s+', ' ', 'g'));
  RETURN btrim(normalized);
 END;
 $$ LANGUAGE plpgsql;
@@ -230,6 +225,16 @@ for wikiid, title in (
     for lang in SUPPORTED_LANGS:
         create_entity(
             "Card", wikiid="%s-%s" % (wikiid, lang), title=title, content_format="text/html"
+        )
+
+for wikiid, title in (("glossary-card", "Glossaire"),):
+    for lang in SUPPORTED_LANGS:
+        create_entity(
+            "Card",
+            wikiid="%s-%s" % (wikiid, lang),
+            title=title,
+            content_format="text/html",
+            do_index=False,
         )
 
 

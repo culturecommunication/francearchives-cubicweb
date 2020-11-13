@@ -1,7 +1,7 @@
 {% from "./mixins.jinja2" import imagelist %}
 {% if recents %}
 <div class="row">
-    <div class="col-lg-7">
+    <div class="col-lg-8">
         <article id="article" class="basenewscontent-view">
           <h1><span class="sr-only">{{ _(entity.__regid__) }} : </span>{{ entity.title | e }}</h1>
           {% if entity.header %}
@@ -33,7 +33,7 @@
   {% else %}
         </article>
     </div>
-    <aside class="siderelated col-lg-5 hidden-print">
+    <aside class="siderelated col-lg-4 hidden-print">
         <h1 class="no-style siderelated__header">{{ recent_label }}</h1>
         {% for recent_entity in recents %}
         <div class="siderelated__content-item">

@@ -38,6 +38,8 @@ import shutil
 import os
 import os.path as osp
 
+from logilab.common.date import ustrftime
+
 from cubicweb.cwconfig import CubicWebConfiguration
 
 # library specific imports
@@ -53,6 +55,21 @@ from cubicweb_francearchives.dataimport import create_ead_index_table
 
 # third party imports
 from cubicweb.devtools import PostgresApptestConfiguration
+
+
+def create_findingaid(cnx, eadid, service):
+    return cnx.create_entity(
+        "FindingAid",
+        name=eadid,
+        stable_id="stable_id{}".format(eadid),
+        eadid=eadid,
+        publisher="publisher",
+        did=cnx.create_entity(
+            "Did", unitid="unitid {}".format(eadid), unittitle="title {}".format(eadid)
+        ),
+        fa_header=cnx.create_entity("FAHeader"),
+        service=service,
+    )
 
 
 class PostgresTextMixin(object):
@@ -197,3 +214,7 @@ class OaiSickleMixin(object):
         with open(self.filepath(), "r") as fp:
             response = MockOaiSickleResponse(fp.read())
             return OAIResponse(response, kwargs)
+
+
+def format_date(date, fmt="%Y-%m-%d"):
+    return ustrftime(date, fmt)

@@ -128,14 +128,71 @@ class Section(CmsObject):
     children = SubjectRelation(CMS_OBJECTS, cardinality="*?")
 
 
+@uuidize
+class CmsI18nObject(EntityType):
+    __abstract__ = True
+    title = String(required=True, fulltextindexed=True)
+    content = RichString(fulltextindexed=True, default_format="text/html")
+    language = String(
+        required=True,
+        vocabulary=(
+            _("en"),
+            _("de"),
+            _("es"),
+        ),
+    )
+
+
+class SectionTranslation(CmsI18nObject):
+    __unique_together__ = [("language", "translation_of")]
+    subtitle = String(fulltextindexed=True)
+    short_description = String(fulltextindexed=True)
+
+
+class translation_of_section(RelationDefinition):
+    name = "translation_of"
+    subject = "SectionTranslation"
+    object = "Section"
+    cardinality = "1*"
+    inlined = True
+    composite = "object"
+
+
 class CommemoCollection(Section):
     year = Int(required=True)
 
 
 class BaseContent(CmsObject):
+    summary = RichString(default_format="text/html")
+    summary_policy = String(
+        required=True,
+        vocabulary=(
+            _("no_summary"),
+            _("summary_headers_6"),
+            # _("summary_headers_1"),
+            _("summary_headers_2"),
+            _("summary_headers_3"),
+        ),
+        default=_("no_summary"),
+        internationalizable=True,
+    )
     description = String()
     keywords = String()
     on_homepage = Boolean(default=False)
+
+
+class BaseContentTranslation(CmsI18nObject):
+    __unique_together__ = [("language", "translation_of")]
+    summary = RichString(default_format="text/html")
+
+
+class translation_of_basecontent(RelationDefinition):
+    name = "translation_of"
+    subject = "BaseContentTranslation"
+    object = "BaseContent"
+    cardinality = "1*"
+    inlined = True
+    composite = "object"
 
 
 class NewsContent(CmsObject):
@@ -166,6 +223,20 @@ class CommemorationItem(CmsObject):
     manif_prog = SubjectRelation(
         "BaseContent", cardinality="??", fulltext_container="subject", inlined=True
     )
+
+
+class CommemorationItemTranslation(CmsI18nObject):
+    __unique_together__ = [("language", "translation_of")]
+    subtitle = String(fulltextindexed=True)
+
+
+class translation_of_commemorationitem(RelationDefinition):
+    name = "translation_of"
+    subject = "CommemorationItemTranslation"
+    object = "CommemorationItem"
+    cardinality = "1*"
+    inlined = True
+    composite = "object"
 
 
 @uuidize
@@ -257,7 +328,12 @@ class commemoration_category(RelationDefinition):
 @uuidize
 class Circular(EntityType):
     circ_id = String(
-        indexed=True, required=True, unique=True, constraints=[RegexpConstraint(r"^[^/:?&\s]+$"),]
+        indexed=True,
+        required=True,
+        unique=True,
+        constraints=[
+            RegexpConstraint(r"^[^/:?&\s]+$"),
+        ],
     )
     siaf_daf_code = String(
         fulltextindexed=True, description=_("Text identification code (SIAF or DAF)")
@@ -383,7 +459,7 @@ class Service(EntityType):
     city = String()
     website_url = String()
     search_form_url = String(
-        description=_("Use %(eadid)s, %(unitid)s or %(unititle)s substitution pattern")
+        description=_("Use {eadid}, {unitid} or {unittitle} substitution pattern")
     )
     thumbnail_url = String(description=_("Use {url} substitution pattern"))
     thumbnail_dest = String(description=_("Use {url} substitution pattern"))
@@ -502,3 +578,56 @@ class Caches(EntityType):
     name = String(required=True, maxsize=32, indexed=True)
     values = Json(__permissions__=PNIA_ADMIN_ATTR_PERMS)
     instance_type = String(required=True, vocabulary=("cms", "consultation"))
+
+
+class GlossaryTerm(EntityType):
+    term = String(unique=True, required=True)
+    term_plural = String(unique=True, description=_("Usefull only for labels and filters"))
+    short_description = String(
+        required=True, description=_("Glossary term description for the popup")
+    )
+    description = String(required=True, description=_("Full glossary term description"))
+    sort_letter = String(required=True, maxsize=1)
+    anchor = String(unique=True)
+
+
+class FaqItem(EntityType):
+    question = RichString(required=True, default_format="text/html")
+    answer = RichString(required=True, default_format="text/html")
+    category = String(
+        required=True,
+        vocabulary=(
+            _("01_faq_basecontent_public"),
+            _("02_faq_search"),
+            _("03_faq_ir"),
+            _("04_faq_circular"),
+            _("05_faq_basecontent_pro"),
+            _("06_faq_eac"),
+        ),
+        default=_("03_faq_ir"),
+        internationalizable=True,
+    )
+    order = Int()
+
+
+class FaqItemTranslation(EntityType):
+    __unique_together__ = [("language", "translation_of")]
+    question = RichString(required=True, default_format="text/html")
+    answer = RichString(required=True, default_format="text/html")
+    language = String(
+        required=True,
+        vocabulary=(
+            _("en"),
+            _("de"),
+            _("es"),
+        ),
+    )
+
+
+class translation_of_faq(RelationDefinition):
+    name = "translation_of"
+    subject = "FaqItemTranslation"
+    object = "FaqItem"
+    cardinality = "1*"
+    inlined = True
+    composite = "object"

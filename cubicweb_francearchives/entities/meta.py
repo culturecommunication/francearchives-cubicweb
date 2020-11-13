@@ -36,6 +36,8 @@ from cubicweb.predicates import match_kwargs
 
 from cubicweb_francearchives.views import twitter_account_name
 
+AUTHORS_SEP = "###"
+
 
 class MetaMixin(object):
     @cachedproperty
@@ -50,11 +52,15 @@ class MetaMixin(object):
             ("title", self.title()),
             ("description", self.description()),
             ("keywords", self.keywords()),
-            ("author", self.author()),
-            ("subject", self.subject()),
-            ("twitter:card", "summary"),
-            ("twitter:site", twitter_account_name(self._cw.vreg.config)),
         ]
+        data.extend([("author", a) for a in self.author()])
+        data.extend(
+            [
+                ("subject", self.subject()),
+                ("twitter:card", "summary"),
+                ("twitter:site", twitter_account_name(self._cw.vreg.config)),
+            ]
+        )
         return [(name, value) for name, value in data if value]
 
     def title(self):
@@ -76,9 +82,12 @@ class MetaMixin(object):
         return None
 
     def author(self):
-        if self.meta:
-            return self.meta.creator
-        return None
+        """
+        see https://extranet.logilab.fr/ticket/69532639
+        """
+        if self.meta and self.meta.creator:
+            return self.meta.creator.split(AUTHORS_SEP)
+        return []
 
     def subject(self):
         if self.meta:
@@ -88,6 +97,12 @@ class MetaMixin(object):
 
 class BaseMetaAdapter(EntityAdapter, MetaMixin):
     __regid__ = "IMeta"
+
+    def meta_data(self):
+        adapter = self.entity.cw_adapt_to("ITranslatable")
+        if adapter:
+            adapter.cache_entity_translations()
+        return super(BaseMetaAdapter, self).meta_data()
 
 
 class HomePageMetaAdapter(Adapter, MetaMixin):

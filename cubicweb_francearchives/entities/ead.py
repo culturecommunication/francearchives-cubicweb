@@ -46,6 +46,7 @@ from cubicweb_elasticsearch.entities import IFullTextIndexSerializable
 
 from cubicweb_francearchives.utils import is_absolute_url
 from cubicweb_francearchives.entities import systemsource_entity
+from cubicweb_francearchives.dataimport.ead import dates_for_es_doc, service_infos_for_es_doc
 
 
 class FAComponentIFTIAdapter(IFullTextIndexSerializable):
@@ -75,7 +76,66 @@ class FAComponentIFTIAdapter(IFullTextIndexSerializable):
         data = {
             "eid": entity.eid,
             "cwuri": entity.cwuri,
+            "creation_date": entity.creation_date,
         }
+        # This is a temporary fix, remove it after ESDocuments are updated
+        if "service" not in es_doc or "dates" not in es_doc:
+            if self.entity.cw_etype == "FindingAid":
+                sql_query = """
+                SELECT _S.cw_eid,_S.cw_code, _S.cw_level, _S.cw_name, _S.cw_name2,
+                       _D.cw_startyear, _D.cw_stopyear
+                FROM cw_Did AS _D, cw_FindingAid AS _X
+                LEFT OUTER JOIN cw_Service AS _S ON (_X.cw_service=_S.cw_eid)
+                WHERE _X.cw_did=_D.cw_eid AND _X.cw_eid=%(eid)s"""
+            else:
+                sql_query = """
+                SELECT _S.cw_eid,_S.cw_code, _S.cw_level, _S.cw_name, _S.cw_name2,
+                       _D.cw_startyear, _D.cw_stopyear
+                FROM cw_Did AS _D, cw_FAComponent AS _X, cw_FindingAid AS _F
+                LEFT OUTER JOIN cw_Service AS _S ON (_F.cw_service=_S.cw_eid)
+                WHERE _X.cw_finding_aid=_F.cw_eid AND
+                      _X.cw_did=_D.cw_eid AND
+                      _X.cw_eid=%(eid)s
+            """
+            cu = self._cw.system_sql(sql_query, {"eid": self.entity.eid})
+            rset = cu.fetchall()
+
+            def service_title(level, name, name2):
+                if level == "level-D":
+                    return name2 or name
+                else:
+                    terms = [name, name2]
+                    return " - ".join(t for t in terms if t)
+
+            infos = [
+                {
+                    "startyear": startyear,
+                    "stopyear": stopyear,
+                    "service": {
+                        "eid": s_eid,
+                        "code": s_code,
+                        "level": self._cw._(s_level),
+                        "title": service_title(s_level, s_name, s_name2),
+                    },
+                }
+                for (s_eid, s_code, s_level, s_name, s_name2, startyear, stopyear) in rset
+            ][0]
+            es_doc.update(service_infos_for_es_doc(self._cw, infos["service"]))
+            es_doc.update(dates_for_es_doc(infos))
+            if self.entity.cw_etype == "FAComponent":
+                sql_query = """
+                SELECT _DA.cw_url,_DA.cw_illustration_url, _DA.cw_role
+                FROM cw_DigitizedVersion AS _DA,
+                     digitized_versions_relation AS reldv
+                WHERE reldv.eid_from=%(eid)s AND
+                     reldv.eid_to=_DA.cw_eid
+                """
+                cu = self._cw.system_sql(sql_query, {"eid": self.entity.eid})
+                es_doc["digitized_versions"] = [
+                    {"role": role, "illustration_url": illustration_url, "url": url}
+                    for (url, illustration_url, role) in cu.fetchall()
+                ]
+
         if isinstance(es_doc, str):
             # sqlite return unicode instead of dict
             es_doc = json.loads(es_doc)
@@ -210,9 +270,7 @@ class Did(AnyEntity):
 @systemsource_entity
 class FAComponent(IndexableMixin, FindingAidBaseMixin, AnyEntity):
     __regid__ = "FAComponent"
-    fetch_attrs, cw_fetch_order = fetch_config(
-        ["component_order", "stable_id", "description", "description_format", "did"], pclass=None
-    )
+    fetch_attrs, cw_fetch_order = fetch_config(["component_order", "stable_id"], pclass=None)
     rest_attr = "stable_id"
 
     def dc_title(self):
@@ -367,6 +425,21 @@ class FindingAid(IndexableMixin, FindingAidBaseMixin, AnyEntity):
         if service:
             return self.related_service.dc_title()
         return self.publisher
+
+    def all_authorities_eids(
+        self,
+    ):
+        """
+        all distinct authorities eids for FindingAid and related FAComponent
+        """
+        query = """DISTINCT Any A WITH A BEING (
+            (DISTINCT Any A WHERE I authority A, I index F,
+                F eid %(eid)s, F is FindingAid)
+            UNION
+            (DISTINCT Any A WHERE I authority A, I index FA,
+                F eid %(eid)s, FA finding_aid F)
+            )"""
+        return {eid[0] for eid in self._cw.execute(query, {"eid": self.eid})}
 
 
 class DigitizedVersion(AnyEntity):

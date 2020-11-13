@@ -37,7 +37,12 @@ from cubicweb_francearchives.dataimport import TRANSMAP
 XITI_FORBIDDEN_PUNCT = "!\"#$%&'()*+,;<=>?@[\\]^`{|}"
 
 XITI_TRANSMAP = merge_dicts(
-    {}, TRANSMAP, dict.fromkeys(ord(c) for c in XITI_FORBIDDEN_PUNCT), {ord(" "): ord("_"),}
+    {},
+    TRANSMAP,
+    dict.fromkeys(ord(c) for c in XITI_FORBIDDEN_PUNCT),
+    {
+        ord(" "): ord("_"),
+    },
 )
 
 
@@ -61,8 +66,7 @@ def pagename_from_chapters(chapters):
 
 
 class XitiEntityAdapter(EntityAdapter):
-    """default implementation returns 3 chapters: (etype, <main-attr>, title)
-    """
+    """default implementation returns 3 chapters: (etype, <main-attr>, title)"""
 
     __regid__ = "IXiti"
 
@@ -143,8 +147,7 @@ class CircularXitiAdapter(XitiEntityAdapter):
 
     @property
     def get_xiti_attrname(self):
-        """ avoid self.entity.cw_rest_attr_info()[0] returning uuid instead of circ_id
-        """
+        """avoid self.entity.cw_rest_attr_info()[0] returning uuid instead of circ_id"""
         return "circ_id"
 
 

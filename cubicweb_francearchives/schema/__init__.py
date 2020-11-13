@@ -136,6 +136,13 @@ class authority_externref(RelationDefinition):
     cardinality = "**"
 
 
+class basecontent_externref(RelationDefinition):
+    name = "related_authority"
+    subject = "BaseContent"
+    object = ("AgentAuthority", "LocationAuthority", "SubjectAuthority")
+    cardinality = "**"
+
+
 class grouped_with(RelationType):
     constraints = [RQLConstraint("NOT S identity O")]
     cardinality = "?*"

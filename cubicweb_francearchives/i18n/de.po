@@ -95,6 +95,24 @@ msgstr ""
 msgid "- New window"
 msgstr "neues Fenster"
 
+msgid "01_faq_basecontent_public"
+msgstr ""
+
+msgid "02_faq_search"
+msgstr ""
+
+msgid "03_faq_ir"
+msgstr ""
+
+msgid "04_faq_circular"
+msgstr ""
+
+msgid "05_faq_basecontent_pro"
+msgstr ""
+
+msgid "06_faq_eac"
+msgstr ""
+
 msgid "1 circulaire"
 msgstr ""
 
@@ -174,6 +192,12 @@ msgstr "Auteur"
 msgid "BaseContent"
 msgstr "Contenu éditorial simple"
 
+msgid "BaseContentTranslation"
+msgstr ""
+
+msgid "BaseContentTranslation_plural"
+msgstr ""
+
 msgid "BaseContent_plural"
 msgstr "Contenus éditoriaux simples"
 
@@ -223,10 +247,19 @@ msgstr "Circulaires"
 msgid "Circulars"
 msgstr "Circulaires"
 
+msgid "CmsI18nObject"
+msgstr ""
+
+msgid "CmsI18nObject_plural"
+msgstr ""
+
 msgid "CmsObject"
 msgstr ""
 
 msgid "CmsObject_plural"
+msgstr ""
+
+msgid "Collapse the toc"
 msgstr ""
 
 msgid "CommemoCollection"
@@ -243,6 +276,12 @@ msgstr "Dates"
 
 msgid "CommemorationItem"
 msgstr "Commémoration"
+
+msgid "CommemorationItemTranslation"
+msgstr ""
+
+msgid "CommemorationItemTranslation_plural"
+msgstr ""
 
 msgid "CommemorationItem_plural"
 msgstr "Commémorations"
@@ -269,6 +308,9 @@ msgid "Content"
 msgstr "Inhalt"
 
 msgid "Contenu"
+msgstr ""
+
+msgid "Copy the glossary term link"
 msgstr ""
 
 msgid "Cote"
@@ -313,6 +355,12 @@ msgstr "Télécharger la cote"
 msgid "Download the inventory"
 msgstr "Ouvrir le document"
 
+msgid "Edit the card"
+msgstr ""
+
+msgid "Edit the glossary term"
+msgstr ""
+
 msgid "Email:"
 msgstr "Courriel :"
 
@@ -320,6 +368,9 @@ msgid "EsDocument"
 msgstr ""
 
 msgid "EsDocument_plural"
+msgstr ""
+
+msgid "Expand the toc"
 msgstr ""
 
 msgid "ExternRef"
@@ -346,11 +397,32 @@ msgstr ""
 msgid "FAHeader_plural"
 msgstr ""
 
+msgid "FAQ"
+msgstr ""
+
+msgid "Faq"
+msgstr ""
+
+msgid "FaqItem"
+msgstr ""
+
+msgid "FaqItemTranslation"
+msgstr ""
+
+msgid "FaqItemTranslation_plural"
+msgstr ""
+
+msgid "FaqItem_plural"
+msgstr ""
+
 msgid "FindingAid"
 msgstr "Inventaire d'archives"
 
 msgid "FindingAid_plural"
 msgstr "Inventaires d'archives"
+
+msgid "Fold all"
+msgstr ""
 
 msgid "Follow FranceArchives on Facebook"
 msgstr "Folgen Sie die FranceArchives auf Facebook"
@@ -370,7 +442,14 @@ msgstr "Bas de page"
 msgid "For more results, try a fuzzy search"
 msgstr "Pour plus de résultats, essayez la recherche approximative"
 
+#, python-brace-format
+msgid "Forbidden to delete a non-orphan {etype} {eid}"
+msgstr ""
+
 msgid "FranceArchives: Portail National des Archives de France"
+msgstr ""
+
+msgid "Full glossary term description"
 msgstr ""
 
 msgid "GB"
@@ -380,6 +459,18 @@ msgid "Geogname"
 msgstr ""
 
 msgid "Geogname_plural"
+msgstr ""
+
+msgid "Glossary"
+msgstr ""
+
+msgid "Glossary term description for the popup"
+msgstr ""
+
+msgid "GlossaryTerm"
+msgstr ""
+
+msgid "GlossaryTerm_plural"
 msgstr ""
 
 msgid "Go back to page:"
@@ -489,6 +580,9 @@ msgstr "Nom :"
 msgid "Name: "
 msgstr "Nom :"
 
+msgid "Need help?"
+msgstr ""
+
 msgid "New AgentAuthority"
 msgstr ""
 
@@ -501,6 +595,9 @@ msgstr ""
 msgid "New BaseContent"
 msgstr ""
 
+msgid "New BaseContentTranslation"
+msgstr ""
+
 msgid "New Caches"
 msgstr ""
 
@@ -508,6 +605,9 @@ msgid "New Category"
 msgstr ""
 
 msgid "New Circular"
+msgstr ""
+
+msgid "New CmsI18nObject"
 msgstr ""
 
 msgid "New CmsObject"
@@ -520,6 +620,9 @@ msgid "New CommemoDate"
 msgstr ""
 
 msgid "New CommemorationItem"
+msgstr ""
+
+msgid "New CommemorationItemTranslation"
 msgstr ""
 
 msgid "New CssImage"
@@ -546,10 +649,19 @@ msgstr ""
 msgid "New FAHeader"
 msgstr ""
 
+msgid "New FaqItem"
+msgstr ""
+
+msgid "New FaqItemTranslation"
+msgstr ""
+
 msgid "New FindingAid"
 msgstr ""
 
 msgid "New Geogname"
+msgstr ""
+
+msgid "New GlossaryTerm"
 msgstr ""
 
 msgid "New Image"
@@ -586,6 +698,9 @@ msgid "New PreviousInfo"
 msgstr ""
 
 msgid "New Section"
+msgstr ""
+
+msgid "New SectionTranslation"
 msgstr ""
 
 msgid "New Service"
@@ -721,8 +836,17 @@ msgstr "Suchresultate"
 msgid "Section"
 msgstr "Rubrique"
 
+msgid "SectionTranslation"
+msgstr ""
+
+msgid "SectionTranslation_plural"
+msgstr ""
+
 msgid "Section_plural"
 msgstr "Rubriques"
+
+msgid "See all FAQs"
+msgstr ""
 
 msgid "See all articles"
 msgstr "Voir tous les articles"
@@ -733,8 +857,14 @@ msgstr "Voir toutes les actualités"
 msgid "See all virtual exhibits"
 msgstr "Voir toutes les expositions virtuelles"
 
+msgid "See also:"
+msgstr "Voir aussi :"
+
 msgid "See more"
 msgstr "Voir plus"
+
+msgid "See other translations"
+msgstr ""
 
 msgid "See the timeline"
 msgstr "Voir la frise chronologique"
@@ -853,6 +983,12 @@ msgstr ""
 msgid "This BaseContent:"
 msgstr ""
 
+msgid "This BaseContentTranslation"
+msgstr ""
+
+msgid "This BaseContentTranslation:"
+msgstr ""
+
 msgid "This Caches"
 msgstr ""
 
@@ -869,6 +1005,12 @@ msgid "This Circular"
 msgstr ""
 
 msgid "This Circular:"
+msgstr ""
+
+msgid "This CmsI18nObject"
+msgstr ""
+
+msgid "This CmsI18nObject:"
 msgstr ""
 
 msgid "This CmsObject"
@@ -893,6 +1035,12 @@ msgid "This CommemorationItem"
 msgstr ""
 
 msgid "This CommemorationItem:"
+msgstr ""
+
+msgid "This CommemorationItemTranslation"
+msgstr ""
+
+msgid "This CommemorationItemTranslation:"
 msgstr ""
 
 msgid "This CssImage"
@@ -943,6 +1091,18 @@ msgstr ""
 msgid "This FAHeader:"
 msgstr ""
 
+msgid "This FaqItem"
+msgstr ""
+
+msgid "This FaqItem:"
+msgstr ""
+
+msgid "This FaqItemTranslation"
+msgstr ""
+
+msgid "This FaqItemTranslation:"
+msgstr ""
+
 msgid "This FindingAid"
 msgstr ""
 
@@ -953,6 +1113,12 @@ msgid "This Geogname"
 msgstr ""
 
 msgid "This Geogname:"
+msgstr ""
+
+msgid "This GlossaryTerm"
+msgstr ""
+
+msgid "This GlossaryTerm:"
 msgstr ""
 
 msgid "This Image"
@@ -1027,6 +1193,12 @@ msgstr ""
 msgid "This Section:"
 msgstr ""
 
+msgid "This SectionTranslation"
+msgstr ""
+
+msgid "This SectionTranslation:"
+msgstr ""
+
 msgid "This Service"
 msgstr ""
 
@@ -1058,20 +1230,28 @@ msgstr "Ce champ est requis"
 msgid "Timeline for %s"
 msgstr "Frise chronologique : %s"
 
+msgid "Toc"
+msgstr ""
+
 msgid "Toggle navigation"
+msgstr ""
+
+msgid "Unfold all"
 msgstr ""
 
 msgid "Url for an internal link"
 msgstr "Url du lien interne de l'image "
 
-#, python-format
-msgid "Use %(eadid)s, %(unitid)s or %(unititle)s substitution pattern"
+#, python-brace-format
+msgid "Use {eadid}, {unitid} or {unittitle} substitution pattern"
 msgstr ""
-"Utiliser %(eadid)s, %(unitid)s or %(unititle)s comme modèle de substitution"
 
 #, python-brace-format
 msgid "Use {url} substitution pattern"
 msgstr "Utiliser {url} comme modèle de substitution"
+
+msgid "Usefull only for labels and filters"
+msgstr ""
 
 msgid "Virtual_exhibit"
 msgstr "Exposition virtuelle"
@@ -1199,6 +1379,9 @@ msgstr ""
 msgid "add BaseContent basecontent_image Image subject"
 msgstr ""
 
+msgid "add BaseContentTranslation translation_of BaseContent object"
+msgstr ""
+
 msgid "add Circular additional_attachment File subject"
 msgstr ""
 
@@ -1214,10 +1397,17 @@ msgstr ""
 msgid "add CommemorationItem commemoration_image Image subject"
 msgstr ""
 
+msgid ""
+"add CommemorationItemTranslation translation_of CommemorationItem object"
+msgstr ""
+
 msgid "add ExternRef externref_image Image subject"
 msgstr ""
 
 msgid "add FAComponent fa_referenced_files File subject"
+msgstr ""
+
+msgid "add FaqItemTranslation translation_of FaqItem object"
 msgstr ""
 
 msgid "add FindingAid fa_referenced_files File subject"
@@ -1230,6 +1420,9 @@ msgid "add OAIImportTask oai_repository OAIRepository object"
 msgstr ""
 
 msgid "add Section section_image Image subject"
+msgstr ""
+
+msgid "add SectionTranslation translation_of Section object"
 msgstr ""
 
 msgid "add Service service_social_network SocialNetwork subject"
@@ -1247,6 +1440,9 @@ msgstr ""
 msgid "add a BaseContent"
 msgstr ""
 
+msgid "add a BaseContentTranslation"
+msgstr ""
+
 msgid "add a Caches"
 msgstr ""
 
@@ -1254,6 +1450,9 @@ msgid "add a Category"
 msgstr ""
 
 msgid "add a Circular"
+msgstr ""
+
+msgid "add a CmsI18nObject"
 msgstr ""
 
 msgid "add a CmsObject"
@@ -1266,6 +1465,9 @@ msgid "add a CommemoDate"
 msgstr ""
 
 msgid "add a CommemorationItem"
+msgstr ""
+
+msgid "add a CommemorationItemTranslation"
 msgstr ""
 
 msgid "add a CssImage"
@@ -1292,10 +1494,19 @@ msgstr ""
 msgid "add a FAHeader"
 msgstr ""
 
+msgid "add a FaqItem"
+msgstr ""
+
+msgid "add a FaqItemTranslation"
+msgstr ""
+
 msgid "add a FindingAid"
 msgstr ""
 
 msgid "add a Geogname"
+msgstr ""
+
+msgid "add a GlossaryTerm"
 msgstr ""
 
 msgid "add a Image"
@@ -1332,6 +1543,9 @@ msgid "add a PreviousInfo"
 msgstr ""
 
 msgid "add a Section"
+msgstr ""
+
+msgid "add a SectionTranslation"
 msgstr ""
 
 msgid "add a Service"
@@ -1484,6 +1698,13 @@ msgstr ""
 msgid "ancestors_facet"
 msgstr "Rubriques"
 
+msgid "anchor"
+msgstr ""
+
+msgctxt "GlossaryTerm"
+msgid "anchor"
+msgstr ""
+
 msgid "annex_of"
 msgstr "annexe de"
 
@@ -1504,6 +1725,28 @@ msgstr "fermeture annuelle"
 msgctxt "Service"
 msgid "annual_closure"
 msgstr "fermeture annuelle"
+
+msgid "answer"
+msgstr ""
+
+msgctxt "FaqItem"
+msgid "answer"
+msgstr ""
+
+msgctxt "FaqItemTranslation"
+msgid "answer"
+msgstr ""
+
+msgid "answer_format"
+msgstr ""
+
+msgctxt "FaqItem"
+msgid "answer_format"
+msgstr ""
+
+msgctxt "FaqItemTranslation"
+msgid "answer_format"
+msgstr ""
 
 msgid "ape_ead_file"
 msgstr ""
@@ -1776,6 +2019,10 @@ msgstr ""
 
 msgid "category"
 msgstr "catégorie"
+
+msgctxt "FaqItem"
+msgid "category"
+msgstr ""
 
 msgctxt "Service"
 msgid "category"
@@ -2110,6 +2357,14 @@ msgctxt "BaseContent"
 msgid "content"
 msgstr "contenu"
 
+msgctxt "BaseContentTranslation"
+msgid "content"
+msgstr ""
+
+msgctxt "CmsI18nObject"
+msgid "content"
+msgstr ""
+
 msgctxt "CmsObject"
 msgid "content"
 msgstr "contenu"
@@ -2122,6 +2377,10 @@ msgctxt "CommemorationItem"
 msgid "content"
 msgstr "contenu"
 
+msgctxt "CommemorationItemTranslation"
+msgid "content"
+msgstr ""
+
 msgctxt "ExternRef"
 msgid "content"
 msgstr "contenu"
@@ -2133,11 +2392,23 @@ msgstr "contenu"
 msgctxt "Section"
 msgid "content"
 msgstr "contenu"
+
+msgctxt "SectionTranslation"
+msgid "content"
+msgstr ""
 
 msgctxt "BaseContent"
 msgid "content_format"
 msgstr ""
 
+msgctxt "BaseContentTranslation"
+msgid "content_format"
+msgstr ""
+
+msgctxt "CmsI18nObject"
+msgid "content_format"
+msgstr ""
+
 msgctxt "CmsObject"
 msgid "content_format"
 msgstr ""
@@ -2147,6 +2418,10 @@ msgid "content_format"
 msgstr ""
 
 msgctxt "CommemorationItem"
+msgid "content_format"
+msgstr ""
+
+msgctxt "CommemorationItemTranslation"
 msgid "content_format"
 msgstr ""
 
@@ -2160,6 +2435,17 @@ msgstr ""
 
 msgctxt "Section"
 msgid "content_format"
+msgstr ""
+
+msgctxt "SectionTranslation"
+msgid "content_format"
+msgstr ""
+
+msgid "context_service"
+msgstr ""
+
+msgctxt "OAIRepository"
+msgid "context_service"
 msgstr ""
 
 msgid "contexte de le recherche"
@@ -2186,8 +2472,23 @@ msgid "cpf_relations_label"
 msgstr "Producteurs d'archives en relation :"
 
 msgid ""
+"creating BaseContentTranslation (BaseContentTranslation translation_of "
+"BaseContent %(linkto)s)"
+msgstr ""
+
+msgid ""
 "creating CommemorationItem (CommemorationItem collection_top "
 "CommemoCollection %(linkto)s)"
+msgstr ""
+
+msgid ""
+"creating CommemorationItemTranslation (CommemorationItemTranslation "
+"translation_of CommemorationItem %(linkto)s)"
+msgstr ""
+
+msgid ""
+"creating FaqItemTranslation (FaqItemTranslation translation_of FaqItem "
+"%(linkto)s)"
 msgstr ""
 
 msgid "creating File (Circular %(linkto)s additional_attachment File)"
@@ -2222,6 +2523,11 @@ msgstr ""
 
 msgid ""
 "creating OAIImportTask (OAIImportTask oai_repository OAIRepository "
+"%(linkto)s)"
+msgstr ""
+
+msgid ""
+"creating SectionTranslation (SectionTranslation translation_of Section "
 "%(linkto)s)"
 msgstr ""
 
@@ -2349,6 +2655,9 @@ msgstr "Dates :"
 msgid "dates_sub_label"
 msgstr "dates :"
 
+msgid "de"
+msgstr ""
+
 msgid "de_lang"
 msgstr "Deutsch"
 
@@ -2394,6 +2703,10 @@ msgstr "Description des documents"
 msgctxt "FindingAid"
 msgid "description"
 msgstr "Description des documents"
+
+msgctxt "GlossaryTerm"
+msgid "description"
+msgstr ""
 
 msgctxt "Image"
 msgid "description"
@@ -2567,6 +2880,9 @@ msgstr "courriel"
 msgid "empty-commemocollection"
 msgstr ""
 
+msgid "en"
+msgstr ""
+
 msgid "en_lang"
 msgstr "English"
 
@@ -2586,6 +2902,9 @@ msgstr ""
 
 msgctxt "FindingAid"
 msgid "entity_object"
+msgstr ""
+
+msgid "es"
 msgstr ""
 
 msgid "es_lang"
@@ -2925,6 +3244,9 @@ msgstr "url d'index"
 msgid "indexes_label"
 msgstr "Voir toutes les archives en lien :"
 
+msgid "indexes_label:"
+msgstr ""
+
 msgid "instance_type"
 msgstr "type d'instance"
 
@@ -3030,6 +3352,26 @@ msgstr ""
 
 msgctxt "FAHeader"
 msgid "lang_description_format"
+msgstr ""
+
+msgctxt "BaseContentTranslation"
+msgid "language"
+msgstr ""
+
+msgctxt "CmsI18nObject"
+msgid "language"
+msgstr ""
+
+msgctxt "CommemorationItemTranslation"
+msgid "language"
+msgstr ""
+
+msgctxt "FaqItemTranslation"
+msgid "language"
+msgstr ""
+
+msgctxt "SectionTranslation"
+msgid "language"
 msgstr ""
 
 msgid "language_used_label"
@@ -3369,6 +3711,12 @@ msgstr "non"
 msgid "no label"
 msgstr "pas de libellé"
 
+msgid "no translation yet exists"
+msgstr ""
+
+msgid "no_summary"
+msgstr ""
+
 msgid "nor"
 msgstr "N° NOR"
 
@@ -3417,6 +3765,13 @@ msgstr "Document non trouvé."
 
 msgid "oai-origin-website"
 msgstr "Consulter le document sur le site d'origine"
+
+msgid "oai_id"
+msgstr ""
+
+msgctxt "FindingAid"
+msgid "oai_id"
+msgstr ""
 
 msgid "oai_repository"
 msgstr ""
@@ -3509,6 +3864,10 @@ msgctxt "ExternRef"
 msgid "order"
 msgstr ""
 
+msgctxt "FaqItem"
+msgid "order"
+msgstr ""
+
 msgctxt "Map"
 msgid "order"
 msgstr ""
@@ -3519,6 +3878,9 @@ msgstr ""
 
 msgctxt "Section"
 msgid "order"
+msgstr ""
+
+msgid "original ressource"
 msgstr ""
 
 msgid "originalsloc_label"
@@ -3734,6 +4096,28 @@ msgstr "Institutions"
 msgid "punctual"
 msgstr "ponctuel"
 
+msgid "question"
+msgstr ""
+
+msgctxt "FaqItem"
+msgid "question"
+msgstr ""
+
+msgctxt "FaqItemTranslation"
+msgid "question"
+msgstr ""
+
+msgid "question_format"
+msgstr ""
+
+msgctxt "FaqItem"
+msgid "question_format"
+msgstr ""
+
+msgctxt "FaqItemTranslation"
+msgid "question_format"
+msgstr ""
+
 msgid "record_id_label"
 msgstr "Identifiant :"
 
@@ -3744,6 +4128,10 @@ msgctxt "ExternRef"
 msgid "reftype"
 msgstr "type de référence"
 
+msgid "related_authority"
+msgstr ""
+
+msgctxt "BaseContent"
 msgid "related_authority"
 msgstr ""
 
@@ -3988,7 +4376,15 @@ msgctxt "CommemoCollection"
 msgid "short_description"
 msgstr ""
 
+msgctxt "GlossaryTerm"
+msgid "short_description"
+msgstr ""
+
 msgctxt "Section"
+msgid "short_description"
+msgstr ""
+
+msgctxt "SectionTranslation"
 msgid "short_description"
 msgstr ""
 
@@ -3997,6 +4393,13 @@ msgstr ""
 
 msgctxt "Service"
 msgid "short_name"
+msgstr ""
+
+msgid "should_normalize"
+msgstr ""
+
+msgctxt "OAIRepository"
+msgid "should_normalize"
 msgstr ""
 
 msgid "siaf_daf_code"
@@ -4029,6 +4432,13 @@ msgstr "Date de signature"
 msgctxt "Circular"
 msgid "signing_date"
 msgstr "Date de signature"
+
+msgid "sort_letter"
+msgstr ""
+
+msgctxt "GlossaryTerm"
+msgid "sort_letter"
+msgstr ""
 
 msgid "source"
 msgstr "source"
@@ -4137,8 +4547,54 @@ msgctxt "CommemorationItem"
 msgid "subtitle"
 msgstr ""
 
+msgctxt "CommemorationItemTranslation"
+msgid "subtitle"
+msgstr ""
+
 msgctxt "Section"
 msgid "subtitle"
+msgstr ""
+
+msgctxt "SectionTranslation"
+msgid "subtitle"
+msgstr ""
+
+msgid "summary"
+msgstr ""
+
+msgctxt "BaseContent"
+msgid "summary"
+msgstr ""
+
+msgctxt "BaseContentTranslation"
+msgid "summary"
+msgstr ""
+
+msgid "summary_format"
+msgstr ""
+
+msgctxt "BaseContent"
+msgid "summary_format"
+msgstr ""
+
+msgctxt "BaseContentTranslation"
+msgid "summary_format"
+msgstr ""
+
+msgid "summary_headers_2"
+msgstr ""
+
+msgid "summary_headers_3"
+msgstr ""
+
+msgid "summary_headers_6"
+msgstr ""
+
+msgid "summary_policy"
+msgstr ""
+
+msgctxt "BaseContent"
+msgid "summary_policy"
 msgstr ""
 
 msgid "support document for a finding aid"
@@ -4146,6 +4602,17 @@ msgstr ""
 
 msgid "temporal_link_label"
 msgstr "Lien temporel :"
+
+msgctxt "GlossaryTerm"
+msgid "term"
+msgstr ""
+
+msgid "term_plural"
+msgstr ""
+
+msgctxt "GlossaryTerm"
+msgid "term_plural"
+msgstr ""
 
 msgid "there was a problem with the elasticsearch request"
 msgstr ""
@@ -4171,9 +4638,17 @@ msgctxt "BaseContent"
 msgid "title"
 msgstr "titre"
 
+msgctxt "BaseContentTranslation"
+msgid "title"
+msgstr ""
+
 msgctxt "Circular"
 msgid "title"
 msgstr "titre"
+
+msgctxt "CmsI18nObject"
+msgid "title"
+msgstr ""
 
 msgctxt "CmsObject"
 msgid "title"
@@ -4186,6 +4661,10 @@ msgstr "titre"
 msgctxt "CommemorationItem"
 msgid "title"
 msgstr "titre"
+
+msgctxt "CommemorationItemTranslation"
+msgid "title"
+msgstr ""
 
 msgctxt "ExternRef"
 msgid "title"
@@ -4206,6 +4685,10 @@ msgstr "titre"
 msgctxt "Section"
 msgid "title"
 msgstr "titre"
+
+msgctxt "SectionTranslation"
+msgid "title"
+msgstr ""
 
 msgid "title_label"
 msgstr "Titre :"
@@ -4257,6 +4740,44 @@ msgstr ""
 
 msgctxt "Map"
 msgid "top_content_format"
+msgstr ""
+
+msgid "translation_of"
+msgstr ""
+
+msgctxt "BaseContentTranslation"
+msgid "translation_of"
+msgstr ""
+
+msgctxt "CommemorationItemTranslation"
+msgid "translation_of"
+msgstr ""
+
+msgctxt "FaqItemTranslation"
+msgid "translation_of"
+msgstr ""
+
+msgctxt "SectionTranslation"
+msgid "translation_of"
+msgstr ""
+
+msgid "translation_of_object"
+msgstr ""
+
+msgctxt "BaseContent"
+msgid "translation_of_object"
+msgstr ""
+
+msgctxt "CommemorationItem"
+msgid "translation_of_object"
+msgstr ""
+
+msgctxt "FaqItem"
+msgid "translation_of_object"
+msgstr ""
+
+msgctxt "Section"
+msgid "translation_of_object"
 msgstr ""
 
 msgctxt "AgentName"
@@ -4362,11 +4883,19 @@ msgctxt "BaseContent"
 msgid "uuid"
 msgstr ""
 
+msgctxt "BaseContentTranslation"
+msgid "uuid"
+msgstr ""
+
 msgctxt "Category"
 msgid "uuid"
 msgstr ""
 
 msgctxt "Circular"
+msgid "uuid"
+msgstr ""
+
+msgctxt "CmsI18nObject"
 msgid "uuid"
 msgstr ""
 
@@ -4383,6 +4912,10 @@ msgid "uuid"
 msgstr ""
 
 msgctxt "CommemorationItem"
+msgid "uuid"
+msgstr ""
+
+msgctxt "CommemorationItemTranslation"
 msgid "uuid"
 msgstr ""
 
@@ -4415,6 +4948,10 @@ msgid "uuid"
 msgstr ""
 
 msgctxt "Section"
+msgid "uuid"
+msgstr ""
+
+msgctxt "SectionTranslation"
 msgid "uuid"
 msgstr ""
 
@@ -4577,6 +5114,11 @@ msgstr "{count} résultats"
 
 #~ msgid "Subscribe to newsletter"
 #~ msgstr "Inscrivez-vous"
+
+#~ msgid "Use %(eadid)s, %(unitid)s or %(unititle)s substitution pattern"
+#~ msgstr ""
+#~ "Utiliser %(eadid)s, %(unitid)s or %(unititle)s comme modèle de "
+#~ "substitution"
 
 #~ msgid "Your subscription email has been sent. Follow instructions in there."
 #~ msgstr ""

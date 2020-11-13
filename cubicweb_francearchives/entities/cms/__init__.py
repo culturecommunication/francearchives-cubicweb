@@ -47,19 +47,66 @@ from logilab.common.decorators import cachedproperty
 from rql import TypeResolverException
 
 from cubicweb import NoResultError, MultipleResultsError
-from cubicweb.predicates import is_instance, score_entity
+from cubicweb.predicates import is_instance, score_entity, has_related_entities
 from cubicweb.entities import AnyEntity, fetch_config
 from cubicweb.entity import _marker
 
+from cubicweb_francearchives import CMS_I18N_OBJECTS
 from cubicweb_francearchives.entities import ETYPE_CATEGORIES
-from cubicweb_francearchives.entities.es import PniaIFullTextIndexSerializable
+from cubicweb_francearchives.entities.es import (
+    PniaIFullTextIndexSerializable,
+    TranslatableIndexSerializableMixin,
+)
 from cubicweb_francearchives.entities.ead import IndexableMixin
 from cubicweb_francearchives.dataimport import normalize_entry
 from cubicweb_francearchives.dataimport.pdf import pdf_infos
-from cubicweb_francearchives.utils import safe_cut
+from cubicweb_francearchives.dataimport.eadreader import unique_indices
+from cubicweb_francearchives.utils import safe_cut, id_for_anchor
 
 from cubicweb_francearchives.xmlutils import process_html_as_xml, add_title_on_external_links
 from cubicweb_francearchives.utils import remove_html_tags
+
+
+class RelatedAutorityIndexableMixin(IndexableMixin):
+    def agent_indexes(self):
+        return self._cw.execute(
+            "DISTINCT Any X, XP WHERE E eid %(e)s, "
+            "E related_authority X, X is AgentAuthority, "
+            "X label XP",
+            {"e": self.eid},
+        )
+
+    def subject_indexes(self):
+        return self._cw.execute(
+            "DISTINCT Any X, XP WHERE E eid %(e)s, "
+            "E related_authority X, X is SubjectAuthority, "
+            "X label XP",
+            {"e": self.eid},
+        )
+
+    def geo_indexes(self):
+        return self._cw.execute(
+            "DISTINCT Any X, XP WHERE E eid %(e)s, "
+            "E related_authority X, X is LocationAuthority, "
+            "X label XP",
+            {"e": self.eid},
+        )
+
+    def es_indexes(self):
+        """method used in AbstractCMSIFTIAdapter"""
+        return self._cw.execute(
+            "Any L, NORMALIZE_ENTRY(L), A WHERE X related_authority A, A label L, X eid %(e)s",
+            {"e": self.eid},
+        )
+
+    def main_indexes(self, itype):
+        # itype is only here for compatibility with IndexableMixin
+        return self._cw.execute(
+            "DISTINCT Any X, XP WHERE E eid %(e)s, "
+            "E related_authority X, X is AgentAuthority, "
+            "X label XP",
+            {"e": self.eid},
+        )
 
 
 @process_html_as_xml
@@ -134,9 +181,58 @@ class CmsObject(ImageMixIn, HTMLMixIn, AnyEntity):
         return super(CmsObject, self).dc_authors()
 
 
-class BaseContent(CmsObject):
+class TranslatableCmsObject(CmsObject):
+    def i18n_query(self, *args, **kwargs):
+        attrs, fvars = [], []
+        for i, field in enumerate(self.i18nfields):
+            attrs.append("X {field} F{i}".format(i=i, field=field))
+            fvars.append("F{i}".format(i=i))
+        query = """Any X, {fvars}, L ORDERBY L WHERE X translation_of E,
+          {attrs}, X language L, E eid %(e)s""".format(
+            fvars=", ".join(fvars), attrs=", ".join(attrs)
+        )
+        return query
+
+    def i18n_rset(self, *args, **kwargs):
+        query = self.i18n_query(*args, **kwargs)
+        return self._cw.execute(query, {"e": self.eid})
+
+    def translations(self, *args, **kwargs):
+        values = {}
+        for res in self.i18n_rset(*args, **kwargs).iter_rows_with_entities():
+            entity = res[0]
+            values[entity.language] = {attr: getattr(entity, attr) for attr in self.i18nfields}
+        return values
+
+    def translations_in_lang(self, lang=None):
+        lang = lang or self._cw.lang
+        if lang == "fr":
+            return {}
+        attrs, fvars = [], []
+        for i, field in enumerate(self.i18nfields):
+            attrs.append("X {field} F{i}".format(i=i, field=field))
+            fvars.append("F{i}".format(i=i))
+        query = """Any X, {fvars} WHERE X translation_of E,
+        {attrs},
+        X language %(lang)s, E eid %(e)s""".format(
+            fvars=", ".join(fvars), attrs=", ".join(attrs)
+        )
+        rset = self._cw.execute(query, {"lang": lang, "e": self.eid})
+        if rset:
+            entity = rset.one()
+            return {attr: getattr(entity, attr) for attr in self.i18nfields}
+        return {}
+
+
+class BaseContent(RelatedAutorityIndexableMixin, TranslatableCmsObject):
     __regid__ = "BaseContent"
     image_rel_name = "basecontent_image"
+    i18nfields = ("title", "content", "summary")
+
+    def dc_title(self):
+        if self._cw.lang == "fr":
+            return self.title
+        return self.cw_adapt_to("ITemplatable").entity_param().title
 
     def rest_path(self):
         return "article/{}".format(self.eid)
@@ -154,6 +250,24 @@ class BaseContent(CmsObject):
                 {"n": "publication", "e": self.eid},
             )
         )
+
+
+class TranslationMixin(object):
+    def rest_path(self):
+        return "{}/{}".format(self.cw_etype.lower(), self.eid)
+
+    @cachedproperty
+    def original_entity(self):
+        if self.translation_of:
+            return self.translation_of[0]
+
+
+class BaseContentTranslation(TranslationMixin, CmsObject):
+    __regid__ = "BaseContentTranslation"
+
+    @property
+    def summary_policy(self):
+        return self.original_entity.summary_policy
 
 
 class NewsContent(CmsObject):
@@ -244,7 +358,7 @@ class Service(ImageMixIn, HTMLMixIn, AnyEntity):
 
     def bounce_url(self, attrs):
         if self.search_form_url:
-            terms = re.search(r"%\((\w+)\)s", self.search_form_url)
+            terms = re.search(r"\{(\w+)\}", self.search_form_url)
             if terms:
                 attrs = {
                     k: urllib.parse.quote_plus(v.encode("utf-8"))
@@ -252,9 +366,11 @@ class Service(ImageMixIn, HTMLMixIn, AnyEntity):
                     if v
                 }
                 try:
-                    return self.search_form_url % attrs
+                    return self.search_form_url.format(**attrs)
                 except Exception:
-                    pass
+                    # could not replace placeholder
+                    # see https://extranet.logilab.fr/ticket/69111700
+                    return self.website_url
         return self.search_form_url or self.website_url
 
     def rest_path(self):
@@ -273,8 +389,12 @@ class Service(ImageMixIn, HTMLMixIn, AnyEntity):
             return self.code.upper()
         return publisher
 
+    @property
+    def url_anchor(self):
+        return "{}#{}".format(self.absolute_url(), id_for_anchor(self.dc_title()))
 
-class Person(IndexableMixin, AnyEntity):
+
+class Person(AnyEntity):
     __regid__ = "Person"
 
     def dc_title(self):
@@ -284,6 +404,14 @@ class Person(IndexableMixin, AnyEntity):
     def label(self):
         """property to ease compatibility with AgentName entities"""
         return self.dc_title()
+
+    def agent_indexes(self):
+        return self._cw.execute(
+            """
+            DISTINCT Any A, L ORDERBY L WHERE P eid %(e)s,
+            P authority A, A label L""",
+            {"e": self.eid},
+        )
 
 
 # XXX duplicated from cubes.frarchives_edition.views.primary
@@ -300,7 +428,7 @@ def get_ancestors(entity, result=None):
     return result
 
 
-class ExternRef(IndexableMixin, CmsObject):
+class ExternRef(RelatedAutorityIndexableMixin, CmsObject):
     __regid__ = "ExternRef"
     fetch_attrs, cw_fetch_order = fetch_config(["title", "reftype", "content"])
     image_rel_name = "externref_image"
@@ -314,39 +442,6 @@ class ExternRef(IndexableMixin, CmsObject):
     def service(self):
         if self.exref_service:
             return self.exref_service[0]
-
-    def main_indexes(self, itype):
-        # itype is only here for compatibility with IndexableMixin
-        return self._cw.execute(
-            "DISTINCT Any X, XP WHERE E eid %(e)s, "
-            "E related_authority X, X is AgentAuthority, "
-            "X label XP",
-            {"e": self.eid},
-        )
-
-    def agent_indexes(self):
-        return self._cw.execute(
-            "DISTINCT Any X, XP WHERE E eid %(e)s, "
-            "E related_authority X, X is AgentAuthority, "
-            "X label XP",
-            {"e": self.eid},
-        )
-
-    def subject_indexes(self):
-        return self._cw.execute(
-            "DISTINCT Any X, XP WHERE E eid %(e)s, "
-            "E related_authority X, X is SubjectAuthority, "
-            "X label XP",
-            {"e": self.eid},
-        )
-
-    def geo_indexes(self):
-        return self._cw.execute(
-            "DISTINCT Any X, XP WHERE E eid %(e)s, "
-            "E related_authority X, X is LocationAuthority, "
-            "X label XP",
-            {"e": self.eid},
-        )
 
 
 class MapCSVReader(object):
@@ -397,6 +492,28 @@ class OfficialText(AnyEntity):
         return self.name
 
 
+class CMSI18NIFTIAdapter(PniaIFullTextIndexSerializable):
+    __select__ = is_instance(*CMS_I18N_OBJECTS) & has_related_entities("translation_of")
+
+    @cachedproperty
+    def original_entity(self):
+        return self.entity.original_entity
+
+    @cachedproperty
+    def ift_original(self):
+        if self.original_entity:
+            return self.original_entity.cw_adapt_to("IFullTextIndexSerializable")
+
+    @property
+    def es_id(self):
+        if self.entity.original_entity:
+            return self.ift_original.es_id
+
+    def serialize(self, complete=True):
+        if self.entity.original_entity:
+            return self.ift_original.serialize(complete)
+
+
 class AbstractCMSIFTIAdapter(PniaIFullTextIndexSerializable):
     __abstract__ = True
 
@@ -434,14 +551,19 @@ class MapIFTIAdapter(AbstractCMSIFTIAdapter):
         return data
 
 
-class BaseContentMixIn(object):
-    def serialize(self, complete=True):
+class BaseContentMixIn(TranslatableIndexSerializableMixin):
+    def serialize(self, complete=True, **kwargs):
         data = super(BaseContentMixIn, self).serialize(complete)
         services = self.entity.basecontent_service
         if services:
             data["publisher"] = [s.short_name or s.dc_title() for s in services]
         if self.entity.is_a_publication:
             data["cw_etype"] = self._cw._("Publication")
+        data["index_entries"] = [
+            {"label": label, "normalized": normalized, "authority": auth}
+            for label, normalized, auth in self.entity.es_indexes()
+        ]
+        data.update(self.add_translations(complete=complete, **kwargs))
         return data
 
 
@@ -497,24 +619,20 @@ class FileAttachmentIFTIAdapter(AbstractCMSIFTIAdapter):
         return self.ift_circular.serialize(complete)
 
 
-class CommemorationItemIFTIAdapter(AbstractCMSIFTIAdapter):
+class CommemorationItemIFTIAdapter(TranslatableIndexSerializableMixin, AbstractCMSIFTIAdapter):
     __select__ = AbstractCMSIFTIAdapter.__select__ & is_instance("CommemorationItem")
+    i18nfields = ("title", "subtitle", "content")
 
-    def indexes(self):
-        return self._cw.execute(
-            "Any L, NORMALIZE_ENTRY(L), A WHERE X related_authority A, A label L, X eid %(e)s",
-            {"e": self.entity.eid},
-        )
-
-    def serialize(self, complete=True):
+    def serialize(self, complete=True, **kwargs):
         data = super(CommemorationItemIFTIAdapter, self).serialize(complete)
         data["index_entries"] = [
             {"label": label, "normalized": normalized, "authority": auth}
-            for label, normalized, auth in self.indexes()
+            for label, normalized, auth in self.entity.es_indexes()
         ]
-        prog = [bc.content for bc in self.entity.manif_prog]
+        prog = [bc.content for bc in self.entity.manif_prog if bc.content]
         if prog:
             data["manif_prog"] = remove_html_tags(" ".join(prog))
+        data.update(self.add_translations(complete=complete, **kwargs))
         return data
 
 
@@ -530,9 +648,22 @@ class CircularIFTIAdapter(AbstractCMSIFTIAdapter):
     __select__ = AbstractCMSIFTIAdapter.__select__ & is_instance("Circular")
     custom_indexable_attributes = ("signing_date", "siaf_daf_signing_date")
 
+    def _index_subjects_authorities(self, concept):
+        """Add Subject entities to ElasticSearch index Concept entity
+        is related to.
+
+        :param Concept concept: Concept entity
+        """
+        # find related SubjectAuthority entities
+        subject_authorities = self._cw.execute(
+            "Any X WHERE X is SubjectAuthority, X same_as %(eid)s", {"eid": concept.eid}
+        )
+        return [{"authority": r[0]} for r in subject_authorities]
+
     def serialize(self, complete=True):
         data = super(CircularIFTIAdapter, self).serialize(complete)
         signing_date = self.entity.sort_date()
+        index_entries = []
         if signing_date:
             data["sort_date"] = signing_date
             data["siaf_daf_signing_year"] = signing_date.year
@@ -545,14 +676,18 @@ class CircularIFTIAdapter(AbstractCMSIFTIAdapter):
                 bfield = get_preflabel(field)
                 if bfield:
                     bfields.append(bfield)
+                index_entries += self._index_subjects_authorities(field)
         if self.entity.archival_field:
             data["archival_field"] = self.entity.archival_field
         if self.entity.historical_context:
             data["historical_context"] = get_preflabel(self.entity.historical_context[0])
+            index_entries += self._index_subjects_authorities(self.entity.historical_context[0])
         if self.entity.document_type:
             data["document_type"] = get_preflabel(self.entity.document_type[0])
+            index_entries += self._index_subjects_authorities(self.entity.document_type[0])
         if self.entity.action:
             data["action"] = get_preflabel(self.entity.action[0])
+            index_entries += self._index_subjects_authorities(self.entity.action[0])
         attachments = list(self.entity.attachment) + list(self.entity.additional_attachment)
         if attachments:
             afields = []
@@ -570,6 +705,8 @@ class CircularIFTIAdapter(AbstractCMSIFTIAdapter):
                     except Exception:
                         continue
             data["attachment"] = " ".join(afields)
+        if index_entries:
+            data["index_entries"] = unique_indices(index_entries, keys=("authority",))
         return data
 
 
@@ -580,6 +717,10 @@ class ExternRefIFTIAdapter(AbstractCMSIFTIAdapter):
         data = super(ExternRefIFTIAdapter, self).serialize(complete)
         data["cw_etype"] = self.entity.reftype.capitalize()
         data["reftype"] = self.entity.reftype.lower()
+        data["index_entries"] = [
+            {"label": label, "normalized": normalized, "authority": auth}
+            for label, normalized, auth in self.entity.es_indexes()
+        ]
         services = self.entity.exref_service
         if services:
             data["publisher"] = [s.short_name or s.dc_title() for s in services]
@@ -622,3 +763,33 @@ class Image(ImageMixIn, HTMLMixIn, AnyEntity):
 class CssImage(ImageMixIn, HTMLMixIn, AnyEntity):
     __regid__ = "CssImage"
     fetch_attrs, cw_fetch_order = fetch_config(["cssid", "description", "caption"])
+
+
+class GlossaryTerm(AnyEntity):
+    __regid__ = "GlossaryTerm"
+    fetch_attrs, cw_fetch_order = fetch_config(
+        ["term", "term_plural", "short_description", "description"]
+    )
+
+    def rest_path(self):
+        return "glossaryterm/{}".format(self.eid)
+
+    @cachedproperty
+    def fmt_creation_date(self):
+        return format_date(self.creation_date, "d MMMM y", locale=self._cw.lang)
+
+
+class FaqItem(TranslatableCmsObject):
+    __regid__ = "FaqItem"
+    fetch_attrs, cw_fetch_order = fetch_config(["order", "answer", "question", "category"])
+    i18nfields = ("question", "answer")
+
+    def dc_title(self):
+        if self._cw.lang == "fr":
+            return self.question
+        return self.cw_adapt_to("ITemplatable").entity_param().question
+
+
+class FaqItemTranslation(TranslationMixin, AnyEntity):
+    __regid__ = "FaqItemTranslation"
+    fetch_attrs, cw_fetch_order = fetch_config(["answer", "question"])

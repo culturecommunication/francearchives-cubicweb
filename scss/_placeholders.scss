@@ -7,3 +7,18 @@
   margin-top: 0.6em;
   margin-bottom: 1.250em;
 }
+
+%sticky-btn {
+  z-index: 99;
+  outline: none;
+  background-color: $royal-blue;
+  color: white;
+  cursor: pointer;
+  border-radius: 7em;
+  border: 3px solid #fff;
+  font-size: 18px;
+}
+
+%sticky-btn-hover {
+  background-color: $dark-dodger-blue; /* Add a dark-grey background on hover */
+}

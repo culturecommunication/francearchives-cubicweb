@@ -178,19 +178,20 @@ class FARoutesTests(PostgresTextMixin, PyramidCWTest):
             resp = self.webapp.get("/cgu")
             self.assertEqual(resp.body, "card Conditions générales d'utilisation".encode("utf-8"))
 
+    @unittest.skip("Disable this test until pyramid 1.10 is pinned")
     @patch(
         "cubicweb_francearchives.views.templates.PniaMainTemplate.call", new=mock_maintemplate_call
     )
     def test_commemocoll(self):
         with self.admin_access.cnx() as cnx:
-            coll = cnx.create_entity("CommemoCollection", title="recueil 2010", year=2010)
+            cnx.create_entity("CommemoCollection", title="recueil 2010", year=2010)
             cnx.commit()
         mock_view = mock_primary_view(lambda e: "recueil {}".format(e.year))
         with self.temporary_appobjects(mock_view):
-            resp = self.webapp.get("/commemo/recueil-2010".format(coll.eid), status=302)
+            resp = self.webapp.get("/commemo/recueil-2010", status=307)
             self.assertEqual(resp.location, "https://localhost:80/commemo/recueil-2010/")
             # test with slash
-            resp = self.webapp.get("/commemo/recueil-2010/".format(coll.eid))
+            resp = self.webapp.get("/commemo/recueil-2010/")
             self.assertEqual(resp.body, b"recueil 2010")
 
     def test_noresult_yields_404(self):
@@ -198,7 +199,13 @@ class FARoutesTests(PostgresTextMixin, PyramidCWTest):
 
 
 class SanitizeTweenMixin(object):
-    settings = merge_dicts({}, BASE_SETTINGS, {"francearchives.autoinclude": "no",})
+    settings = merge_dicts(
+        {},
+        BASE_SETTINGS,
+        {
+            "francearchives.autoinclude": "no",
+        },
+    )
 
     def includeme(self, config):
         config.add_route("dumpform", "/dumpform")
@@ -221,7 +228,11 @@ class SanitizeParameterTest(SanitizeTweenMixin, PyramidCWTest):
 
 class NoSanitizeParameterTest(SanitizeTweenMixin, PyramidCWTest):
     settings = merge_dicts(
-        {}, SanitizeTweenMixin.settings, {"francearchives.sanitize_params": "no",}
+        {},
+        SanitizeTweenMixin.settings,
+        {
+            "francearchives.sanitize_params": "no",
+        },
     )
 
     def test_not_sanitized(self):
@@ -257,7 +268,13 @@ def es_autosuggest_response(count):
     def _search(*args, **kwargs):
         search = Search(doc_type="_doc", index="text_suggest")
         return ESResponse(
-            search, {"hits": {"hits": [_result(i) for i in range(count)], "total": count,}}
+            search,
+            {
+                "hits": {
+                    "hits": [_result(i) for i in range(count)],
+                    "total": count,
+                }
+            },
         )
 
     return _search
@@ -292,7 +309,13 @@ class ESRouteTests(PyramidCWTest):
 
 
 class NewsLetterTests(PyramidCWTest):
-    settings = merge_dicts({}, BASE_SETTINGS, {"francearchives.autoinclude": "no",})
+    settings = merge_dicts(
+        {},
+        BASE_SETTINGS,
+        {
+            "francearchives.autoinclude": "no",
+        },
+    )
 
     def includeme(self, config):
         config.include("cubicweb_francearchives.pviews")
@@ -307,7 +330,8 @@ class NewsLetterTests(PyramidCWTest):
             self.assertEqual(
                 res.body,
                 "test1@test.fr,{}\ntest2@test.fr,{}\n".format(
-                    nls1.creation_date, nls2.creation_date,
+                    nls1.creation_date,
+                    nls2.creation_date,
                 ).encode("utf-8"),
             )
 
@@ -346,7 +370,13 @@ class CatchAllTC(PostgresTextMixin, PyramidCWTest):
 
 
 class CSVExportTests(PostgresTextMixin, PyramidCWTest):
-    settings = merge_dicts({}, BASE_SETTINGS, {"francearchives.autoinclude": "no",})
+    settings = merge_dicts(
+        {},
+        BASE_SETTINGS,
+        {
+            "francearchives.autoinclude": "no",
+        },
+    )
 
     def includeme(self, config):
         config.include("cubicweb_francearchives.pviews")
@@ -499,15 +529,12 @@ Jérôme Savonarole,persname,http://testing.fr/cubicweb/facomponent/{}
             self.assertEqual(res.body, expected.encode("utf-8"))
 
     def test_indices_location_csv_export(self):
-        with self.admin_access.cnx() as cnx:
-            fa = cnx.find("FindingAid", eid=self.fa_eid).one()
+        with self.admin_access.cnx():
             res = self.webapp.get("/indices-location.csv")
             expected = """\
 index_entry,index_type,documents
 Paris,geogname,http://testing.fr/cubicweb/findingaid/FRAD084_xxx
-""".format(
-                fa.stable_id
-            )
+"""
             self.assertEqual(res.body, expected.encode("utf-8"))
 
     def test_indices_subject_csv_export(self):

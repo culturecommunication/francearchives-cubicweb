@@ -53,8 +53,7 @@ from cubicweb_francearchives.dataimport import sqlutil, to_unicode
 
 # XXX once 3.24 is released: from cubicweb.dataimport.stores import NullStore
 class NullStore(object):
-    """Store that do nothing, handy to measure time taken be above steps
-    """
+    """Store that do nothing, handy to measure time taken be above steps"""
 
     def __init__(self):
         self._eid_gen = count()
@@ -125,7 +124,7 @@ def postprocess_import_eac(cnx, created_authrecs, sameas_authorityrecords, log):
 
 def postprocess_authorities(cnx, log):
     """Replace ExternalUri with the same cwuri as AuthorityRecord record_id
-       by the corresponding AuthorityRecord
+    by the corresponding AuthorityRecord
     """
     rset = cnx.execute(
         """
