@@ -1,0 +1,23 @@
+<div class="sharelinks{% if css_class %} {{css_class}}{% endif %} d-print-none">
+ {{ _(sharelinks["title"]) }}{{ _(":")}}
+  <a class="sharelink" target="_blank" href="{{ sharelinks["facebook"] }}" title="{{ _("Share on facebook") }}">
+    <i class="fa fa-facebook circle-blue-icon"></i>
+  </a>
+  <a class="sharelink" target="_blank" href="{{ sharelinks["twitter"] }}" title="{{ _("Share on twitter") }}">
+    <i class="fa fa-twitter circle-blue-icon"></i>
+  </a>
+  <a class="sharelink" href="{{ sharelinks["mail"] }}" title="{{ _("Share by mail") }}">
+    <i class="fa fa-envelope circle-blue-icon"></i>
+  </a>
+  <a id="copylink" class="sharelink" href="{{ sharelinks["copyurl"] }}" title="{{ _("Copy link") }}"
+    onclick="copyUrl(event)">
+    <i class="fa fa-link circle-blue-icon"></i>
+  </a>
+  <p class="hidden" id="tooltip-copylink" role="status">
+     <i class="fa fa-check" aria-hidden="true"></i>
+  {{ _("Link copied to clipboard!")}}
+  </p>
+</div>
+<div class="clearfix"></div>
+
+

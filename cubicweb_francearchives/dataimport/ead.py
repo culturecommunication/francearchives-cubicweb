@@ -30,7 +30,6 @@
 #
 
 from datetime import datetime
-import glob
 import logging
 import os
 import os.path as osp
@@ -44,12 +43,11 @@ from glamconv.cli.commands import ead2_to_ape
 
 import json
 
-from pytz import utc as pytz_utc
+import pytz
 
 from logilab.mtconverter import xml_escape
 
 from cubicweb.utils import json_dumps
-
 from cubicweb_francearchives.utils import merge_dicts, pick
 from cubicweb_francearchives.entities import ETYPE_CATEGORIES
 from cubicweb_francearchives.dataimport import (
@@ -60,6 +58,7 @@ from cubicweb_francearchives.dataimport import (
     strip_html,
     strip_nones,
     get_year,
+    get_date,
     clean_values,
     normalize_entry,
     remove_extension,
@@ -78,6 +77,7 @@ from cubicweb_francearchives.dataimport.eadreader import (
     unique_indices,
 )
 from cubicweb_francearchives.dataimport.ape_ead import register_ead_actions
+from cubicweb_francearchives.storage import S3BfssStorageMixIn
 
 
 LOGGER = logging.getLogger()
@@ -143,16 +143,16 @@ def dates_for_es_doc(did_attrs, logger=None, docid=None):
             return attrs
     year = startyear or stopyear
     attrs["year"] = year
-    # XXX should we only consider start date as sortdate ?
     attrs["sortdate"] = "{}-01-01".format(year) if year else None
     fa_dates = {}
     attrs["startyear"] = startyear
     attrs["stopyear"] = stopyear
-    if startyear:
-        fa_dates["gte"] = startyear
-    if stopyear:
-        fa_dates["lte"] = stopyear
-    attrs["dates"] = fa_dates
+
+    if startyear or stopyear:
+        fa_dates["gte"] = startyear or stopyear
+        fa_dates["lte"] = stopyear or startyear
+    if fa_dates:
+        attrs["dates"] = fa_dates
     return attrs
 
 
@@ -167,7 +167,9 @@ def service_infos_for_es_doc(cnx, service_infos):
     }
 
 
-def component_stable_id(fa_id, comp_path):
+def component_stable_id(fa_id, comp_id, comp_path):
+    if comp_id:
+        return usha1("{}{}".format(fa_id, comp_id))
     return usha1("{}{}".format(fa_id, "-".join(str(i) for i in comp_path)))
 
 
@@ -202,6 +204,18 @@ def findingaid_eids(cnx, fa_stable_id):
     )
 
 
+def generate_ape_ead_xml(cnx, config, tree, ir_name, stable_id, service_infos):
+    """
+    Compute ape_ead_xml file and write it in the ape_filepath
+    """
+    ape_filepath = osp.join(
+        config["appfiles-dir"],
+        compute_ape_relpath(cnx, ir_name, service_infos),
+    )
+    generate_ape_ead_file_from_xml(cnx, tree, service_infos, stable_id, ape_filepath)
+    return ape_filepath
+
+
 def compute_ape_relpath(cnx, filepath_or_eadid, service_infos):
     if service_infos is None:
         service_map = load_services_map(cnx)
@@ -214,11 +228,6 @@ def compute_ape_relpath(cnx, filepath_or_eadid, service_infos):
     # XXX make sure to provide a different basename than the original EAD file
     # or else the importer will believe the file has already been imported.
     return "ape-ead/{}/ape-{}".format(publisher_code, basename)
-
-
-def get_basepath(filepath):
-    ufilepath = osp.abspath(decode_filepath(filepath))
-    return osp.basename(ufilepath)
 
 
 class MetadataReaderMixIn(object):
@@ -244,6 +253,7 @@ class MetadataReaderMixIn(object):
             ("index_collectivite", "corpname"),
             ("index_lieu", "geogname"),
             ("index_matiere", "subject"),
+            ("type", "genreform"),
         ):
             index_labels = entry.get(index_name) or ()
             if not isinstance(index_labels, (list, tuple)):
@@ -267,8 +277,15 @@ class MetadataReaderMixIn(object):
     def import_findingaid(self, service_infos, metadata, fa_support, **fa_es_attrs):
         filepath = fa_support["data"]
         file_identifier = metadata["identifiant_fichier"]
+        stable_id = usha1(file_identifier)
+        eadid = remove_extension(file_identifier)
+        if self.config.get("force_delete"):
+            file_identifier, stable_id = self.process_existing_findingaids(eadid, fa_support)
         unittitle = metadata["titre"]
+        unitdate = get_date(metadata.get("date1"), metadata.get("date2"))
+        extptr = metadata.get("identifiant_uri")
         did_attrs = {
+            "unitdate": unitdate,
             "unittitle": unittitle,
             "startyear": get_year(metadata.get("date1")),
             "stopyear": get_year(metadata.get("date2")),
@@ -276,12 +293,14 @@ class MetadataReaderMixIn(object):
             "physdesc_format": "text/html",
             "lang_description": metadata.get("langue"),
             "origination": metadata.get("origine"),
-            "extptr": metadata.get("identifiant_uri"),
+            "extptr": extptr,
         }
+        if extptr and not extptr.startswith("http"):
+            raise Exception('`identifiant_uri` "{0}" is not a valid URL'.format(extptr))
         did_data = self.create_entity("Did", clean_values(did_attrs))
         header_attrs = self.create_entity("FAHeader", {"titleproper": unittitle})
         # cwuri = unicode(did_data['eid'])
-        basepath = get_basepath(filepath)
+        basepath = self.storage.storage_get_basepath(filepath)
         if file_identifier and file_identifier != basepath:
             self.log.warning(
                 '`file_identifier` "{0}" is different from the imported file name "{1}"'.format(
@@ -291,8 +310,7 @@ class MetadataReaderMixIn(object):
         publisher = service_infos.get("name") or default_service_name(basepath)
         fa_attrs = {
             "name": file_identifier,
-            "eadid": remove_extension(file_identifier),
-            "fatype": metadata.get("type"),
+            "eadid": eadid,
             "did": did_data["eid"],
             "scopecontent": self.richstring_html(metadata.get("description"), "scopecontent"),
             "scopecontent_format": "text/html",
@@ -308,7 +326,7 @@ class MetadataReaderMixIn(object):
                 metadata.get("conditions_utilisation"), "userestrict"
             ),
             "userestrict_format": "text/html",
-            "stable_id": usha1(file_identifier),
+            "stable_id": stable_id,
             "publisher": str(publisher),
             "service": service_infos.get("eid"),
             "fa_header": header_attrs["eid"],
@@ -316,6 +334,10 @@ class MetadataReaderMixIn(object):
         fa_attrs["creation_date"] = metadata["creation_date"]
         fa_attrs["findingaid_support"] = fa_support["eid"]
         fa_data = self.create_entity("FindingAid", clean_values(fa_attrs))
+        illustration_url = metadata.get("source_image")
+        if illustration_url:
+            daos = [{"role": "thumbnail", "illustration_url": illustration_url, "url": None}]
+            self.create_daos(daos, fa_data["eid"])
         fa_es_attrs.update(
             {
                 "name": fa_data["name"],
@@ -371,10 +393,11 @@ class Reader(MetadataReaderMixIn, IndexImporterMixin):
         if self.log is None:
             self.log = LOGGER
         self.store = store
+        self.storage = S3BfssStorageMixIn(log=self.log)
         if self.config["esonly"]:
             self.add_rel = lambda *a, **k: None
             self.authority_records = {}
-            self.known_fa_ids = set()
+            self.known_fa_ids = {}
             for rqlpath in ("I index FA", "I index FAC, FAC finding_aid FA"):
                 for typevar, rqlpath2 in (
                     ("T", "I is AgentName, I type T"),
@@ -399,7 +422,10 @@ class Reader(MetadataReaderMixIn, IndexImporterMixin):
                 for x, r in store.rql("Any X, R WHERE " "X is AuthorityRecord, " "X record_id R")
             }
             self.known_fa_ids = {
-                stable_id for stable_id, in store.rql("Any S WHERE X is FindingAid, X stable_id S")
+                eadid.lower(): stable_id
+                for eadid, stable_id in store.rql(
+                    "Any E, S WHERE X is FindingAid, X stable_id S, X eadid E"
+                )
             }
         self.delete_existing_findingaid = False
         self.deferred = {}
@@ -409,6 +435,7 @@ class Reader(MetadataReaderMixIn, IndexImporterMixin):
         self._richstring_cache = {}
         self.imported_findingaids = []
         self._init_authorities()
+        self._init_blacklisted_authorities()
         self._init_auth_history()
 
     def etype_richstring_attrs(self, etype):
@@ -469,8 +496,9 @@ class Reader(MetadataReaderMixIn, IndexImporterMixin):
 
     def create_file(self, filepath, title=None, sha1=None):
         if sha1 is None:
-            with open(filepath, "rb") as f:
-                sha1 = usha1(f.read())
+            sha1 = self.storage.get_file_sha1(filepath)
+            if sha1 is None:
+                raise Exception('Could not find file "%r". Please, reimport it.', filepath)
         if not self.config["esonly"] and self.ignore_filepath(filepath, sha1):
             return None
         f = self.create_cwfile(filepath, title, sha1)
@@ -479,8 +507,8 @@ class Reader(MetadataReaderMixIn, IndexImporterMixin):
         return f
 
     def create_cwfile(self, filepath, title=None, sha1=None):
-        ufilepath = osp.abspath(decode_filepath(filepath))
-        basepath = osp.basename(ufilepath)
+        ufilepath = self.storage.storage_ufilepath(filepath)
+        _, basepath = os.path.split(ufilepath)
         return self.create_entity(
             "File",
             {
@@ -493,6 +521,14 @@ class Reader(MetadataReaderMixIn, IndexImporterMixin):
             },
         )
 
+    def create_daos(self, daos, eid):
+        urls = []
+        for daodef in daos:
+            urls.append(dict(daodef))
+            digit_ver_attrs = self.create_entity("DigitizedVersion", strip_nones(daodef))
+            self.add_rel(eid, "digitized_versions", digit_ver_attrs["eid"])
+        return urls
+
     def import_component(self, comp_props, findingaid_attrs, service_infos, parent_component):
         did_attrs = self.create_did(comp_props["did"])
         referenced_files = comp_props.pop("referenced_files")
@@ -500,7 +536,9 @@ class Reader(MetadataReaderMixIn, IndexImporterMixin):
             {
                 "did": did_attrs["eid"],
                 "finding_aid": findingaid_attrs["eid"],
-                "stable_id": component_stable_id(findingaid_attrs["stable_id"], comp_props["path"]),
+                "stable_id": component_stable_id(
+                    findingaid_attrs["stable_id"], comp_props["c_id"], comp_props["path"]
+                ),
                 "parent_component": parent_component,
                 "component_order": comp_props["path"][-1],
             },
@@ -535,12 +573,8 @@ class Reader(MetadataReaderMixIn, IndexImporterMixin):
         )
         for infos in index_entries:
             self.create_index(infos, target=comp_attrs["eid"], fa_attrs=findingaid_attrs)
-        # keep daos attributes with no eid for es indexing
-        daos = []
-        for daodef in comp_props["daos"]:
-            daos.append(dict(daodef))
-            digit_ver_attrs = self.create_entity("DigitizedVersion", strip_nones(daodef))
-            self.add_rel(comp_attrs["eid"], "digitized_versions", digit_ver_attrs["eid"])
+        # create DigitizedVersions
+        self.create_daos(comp_props["daos"], comp_attrs["eid"])
         es_doc = es_dict(
             comp_attrs,
             [
@@ -555,7 +589,6 @@ class Reader(MetadataReaderMixIn, IndexImporterMixin):
             did=es_dict(did_attrs, ["unittitle", "unitid", "note", "abstract"]),
             publisher=findingaid_attrs["publisher"],
             digitized=bool(comp_props["daos"]),
-            digitized_versions=daos,
             index_entries=unique_indices(index_entries),
             originators=findingaid_attrs["originators"],
             fa_stable_id=findingaid_attrs["stable_id"],
@@ -577,15 +610,15 @@ class Reader(MetadataReaderMixIn, IndexImporterMixin):
             if self.config.get("update_imported"):
                 return False
             if not self.config.get("reimport"):
-                self.log.info("ignore already imported file %s", basepath)
+                self.log.info("Ignore already imported file %s", basepath)
                 return True
             prevsha1 = self.files[basepath][1]
             if prevsha1 == sha1 and not self.config.get("force_delete"):
                 self.log.info(
-                    "ignore already imported file %s (because of identical sha1)", basepath
+                    "Ignore already imported file %s (because of identical sha1)", basepath
                 )
                 return True
-            self.log.info("delete entities related to already imported file %s", basepath)
+            self.log.info("Entities related to  %s will be deleted", basepath)
             self.delete_existing_findingaid = True
         return False
 
@@ -595,15 +628,6 @@ class Reader(MetadataReaderMixIn, IndexImporterMixin):
                 self.store._cnx, filepath, interactive=False, esonly=self.config["esonly"]
             )
 
-    def make_symlink(self, filepath, sha1):
-        if self.config.get("appfiles-dir"):
-            destpath = osp.join(
-                self.config["appfiles-dir"], "{}_{}".format(str(sha1), osp.basename(filepath))
-            )
-            if osp.lexists(destpath):
-                os.unlink(destpath)
-            os.symlink(filepath, destpath)
-
     def creation_date_from_filepath(self, filepath):
         rset = self.store.rql(
             """
@@ -612,7 +636,7 @@ class Reader(MetadataReaderMixIn, IndexImporterMixin):
             """,
             {"e": osp.basename(filepath)},
         )
-        return rset[0][0] if rset else datetime.now(pytz_utc)
+        return rset[0][0] if rset else datetime.now(pytz.utc)
 
     def import_filepath(self, filepath, service_infos=None):
         entities = []
@@ -626,27 +650,27 @@ class Reader(MetadataReaderMixIn, IndexImporterMixin):
             service_map = load_services_map(self.store._cnx)
             service_infos = service_infos_from_filepath(filepath, service_map)
         if file_ext in (".xml", ".pdf"):
-            with open(filepath, "rb") as f:
-                sha1 = usha1(f.read())
+            sha1 = self.storage.get_file_sha1(filepath)
+            if sha1 is None:
+                self.log.error('Could not find file "%r". Please, reimport it.', filepath)
+                return entities
             fa_support = self.create_file(filepath, sha1=sha1)
             if fa_support is None:
                 return entities
             self.update_authorities_cache(service_infos.get("eid"))
             if file_ext == ".xml":
-                relfiles_dir = "{}/RELFILES".format(osp.dirname(filepath))
-                if osp.isdir(relfiles_dir):
-                    relfiles = dict(
-                        (osp.basename(f), f) for f in glob.glob("{}/*.pdf".format(relfiles_dir))
-                    )
-                else:
-                    relfiles = None
+                relfiles = self.storage.storage_handle_pdf_relfiles(filepath)
                 entities = self.import_ead_xml(service_infos, fa_support, relfiles=relfiles)
             elif file_ext == ".pdf":
-                if not self.config["esonly"]:
-                    self.make_symlink(filepath, sha1)
                 entities = self.import_pdf(service_infos, fa_support)
+                # add the symlink after all previous data deletions
+                if not self.config["esonly"]:
+                    # FIXME s3 why publish imported pdf ?
+                    self.storage.storage_make_symlink_to_publish(
+                        filepath, sha1, self.config.get("appfiles-dir")
+                    )
         else:
-            self.log.debug("ignoring unknown extension %s", osp.splitext(filepath)[-1])
+            self.log.debug(f"""do not process "{filepath}" as it's not a .xml or .pdf file""")
             return []
         return entities
 
@@ -661,19 +685,23 @@ class Reader(MetadataReaderMixIn, IndexImporterMixin):
         fa_attrs      : attributes to add to FindingAid
         """
         filepath = fa_support["data"]
+        binary = self.storage.storage_get_file_content(filepath)
+        if not binary:
+            self.log.error('Could not find file "%r". Please reimport it.', filepath)
+            return []
         try:
-            tree = preprocess_ead(filepath)
+            tree = preprocess_ead(binary)
         except Exception as exc:
-            self.log.exception("invalid xml %r", filepath)
+            self.log.exception("Import aborted: invalid xml %r", filepath)
             capture_exception(exc, filepath)
             return []
         return self.import_ead_xmltree(tree, service_infos, fa_support, relfiles, **fa_attrs)
 
-    def update_fa_redirects(self, old_stable_id, new_stable_id, old_ir_name):
+    def update_fa_redirects(self, old_stable_id, new_stable_id, eadid):
         data = {
             "old_stable_id": old_stable_id,
             "new_stable_id": new_stable_id,
-            "old_ir_name": old_ir_name,
+            "eadid": eadid,
             "date": datetime.now().strftime("%Y-%m-%d"),
         }
         sql = self.store._cnx.system_sql
@@ -691,8 +719,8 @@ class Reader(MetadataReaderMixIn, IndexImporterMixin):
                     existing,
                 )
         query = """
-        INSERT INTO fa_redirects (old_ir_name, from_stable_id, to_stable_id, date)
-        VALUES (%(old_ir_name)s, %(old_stable_id)s, %(new_stable_id)s, %(date)s)
+        INSERT INTO fa_redirects (eadid, from_stable_id, to_stable_id, date)
+        VALUES (%(eadid)s, %(old_stable_id)s, %(new_stable_id)s, %(date)s)
         ON CONFLICT (from_stable_id) DO UPDATE SET to_stable_id = EXCLUDED.to_stable_id;
         """
         sql(query, data)
@@ -752,7 +780,9 @@ class Reader(MetadataReaderMixIn, IndexImporterMixin):
                 old_stable_id = usha1(old_ir_name)
                 if stable_id == old_stable_id:
                     continue
-                if old_stable_id in self.known_fa_ids and self.config.get("reimport"):
+                if old_stable_id in list(self.known_fa_ids.values()) and self.config.get(
+                    "reimport"
+                ):
                     delete_from_filename(
                         self.store._cnx,
                         old_stable_id,
@@ -769,18 +799,38 @@ class Reader(MetadataReaderMixIn, IndexImporterMixin):
             self.log.warning("no fa_support found, use <eadid> as stable_id")
             ir_name = eadid
             stable_id = usha1(ir_name)
-        if stable_id in self.known_fa_ids and self.config.get("reimport"):
-            # This does not seem not be necessary as all files have fa_support now and are
-            # previously deleted
+        if self.config.get("reimport"):
             # What is the difference between reimport and force_delete options ?
-            delete_from_filename(
-                self.store._cnx,
-                stable_id,
-                interactive=False,
-                esonly=self.config["esonly"],
-                is_filename=False,
-            )
+            if (
+                stable_id not in list(self.known_fa_ids.values())
+                and eadid.lower() in self.known_fa_ids
+            ):
+                # the filename had been changed, but not the eadid
+                # stable_id is no more an usha1 on the filename
+                # (see https://extranet.logilab.fr/ticket/74031756)
+                new_stable_id = self.known_fa_ids[eadid.lower()]
+                # keep track of the modification
+                self.update_fa_redirects(stable_id, new_stable_id, eadid)
+                stable_id = new_stable_id
+            if stable_id in list(self.known_fa_ids.values()):
+                delete_from_filename(
+                    self.store._cnx,
+                    stable_id,
+                    interactive=False,
+                    esonly=self.config["esonly"],
+                    is_filename=False,
+                )
         return ir_name, stable_id
+
+    def create_ape_ead_xml(self, tree, ir_name, stable_id, service_infos):
+        """
+        Create ape_ead_xml file for the imported IR
+        """
+        ape_filepath = generate_ape_ead_xml(
+            self.store._cnx, self.config, tree, ir_name, stable_id, service_infos
+        )
+        ape_filepath = self.storage.storage_handle_ape_ead_filepath(ape_filepath)
+        return self.create_file(ape_filepath)
 
     def import_ead_xmltree(self, tree, service_infos, fa_support, relfiles=None, **fa_attrs):
         """
@@ -794,10 +844,16 @@ class Reader(MetadataReaderMixIn, IndexImporterMixin):
         relfiles      : files to link to FindingAid
         fa_attrs      : attributes to add to FindingAid
         """
+
+        self.log.info("Start processing XML")
         filepath = fa_support["data"]
         creation_date = self.creation_date_from_filepath(filepath)
+        ead_reader = EADXMLReader(tree, self.storage.get_file_sha1, relfiles, log=self.log)
+        ead_reader.check_c_id_unicity(tree)
+        self.log.info("Start deleting from file")
         self.delete_from_filename(filepath)
-        ead_reader = EADXMLReader(tree, relfiles, log=self.log)
+        self.log.info("Finish deleting from file")
+
         header_props = ead_reader.fa_headerprops()
         fa_properties = ead_reader.fa_properties
         eadid = header_props.pop("eadid")
@@ -806,18 +862,12 @@ class Reader(MetadataReaderMixIn, IndexImporterMixin):
                 raise Exception("findingaid with neither file nor eadid")
             eadid = osp.splitext(fa_support["data_name"])[0]
         ir_name, stable_id = self.process_existing_findingaids(eadid, fa_support)
+        self.log.info("Start creating entities")
         header_attrs = self.create_entity("FAHeader", strip_nones(header_props))
         did_props = fa_properties["did"]
         did_attrs = self.create_did(did_props)
         # XXX if stable_id in already_imported and not self.config.get('reimport'): continue
-        ape_filepath = osp.join(
-            self.config["appfiles-dir"],
-            compute_ape_relpath(self.store._cnx, ir_name, service_infos),
-        )
-        generate_ape_ead_file_from_xml(
-            self.store._cnx, tree, service_infos, stable_id, ape_filepath
-        )
-        ape_file = self.create_file(ape_filepath)
+        ape_file = self.create_ape_ead_xml(tree, ir_name, stable_id, service_infos)
         referenced_files = fa_properties.pop("referenced_files")
         publisher = service_infos.get("name") or default_service_name(eadid)
         findingaid_attrs = merge_dicts(
@@ -863,6 +913,8 @@ class Reader(MetadataReaderMixIn, IndexImporterMixin):
         )
         for infos in index_entries:
             self.create_index(infos, target=findingaid_attrs["eid"], fa_attrs=findingaid_attrs)
+        # create DigitizedVersions
+        self.create_daos(fa_properties["daos"], findingaid_attrs["eid"])
         fa_es_doc = es_dict(
             findingaid_attrs,
             [
@@ -882,6 +934,7 @@ class Reader(MetadataReaderMixIn, IndexImporterMixin):
             author=header_attrs.get("author"),
             fa_stable_id=findingaid_attrs["stable_id"],
             did=es_dict(did_attrs, ["unittitle", "unitid", "note", "abstract"]),
+            digitized=bool(fa_properties["daos"]),
             index_entries=index_entries,
             originators=ead_reader.originators(),
             creation_date=findingaid_attrs["creation_date"],
@@ -912,6 +965,7 @@ class Reader(MetadataReaderMixIn, IndexImporterMixin):
             )
             path2eid[comp_attrs["path"]] = es_doc["_source"]["eid"]
             es_documents.append(es_doc)
+        self.log.info("Finish processing XML")
         return es_documents
 
     def create_referenced_files(self, fa_eid, referenced_files):
@@ -919,7 +973,11 @@ class Reader(MetadataReaderMixIn, IndexImporterMixin):
         for file_info in referenced_files:
             feid = self.create_cwfile(**file_info)["eid"]
             self.add_rel(fa_eid, "fa_referenced_files", feid)
-            self.make_symlink(file_info["filepath"], file_info["sha1"])
+            # we should not create a symlink here but the referenced_files paths
+            # are hard coded in FindingAid/FAComponent component_additional attribut
+            self.storage.storage_make_symlink_to_publish(
+                file_info["filepath"], file_info["sha1"], self.config.get("appfiles-dir")
+            )
 
     def import_pdf(self, service_infos, fa_support, metadata=None):
         filepath = fa_support["data"]
@@ -934,21 +992,17 @@ class Reader(MetadataReaderMixIn, IndexImporterMixin):
         return [self.import_findingaid(service_infos, metadata, fa_support, **fa_es_attrs)]
 
     def pdf_metadata(self, filepath):
-        directory = osp.dirname(filepath)
-        metadata_file = osp.join(directory, "metadata.csv")
-        if not osp.isfile(metadata_file):
-            self.log.warning(
-                "ignoring PDF directory %s because metadata.csv file is missing", directory
-            )
+        metadata_file = self.storage.storage_get_metadata_file(filepath)
+        if metadata_file is None:
             all_metadata = {}
         elif metadata_file not in self._pdf_metadata_cache:
-            all_metadata = load_metadata_file(metadata_file)
+            all_metadata = load_metadata_file(self.storage.storage_read_file, metadata_file)
             self._pdf_metadata_cache[metadata_file] = all_metadata
         else:
             all_metadata = self._pdf_metadata_cache[metadata_file]
         filename = osp.basename(filepath)
         if filename not in all_metadata:
-            self.log.info("using dummy metadata for %s", filename)
+            self.log.info("Using dummy metadata for %s", filename)
             filename = osp.basename(filepath)
             return default_csv_metadata(remove_extension(filename))
         return all_metadata[filename]

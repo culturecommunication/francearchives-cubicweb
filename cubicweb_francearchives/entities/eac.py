@@ -31,11 +31,19 @@
 """cubicweb-pnia-eac entity's classes"""
 from collections import OrderedDict
 import datetime
-from lxml import etree
 
-from cubicweb_francearchives.views import html_link
+from logilab.common.decorators import cachedproperty
+
+from cubicweb.predicates import is_instance
+
 
 import cubicweb_eac.entities as eac
+
+from cubicweb_francearchives.entities.adapters import EntityMainPropsAdapter
+from cubicweb_francearchives.entities.es import PniaIFullTextIndexSerializable
+from cubicweb_francearchives.views import html_link, format_date
+from cubicweb_francearchives.utils import format_entity_attributes, cut_words, remove_html_tags
+from cubicweb_francearchives.xmlutils import process_html_for_csv
 
 
 format_dates = "{0.day:2d}/{0.month:02d}/{0.year:4d}"
@@ -77,25 +85,28 @@ class AuthorityRecord(eac.AuthorityRecord):
 
     def __init__(self, req, **extra):
         super(AuthorityRecord, self).__init__(req, **extra)
-        self._authorized_nameentiry = None
+        self._authorized_name_entry = None
 
     @property
-    def authorized_nameentiry(self):
+    def authorized_name_entry(self):
         """Initialize the NameEntry of "authorized" form variant, if any; otherwise any
         NameEntry.
         """
-        if self._authorized_nameentiry is None:
+        if self._authorized_name_entry is None:
             rset = self._cw.find("NameEntry", name_entry_for=self, form_variant="authorized")
             if not rset:
                 rset = self._cw.find("NameEntry", name_entry_for=self)
-            self._authorized_nameentiry = next(rset.entities())
-        return self._authorized_nameentiry
+            if rset:
+                self._authorized_name_entry = next(rset.entities())
+        return self._authorized_name_entry
 
     def dc_title(self):
         """A NameEntry of "authorized" form variant, if any; otherwise any
         NameEntry.
         """
-        return self.authorized_nameentiry.parts
+        if self.authorized_name_entry:
+            return self.authorized_name_entry.parts
+        return ""
 
     def other_names_rset(self):
         """Get all declared NameEntries for this AuthorityRecord other then the authorized one"""
@@ -107,7 +118,7 @@ class AuthorityRecord(eac.AuthorityRecord):
         X date_relation D?, D start_date SD, D end_date ED,
         A eid %(eid)s
         """,
-            {"auteid": self.authorized_nameentiry.eid, "eid": self.eid},
+            {"auteid": self.authorized_name_entry.eid, "eid": self.eid},
         )
 
     def parallel_names_rset(self):
@@ -176,15 +187,17 @@ class AuthorityRecord(eac.AuthorityRecord):
             {"eid": self.eid},
         )
 
-    @property
-    def main_infos(self):
+    def main_infos(self, export=False):
+        if export:
+            data = [(self._cw._("record_id_label"), self.record_id)]
+            if self.isni:
+                data.append(((self._cw._("ISNI"), self.isni)))
+            return OrderedDict(data)
         if self.isni:
-            format_infos = lambda x, y: "{}<br>{}".format(x, y)
+            values = f'<ul class="list list-unstyled"><li>{self.record_id}</li><li>{self.isni}</li></ul>'  # noqa
         else:
-            format_infos = lambda x, y: x
-        return OrderedDict(
-            [(self._cw._("record_id_label"), format_infos(self.record_id, self.isni))]
-        )
+            values = self.record_id
+        return OrderedDict([(self._cw._("record_id_label"), values)])
 
     @property
     def main_date(self):
@@ -192,6 +205,17 @@ class AuthorityRecord(eac.AuthorityRecord):
         NameEntry.
         """
         return format_eac_dates(self.start_date, self.end_date)
+
+    @property
+    def dates(self):
+        if self.start_date and self.end_date:
+            if self.start_date == self.end_date:
+                return format_date(self.start_date, self._cw, fmt="d MMMM y")
+            start_date = format_date(self.start_date, self._cw, fmt="d MMMM y")
+            end_date = format_date(self.end_date, self._cw, fmt="d MMMM y")
+            return "-".join([start_date, end_date])
+        date = self.start_date or self.end_date
+        return format_date(date, self._cw, fmt="d MMMM y")
 
     def name_entry(self, klass="list list-unstyled", subvid="francearchives.eac"):
         rset_names = self.other_names_rset()
@@ -204,7 +228,7 @@ class AuthorityRecord(eac.AuthorityRecord):
             view_parallel = self._cw.vreg["views"].select("list", self._cw, rset=rset_parallel)
             views.append(view_parallel.render(klass=klass, subvid=subvid))
         if views:
-            return {self._cw._("name_entries_label"): views}
+            return {self._cw._("name_entries_label"): "".join(views)}
         return {}
 
     @property
@@ -214,14 +238,6 @@ class AuthorityRecord(eac.AuthorityRecord):
     @property
     def related_service(self):
         return self.maintainer[0] if self.maintainer else None
-
-    @staticmethod
-    def extract_from_tag(xml_str, name):
-        values = OrderedDict()
-        elem = etree.fromstring(xml_str)
-        values[name] = elem.text.strip()
-        # values.update(elem.attrib)
-        return values
 
     @property
     def language_used(self):
@@ -306,10 +322,12 @@ class AuthorityRecord(eac.AuthorityRecord):
     def maintenance_events(self):
         rset = self.maintenance_events_rset()
         if rset:
-            view = self._cw.vreg["views"].select(
-                "francearchives.eac", self._cw, rset=rset, klass="maintenance-event"
-            )
-            return {self._cw._("maintenance_event_label"): view.render()}
+            view = self._cw.vreg["views"].select("list", self._cw, rset=rset)
+            return {
+                self._cw._("maintenance_event_label"): view.render(
+                    klass="list-unstyled maintenance-event", subvid="francearchives.eac"
+                )
+            }
         return {}
 
     @property
@@ -322,18 +340,38 @@ class AuthorityRecord(eac.AuthorityRecord):
 
     @property
     def functions(self):
-        rset = self.related("function_agent", role="object")
+        """Try to sort functions by dates"""
+
+        rset = self._cw.execute(
+            """Any X, A, SD, ED ORDERBY SD, ED WHERE X function_agent A,
+               A eid %(e)s, X date_relation D?, D start_date SD, D end_date ED""",
+            {"e": self.eid},
+        )
         if rset:
-            view = self._cw.vreg["views"].select("francearchives.eac", self._cw, rset=rset)
-            return {self._cw._("functions_label"): view.render()}
+            view = self._cw.vreg["views"].select("list", self._cw, rset=rset)
+            return {
+                self._cw._("functions_label"): view.render(
+                    klass="list list-unstyled", subvid="francearchives.eac"
+                )
+            }
         return {}
 
     @property
     def mandates(self):
-        rset = self.related("mandate_agent", role="object")
+        """Try to sort mandates by dates"""
+
+        rset = self._cw.execute(
+            """Any X, A, SD, ED ORDERBY SD, ED, X WHERE X mandate_agent A,
+               A eid %(e)s, X date_relation D?, D start_date SD, D end_date ED""",
+            {"e": self.eid},
+        )
         if rset:
-            view = self._cw.vreg["views"].select("francearchives.eac", self._cw, rset=rset)
-            return {self._cw._("mandates_label"): view.render()}
+            view = self._cw.vreg["views"].select("list", self._cw, rset=rset)
+            return {
+                self._cw._("mandates_label"): view.render(
+                    klass="list list-unstyled", subvid="francearchives.eac"
+                )
+            }
         return {}
 
     @property
@@ -352,15 +390,29 @@ class AuthorityRecord(eac.AuthorityRecord):
 
     @property
     def occupations(self):
-        rset = self.related("occupation_agent", role="object")
+        """Try to sort occupations by dates"""
+        rset = self._cw.execute(
+            """Any X, A, SD, ED ORDERBY SD, ED WHERE X occupation_agent A,
+               A eid %(e)s, X date_relation D?, D start_date SD, D end_date ED""",
+            {"e": self.eid},
+        )
         if rset:
-            view = self._cw.vreg["views"].select("francearchives.eac", self._cw, rset=rset)
-            return {self._cw._("occupation_label"): view.render()}
+            view = self._cw.vreg["views"].select("list", self._cw, rset=rset)
+            return {
+                self._cw._("occupation_label"): view.render(
+                    klass="list list-unstyled", subvid="francearchives.eac"
+                )
+            }
         return {}
 
     @property
     def legal_statuses(self):
-        rset = self.related("legal_status_agent", role="object")
+        """Try to sort  legal status by dates"""
+        rset = self._cw.execute(
+            """Any X, A, SD, ED ORDERBY SD, ED, X WHERE X legal_status_agent A,
+               A eid %(e)s, X date_relation D?, D start_date SD, D end_date ED""",
+            {"e": self.eid},
+        )
         if rset:
             view = self._cw.vreg["views"].select("francearchives.eac", self._cw, rset=rset)
             return {self._cw._("legal_statuses_label"): view.render()}
@@ -378,9 +430,22 @@ class AuthorityRecord(eac.AuthorityRecord):
     def source_entry(self):
         rset = self.related("source_agent", role="object")
         if rset:
-            view = self._cw.vreg["views"].select("francearchives.eac", self._cw, rset=rset)
-            return {self._cw._("source_entry_label"): view.render()}
+            view = self._cw.vreg["views"].select("list", self._cw, rset=rset)
+            return {
+                self._cw._("source_entry_label"): view.render(
+                    klass="list list-unstyled", subvid="francearchives.eac"
+                )
+            }
         return {}
+
+    def es_indexes(self):
+        return self._cw.execute(
+            """
+            DISTINCT Any L, NORMALIZE_ENTRY(L), X ORDERBY X WHERE E eid %(e)s,
+            X is AgentAuthority, X same_as E, X label L
+            """,
+            {"e": self.eid},
+        )
 
     @property
     def authorities(self):
@@ -398,6 +463,26 @@ class AuthorityRecord(eac.AuthorityRecord):
             if rset:
                 indexes.append((label, [e.view("outofcontext") for e in rset.entities()]))
         return OrderedDict(indexes)
+
+    @cachedproperty
+    def qualified_authority(self):
+        return list(
+            self._cw.execute(
+                "Any X, L, B, C, Q ,MD, CD, E LIMIT 1 WHERE X is AgentAuthority,"
+                "X same_as AR, AR is AuthorityRecord, AR eid %(eid)s, "
+                "X label L, X quality True, X quality Q, X birthyear B, X deathyear C, "
+                "X modification_date MD, X creation_date CD, X cwuri E",
+                {"eid": self.eid},
+            ).entities()
+        )
+
+    @property
+    def abstract_text(self):
+        """used in the linked Authority description or in AuthorityRecord search result digest"""
+        description = "\n".join(
+            remove_html_tags(f.text or f.abstract or "") for f in self.reverse_history_agent
+        )
+        return cut_words(description, 280)
 
 
 class Citation(eac.Citation):
@@ -519,3 +604,150 @@ class NameEntry(eac.NameEntry):
     def cw_fetch_order(cls, select, attr, var):
         if attr == "parts":
             select.add_sort_var(var)
+
+
+class AuthorityRecordMainPropsAdapter(EntityMainPropsAdapter):
+    __regid__ = "entity.main_props"
+    __select__ = is_instance("AuthorityRecord")
+
+    def __init__(self, _cw, **kwargs):
+        fmt = kwargs.get("fmt", {"text": "text/html", "vid": "incontext"})
+        self.text_format = fmt["text"]
+        self.vid = fmt["vid"]
+        super(AuthorityRecordMainPropsAdapter, self).__init__(_cw, **kwargs)
+
+    def csv_export_props(self):
+        title = self._cw._("Download shelfmark")
+        return {
+            "url": self._cw.build_url("%s.csv" % self.entity.rest_path()),
+            "title": title,
+            "link": title,
+        }
+
+    def process_values_for_export(self, label, values):
+        """
+        For a given attribute, return its label and text values without html
+        :param label: attribute label
+        :param values: values to be cleaned
+        :return: A list if tuple label, value
+
+        """
+        attrs = []
+        label = label.strip().strip(":").strip()  # remove ":"
+        cnx = self._cw
+        if isinstance(values, (list, tuple)):
+            attrs.append((label, "; ".join(process_html_for_csv(v, cnx) for v in values)))
+        elif isinstance(values, (dict, OrderedDict)):
+            for key, data in values.items():
+                if data:
+                    attrs.append(
+                        (
+                            f"{label.strip()}, {key.strip().strip(':')}",
+                            process_html_for_csv(data, cnx),
+                        )
+                    )
+        else:
+            attrs.append(
+                (
+                    label,
+                    process_html_for_csv(format_entity_attributes(values, " "), cnx),
+                )
+            )
+        return attrs
+
+    def properties(self, export=False, vid="incontext", text_format="text/html"):
+        self.text_format = text_format
+        self.vid = vid
+        entity = self.entity
+        props = [
+            entity.name_entry(),
+            entity.places,
+            entity.functions,
+            entity.function_relations,
+            entity.occupations,
+            entity.legal_statuses,
+            entity.language_used,
+            entity.history,
+            entity.general_context,
+            entity.structure,
+            entity.mandates,
+            entity.source_entry,
+            entity.main_infos(export=export),
+            entity.maintenance_events,
+            entity.cpf_relations,
+            entity.resource_relations,
+            entity.authorities,
+        ]
+        if export:
+            if entity.related_service:
+                props.insert(0, {self._cw._("FranceArchives link"): entity.absolute_url()})
+                props.insert(1, {self._cw._("Name"): entity.dc_title()})
+                props.append({self._cw._("publisher"): entity.related_service.dc_title()})
+        attrs = []
+        for data in props:
+            for label, values in data.items():
+                if export:
+                    attrs.extend(self.process_values_for_export(label, values))
+                else:
+                    values = format_entity_attributes(values, "")
+                    if values:
+                        attrs.append((label, values))
+        return attrs
+
+
+def clean_values(data):
+    return "".join([remove_html_tags(v).strip() for v in data])
+
+
+class AuthorityRecordIFTIAdapter(PniaIFullTextIndexSerializable):
+    __select__ = PniaIFullTextIndexSerializable.__select__ & is_instance("AuthorityRecord")
+
+    @property
+    def es_id(self):
+        return self.entity.record_id
+
+    def build_all_text(self):
+        """add all indexed data in ES alltext field"""
+        entity = self.entity
+        all_text = [self.entity.record_id]
+        for data in (
+            entity.name_entry(),
+            entity.functions,
+            entity.occupations,
+            entity.history,
+            entity.legal_statuses,
+        ):
+            all_text.append(clean_values(data.values()))
+        return " ".join(all_text).strip()
+
+    def serialize(self, complete=True):
+        data = super(AuthorityRecordIFTIAdapter, self).serialize(complete)
+        data["title"] = self.entity.dc_title()
+        data["alltext"] = self.build_all_text()
+        # for the moment don't show AuthorityRecord in global search
+        # data["escategory"] = ETYPE_CATEGORIES[self.entity.cw_etype]
+        start_date = self.entity.start_date
+        end_date = self.entity.end_date
+        # bad formatted date / date range, ES will fail for those dates
+        if start_date and start_date.year < 1000:
+            start_date = None
+        if end_date and end_date.year < 1000:
+            end_date = None
+        dates = {}
+        if start_date:
+            dates["gte"] = start_date.year
+        if end_date:
+            dates["lte"] = end_date.year
+        if dates:
+            data["dates"] = dates
+            sort_date = start_date or end_date
+            data["sortdate"] = sort_date.strftime("%Y-%m-%d")
+        service = self.entity.related_service
+        if service:
+            data["publisher"] = service.short_name
+        # for the moment don't show AuthorityRecord on related AgentAuthority pages
+        # data["index_entries"] = [
+        #     {"label": label, "normalized": normalized, "authority": auth}
+        #     for label, normalized, auth in self.entity.es_indexes()
+        # ]
+        return data

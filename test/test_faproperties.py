@@ -51,7 +51,7 @@ class FaPropertiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
                 "Service", code="FRAD051", category="L", search_form_url="http://francearchives.fr"
             )
             cnx.commit()
-            filepath = self.datapath("ir_data/FRAD051_est_ead_affichage.xml")
+            filepath = "ir_data/FRAD051_est_ead_affichage.xml"
             self.import_filepath(cnx, filepath)
             fa = cnx.find("FindingAid").one()
             self.assertTrue(fa.related_service.eid, service.eid)
@@ -71,7 +71,7 @@ class FaPropertiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
                 "Service", code="FRAD051", category="L", search_form_url="http://francearchives.fr"
             )
             cnx.commit()
-            filepath = self.datapath("ir_data/FRAD051_est_ead_affichage.xml")
+            filepath = "ir_data/FRAD051_est_ead_affichage.xml"
             self.import_filepath(cnx, filepath)
             fc_rql = "Any X WHERE X is FAComponent, X did D, D unitid %(u)s"
             fa = cnx.find("FindingAid").one()
@@ -93,7 +93,7 @@ class FaPropertiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
                 "Service", code="FRAD034", category="L", search_form_url="http://francearchives.fr"
             )
             cnx.commit()
-            filepath = self.datapath("ir_data/FRAD034_000000248.xml")
+            filepath = "ir_data/FRAD034_000000248.xml"
             self.import_filepath(cnx, filepath)
             fa = cnx.find("FindingAid").one()
             self.assertTrue(fa.related_service.eid, service.eid)
@@ -114,7 +114,7 @@ class FaPropertiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
                 "Service", code="FRAD037", category="L", search_form_url="http://francearchives.fr"
             )
             cnx.commit()
-            filepath = self.datapath("ir_data/FRAD037_E_3E18_excerpt.xml")
+            filepath = "ir_data/FRAD037_E_3E18_excerpt.xml"
             self.import_filepath(cnx, filepath)
             fc_rql = "Any X WHERE X is FAComponent, X did D, D unitid %(u)s"
             fc = cnx.execute(fc_rql, {"u": "3E18/2"}).one()
@@ -136,7 +136,7 @@ class FaPropertiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
                 "Service", code="FRAD034", category="L", search_form_url="http://francearchives.fr"
             )
             cnx.commit()
-            filepath = self.datapath("ir_data/FRAD034_000000248.xml")
+            filepath = "ir_data/FRAD034_000000248.xml"
             self.import_filepath(cnx, filepath)
             fa = cnx.find("FindingAid").one()
             expected_fa_extptr = "http://google.fr"
@@ -157,7 +157,7 @@ class FaPropertiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
                 "Service", code="FRAD034", category="L", search_form_url="http://francearchives.fr"
             )
             cnx.commit()
-            filepath = self.datapath("ir_data/FRAD034_000000248.xml")
+            filepath = "ir_data/FRAD034_000000248.xml"
             self.import_filepath(cnx, filepath)
             fa = cnx.find("FindingAid").one()
             expected_fa_extptr = "http://google.fr"
@@ -186,7 +186,7 @@ class FaPropertiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
                 search_form_url="http://archives39.fr/search?query={unitid}&search-query=&search-query=1",  # noqa
             )
             cnx.commit()
-            filepath = self.datapath("ir_data/FRAD039_3P_Inventaire.xml")
+            filepath = "ir_data/FRAD039_3P_Inventaire.xml"
             self.import_filepath(cnx, filepath)
             fa = cnx.find("FindingAid").one()
             expected_fa_extptr = "http://archives39.fr/search?query=3P&search-query=&search-query=1"
@@ -205,7 +205,7 @@ class FaPropertiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
         with self.admin_access.cnx() as cnx:
             cnx.create_entity("Service", code="FRAD034", category="L")
             cnx.commit()
-            filepath = self.datapath("ir_data/FRAD063_000051242.xml")
+            filepath = "ir_data/FRAD063_000051242.xml"
             self.import_filepath(cnx, filepath)
             fa = cnx.find("FindingAid").one()
             self.assertEqual(fa.did[0].extptr, "ark:/72847/vta1a56e5e06dfce452")
@@ -228,7 +228,7 @@ class FaPropertiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
         with self.admin_access.cnx() as cnx:
             cnx.create_entity("Service", code="FRAD034", category="L")
             cnx.commit()
-            filepath = self.datapath("ir_data/FRAD034_000000248_extptr_on_fa.xml")
+            filepath = "ir_data/FRAD034_000000248_extptr_on_fa.xml"
             self.import_filepath(cnx, filepath)
             fa = cnx.find("FindingAid").one()
             self.assertEqual(
@@ -256,7 +256,7 @@ class FaPropertiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
                 "Service", code="FRBNF", category="L", thumbnail_url="{url}.thumbnail"
             )
             cnx.commit()
-            self.import_filepath(cnx, self.datapath("ir_data/FRBNF_EAD000096744.xml"))
+            self.import_filepath(cnx, "ir_data/FRBNF_EAD000096744.xml")
             fc_rql = "Any X WHERE X is FAComponent, X did D, D unitid %(u)s"
             fc = cnx.execute(fc_rql, {"u": "2011/001/0474"}).one()
             self.assertEqual(fc.related_service.eid, service.eid)
@@ -273,7 +273,7 @@ class FaPropertiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
         with self.admin_access.cnx() as cnx:
             cnx.create_entity("Service", code="FRBNF", category="L")
             cnx.commit()
-            self.import_filepath(cnx, self.datapath("ir_data/FRBNF_EAD000096744.xml"))
+            self.import_filepath(cnx, "ir_data/FRBNF_EAD000096744.xml")
             fa_component = cnx.execute(
                 "Any X WHERE X is FAComponent, X did D, D unitid %(unitid)s",
                 {"unitid": "2011/001/0474"},
@@ -313,7 +313,7 @@ class FaPropertiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
             # thumbnail_url is not set
             cnx.create_entity("Service", category=category, name=name, code=code)
             cnx.commit()
-            self.import_filepath(cnx, self.datapath(path))
+            self.import_filepath(cnx, path)
             fc = cnx.execute(fc_rql, {"u": "74 J 2"}).one()
             # one of the dao tags' URL is used
             self.assertTrue(fc.illustration_url in expected)
@@ -333,7 +333,7 @@ class FaPropertiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
                 thumbnail_url="http://www.archives.landes.org/{url}",
             )
             cnx.commit()
-            filepath = self.datapath("ir_data/FRAD040_000020FI__fiche_img.xml")
+            filepath = "ir_data/FRAD040_000020FI__fiche_img.xml"
             self.import_filepath(cnx, filepath)
             fc_rql = "Any X WHERE X is FAComponent, X did D, D unitid %(u)s"
             fc = cnx.execute(fc_rql, {"u": "20 FI 2"}).one()
@@ -352,7 +352,7 @@ class FaPropertiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
                 "Service", code="FRAD040", category="L", thumbnail_dest=thumbnail_dest
             )
             cnx.commit()
-            filepath = self.datapath("ir_data/FRAD040_000020FI__fiche_img.xml")
+            filepath = "ir_data/FRAD040_000020FI__fiche_img.xml"
             self.import_filepath(cnx, filepath)
             rql = "Any X WHERE X is FAComponent, X did D, D unitid %(unitid)s"
             fa_component = cnx.execute(rql, {"unitid": "20 FI 9"}).one()
@@ -370,7 +370,7 @@ class FaPropertiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
         with self.admin_access.cnx() as cnx:
             cnx.create_entity("Service", code="FRAD040", category="L", thumbnail_url=thumbnail_url)
             cnx.commit()
-            filepath = self.datapath("ir_data/FRAD040_000020FI__fiche_img.xml")
+            filepath = "ir_data/FRAD040_000020FI__fiche_img.xml"
             self.import_filepath(cnx, filepath)
             rql = "Any X WHERE X is FAComponent, X did D, D unitid %(unitid)s"
             fa_component = cnx.execute(rql, {"unitid": "20 FI 9"}).one()
@@ -393,7 +393,7 @@ class FaPropertiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
                 search_form_url="http://archives39.fr/search?query={unitid}&search-query=&search-query=1",  # noqa
             )
             cnx.commit()
-            filepath = self.datapath("ir_data/FRAD039_3P_Inventaire.xml")
+            filepath = "ir_data/FRAD039_3P_Inventaire.xml"
             self.import_filepath(cnx, filepath)
             unitid = "3Pplan6802/4"
             fc_rql = "Any X WHERE X is FAComponent, X did D, D unitid %(u)s"
@@ -402,6 +402,44 @@ class FaPropertiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
             fc.did[0].cw_set(unitid=None)
             cnx.commit()
             self.assertEqual(service.website_url, fc.bounce_url)
+
+    def test_findingaid_illustration_url_thumbnail_url(self):
+        """Test thumbnail_dest and thumbnail_url of FindingAid.
+
+        Trying: dao tag contains relative URL and thumbnail_url is set on its related service
+        Expecting: illustration_url is formatted relative URL and thumbnail_dest is bounce_url
+        """
+        website_url = "http://www.mairie-perpignan.fr/fr/culture/archives-communales"
+        with self.admin_access.cnx() as cnx:
+            cnx.create_entity("Service", code="FRAD066", category="L", website_url=website_url)
+            cnx.commit()
+            filepath = "ir_data/FRAD066_1B.xml"
+            self.import_filepath(cnx, filepath)
+            fa = cnx.find("FindingAid").one()
+            self.assertEqual(fa.bounce_url, website_url)
+            self.assertEqual(fa.thumbnail_dest, website_url)
+            self.assertEqual(fa.illustration_url, None)
+
+    def test_findingaid_legalstatus(self):
+        """Test legalstatus display of FAComponent.
+
+        Trying: import in IR with <legalstatus type="arch_privee" altrender="Archives privées">
+        Expecting: legalstatus@altrender value is found in FindingAid accessrestrict
+
+        """
+        with self.admin_access.cnx() as cnx:
+            cnx.create_entity(
+                "Service",
+                code="FRAD040",
+                category="L",
+            )
+            cnx.commit()
+            filepath = "ir_data/FRAD040_000020FI__fiche_img.xml"
+            self.import_filepath(cnx, filepath)
+            fi = cnx.find("FindingAid").one()
+            expected = """Archives privées. Les documents produits avant 1946"""
+            adapter = fi.cw_adapt_to("entity.main_props")
+            self.assertIn(expected, adapter.clean_value(fi, "accessrestrict"))
 
 
 if __name__ == "__main__":

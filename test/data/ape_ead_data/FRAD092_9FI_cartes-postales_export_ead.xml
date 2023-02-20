@@ -17,15 +17,22 @@
         <extptr xlink:href="https://opendata.hauts-de-seine.fr/explore/dataset/cartes-postales/" xlink:type="simple"/>
       </unitid>
       <unittitle>Cartes postales anciennes</unittitle>
-      <unitdate>1900-1900</unitdate>
+      <unitdate>1900 - 1944-05-31</unitdate>
       <physdesc>5 cartons</physdesc>
       <origination>Archives des Hauts-de-Seine</origination>
       <langmaterial>italien</langmaterial>
     </did>
     <controlaccess>
       <corpname>Service des postes</corpname>
+      <genreform>photographie</genreform>
       <geogname>Antony (Hauts-de-Seine)</geogname>
+      <geogname>Corse (France ; département)</geogname>
+      <geogname>Digne-les-Bains (Alpes-de-Haute-Provence, France ; arrondissement )</geogname>
+      <geogname>Digne-les-Bains (Alpes-de-Haute-Provence, France)</geogname>
       <geogname>Hauts-de-Seine</geogname>
+      <geogname>Paris</geogname>
+      <geogname>Sisteron (Alpes-de-Haute-Provence, France ; arrondissement)</geogname>
+      <geogname>méditerranée (mer)</geogname>
       <persname>Alphonse Germain</persname>
       <persname>Jules Ferry</persname>
       <subject>Cartes postales</subject>
@@ -50,6 +57,7 @@
           <origination>Archives privées Mr X</origination>
         </did>
         <controlaccess>
+          <genreform>photographie</genreform>
           <geogname>Bagneux</geogname>
           <persname>Charles Baudelaire</persname>
           <subject>Bâtiment public > Gare</subject>
@@ -70,6 +78,7 @@
           <origination>Archives privées Mr X</origination>
         </did>
         <controlaccess>
+          <genreform>plaque de verre</genreform>
           <geogname>Bagneux</geogname>
           <persname>Claudette Levy</persname>
           <persname>Emma Bovary</persname>
@@ -91,6 +100,7 @@
           <origination>Entreprise Pajol</origination>
         </did>
         <controlaccess>
+          <genreform>photographie</genreform>
           <geogname>Bagneux</geogname>
           <persname>Claudette Levy</persname>
           <persname>Emma Bovary</persname>
@@ -112,6 +122,7 @@
           <origination>Entreprise Pajol</origination>
         </did>
         <controlaccess>
+          <genreform>photographie</genreform>
           <geogname>Bagneux</geogname>
           <persname>Claudette Levy</persname>
           <persname>Emma Bovary</persname>
@@ -133,6 +144,7 @@
           <origination>Entreprise Pajol</origination>
         </did>
         <controlaccess>
+          <genreform>photographie</genreform>
           <geogname>Bagneux</geogname>
           <persname>Claudette Levy</persname>
           <persname>Emma Bovary</persname>
@@ -154,7 +166,8 @@
           <origination>Entreprise Pajol</origination>
         </did>
         <controlaccess>
-          <corpname>Soci&#233;t&#233; Beguin-Say</corpname>
+          <corpname>Société Beguin-Say</corpname>
+          <genreform>photographie</genreform>
           <geogname>Bagneux</geogname>
           <persname>Claudette Levy</persname>
           <persname>Emma Bovary</persname>
@@ -176,7 +189,8 @@
           <origination>Entreprise Pajol</origination>
         </did>
         <controlaccess>
-          <corpname>Soci&#233;t&#233; Beguin-Say</corpname>
+          <corpname>Société Beguin-Say</corpname>
+          <genreform>photographie</genreform>
           <geogname>Bagneux</geogname>
           <subject>Logement social > Cité du Champ des Oiseaux</subject>
         </controlaccess>
@@ -196,7 +210,8 @@
           <origination>Entreprise Pajol</origination>
         </did>
         <controlaccess>
-          <corpname>Soci&#233;t&#233; Beguin-Say</corpname>
+          <corpname>Société Beguin-Say</corpname>
+          <genreform>photographie</genreform>
           <geogname>Bagneux</geogname>
           <subject>Logement social > Cité du Champ des Oiseaux</subject>
         </controlaccess>
@@ -216,7 +231,8 @@
           <origination>Entreprise Pajol</origination>
         </did>
         <controlaccess>
-          <corpname>Soci&#233;t&#233; Beguin-Say</corpname>
+          <corpname>Société Beguin-Say</corpname>
+          <genreform>photographie</genreform>
           <geogname>Bagneux</geogname>
           <subject>Logement social > Cité du Champ des Oiseaux</subject>
         </controlaccess>
@@ -236,7 +252,8 @@
           <origination>Entreprise Pajol</origination>
         </did>
         <controlaccess>
-          <corpname>Soci&#233;t&#233; Beguin-Say</corpname>
+          <corpname>Société Beguin-Say</corpname>
+          <genreform>photographie</genreform>
           <geogname>Bagneux</geogname>
           <subject>Logement social > Cité du Champ des Oiseaux</subject>
         </controlaccess>

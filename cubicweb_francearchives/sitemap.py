@@ -31,12 +31,15 @@
 """francearchives sitemap files generator"""
 
 
+# standard library imports
 import logging
-from itertools import count
-import os.path as osp
 from io import StringIO
 from datetime import date
-import gzip
+from itertools import count
+
+# third party imports
+# CubicWeb specific imports
+# library specific imports
 
 
 SITEMAP_ENTRY = """ <url>
@@ -84,7 +87,6 @@ def iter_entities(req):
         "Any X, I, M WHERE X is Circular, X circ_id I, X modification_date M",
         "Any X, M WHERE X is NewsContent, X modification_date M",
         "Any X, M WHERE X is BaseContent, X modification_date M",
-        "Any X, Y, M WHERE X is CommemoCollection, X year Y, X modification_date M",
         "Any X, Y, M WHERE X is CommemorationItem, X commemoration_year Y, X modification_date M",
         "Any X, L, D, M WHERE X is Service, X level L, X dpt_code D, X modification_date M",
         "Any X, M WHERE X is LocationAuthority, X modification_date M",
@@ -136,7 +138,7 @@ def coroutine(func):
 
 
 @coroutine
-def sitemap_index_writer(output_dir, baseurl):
+def sitemap_index_writer(storage, output_dir, baseurl):
     sitemaps = []
     try:
         buf = StringIO()
@@ -150,7 +152,7 @@ def sitemap_index_writer(output_dir, baseurl):
             sitemaps.append("Sitemap: {}{}".format(baseurl, sitemap))
             buf.write(
                 """  <sitemap>
-        <loc>%s/%s</loc>
+        <loc>%s%s</loc>
         <lastmod>%s</lastmod>
      </sitemap>
 """
@@ -159,12 +161,11 @@ def sitemap_index_writer(output_dir, baseurl):
     except GeneratorExit:
         buf.write("</sitemapindex>")
         index_filename = "sitemap_index.xml"
-        with open(osp.join(output_dir, index_filename), "wb") as sitemap_file:
-            sitemap_file.write(buf.getvalue().encode("utf8"))
-        sitemaps.insert(0, "Sitemap: {}{}".format(baseurl, index_filename))
-        with open(osp.join(output_dir, "robots.txt"), "wb") as robots:
-            robots.write(
-                b"""User-agent: *
+        storage.storage_write_sitemap_ini_file(index_filename, output_dir, buf)
+        sitemaps.insert(0, "Sitemap: {}{}/{}".format(baseurl, output_dir, index_filename))
+        rbuf = StringIO()
+        rbuf.write(
+            """User-agent: *
 Disallow: /fr/search
 Disallow: /en/
 Disallow: /es/
@@ -172,18 +173,23 @@ Disallow: /de/
 
 %s
 """
-                % "\n".join(sitemaps).encode("utf8")
-            )
+            % "\n".join(sitemaps)
+        )
+        storage.storage_write_sitemap_ini_file("robots.txt", output_dir, rbuf)
 
 
-def dump_sitemaps(req, output_dir, size_threshold=10 * 1000 * 1000, nb_entries_threshold=50000):
-    index_writer = sitemap_index_writer(output_dir, req.base_url())
+def dump_sitemaps(
+    req, storage, output_dir, size_threshold=10 * 1000 * 1000, nb_entries_threshold=50000
+):
+    index_writer = sitemap_index_writer(storage, output_dir, req.base_url())
     for index, buf in enumerate(generate_sitemaps(req, size_threshold, nb_entries_threshold)):
         basename = "sitemap%s.xml.gz" % (index + 1)
-        sitemap_file = gzip.open(osp.join(output_dir, basename), "wb")
-        sitemap_file.write(buf.getvalue().encode("utf8"))
-        sitemap_file.close()
-        index_writer.send(basename)
+        storage.storage_write_gz_file(basename, buf, output_dir)
+        if storage.s3_bucket:
+            index_writer.send(f"{output_dir}/{basename}")
+            print(f"write {output_dir}/{basename}")
+        else:
+            index_writer.send(basename)
 
 
 def generate(cnx):

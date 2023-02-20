@@ -35,7 +35,15 @@ from lxml.html import clean
 from cubicweb.uilib import REM_ROOT_HTML_TAGS, ALLOWED_TAGS
 
 # allow the style attribute
-SAFE_ATTRS = html.defs.safe_attrs | {"style", "frameborder", "allowfullscreen"}
+SAFE_ATTRS = html.defs.safe_attrs | {
+    "style",
+    "frameborder",
+    "allowfullscreen",
+    "aria-controls",
+    "aria-expanded",
+    "data-label-expand",
+    "data-label-collapse",
+}
 
 CLEANER = clean.Cleaner(
     allow_tags=ALLOWED_TAGS | {"iframe", "figure", "figcaption"},

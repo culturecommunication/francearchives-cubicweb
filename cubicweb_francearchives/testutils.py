@@ -29,29 +29,38 @@
 # knowledge of the CeCILL-C license and that you accept its terms.
 #
 
-import mock
-
-from sickle import Sickle
-from sickle.response import OAIResponse
-
+import datetime as dt
 import shutil
 import os
 import os.path as osp
+from uuid import uuid4
+
+import boto3
+import mock
+from moto import mock_s3
+from botocore.exceptions import ClientError
 
 from logilab.common.date import ustrftime
 
+from cubicweb import Binary
 from cubicweb.cwconfig import CubicWebConfiguration
 
+
 # library specific imports
+from cubicweb_francearchives import S3_ACTIVE, FranceArchivesS3Storage
 from cubicweb_francearchives.dataimport import ead, load_services_map, service_infos_from_filepath
+from cubicweb_francearchives.dataimport.oai_utils import PniaOAIResponse, PniaSickle
 from cubicweb_francearchives.dataimport.sqlutil import (
+    no_trigger,
     disable_triggers,
     enable_triggers,
     sudocnx,
     ead_foreign_key_tables,
+    nomina_foreign_key_tables,
 )
 from cubicweb_francearchives.dataimport.stores import create_massive_store
-from cubicweb_francearchives.dataimport import create_ead_index_table
+from cubicweb_francearchives.dataimport.csv_nomina import CSVNominaReader
+
 
 # third party imports
 from cubicweb.devtools import PostgresApptestConfiguration
@@ -89,8 +98,216 @@ class PostgresTextMixin(object):
             cnx.commit()
 
 
-class EADImportMixin(object):
+class HashMixIn(object):
+    @classmethod
+    def init_config(cls, config):
+        super(HashMixIn, cls).init_config(config)
+        config.set_option("compute-hash", True)
+        config.set_option("hash-algorithm", "sha1")
 
+
+class S3BfssStorageTestMixin(HashMixIn):
+    s3_endpoint = os.environ.get("AWS_S3_ENDPOINT_URL", "")
+
+    def s3_test_with_mock(self):
+        return S3_ACTIVE and "9000" not in self.s3_endpoint
+
+    def s3_test_with_minio(self):
+        return S3_ACTIVE and "9000" in self.s3_endpoint
+
+    def setUp(self):
+        self.fkeyfunc = "STKEY"
+        self.s3_bucket_name = "siaf-tests-{}".format(uuid4()) if S3_ACTIVE else None
+        if self.s3_test_with_mock():
+            s3_mock = mock_s3()
+            s3_mock.start()
+            resource = boto3.resource("s3", region_name="us-east-1")
+            self.s3_bucket = resource.create_bucket(Bucket=self.s3_bucket_name)
+            patched_storage_s3_client = mock.patch(
+                "cubicweb_s3storage.storages.S3Storage._s3_client",
+                return_value=boto3.client("es3"),
+            )
+            patched_storage_s3_client.start()
+            self._mocks = [
+                s3_mock,
+                patched_storage_s3_client,
+            ]
+            # TODO mock pyramid s3 cnx too
+            print("S3 Storage activated")
+        elif self.s3_test_with_minio():
+            os.environ["AWS_S3_BUCKET_NAME"] = self.s3_bucket_name
+            storage = FranceArchivesS3Storage(self.s3_bucket_name)
+            try:
+                storage.s3cnx.create_bucket(Bucket=self.s3_bucket_name)
+            except ClientError:
+                print("Bucket {} already exists".format(self.s3_bucket_name))
+            print("S3 Storage activated with minio")
+        else:
+            # we are not on S3Storage
+            self.fkeyfunc = "FSPATH"
+            print("BFSS Storage activated")
+        super(S3BfssStorageTestMixin, self).setUp()
+
+    def tearDown(self):
+        super(S3BfssStorageTestMixin, self).tearDown()
+        if self.s3_test_with_mock():
+            while self._mocks:
+                self._mocks.pop().stop()
+        elif self.s3_test_with_minio():
+            try:
+                s3 = boto3.resource("s3", endpoint_url=os.environ.get("AWS_S3_ENDPOINT_URL"))
+                bucket = s3.Bucket(self.s3_bucket_name)
+                bucket.objects.all().delete()
+                bucket.delete()
+            except ClientError as exc:
+                print(exc)
+                print("[test.treaDown] Failed to delete bucket {}".format(self.s3_bucket_name))
+
+    def fileExists(self, fkey):
+        """
+        Returns boolean
+        """
+        if not self.s3_bucket_name:
+            return osp.exists(fkey)
+
+        if isinstance(fkey, bytes):
+            fkey = fkey.decode()
+        if self.s3_test_with_mock():
+            s3 = boto3.resource("s3")
+            s3_object = s3.Object(self.s3_bucket_name, fkey)
+            try:
+                return s3_object.get()["Body"]
+            except s3.meta.client.exceptions.NoSuchKey:
+                print(f"[test.fileExists] no {fkey} key found in bucket")
+                return False
+        elif self.s3_test_with_minio():
+            storage = FranceArchivesS3Storage(self.s3_bucket_name)
+            try:
+                head = storage.s3cnx.head_object(Key=fkey, Bucket=self.s3_bucket_name)
+                return head["ResponseMetadata"].get("HTTPStatusCode") == 200
+            except ClientError:
+                print(f"[test.fileExists] no {fkey} key found in bucket")
+                return False
+
+    def getFileContent(self, fkey):
+        """
+        Returns file contents or None if no file is found
+        """
+        if not self.s3_bucket_name:
+            with open(fkey, "rb") as fp:
+                return fp.read()
+
+        if isinstance(fkey, bytes):
+            fkey = fkey.decode()
+        if self.s3_test_with_mock():
+            s3 = boto3.resource("s3")
+            s3_object = s3.Object(self.s3_bucket_name, fkey)
+            try:
+                return s3_object.get()["Body"].read()
+            except s3.meta.client.exceptions.NoSuchKey:
+                print(f"[test.fileExists] no {fkey} key found in bucket")
+                return False
+        elif self.s3_test_with_minio():
+            storage = FranceArchivesS3Storage(self.s3_bucket_name)
+            try:
+                result = storage.s3cnx.get_object(Bucket=self.s3_bucket_name, Key=fkey)
+                return result["Body"].read()
+            except ClientError:
+                print(f"[test.getFileContent] no {fkey} key found in bucket")
+
+    def isFile(self, fkey):
+        if self.s3_bucket_name:
+            return self.fileExists(fkey)
+        else:
+            return osp.isfile(fkey)
+
+    def get_filepath_by_storage(self, filepath):
+        """
+        Compute the filepath for test.
+
+        :create: if true, upload imported files in s3
+        :filepath: imported filepath
+
+        :returns: filepath
+        :rtype: str
+        """
+        if self.s3_bucket_name:
+            return filepath.lstrip("/")
+        else:
+            return self.datapath(filepath)
+
+    def storage_write_file(self, filepath, content):
+        """
+        Write a file with the give content
+        """
+        if self.s3_bucket_name:
+            if self.fileExists(filepath):
+                return filepath
+            storage = FranceArchivesS3Storage(self.s3_bucket_name)
+            storage.temporary_import_upload(Binary(content.encode("utf8")), filepath)
+        else:
+            dirs, basename = os.path.split(filepath)
+            if not osp.exists(dirs):
+                os.makedirs(dirs)
+            with open(filepath, "w+") as fp:
+                fp.write(content)
+
+    def get_or_create_imported_filepath(self, filepath):
+        """
+        Compute the filepath for test.
+
+        :create: if true, upload ead test files in s3
+        :filepath: imported filepath
+
+        :returns: filepath
+        :rtype: str
+        """
+
+        if self.s3_bucket_name:
+            storage = FranceArchivesS3Storage(self.s3_bucket_name)
+            if storage.file_exists(filepath):
+                # we are probably testing file reimports
+                return filepath
+            fs_filepath = self.datapath(filepath)
+            with open(fs_filepath, "rb") as stream:
+                storage.temporary_import_upload(Binary(stream.read()), filepath)
+            # also upload "RELFILES" if exist
+            relfiles_dir = f"{osp.dirname(fs_filepath)}/RELFILES"
+            for root, dirs, files in os.walk(relfiles_dir):
+                for relfname in files:
+                    relkey = storage.ensure_key(f"{osp.dirname(filepath)}/RELFILES/{relfname}")
+                    with open(osp.join(root, relfname), "rb") as stream:
+                        storage.temporary_import_upload(Binary(stream.read()), relkey)
+            # also upload metadata file if exists
+            metadata_file = f"{osp.dirname(fs_filepath)}/metadata.csv"
+            if osp.isfile(metadata_file):
+                with open(metadata_file, "rb") as stream:
+                    metadata_key = storage.ensure_key(f"{osp.dirname(filepath)}/metadata.csv")
+                    storage.temporary_import_upload(Binary(stream.read()), metadata_key)
+
+        else:
+            filepath = self.datapath(filepath)
+        return filepath
+
+    def load_directory_folder(self, fs_folderpath, prefix):
+        """
+        Compute the filepath for test.
+
+        :fs_folderpath: file system folder path to import
+        :filepath: imported filepath
+        """
+
+        if self.s3_bucket_name:
+            storage = FranceArchivesS3Storage(self.s3_bucket_name)
+            for root, dirs, files in os.walk(fs_folderpath):
+                for filename in files:
+                    fs_filepath = osp.join(root, filename)
+                    fkey = storage.ensure_key(fs_filepath.replace(fs_folderpath, prefix))
+                    with open(fs_filepath, "rb") as stream:
+                        storage.temporary_import_upload(Binary(stream.read()), fkey)
+
+
+class EADImportMixin(S3BfssStorageTestMixin):
     readerconfig = {
         "esonly": False,
         "index-name": "dummy",
@@ -104,6 +321,7 @@ class EADImportMixin(object):
         self.config.set_option("appfiles-dir", import_dir)
         if not osp.isdir(import_dir):
             os.mkdir(import_dir)
+        self.imported_filepath = None
 
     def tearDown(self):
         super(EADImportMixin, self).tearDown()
@@ -112,8 +330,10 @@ class EADImportMixin(object):
             shutil.rmtree(import_dir)
 
     def import_filepath(self, cnx, filepath, service_infos=None, **custom_settings):
+        filepath = self.get_or_create_imported_filepath(filepath)
         if isinstance(filepath, bytes):
             filepath = filepath.decode("utf-8")
+        self.imported_filepath = filepath
         if service_infos is None:
             services_map = load_services_map(cnx)
             service_infos = service_infos_from_filepath(filepath, services_map)
@@ -122,19 +342,52 @@ class EADImportMixin(object):
             with sudocnx(cnx, interactive=False) as su_cnx:
                 disable_triggers(su_cnx, fk_tables)
         store = create_massive_store(cnx, nodrop=self.readerconfig["nodrop"])
-        create_ead_index_table(cnx)
         settings = self.readerconfig.copy()
         settings["appfiles-dir"] = self.config["appfiles-dir"]
         settings.update(custom_settings)
         self.reader = ead.Reader(settings, store)
-        es_doc = self.reader.import_filepath(filepath, service_infos)
+        es_docs = self.reader.import_filepath(filepath, service_infos)
         store.flush()
         store.finish()
-        store.commit()
         if not self.readerconfig["nodrop"]:
             with sudocnx(cnx, interactive=False) as su_cnx:
                 enable_triggers(su_cnx, fk_tables)
-        return es_doc
+        return es_docs
+
+
+class NominaImportMixin(S3BfssStorageTestMixin):
+    def setUp(self):
+        super(NominaImportMixin, self).setUp()
+        import_dir = self.datapath("tmp")
+        self.config.set_option("appfiles-dir", import_dir)
+        if not osp.isdir(import_dir):
+            os.mkdir(import_dir)
+
+    readerconfig = {
+        "nomina-index-name": "dummy_nomina",
+    }
+
+    @classmethod
+    def init_config(cls, config):
+        super(NominaImportMixin, cls).init_config(config)
+        config.set_option("nomina-services-dir", "/tmp")
+
+    def tearDown(self):
+        super(NominaImportMixin, self).tearDown()
+        import_dir = self.datapath("tmp")
+        if osp.exists(import_dir):
+            shutil.rmtree(import_dir)
+
+    def import_filepath(self, cnx, filepath, doctype, delimiter=";"):
+        store = create_massive_store(cnx, nodrop=True)
+        reader = CSVNominaReader(self.readerconfig, store, self.service.code)
+        notrigger_tables = nomina_foreign_key_tables(cnx.vreg.schema)
+        with no_trigger(cnx, notrigger_tables, interactive=False):
+            es_docs = reader.import_records(filepath, delimiter=delimiter, doctype=doctype)
+            store.flush()
+            store.finish()
+            store.commit()
+        return es_docs
 
 
 class XMLCompMixin(object):
@@ -173,13 +426,6 @@ class EsSerializableMixIn(object):
         CubicWebConfiguration.config_for = staticmethod(config_for)
 
 
-class HashMixIn(object):
-    def setUp(self):
-        super(HashMixIn, self).setUp()
-        self.config.global_set_option("compute-hash", True)
-        self.config.global_set_option("hash-algorithm", "sha1")
-
-
 class MockOaiSickleResponse(object):
     """Mimics the response object returned by HTTP requests."""
 
@@ -195,14 +441,16 @@ class OaiSickleMixin(object):
         raise NotImplementedError
 
     def __init__(self, *args, **kwargs):
-        self.patch = mock.patch("sickle.app.Sickle.harvest", self.mock_harvest)
+        self.patch = mock.patch(
+            "cubicweb_francearchives.dataimport.oai_utils.PniaSickle.harvest", self.mock_harvest
+        )
         self.filename = None
         super(OaiSickleMixin, self).__init__(*args, **kwargs)
 
     def setUp(self):
         super(OaiSickleMixin, self).setUp()
         self.patch.start()
-        self.sickle = Sickle("http://localhost")
+        self.sickle = PniaSickle("http://localhost")
 
     def tearDown(self):
         """Tear down test cases."""
@@ -213,8 +461,41 @@ class OaiSickleMixin(object):
         assert self.filename is not None
         with open(self.filepath(), "r") as fp:
             response = MockOaiSickleResponse(fp.read())
-            return OAIResponse(response, kwargs)
+            return PniaOAIResponse(response, kwargs)
 
 
 def format_date(date, fmt="%Y-%m-%d"):
     return ustrftime(date, fmt)
+
+
+def create_authority_record(cnx):
+    service = cnx.create_entity(
+        "Service", category="other", name="Service", code="CODE", short_name="ADP"
+    )
+    name = "Jean Cocotte"
+    subject = cnx.create_entity(
+        "AgentAuthority",
+        label=name,
+        reverse_authority=cnx.create_entity(
+            "AgentName",
+            role="person",
+            label="name",
+        ),
+    )
+    kind_eid = cnx.find("AgentKind", name="person")[0][0]
+    record = cnx.create_entity(
+        "AuthorityRecord",
+        record_id="FRAN_NP_006883",
+        agent_kind=kind_eid,
+        maintainer=service.eid,
+        reverse_name_entry_for=cnx.create_entity(
+            "NameEntry", parts=name, form_variant="authorized"
+        ),
+        xml_support="foo",
+        start_date=dt.datetime(1940, 1, 1),
+        end_date=dt.datetime(2000, 5, 1),
+        reverse_occupation_agent=cnx.create_entity("Occupation", term="éleveur de poules"),
+        reverse_history_agent=cnx.create_entity("History", text="<p>Il aimait les poules</p>"),
+        same_as=subject,
+    )
+    return record

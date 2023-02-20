@@ -28,6 +28,8 @@
 # The fact that you are presently reading this means that you have had
 # knowledge of the CeCILL-C license and that you accept its terms.
 #
+
+import datetime
 import os.path as osp
 
 import unittest
@@ -37,12 +39,15 @@ from cubicweb.devtools import testlib
 
 from cubicweb.devtools import PostgresApptestConfiguration
 
-from cubicweb_francearchives.testutils import HashMixIn
+from cubicweb_francearchives import SECTIONS
+from cubicweb_francearchives.dataimport.pdf import pdf_infos
+from cubicweb_francearchives.dataimport.oai_nomina import compute_nomina_stable_id
+from cubicweb_francearchives.testutils import S3BfssStorageTestMixin
 
 from pgfixtures import setup_module, teardown_module  # noqa
 
 
-class EntitiesTC(HashMixIn, testlib.CubicWebTC):
+class EntitiesTC(S3BfssStorageTestMixin, testlib.CubicWebTC):
     configcls = PostgresApptestConfiguration
 
     def test_map(self):
@@ -189,6 +194,9 @@ class EntitiesTC(HashMixIn, testlib.CubicWebTC):
             )
 
     def test_section(self):
+        """
+        Add Section with Image in File
+        """
         with self.admin_access.cnx() as cnx:
             ce = cnx.create_entity
             image = cnx.create_entity(
@@ -232,7 +240,7 @@ class EntitiesTC(HashMixIn, testlib.CubicWebTC):
             )
 
 
-class FileTests(testlib.CubicWebTC):
+class FileTests(S3BfssStorageTestMixin, testlib.CubicWebTC):
     configcls = PostgresApptestConfiguration
 
     def _create_similar_files(self, cnx):
@@ -259,7 +267,7 @@ class FileTests(testlib.CubicWebTC):
             cnx.commit()
             cnx.find("File").one()
             fpath = cnx.execute("Any fspath(D) WHERE X data D, X is File")[0][0].getvalue()
-            self.assertTrue(osp.exists(fpath))
+            self.assertTrue(self.fileExists(fpath))
 
     def test_delete_all_similar_files(self):
         """
@@ -300,6 +308,164 @@ class FileTests(testlib.CubicWebTC):
             self.assertFalse(cnx.find("File"))
             self.assertFalse(osp.exists(fpaths[0]))
 
+    def test_s3_file_upload_content_type(self):
+        """
+        Trying: create a PDF file
+        Expecting: the file is uploaded with the right mimetype
+        """
+        if self.s3_bucket_name:
+            mime_type = "application/pdf"
+            with self.admin_access.client_cnx() as cnx:
+                pdf = cnx.create_entity(
+                    "File",
+                    data_name="pdf",
+                    data_format="application/pdf",
+                    data=Binary(b"pdf content"),
+                )
+                cnx.commit()
+                s3storage = self.repo.system_source.storage("File", "data")
+                s3_key = s3storage.get_s3_key(pdf, "data")
+                head = s3storage.s3cnx.head_object(Bucket=s3storage.bucket, Key=s3_key)
+                self.assertEqual(head["ContentType"], mime_type)
+
+    def test_update_file_content(self):
+        """
+        Trying: create a Circular with attachment and update the attachment content
+        Expecting: attachment file references a new file and the old no more exists
+        """
+        with self.admin_access.cnx() as cnx:
+            signing_date = datetime.date(2001, 6, 6)
+            pdffile = self.get_or_create_imported_filepath("pdf.pdf")
+            pdf_content = self.getFileContent(pdffile)
+            circular = cnx.create_entity(
+                "Circular",
+                circ_id="circ01",
+                title="Circular",
+                signing_date=signing_date,
+                status="in-effect",
+            )
+            attachment = cnx.create_entity(
+                "File",
+                data_name="pdf",
+                data_format="application/pdf",
+                data=Binary(pdf_content),
+                reverse_attachment=circular,
+            )
+            cnx.commit()
+            fpath = cnx.execute(f"""Any FSPATH(D) WHERE X eid {attachment.eid}, F data D""")[0][
+                0
+            ].getvalue()
+            self.assertTrue(self.fileExists(fpath))
+            pdf_text = "Test\nCirculaire chat\n\n\x0c"
+            self.assertEqual(pdf_text, pdf_infos(fpath).get("text"))
+            # update pdf
+            with open(osp.join(self.datadir, "pdf1.pdf"), "rb") as f:
+                pdf_content = f.read()
+                attachment.cw_set(data=Binary(pdf_content))
+            cnx.commit()
+            new_pdf_text = "Circulaire sérieux\n\n\x0c"
+            new_fpath = cnx.execute(f"""Any FSPATH(D) WHERE X eid {attachment.eid}, F data D""")[0][
+                0
+            ].getvalue()
+            self.assertFalse(self.fileExists(fpath))
+            self.assertTrue(self.fileExists(new_fpath))
+            self.assertNotEqual(new_fpath, fpath)
+            self.assertEqual(new_pdf_text, pdf_infos(new_fpath).get("text"))
+
+
+class NominaRecordTests(S3BfssStorageTestMixin, testlib.CubicWebTC):
+    configcls = PostgresApptestConfiguration
+
+    def setup_database(self):
+        super(NominaRecordTests, self).setup_database()
+        with self.admin_access.cnx() as cnx:
+            self.service = cnx.create_entity(
+                "Service",
+                name="Département des Landes",
+                code="FRAD040",
+                category="DS",
+                short_name="Landes",
+            )
+            cnx.commit()
+
+    def test_nomina_mpf1418_dates(self):
+        """Test MPF1418 NominaRecord dates
+
+        Trying: add a MPF1418 NominaRecord
+
+        Expecting: acte_year is d date
+        """
+
+        with self.admin_access.cnx() as cnx:
+            stable_id = compute_nomina_stable_id(self.service.code, "1")
+            nomina_record = cnx.create_entity(
+                "NominaRecord",
+                stable_id=stable_id,
+                json_data={
+                    "e": {
+                        "N": {
+                            "d": [{"d": "1894-06-24", "y": "1894"}],
+                            "l": [{"c": "France", "d": "Yvelines (ex Seine et Oise)", "dc": "78"}],
+                        },
+                        "D": {
+                            "d": [{"d": "1914-06-24", "y": "1914"}],
+                            "l": [{"c": "France", "d": "Yvelines (ex Seine et Oise)", "dc": "78"}],
+                        },
+                    },
+                    "p": [{"f": "Georges René", "n": "BIEUVILLE"}],
+                    "t": "MPF14-18",
+                    "u": "https://www.memoiredeshommes.sga.defense.gouv.fr/fr/ark:/40699/m005239d4b17b33e",  # noqa
+                },
+                service=self.service,
+            )
+            self.assertEqual(nomina_record.acte_year, "1914")
+
+    def test_nomina_dates(self):
+        """Test NominaRecord other then MPF1418 dates
+
+        Trying: add a NominaRecord
+
+        Expecting: acte_year is the date of doctype_code
+        """
+
+        with self.admin_access.cnx() as cnx:
+            stable_id = compute_nomina_stable_id(self.service.code, "10")
+            nomina_record = cnx.create_entity(
+                "NominaRecord",
+                stable_id=stable_id,
+                json_data={
+                    "c": {"c": "R P 392", "e": "0", "n": "22", "o": ["laboureur"]},
+                    "e": {
+                        "N": [
+                            {
+                                "d": {"y": "1867"},
+                            }
+                        ],
+                        "R": [
+                            {
+                                "l": {
+                                    "c": "France",
+                                    "cc": "FR",
+                                    "d": "Landes",
+                                    "dc": "40",
+                                    "p": "Cère",
+                                }
+                            }
+                        ],
+                        "RM": [
+                            {
+                                "d": {"y": "1887"},
+                            }
+                        ],
+                    },
+                    "p": [{"f": "Barthélémy", "n": "Duprat"}],
+                    "t": "RM",
+                    "u": "http://www.archives.landes.fr/ark:/35227/s0052cbf404e1290/52cc0a4a27570",
+                },
+                service=self.service,
+            )
+            self.assertEqual(nomina_record.acte_year, "1887")
+
 
 class BreadcrumbTests(testlib.CubicWebTC):
     configcls = PostgresApptestConfiguration
@@ -308,21 +474,26 @@ class BreadcrumbTests(testlib.CubicWebTC):
         with self.admin_access.cnx() as cnx:
             self.service = cnx.create_entity(
                 "Service", category="s1", short_name="AD de la Marne", code="FRAD051"
-            ).eid
+            )
             cnx.commit()
 
-    def test_person_breadcrumbs(self):
+    def test_nomina_breadcrumbs(self):
         with self.admin_access.cnx() as cnx:
-            person = cnx.create_entity(
-                "Person", name="Durand", forenames="Jean", publisher="FRAD051", service=self.service
+            stable_id = compute_nomina_stable_id(self.service.code, "42")
+            nomina_record = cnx.create_entity(
+                "NominaRecord",
+                stable_id=stable_id,
+                json_data={"p": [{"f": "Jean", "n": "Durand"}], "t": "AA"},
+                service=self.service,
             )
-            ibc = person.cw_adapt_to("IBreadCrumbs")
+            ibc = nomina_record.cw_adapt_to("IBreadCrumbs")
             self.assertEqual(
                 ibc.breadcrumbs(),
                 [
                     ("http://testing.fr/cubicweb/", "Home"),
-                    ("http://testing.fr/cubicweb/inventaires/FRAD051", "AD de la Marne"),
-                    (None, "Jean Durand"),
+                    ("http://testing.fr/cubicweb/basedenoms", "Search in the name base"),
+                    ("http://testing.fr/cubicweb/basedenoms/FRAD051", "AD de la Marne"),
+                    (None, "Durand, Jean"),
                 ],
             )
 
@@ -458,6 +629,42 @@ class AdapterTests(testlib.CubicWebTC):
             card = cnx.find("Card", eid=card.eid).one()
             adapter = card.cw_adapt_to("IFullTextIndexSerializable")
             self.assertEqual(adapter.serialize(), {})
+
+
+class BaseContentAideTC(S3BfssStorageTestMixin, testlib.CubicWebTC):
+    configcls = PostgresApptestConfiguration
+
+    def setup_database(self):
+        with self.admin_access.cnx() as cnx:
+            cnx.create_entity("Section", name="gerer", title="Gérer")
+            cnx.create_entity("Section", name="comprendre", title="Comprendre")
+            cnx.commit()
+            rset = cnx.execute("Any X WHERE X is Section, X name 'gerer'")
+            SECTIONS["gerer"] = rset[0][0]
+
+    def test_basecontent_pro(self):
+        with self.admin_access.cnx() as cnx:
+            basecontent = cnx.create_entity(
+                "BaseContent",
+                title="title",
+                reverse_children=cnx.find("Section", name="gerer").one(),
+            )
+            cnx.commit()
+            basecontent.cw_clear_all_caches()
+            self.assertEqual("05_faq_basecontent_pro", basecontent.cw_adapt_to("IFaq").faq_category)
+
+    def test_basecontent_public(self):
+        with self.admin_access.cnx() as cnx:
+            basecontent = cnx.create_entity(
+                "BaseContent",
+                title="title",
+                reverse_children=cnx.find("Section", name="comprendre").one(),
+            )
+            cnx.commit()
+            basecontent.cw_clear_all_caches()
+            self.assertEqual(
+                "01_faq_basecontent_public", basecontent.cw_adapt_to("IFaq").faq_category
+            )
 
 
 if __name__ == "__main__":

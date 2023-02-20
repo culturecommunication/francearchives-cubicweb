@@ -1,0 +1,21 @@
+ {% from "./mixins.jinja2" import subtree %}
+
+<section class="section-tree-wrapper">
+ <div class="section-tree-container">
+   <div class="section-tree-header">
+     <h2 id="section-title" class="section-tree-title">{{ _("Section's documents:")}}</h2>
+     {%- if has_sections is sameas true  -%}
+     <button id="fold-all-tree" class="d-print-none"
+         data-label-collapse="{{_('Fold all') }}"
+         data-label-expand="{{_('Unfold all') }}"
+         aria-expanded="false" aria-controls="tsd-1">
+         {{_('Unfold all') }}
+      </button>
+     {%- endif -%}
+   </div>
+   <nav id="section-tree" aria-labelledby="section-title">
+     {{ subtree(data, 1, 1) }}
+   </nav>
+  </div>
+</section>
+<div class="clearfix"></div>

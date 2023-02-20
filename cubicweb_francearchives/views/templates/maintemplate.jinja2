@@ -3,7 +3,7 @@
 <html lang="{{ lang }}">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, width=device-width" />
+    <meta name="viewport" content="initial-scale=1.0, width=device-width" />
     <meta name="language" content="{{ lang }}" />
     <link rel="apple-touch-icon" sizes="180x180" href="{{ data_url }}icons/apple-touch-icon.png">
     <link rel="icon" type="image/png" href="{{ data_url }}icons/favicon-32x32.png" sizes="32x32">
@@ -11,7 +11,7 @@
     <link rel="manifest" href="{{ data_url }}icons/manifest.json">
     <link rel="mask-icon" href="{{ data_url }}icons/safari-pinned-tab.svg">
     <link rel="shortcut icon" href="{{ data_url }}icons/favicon.ico">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400;1,700&display=swap" rel="stylesheet">
     <meta name="msapplication-config" content="{{ data_url }}icons/browserconfig.xml">
     <meta name="theme-color" content="#ffffff">
     {% for attr, value in meta %}
@@ -22,237 +22,172 @@
     {% endfor %}
     <title>{{ title }}</title>
     <script>
-      {% for varname, value in js_vars %}
-        var {{ varname }} = {{ value }};
+     {% for varname, value in js_vars %}
+     var {{ varname }} = {{ value }};
       {% endfor %}
     </script>
     {% for css in cssfiles %}
-      <link rel="stylesheet" href="{{ css }}" type="text/css" media="all" />
+    <link rel="stylesheet" href="{{ css }}" type="text/css" media="all" />
     {% endfor %}
     {% if jsonld_graph %}
       <script type="application/ld+json">
-      {{ jsonld_graph }}
+       {{ jsonld_graph }}
       </script>
-    {% endif %}
-    <script>
-      window.addEventListener('error', function(evt) {
-       if (evt.target.dataset !== undefined && evt.target.dataset.defaultsrc !== undefined) {
-           var defaultsrc = evt.target.dataset.defaultsrc.split(';');
-           if (defaultsrc.length > 1) {
-               evt.target.setAttribute('src', defaultsrc[0]);
-               evt.target.dataset.defaultsrc = defaultsrc.slice(1, defaultsrc.length).join(';');
+      {% endif %}
+      <script>
+       window.addEventListener('error', function(evt) {
+           if (evt.target.dataset !== undefined && evt.target.dataset.defaultsrc !== undefined) {
+               var defaultsrc = evt.target.dataset.defaultsrc.split(';');
+               if (defaultsrc.length > 1) {
+                   evt.target.setAttribute('src', defaultsrc[0]);
+                   evt.target.dataset.defaultsrc = defaultsrc.slice(1, defaultsrc.length).join(';');
+               }
+               else if (defaultsrc.length == 1) {
+                   evt.target.setAttribute('src', defaultsrc[0]);
+               }
            }
-           else if (defaultsrc.length == 1) {
-               evt.target.setAttribute('src', defaultsrc[0]);
-           }
-        }
-    }, true);
-   </script>
+       }, true);
+      </script>
 
   </head>
   <body>
-    <ul id="skippy"  class="sr-only sr-only-focusable" >
-      <li>
-        <a class="sr-only sr-only-focusable" href="#page">
-          <span class="skiplink-text">{{ _('Skip to content') }}</span>
-        </a>
-      </li>
-      <li>
-        <a class="sr-only sr-only-focusable" href="#main-menu">
-          <span class="skiplink-text">{{ _('Skip to menu') }}</span>
-        </a>
-      </li>
-     </ul>
-
+    <nav class="skippy visually-hidden-focusable overflow-hidden"
+         aria-label="{{ _('quick access links') }}">
+      <ul>
+        <li>
+          <a href="#page" class="p-1 m-1">{{ _('Skip to content') }}</a>
+        </li>
+        <li>
+          <a href="#main-menu" class="p-1 m-1">{{ _('Skip to menu') }}</a>
+        </li>
+      </ul>
+    </nav>
     {% block adminpanel %}
     {% endblock %}
-    <header role="banner" class="navbar navbar-pnia container-fluid">
-      <div class="row navtools">
-        <div class="col-xs-6 col-md-4 navbar-section" id="logo-container">
-            <button class="navbar-toggle" data-target="#tools-group" data-toggle="collapse" type="button">
-              <span class="sr-only">{{ _('Toggle navigation') }}</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            {% if not homepage %}
-            <a href="{{ base_url }}"
-               title="{{ _('FranceArchives: Portail National des Archives de France') }}">
-            {% endif %}
-                <img src="{{ data_url }}images/FranceArchive_Small_Signature.svg"
-                     class = "visible-xs"
-                      alt="{{ _('FranceArchives: Portail National des Archives de France') }}" />
-                <img src="{{ data_url }}images/FranceArchive_Signature.svg"
-                     class = "hidden-xs"
-                      alt="{{ _('FranceArchives: Portail National des Archives de France') }}" />
-            {% if not homepage %}
-            </a>
-            {% endif %}
-        </div>
-        <div class="col-xs-3 col-md-4 navbar-section align-center">
-          <div id="social-networks" class="col-xs-6">
-            {% if sn %}
-             <ul>
-              {% for snid, snvals in sn.items() %}
-              <li>
-                <a id="{{ snid }}-action"
-                   class="action-link"
-                   href="{{ snvals['url'] }}"
-                   target="_blank"
-                   title="{{ _(snvals['title']) }} {{_('- New window')}}"
-                   rel="nofollow noopener noreferrer">{{ sn_id }}
-                <span class="sr_only">{{ _(snvals['title']) }}</span>
-                </a>
-              </li>
-              {% endfor%}
-            </ul>
-            {% endif %}
-          </div>
-        </div>
-        <div class="col-xs-3 col-md-4">
-          <ul class="nav navbar-nav navbar-right">
-            <li>
-              <a id="main-menu" aria-expanded="false" href="#">
-                <span>{{ _('Menu') }}</span>
-                <span id="menu-icon" aria-label="{{_('Open the menu')}}"></span>
+    <header class="navbar-pnia d-print-none">
+      <section id="foreground-navtools">
+        <section class="centered-navtools">
+          <div class="row navtools">
+            <div class="col-xs-12 col-lg-6" id="logo-container">
+              <a class="link_republiquefrancaise" href="{{ base_url }}" tabindex="-1" aria-hidden="true">
+                <img class="logo_republiquefrancaise"
+                     alt="{{ _('Go to FranceArchives homepage') }}"
+                     src="{{ data_url }}images/logo_republiquefrancaise.png" />
               </a>
-            </li>
-           {% block login %}
-            <li>
-            </li>
-           {% endblock %}
-          </ul>
-        </div>
-      </div>
-      <nav id="menu-panel" class="hidden hidden-print" aria-expanded="false" role="navigation">
-        <h1 class="sr-only">{{ _('Menu') }}</h1>
-        <ul>
-          {% for title, label, url, css, desc in topsections %}
-            <li class="row menu-icon__menu-item">
-              <div class="col-md-4 col-xs-12">
-                <a href="{{ base_url }}/{{ url }}" >
-                  <div class="heading {{css}}">
-                    <h2>{{ _(title) }}</h2>
-                    <p>{{ _(label) }}</p>
-                  </div>
-                </a>
-              </div>
-              <div class="col-md-8 col-xs-12">
-                <p>
-                  <a href="{{ base_url }}/{{ url }}">{{ desc }}</a>
-                </p>
-              </div>
-            </li>
-          {% endfor %}
-        </ul>
-      </nav>
-   {% if not vtimeline %}
-      {# Hero Images #}
-      {% if homepage %}
-        {% include "heroimages.jinja2" %}
-      {% endif %}
-
-      {# Search Bar #}
-      <section id="home-search-bar" class="hidden-print">
-        <form class="search-bar" action="{{ base_url }}/search">
-          <span class="search-options-toggle" tabindex="2" role="search"></span>
-          <span id="rbl1" class="sr-only">{{ _('Choose search perimeter') }}</span>
-          <div id="site-search-options" class="search-options hidden" role="radiogroup" aria-labelledby="rbl1">
-            <div class="radio search-options-toggle__menu-item">
-              <label for="rb1">
-                <input id="rb1" type="radio" name="es_escategory" value="" role="radio" aria-labelledby="rblv1" aria-checked="false" />
-                <span id="rblv1">{{ _('###in all###') }}</span>
-              </label>
+              {% if not homepage %}
+              <a class="link_francearchives"
+                 href="{{ base_url }}"
+                 title="{{ _('FranceArchives: Portail National des Archives de France') }}">
+                {% endif %}
+                <img class="logo_francearchives"
+                     src="{{ data_url }}images/logo_francearchives.svg"
+                     alt="{{ _('Go to FranceArchives homepage') }}" />
+                {% if not homepage %}
+              </a>
+              {% endif %}
             </div>
-            <div class="radio search-options-toggle__menu-item">
-              <label for="rb2">
-                <input id="rb2" type="radio" name="es_escategory" value="edito" role="radio" aria-labelledby="rblv2" aria-checked="false" />
-                <span id="rblv2">{{ _('###in edito###') }}</span>
-              </label>
-            </div>
-            <div class="radio search-options-toggle__menu-item">
-              <label for="rb3">
-                <input id="rb3" type="radio" name="es_escategory" value="archives" role="radio" aria-labelledby="rblv3" aria-checked="false" />
-                <span id="rblv3">{{ _('###in archives###') }}</span>
-              </label>
-            </div>
-            <div class="radio search-options-toggle__menu-item">
-              <label for="rb4">
-                <input id="rb4" type="radio" name="es_escategory" value="services" role="radio" aria-labelledby="rblv4" aria-checked="false" />
-                <span id="rblv4">{{ _('###in directory###') }}</span>
-              </label>
+            <div class="buttons-container col-xs-12 col-lg-6">
+              <ul class="nav navbar-nav navbar-right" id="main-links">
+                <li id="nomina-link">
+                  <a href="{{base_url}}/basedenoms">
+                    <span>{{ _('Search in the name base') }}</span>
+                    <span id="nomina-icon" aria-hidden="true"></span>
+                  </a>
+                </li>
+                <li>
+                  {% if display_professional_access %}
+                  <a id="gerer-menu" href="{{base_url}}/gerer">
+                    <span>{{ _('Professional access') }}</span>
+                    <span id="gerer-icon"></span>
+                  </a>
+                  {% else %}
+                  <a id="gerer-menu" aria-expanded="false" href="{{base_url}}/">
+                    <span>{{ _('All public access') }}</span>
+                    <span id="gerer-icon"></span>
+                  </a>
+                  {% endif %}
+                </li>
+                <li id="menu-toggle">
+                  <a id="main-menu" aria-expanded="false"
+                     aria-controls="menu-panel" aria-haspopup="true" href="#">
+                    <div>
+                      <span>{{ _('Menu') }}</span>
+                      <span id="menu-icon" aria-hidden="true"></span>
+                    </div>
+                  </a>
+                </li>
+                {% block login %}
+                {% endblock %}
+              </ul>
             </div>
           </div>
-
-          <!-- 2 extra divs for typeahead -->
-          <div class="typeahead__container">
-            <div class="typeahead__field">
-              <label for="norql" class="sr-only">{{ _('###ToSearch###') }}</label>
-              <input id="norql" class="search-query" type="text"
-                     autocomplete="off" name="q" tabindex="1"
-                     placeholder="{{ _('###ToSearch###') }}" />
-            </div>
-          </div>
-
-          <div class="search-submit">
-            <input type="submit" class="button" value="{{ _('###ToSearch###') }}" aria-label="{{ _('###ToSearch###') }}" tabindex="3"/>
-            <span class="sr-only">{{  _('###ToSearch###') }}</span>
-          </div>
-        </form>
+          {% include "menu-panel.jinja2"%}
+        </section>
       </section>
+      {# Search Bar #}
+      {% if display_search_bar %}
+      <section id="search-bar-section" class="container-fluid">
+        {# Hero Images #}
+        {% if homepage %}
+           {% include "heroimages.jinja2" %}
+        {% endif %}
+        {% if nomina %}
+           {% include "nomina-searchbar.jinja2" %}
+        {% else %}
+           {% include "main-searchbar.jinja2" %}
+        {% endif %}
+      </section>
+      {% endif %}
+      {# Breadcrumbs #}
+      {% if breadcrumbs and breadcrumbs|length != 0 %}
+      <nav class="breadcrumbs-container" aria-label="{{_('breadcrumb')}}" role="navigation">
+        <ol id="breadcrumbs" class="breadcrumb">
+          {% for url, label in breadcrumbs %}
+          {% if url and not loop.last %}
+          <li class="breadcrumb-item"><a href="{{ url }}" title="{{ _('Go back to page:') }} {{ label }}">{{ label|e }}</a></li>
+          {% else %}
+          <li class="breadcrumb-item active" aria-current="page">{{ label|e }}</li>
+          {% endif %}
+          {% endfor %}
+        </ol>
+      </nav>
+      {% endif %}
+    </header>
+    <main id="page" class="container-fluid siaf-container {{ page_id }}" tabindex="-1">
       {% if homepage %}
       {% include "homepage.jinja2" %}
       {% endif %}
 
-      {# Breadcrumbs #}
-      {% if breadcrumbs and breadcrumbs|length != 0 %}
-      <ul id="breadcrumbs" class="breadcrumb hidden-print">
-      {% for url, label in breadcrumbs %}
-        {% if url and not loop.last %}
-          <li><a href="{{ url }}" title="{{ _('Go back to page: ') }} {{ label }}">{{ label }}</a></li>
-        {% else %}
-          <li>{{ label }}</li>
-        {% endif %}
-      {% endfor %}
-      </ul>
-      {% endif %}
-    </header>
-    <main id="page" class="container-fluid {{ page_id }}" role="main">
       {% if header_row %}
       <div class="page__header">
         {{ header_row }}
       </div>
       {% endif %}
       {{ page_content }}
-      {% if cms and faqs %}
+      {% if faqs %}
       {% from "./mixins.jinja2" import modalfaq %}
       {{  modalfaq(faqs, _) }}
       {% endif %}
 
     </main>
-    {% else %}
-    </header>
-    {# Timeline must be a direct child of body #}
-      {{ page_content }}
-    {% endif %}
     {# Footer #}
     {% include "footer.jinja2" %}
 
     {% for js in jsfiles %}
-      <script src="{{ js }}"></script>
+    <script src="{{ js }}"></script>
     {% endfor %}
     {% for inlinescript in inline_scripts %}
       <script type="text/javascript">
-        {{ inlinescript }}
+       {{ inlinescript }}
       </script>
-    {% endfor %}
+      {% endfor %}
 
-    {# Xiti #}
-    {% if xiti %}
+      {# Xiti #}
+      {% if xiti %}
       {% include "xiti.jinja2" %}
-    {% endif %}
-    {% if display_totop %}
-    <button class="fa fa-arrow-up" id="toTopBtn" title="{{_('Go to the top of the page')}}"></button>
-    {% endif %}
+      {% endif %}
+      {% if display_totop %}
+      <button class="fa fa-angle-up" id="toTopBtn" title="{{_('Go to the top of the page')}}"></button>
+      {% endif %}
   </body>
 </html>

@@ -38,28 +38,40 @@
 
 import os
 import glob
-import unittest
 
 # third party imports
 # library specific imports
+from cubicweb.devtools.testlib import CubicWebTC
 from cubicweb_francearchives.dataimport import oai_utils
 
+from cubicweb_francearchives.testutils import S3BfssStorageTestMixin
 
-class TestOAIPMHWriter(unittest.TestCase):
+
+class TestOAIPMHWriter(S3BfssStorageTestMixin, CubicWebTC):
     """OAIPMHWriter test cases.
 
-    :cvar str EAD_SERVICES_DIR: location of backup files
     :cvar dict SERVICE_INFOS: service information
     """
 
-    EAD_SERVICES_DIR = "/tmp"
-    PATH = os.path.join(EAD_SERVICES_DIR, "{code}/oaipmh")
     SERVICE_INFOS = {"code": "FRAD123"}
+
+    @classmethod
+    def init_config(cls, config):
+        super(TestOAIPMHWriter, cls).init_config(config)
+        config.set_option("ead-services-dir", "/tmp")
+
+    def get_path(self, subdirectory=()):
+        """
+        Compute the path
+        """
+        return os.path.join(
+            self.config["ead-services-dir"], self.SERVICE_INFOS["code"], "oaipmh", *subdirectory
+        )
 
     def tearDown(self):
         """Tear down test cases."""
         super(TestOAIPMHWriter, self).tearDown()
-        path = self.PATH.format(**self.SERVICE_INFOS)
+        path = self.get_path()
         if os.path.exists(path):
             for filename in glob.glob(os.path.join(path, "*")):
                 os.remove(filename)
@@ -71,27 +83,24 @@ class TestOAIPMHWriter(unittest.TestCase):
         Trying: already existing directory
         Expecting: existing directory with the same files
         """
-        path = self.PATH.format(**self.SERVICE_INFOS)
-        file_path = os.path.join(path, "foo")
-        os.makedirs(path)
-        open(file_path, "w+").close()
+        file_path = self.get_filepath_by_storage(os.path.join(self.get_path(), "foo"))
+        self.storage_write_file(file_path, "bar")
         oai_writer = oai_utils.OAIPMHWriter(
-            self.EAD_SERVICES_DIR, self.SERVICE_INFOS, subdirectories=["oaipmh"]
+            self.config["ead-services-dir"], self.SERVICE_INFOS, subdirectories=["oaipmh"]
         )
         oai_writer.makedir(subdirectories=["oaipmh"])
-        self.assertTrue(os.path.exists(path))
-        self.assertTrue(os.path.exists(file_path))
+        self.assertTrue(self.fileExists(file_path))
 
     def test_create_directory_new(self):
-        """Test backup XML file directory creation.
+        """Test backup XML file directory creation. Bfss only
 
         Trying: new path
         Expecting: new directory
         """
-        path = self.PATH.format(**self.SERVICE_INFOS)
-        oai_writer = oai_utils.OAIPMHWriter(self.EAD_SERVICES_DIR, self.SERVICE_INFOS)
+        oai_writer = oai_utils.OAIPMHWriter(self.config["ead-services-dir"], self.SERVICE_INFOS)
         oai_writer.makedir(subdirectories=["oaipmh"])
-        self.assertTrue(os.path.exists(path))
+        if not self.s3_bucket_name:
+            self.assertTrue(self.fileExists(self.get_path()))
 
     def test_get_file_path(self):
         """Test getting file path.
@@ -99,14 +108,12 @@ class TestOAIPMHWriter(unittest.TestCase):
         Trying: fout-digit EAD ID
         Expecting: file path is {path}/{code_service}_{eadid}.xml
         """
-        path = self.PATH.format(**self.SERVICE_INFOS)
         eadid = "1234"
-        service_code = self.SERVICE_INFOS["code"]
-        file_path = os.path.join(path, "{code}_{eadid}.xml".format(code=service_code, eadid=eadid))
+        file_path = os.path.join(self.get_path(), f"{self.SERVICE_INFOS['code']}_{eadid}.xml")
         oai_writer = oai_utils.OAIPMHWriter(
-            self.EAD_SERVICES_DIR, self.SERVICE_INFOS, subdirectories=["oaipmh"]
+            self.config["ead-services-dir"], self.SERVICE_INFOS, subdirectories=["oaipmh"]
         )
-        self.assertEqual(file_path, oai_writer.get_file_path(eadid))
+        self.assertEqual(self.get_filepath_by_storage(file_path), oai_writer.get_file_path(eadid))
 
     def test_get_file_path_lower(self):
         """Test getting file path.
@@ -114,14 +121,12 @@ class TestOAIPMHWriter(unittest.TestCase):
         Trying: fout-digit EAD ID
         Expecting: file path is {path}/{code_service}_{eadid}.xml
         """
-        path = self.PATH.format(**self.SERVICE_INFOS)
         eadid = "frad123_1234"
-        service_code = self.SERVICE_INFOS["code"]
-        file_path = os.path.join(path, "{code}_1234.xml".format(code=service_code))
+        file_path = os.path.join(self.get_path(), f"{self.SERVICE_INFOS['code']}_1234.xml")
         oai_writer = oai_utils.OAIPMHWriter(
-            self.EAD_SERVICES_DIR, self.SERVICE_INFOS, subdirectories=["oaipmh"]
+            self.config["ead-services-dir"], self.SERVICE_INFOS, subdirectories=["oaipmh"]
         )
-        self.assertEqual(file_path, oai_writer.get_file_path(eadid))
+        self.assertEqual(self.get_filepath_by_storage(file_path), oai_writer.get_file_path(eadid))
 
     def test_get_file_whitespace(self):
         """Test getting file path.
@@ -129,12 +134,12 @@ class TestOAIPMHWriter(unittest.TestCase):
         Trying: fout-digit EAD ID
         Expecting: file path is {path}/{code_service}_{eadid}.xml
         """
-        path = self.PATH.format(**self.SERVICE_INFOS)
         eadid = " FRAD123_1234 "
-        service_code = self.SERVICE_INFOS["code"]
-        file_path = os.path.join(path, "{code}_1234.xml".format(code=service_code))
+        file_path = self.get_filepath_by_storage(
+            os.path.join(self.get_path(), f"{self.SERVICE_INFOS['code']}_1234.xml")
+        )
         oai_writer = oai_utils.OAIPMHWriter(
-            self.EAD_SERVICES_DIR, self.SERVICE_INFOS, subdirectories=["oaipmh"]
+            self.config["ead-services-dir"], self.SERVICE_INFOS, subdirectories=["oaipmh"]
         )
         self.assertEqual(file_path, oai_writer.get_file_path(eadid))
 
@@ -144,14 +149,12 @@ class TestOAIPMHWriter(unittest.TestCase):
         Trying: EAD ID with dash
         Expecting: file path is {path}/{code_service}_{eadid}.xml
         """
-        path = self.PATH.format(**self.SERVICE_INFOS)
         eadid = "FRAD123 F 1-1423"
-        service_code = self.SERVICE_INFOS["code"]
-        file_path = os.path.join(path, "{code}_F_1-1423.xml".format(code=service_code))
+        file_path = os.path.join(self.get_path(), f"{self.SERVICE_INFOS['code']}_F_1-1423.xml")
         oai_writer = oai_utils.OAIPMHWriter(
-            self.EAD_SERVICES_DIR, self.SERVICE_INFOS, subdirectories=["oaipmh"]
+            self.config["ead-services-dir"], self.SERVICE_INFOS, subdirectories=["oaipmh"]
         )
-        self.assertEqual(file_path, oai_writer.get_file_path(eadid))
+        self.assertEqual(self.get_filepath_by_storage(file_path), oai_writer.get_file_path(eadid))
 
     def test_get_file_contents(self):
         """Test getting file contents.
@@ -159,7 +162,7 @@ class TestOAIPMHWriter(unittest.TestCase):
         Trying: calling get_file_contents method
         Expecting: raises NotImplementedError
         """
-        oai_writer = oai_utils.OAIPMHWriter(self.EAD_SERVICES_DIR, self.SERVICE_INFOS)
+        oai_writer = oai_utils.OAIPMHWriter(self.config["ead-services-dir"], self.SERVICE_INFOS)
         with self.assertRaises(NotImplementedError):
             oai_writer.get_file_contents()
 
@@ -170,16 +173,16 @@ class TestOAIPMHWriter(unittest.TestCase):
         Expecting: new file
         """
         eadid = "IR0001383"
-        path = self.PATH.format(**self.SERVICE_INFOS)
-        file_path = os.path.join(path, "{}_{}.xml".format(self.SERVICE_INFOS["code"], eadid))
-        os.makedirs(path)
+        file_path = self.get_filepath_by_storage(
+            os.path.join(self.get_path(), f"{self.SERVICE_INFOS['code']}_{eadid}.xml")
+        )
         oai_writer = oai_utils.OAIPMHWriter(
-            self.EAD_SERVICES_DIR, self.SERVICE_INFOS, subdirectories=["oaipmh"]
+            self.config["ead-services-dir"], self.SERVICE_INFOS, subdirectories=["oaipmh"]
         )
         oai_file_path = oai_writer.dump(eadid, b"bar")
         self.assertEqual(file_path, oai_file_path)
-        with open(file_path) as fp:
-            self.assertEqual("bar", fp.read())
+        binary = self.getFileContent(file_path)
+        self.assertEqual(b"bar", binary)
 
     def test_dump_existing_file(self):
         """Test dumping file contents.
@@ -188,15 +191,14 @@ class TestOAIPMHWriter(unittest.TestCase):
         Expecting: new file
         """
         eadid = "IR0001383"
-        path = self.PATH.format(**self.SERVICE_INFOS)
-        file_path = os.path.join(path, "{}_{}.xml".format(self.SERVICE_INFOS["code"], eadid))
-        os.makedirs(path)
-        with open(file_path, "w+") as fp:
-            fp.write("bar")
+        file_path = self.get_filepath_by_storage(
+            os.path.join(self.get_path(), f"{self.SERVICE_INFOS['code']}_{eadid}.xml")
+        )
+        self.storage_write_file(file_path, "bar")
         oai_writer = oai_utils.OAIPMHWriter(
-            self.EAD_SERVICES_DIR, self.SERVICE_INFOS, subdirectories=["oaipmh"]
+            self.config["ead-services-dir"], self.SERVICE_INFOS, subdirectories=["oaipmh"]
         )
         oai_file_path = oai_writer.dump(eadid, b"baz")
         self.assertEqual(file_path, oai_file_path)
-        with open(file_path) as fp:
-            self.assertEqual("baz", fp.read())
+        binary = self.getFileContent(file_path)
+        self.assertEqual(b"baz", binary)

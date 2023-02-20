@@ -1,30 +1,28 @@
-<section id="hero-images" aria-hidden="true" class="hidden-print">
-    {% for section in heroimages.sections %}
-    <div class="hero-images--item {{ 'hero-images--item__visible' if loop.index == 1 else ''}} ">
-        <a href="{{ section.url }}" title="{{ _('Go to the section') }} {{ section.name }}">
-            <img class="hero-images--image hero-images--image__lowres"
-                 src="{{ section.hero_src }}"
-                 data-highres-xl="{{ section.hero_xl_src }}"
-                 data-highres-lg="{{ section.hero_lg_src }}"
-                 data-highres-md="{{ section.hero_md_src }}"
-                 data-highres-sm="{{ section.hero_sm_src }}"
-                 data-highres-xs="{{ section.hero_xs_src }}"
-                 alt=""
-                 />
-        </a>
-        {% if section.motos or section.sources %}
+<section id="hero-images" class="d-print-none">
+    <div class="hero-images--item hero-images--item__visible">
+        <img class="hero-images--image hero-images--image__lowres"
+            src="{{ heroimage.image.hero_src }}"
+            data-highres-xl="{{ heroimage.image.hero_xl_src }}"
+            data-highres-lg="{{ heroimage.image.hero_lg_src }}"
+            data-highres-md="{{ heroimage.image.hero_md_src }}"
+            data-highres-sm="{{ heroimage.image.hero_sm_src }}"
+            data-highres-xs="{{ heroimage.image.hero_xs_src }}"
+            aria-hidden="true" 
+            alt=""
+        />
+
         <div class="hero-images-desc">
-        {% if section.motos %}
-            <span class="hero-images-desc-moto">{{ section.motos }}</span>
-        {% endif %}
-        {% if section.sources %}
-             <span class="hero-images-desc-source">{{ section.sources }}</span>
-        {% endif %}
+            <div class="hero-images-desc-moto-container">
+                <span class="hero-images-desc-moto">{{ _("Discover 15 centuries of archives") }}</span>
+                {% if mission_link %}
+                {% set label = picklabel(mission_link.labels, lang) %}
+                <a class="hero-images-desc-link" href="{{ mission_link.url | format(base_url=base_url+'/')}}">{{ label }}</a>
+                {% endif %}
+            </div>
         </div>
-        {% endif %}
-        {% if heroimages.alert %}
-            <div class="alert">{{ heroimages.alert }}</div>
+
+        {% if heroimage.alert %}
+            <div class="alert">{{ heroimage.alert }}</div>
         {% endif %}
     </div>
-    {% endfor %}
 </section>

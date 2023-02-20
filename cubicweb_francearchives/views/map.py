@@ -28,6 +28,8 @@
 # The fact that you are presently reading this means that you have had
 # knowledge of the CeCILL-C license and that you accept its terms.
 #
+from logilab.common.decorators import cachedproperty
+
 from cubicweb.view import StartupView
 
 from cubicweb_francearchives.views import get_template, JinjaViewMixin
@@ -36,6 +38,10 @@ from cubicweb_francearchives.views import get_template, JinjaViewMixin
 class FAMapView(JinjaViewMixin, StartupView):
     template = get_template("fa-map.jinja2")
     __regid__ = "fa-map"
+    notop = True
+
+    def page_title(self):
+        return self._cw._("Carte des inventaires")
 
     def add_css(self):
         for css in ("leaflet.css", "LeafletStyleSheet.css"):
@@ -49,7 +55,14 @@ class FAMapView(JinjaViewMixin, StartupView):
         self.add_css()
         self.add_js()
         self.call_template(
-            title="Carte des inventaires",
+            a11y_alert=self._cw._("a11y_ir_map_info {link}").format(
+                link=self._cw.build_url("inventaires")
+            ),
+            title=self._cw._("Carte des inventaires"),
             iconurl=self._cw.data_url("images/marker-jaune.png"),
             markerurl=self._cw.build_url("fa-map.json"),
         )
+
+    @cachedproperty
+    def xiti_chapters(self):
+        return ["ir_map"]

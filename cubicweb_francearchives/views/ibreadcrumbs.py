@@ -28,11 +28,13 @@
 # The fact that you are presently reading this means that you have had
 # knowledge of the CeCILL-C license and that you accept its terms.
 #
-from cubicweb.view import EntityAdapter
+from cubicweb.entity import EntityAdapter
 from cubicweb.predicates import is_instance
 from cubicweb.uilib import cut
 
 from cubicweb_card.views import CardBreadCrumbsAdapter
+
+from cubicweb_francearchives.utils import remove_html_tags
 
 
 class FindingAidBreadCrumbsAdapter(EntityAdapter):
@@ -51,21 +53,6 @@ class FindingAidBreadCrumbsAdapter(EntityAdapter):
         else:
             fa_label = _("Inventory")
         path.append((None, fa_label))
-        return path
-
-
-class NominaPersonBreadCrumbsAdapter(EntityAdapter):
-    __regid__ = "IBreadCrumbs"
-    __select__ = is_instance("Person", accept_none=False)
-
-    def breadcrumbs(self, view=None, recurs=None):
-        _ = self._cw._
-        path = [(self._cw.build_url(""), _("Home"))]
-        if self.entity.service:
-            path.append(
-                (self.entity.service[0].documents_url(), self.entity.service[0].publisher())
-            )
-        path.append((None, self.entity.dc_title()))
         return path
 
 
@@ -165,6 +152,65 @@ class ServiceBreadCrumbsAdapter(EntityAdapter):
                 (parent.absolute_url(), parent.dc_title()),
             )
         return paths
+
+
+class FaqItemBreadCrumbsAdapter(EntityAdapter):
+    __regid__ = "IBreadCrumbs"
+    __select__ = is_instance("FaqItem")
+
+    def breadcrumbs(self, view=None, recurs=None):
+        _ = self._cw._
+        return [
+            (self._cw.build_url(""), _("Home")),
+            (self._cw.build_url("faq"), _("FAQ")),
+            (None, remove_html_tags(self.entity.dc_title())),
+        ]
+
+
+class GlossaryTermBreadCrumbsAdapter(EntityAdapter):
+    __regid__ = "IBreadCrumbs"
+    __select__ = is_instance("GlossaryTerm")
+
+    def breadcrumbs(self, view=None, recurs=None):
+        _ = self._cw._
+        return [
+            (self._cw.build_url(""), _("Home")),
+            (self._cw.build_url("glossaire"), _("Glossary")),
+            (None, remove_html_tags(self.entity.dc_title())),
+        ]
+
+
+class PniaTranslationsBreadCrumbsAdapter(EntityAdapter):
+    __regid__ = "IBreadCrumbs"
+    __select__ = is_instance(
+        "SectionTranslation", "BaseContentTranslation", "CommemorationItemTranslation"
+    )
+
+    def breadcrumbs(self, view=None, recurs=None):
+        _ = self._cw._
+        path = [(self._cw.build_url(""), _("Home"))]
+        original = self.entity.original_entity
+        path.append((original.absolute_url(), original.dc_title()))
+        path.append((None, self.entity.dc_title()))
+        return path
+
+
+class NominaRecordBreadCrumbsAdapter(EntityAdapter):
+    __regid__ = "IBreadCrumbs"
+    __select__ = is_instance("NominaRecord", accept_none=False)
+
+    def breadcrumbs(self, view=None, recurs=None):
+        _ = self._cw._
+        path = [
+            (self._cw.build_url(""), _("Home")),
+            (self._cw.build_url("basedenoms"), _("Search in the name base")),
+        ]
+        if self.entity.service:
+            path.append(
+                (self.entity.service[0].nominarecords_url(), self.entity.service[0].publisher())
+            )
+        path.append((None, self.entity.dc_title()))
+        return path
 
 
 def registration_callback(vreg):

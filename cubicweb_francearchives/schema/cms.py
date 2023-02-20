@@ -41,6 +41,7 @@ from yams.buildobjs import (
     Boolean,
     SubjectRelation,
     Bytes,
+    Float,
 )
 from yams.constraints import SizeConstraint, RegexpConstraint
 
@@ -97,7 +98,7 @@ class CmsObject(EntityType):
     __abstract__ = True
     title = String(required=True, fulltextindexed=True)
     content = RichString(fulltextindexed=True, default_format="text/html")
-    order = Int()
+    order = Int(required=True, default=0)
     metadata = SubjectRelation("Metadata", inlined=True, cardinality="??", composite="subject")
 
 
@@ -109,6 +110,13 @@ class Metadata(EntityType):
     creator = String()
     type = String()
     keywords = String()
+
+
+ON_FRONTPAGE_VOC = (
+    "",
+    _("onhp_hp"),
+    _("onhp_arch"),
+)
 
 
 class Section(CmsObject):
@@ -124,8 +132,22 @@ class Section(CmsObject):
     name = String(
         unique=True, description=_("unique identifier"), __permissions__=PNIA_RO_ATTR_PERMS
     )
-    short_description = String()
+    short_description = String(description=_("display on menu"))
     children = SubjectRelation(CMS_OBJECTS, cardinality="*?")
+    header = String(maxsize=500, description=_("display on HP, maximum length is 500 characters"))
+    on_homepage = String(
+        vocabulary=ON_FRONTPAGE_VOC, default=_(""), internationalizable=True, indexed=True
+    )
+    on_homepage_order = Int()
+    display_mode = String(
+        vocabulary=(
+            _("mode_no_display"),
+            _("mode_tree"),
+            _("mode_themes"),
+        ),
+        default=_("mode_tree"),
+        internationalizable=True,
+    )
 
 
 @uuidize
@@ -147,6 +169,7 @@ class SectionTranslation(CmsI18nObject):
     __unique_together__ = [("language", "translation_of")]
     subtitle = String(fulltextindexed=True)
     short_description = String(fulltextindexed=True)
+    header = String(maxsize=500, description=_("display on HP, maximum length is 500 characters"))
 
 
 class translation_of_section(RelationDefinition):
@@ -158,11 +181,8 @@ class translation_of_section(RelationDefinition):
     composite = "object"
 
 
-class CommemoCollection(Section):
-    year = Int(required=True)
-
-
 class BaseContent(CmsObject):
+    header = String(maxsize=500, description=_("display on HP, maximum length is 500 characters"))
     summary = RichString(default_format="text/html")
     summary_policy = String(
         required=True,
@@ -176,13 +196,23 @@ class BaseContent(CmsObject):
         default=_("no_summary"),
         internationalizable=True,
     )
+    content_type = String(
+        vocabulary=(_("Article"), _("Publication"), _("SearchHelp")),
+        default="Article",
+        internationalizable=True,
+        required=True,
+    )
     description = String()
     keywords = String()
-    on_homepage = Boolean(default=False)
+    on_homepage = String(
+        vocabulary=ON_FRONTPAGE_VOC, default=_(""), internationalizable=True, indexed=True
+    )
+    on_homepage_order = Int()
 
 
 class BaseContentTranslation(CmsI18nObject):
     __unique_together__ = [("language", "translation_of")]
+    header = String(maxsize=500, description=_("display on HP, maximum length is 500 characters"))
     summary = RichString(default_format="text/html")
 
 
@@ -196,10 +226,13 @@ class translation_of_basecontent(RelationDefinition):
 
 
 class NewsContent(CmsObject):
-    header = String()
-    start_date = Date(required=True)
+    header = String(maxsize=500, description=_("display on HP, maximum length is 500 characters"))
+    start_date = Date()
     stop_date = Date()
-    on_homepage = Boolean(default=False)
+    on_homepage = String(
+        vocabulary=ON_FRONTPAGE_VOC, default=_(""), internationalizable=True, indexed=True
+    )
+    on_homepage_order = Int()
 
 
 @uuidize
@@ -210,24 +243,37 @@ class CommemoDate(EntityType):
 
 
 class CommemorationItem(CmsObject):
+    header = String(maxsize=500, description=_("display on HP, maximum length is 500 characters"))
+    summary = RichString(default_format="text/html")
+    summary_policy = String(
+        required=True,
+        vocabulary=(
+            _("no_summary"),
+            _("summary_headers_6"),
+            # _("summary_headers_1"),
+            _("summary_headers_2"),
+            _("summary_headers_3"),
+        ),
+        default=_("no_summary"),
+        internationalizable=True,
+    )
     subtitle = String(fulltextindexed=True)
-    alphatitle = String(required=True, indexed=True)
-    year = Int(fulltextindexed=True)
-    commemoration_year = Int(fulltextindexed=True, required=True)
+    alphatitle = String(indexed=True)
+    start_year = Int(fulltextindexed=True)
+    stop_year = Int(fulltextindexed=True)
+    commemoration_year = Int(fulltextindexed=True)
     commemo_dates = SubjectRelation("CommemoDate")
-    on_homepage = Boolean(default=False)
-    on_homepage_order = Int(default=0, required=True)
-    collection_top = SubjectRelation(
-        "CommemoCollection", cardinality="1*", inlined=True, composite="object"
+    on_homepage = String(
+        vocabulary=ON_FRONTPAGE_VOC, default=_(""), internationalizable=True, indexed=True
     )
-    manif_prog = SubjectRelation(
-        "BaseContent", cardinality="??", fulltext_container="subject", inlined=True
-    )
+    on_homepage_order = Int()
 
 
 class CommemorationItemTranslation(CmsI18nObject):
     __unique_together__ = [("language", "translation_of")]
     subtitle = String(fulltextindexed=True)
+    header = String(maxsize=500, description=_("display on HP, maximum length is 500 characters"))
+    summary = RichString(default_format="text/html")
 
 
 class translation_of_commemorationitem(RelationDefinition):
@@ -242,7 +288,10 @@ class translation_of_commemorationitem(RelationDefinition):
 @uuidize
 class Image(EntityType):
     caption = RichString(default_format="text/html")
-    description = RichString(default_format="text/html")
+    description = RichString(
+        default_format="text/html",
+        description=_("this field will be displayed as image alt in HTML"),
+    )
     copyright = String()
     image_file = SubjectRelation("File", cardinality="1*", inlined=True, composite="subject")
     uri = String(description=_("Url for an internal link"))
@@ -271,10 +320,32 @@ class basecontent_image(RelationDefinition):
 
 class section_image(RelationDefinition):
     # XXX only one relation `image` should be sufficient
-    subject = ("Section", "CommemoCollection")
+    subject = ("Section",)
     object = "Image"
     cardinality = "*?"
     composite = "subject"
+
+
+class OrderedSubjectAuthority(EntityType):
+    """Ternary relation describing the order of a subject in a section"""
+
+    subject_entity = SubjectRelation(
+        "SubjectAuthority", cardinality="1*", composite="object", inlined=True
+    )
+    order = Int(required=True)
+
+
+class subject_image(RelationDefinition):
+    # XXX only one relation `image` should be sufficient
+    subject = "SubjectAuthority"
+    object = "Image"
+    cardinality = "*?"
+    composite = "subject"
+
+
+class section_themes(RelationDefinition):
+    subject = "Section"
+    object = "OrderedSubjectAuthority"
 
 
 class service_image(RelationDefinition):
@@ -361,7 +432,7 @@ class Circular(EntityType):
     circular_modification_date = Date()
     abrogation_date = Date()
     link = String(description=_("Hypertext link to the circular"))
-    order = Int()
+    order = Int(required=True, default=0)
     producer = String(description=_("producers name"))
     producer_acronym = String()
     abrogation_text = String()
@@ -370,7 +441,7 @@ class Circular(EntityType):
 
 
 class attachment(RelationDefinition):
-    """ internal file link"""
+    """internal file link"""
 
     subject = "Circular"
     object = "File"
@@ -380,7 +451,7 @@ class attachment(RelationDefinition):
 
 
 class additional_attachment(RelationDefinition):
-    """ additional internal file link """
+    """additional internal file link"""
 
     subject = "Circular"
     object = "File"
@@ -451,18 +522,22 @@ class Service(EntityType):
     name2 = String(fulltextindexed=True, description=_("long name"))
     short_name = String(maxsize=64, indexed=True, description=_("short name"))
     phone_number = String()
-    fax = String()
+    code_insee_commune = String(maxsize=20)
     email = String()
     address = String(fulltextindexed=True)
     mailing_address = String(fulltextindexed=True)
     zip_code = String(maxsize=10)
-    city = String()
+    city = String(fulltextindexed=True)
     website_url = String()
     search_form_url = String(
         description=_("Use {eadid}, {unitid} or {unittitle} substitution pattern")
     )
     thumbnail_url = String(description=_("Use {url} substitution pattern"))
     thumbnail_dest = String(description=_("Use {url} substitution pattern"))
+    iiif_extptr = Boolean(
+        default=False,
+        description=_("Service has a IIIF server and encode manifest in <extptr> (LIGEO)"),
+    )
     annual_closure = String()
     opening_period = String()
     contact_name = String(fulltextindexed=True)
@@ -476,10 +551,8 @@ class Service(EntityType):
             _("level-P"),
             _("level-H"),
             _("level-U"),
-            _("level-O"),
             _("level-I"),
             _("level-E"),
-            _("level-Z"),
             _("level-N"),
             _("level-F"),
         ),
@@ -487,6 +560,8 @@ class Service(EntityType):
         internationalizable=True,
     )
     code = String(maxsize=64, fulltextindexed=True)
+    longitude = Float()
+    latitude = Float()
     dpt_code = String(maxsize=3, indexed=True)
     other = RichString(default_format="text/html", fulltextindexed=True)
 
@@ -527,6 +602,11 @@ class ExternRef(CmsObject):
     )
     start_year = Int()
     stop_year = Int()
+    header = String(maxsize=500, description=_("display on HP, maximum length is 500 characters"))
+    on_homepage = String(
+        vocabulary=ON_FRONTPAGE_VOC, default=_(""), internationalizable=True, indexed=True
+    )
+    on_homepage_order = Int()
 
 
 class exref_service(RelationDefinition):
@@ -537,6 +617,11 @@ class exref_service(RelationDefinition):
 class basecontent_service(RelationDefinition):
     subject = "BaseContent"
     object = "Service"
+
+
+class related_content_suggestion(RelationDefinition):
+    subject = ("BaseContent", "ExternRef", "CommemorationItem")
+    object = ("BaseContent", "ExternRef", "CommemorationItem")
 
 
 @uuidize
@@ -559,7 +644,7 @@ class Map(EntityType):
         ),
     )
     metadata = SubjectRelation("Metadata", inlined=True, cardinality="??")
-    order = Int()
+    order = Int(required=True, default=0)
 
 
 class map_image(RelationDefinition):
@@ -631,3 +716,37 @@ class translation_of_faq(RelationDefinition):
     cardinality = "1*"
     inlined = True
     composite = "object"
+
+
+class SiteLink(EntityType):
+    __permissions__ = {
+        "read": ("managers", "users", "guests"),
+        "add": ("managers",),
+        "update": ("managers",),
+        "delete": ("managers",),
+    }
+    label_fr = String(maxsize=512, required=True)
+    label_en = String(maxsize=512)
+    label_es = String(maxsize=512)
+    label_de = String(maxsize=512)
+    description_fr = String(maxsize=350)
+    description_en = String(maxsize=350)
+    description_es = String(maxsize=350)
+    description_de = String(maxsize=350)
+    link = String(maxsize=512, required=True)
+    context = String(
+        required=True,
+        vocabulary=(
+            _("main_menu_links"),
+            _("archiviste_hp_links"),
+            _("footer_ministries"),
+            _("footer_public_sites"),
+            _("footer_archives_sites"),
+            _("footer_search_notebooks"),
+            _("footer_usefull_links"),
+            _("footer_links"),
+            _("foundout_link"),
+        ),
+        internationalizable=True,
+    )
+    order = Int(required=True)

@@ -31,17 +31,25 @@
 from mock import patch
 
 import os.path as osp
+import datetime as dt
 
 import unittest
 
 from cubicweb import Binary
 from cubicweb.devtools import testlib
 
-from cubicweb_francearchives.testutils import PostgresTextMixin, EsSerializableMixIn, HashMixIn
+from cubicweb_francearchives.testutils import (
+    PostgresTextMixin,
+    EsSerializableMixIn,
+    S3BfssStorageTestMixin,
+)
 
 from pgfixtures import setup_module, teardown_module as pg_teardown_module  # noqa
 
 from esfixtures import teardown_module as es_teardown_module  # noqa
+
+from cubicweb_francearchives.dataimport.ead import dates_for_es_doc
+from cubicweb_francearchives.dataimport.oai_nomina import compute_nomina_stable_id
 
 
 def teardown_module(module):
@@ -50,7 +58,7 @@ def teardown_module(module):
 
 
 class IFullTextIndexSerializableTC(
-    HashMixIn, EsSerializableMixIn, PostgresTextMixin, testlib.CubicWebTC
+    S3BfssStorageTestMixin, EsSerializableMixIn, PostgresTextMixin, testlib.CubicWebTC
 ):
     @patch("elasticsearch.client.indices.IndicesClient.exists")
     @patch("elasticsearch.client.Elasticsearch.index")
@@ -85,7 +93,7 @@ class IFullTextIndexSerializableTC(
     @patch("elasticsearch.client.indices.IndicesClient.exists")
     @patch("elasticsearch.client.Elasticsearch.index")
     def test_modify_circular_file(self, index, exists):
-        """ tests RelationsUpdateIndexES is called on File"""
+        """tests RelationsUpdateIndexES is called on File"""
         with self.admin_access.cnx() as cnx:
             with open(osp.join(self.datadir, "pdf.pdf"), "rb") as pdf:
                 ce = cnx.create_entity
@@ -158,51 +166,9 @@ class IFullTextIndexSerializableTC(
 
     @patch("elasticsearch.client.indices.IndicesClient.exists")
     @patch("elasticsearch.client.Elasticsearch.index")
-    def test_commemo_manif_prog(self, index, exists):
-        """tests IFullTextIndexSerializable adaptors on CommemorationItem and
-
-        its manif_prog BaseContent
-        """
-        with self.admin_access.cnx() as cnx:
-            ce = cnx.create_entity
-            basecontent = ce("BaseContent", title="program", content="31 juin")
-            cnx.commit()
-            es_json = basecontent.cw_adapt_to("IFullTextIndexSerializable").serialize()
-            self.assertEqual("31 juin", es_json["content"])
-            # link the basecontent to a CommemorationItem
-            commemo_item = ce(
-                "CommemorationItem",
-                title="Commemoration",
-                alphatitle="commemoration",
-                content="content",
-                commemoration_year=1500,
-                manif_prog=basecontent,
-                collection_top=ce("CommemoCollection", title="Moyen Age", year=1500),
-            )
-            cnx.commit()
-            basecontent = cnx.find("BaseContent", eid=basecontent.eid).one()
-            es_json_commemo = commemo_item.cw_adapt_to("IFullTextIndexSerializable").serialize()
-            self.assertEqual("31 juin", es_json_commemo["manif_prog"])
-            es_json_bc = basecontent.cw_adapt_to("IFullTextIndexSerializable").serialize()
-            self.assertEqual(commemo_item.eid, es_json_bc["eid"])
-            self.assertEqual("CommemorationItem", es_json_bc["cw_etype"])
-            self.assertEqual(es_json_bc["content"], "content")
-
-            # update basecontent
-            basecontent.cw_set(content="28 juin")
-            cnx.commit()
-            commemo_item = cnx.find("CommemorationItem", eid=commemo_item.eid).one()
-            es_json_commemo = commemo_item.cw_adapt_to("IFullTextIndexSerializable").serialize()
-            self.assertEqual("28 juin", es_json_commemo["manif_prog"])
-            basecontent = cnx.find("BaseContent", eid=basecontent.eid).one()
-            es_json_bc = basecontent.cw_adapt_to("IFullTextIndexSerializable").serialize()
-            self.assertEqual("28 juin", es_json_bc["manif_prog"])
-
-    @patch("elasticsearch.client.indices.IndicesClient.exists")
-    @patch("elasticsearch.client.Elasticsearch.index")
-    def test_is_a_publication(self, index, exists):
+    def test_is_in_publication_section(self, index, exists):
         """es_json['cw_etype'] of BaseContent which is a publication
-        (in `publication` section) must be Publication
+        (in `publication` section) must be BaseContent for now
         """
         with self.admin_access.cnx() as cnx:
             service = cnx.create_entity("Service", category="cat", name="Service", short_name="s1")
@@ -217,13 +183,13 @@ class IFullTextIndexSerializableTC(
             )
             cnx.commit()
             es_json = basecontent.cw_adapt_to("IFullTextIndexSerializable").serialize()
-            self.assertEqual("Publication", es_json["cw_etype"])
+            self.assertEqual("Article", es_json["cw_etype"])
 
     @patch("elasticsearch.client.indices.IndicesClient.exists")
     @patch("elasticsearch.client.Elasticsearch.index")
-    def test_is_not_a_publication(self, index, exists):
-        """es_json['cw_type'] of BaseContent which is not a publication
-        (not in `publication` section) must be BaseContent
+    def test_basecontent_cw_etype(self, index, exists):
+        """Trying: create BaseContent and modify its content_type
+        Expecting; es_json['cw_etype'] of BaseContent which be the same as content_type if specified
         """
         with self.admin_access.cnx() as cnx:
             service = cnx.create_entity("Service", category="cat", name="Service", short_name="s1")
@@ -232,15 +198,27 @@ class IFullTextIndexSerializableTC(
                 title="program",
                 content="31 juin",
                 basecontent_service=service,
+                content_type="SearchHelp",
                 reverse_children=cnx.create_entity("Section", title="Publication", name="toto"),
             )
             cnx.commit()
             es_json = basecontent.cw_adapt_to("IFullTextIndexSerializable").serialize()
-            self.assertEqual("BaseContent", es_json["cw_etype"])
+            self.assertEqual("SearchHelp", basecontent.content_type)
+            self.assertEqual("SearchHelp", es_json["cw_etype"])
+            basecontent.cw_set(content_type="Publication")
+            cnx.commit()
+            es_json = basecontent.cw_adapt_to("IFullTextIndexSerializable").serialize()
+            self.assertEqual("Publication", basecontent.content_type)
+            self.assertEqual("Publication", es_json["cw_etype"])
+            basecontent.cw_set(content_type="Article")
+            cnx.commit()
+            es_json = basecontent.cw_adapt_to("IFullTextIndexSerializable").serialize()
+            self.assertEqual("Article", basecontent.content_type)
+            self.assertEqual("Article", es_json["cw_etype"])
 
     @patch("elasticsearch.client.indices.IndicesClient.exists")
     @patch("elasticsearch.client.Elasticsearch.index")
-    def test_basecontent_without_manif_prog(self, index, exists):
+    def test_basecontent(self, index, exists):
         with self.admin_access.cnx() as cnx:
             service = cnx.create_entity("Service", category="cat", name="Service", short_name="s1")
             basecontent = cnx.create_entity(
@@ -248,23 +226,37 @@ class IFullTextIndexSerializableTC(
             )
             cnx.commit()
             es_json = basecontent.cw_adapt_to("IFullTextIndexSerializable").serialize()
-            self.assertEqual("edito", es_json["escategory"])
+            self.assertEqual("siteres", es_json["escategory"])
             self.assertEqual("31 juin", es_json["content"])
             self.assertEqual("program", es_json["title"])
             self.assertEqual(es_json["publisher"], ["s1"])
+            self.assertEqual(
+                es_json["service"],
+                [
+                    {
+                        "code": service.code,
+                        "eid": service.eid,
+                        "level": service.level,
+                        "title": service.dc_title(),
+                    }
+                ],
+            )
 
     @patch("elasticsearch.client.indices.IndicesClient.exists")
     @patch("elasticsearch.client.Elasticsearch.index")
     def test_basecontent_services(self, index, exists):
         with self.admin_access.cnx() as cnx:
-            s1 = cnx.create_entity("Service", category="cat", name="Service", short_name="s1")
-            s2 = cnx.create_entity("Service", category="cat", name="Service", short_name="s2")
+            s1 = cnx.create_entity(
+                "Service", category="cat", short_name="s1_short", name2="s1_name2", name="s1_name"
+            )
+            s2 = cnx.create_entity("Service", category="cat", name2="n2_name2", name="s2_name")
+            s3 = cnx.create_entity("Service", category="cat", name="s3_name")
             basecontent = cnx.create_entity(
-                "BaseContent", title="program", content="31 juin", basecontent_service=[s1, s2]
+                "BaseContent", title="program", content="31 juin", basecontent_service=[s1, s2, s3]
             )
             cnx.commit()
             es_json = basecontent.cw_adapt_to("IFullTextIndexSerializable").serialize()
-            self.assertEqual(es_json["publisher"], ["s1", "s2"])
+            self.assertEqual(es_json["publisher"], ["s1_short", "n2_name2", "s3_name"])
 
     @patch("elasticsearch.client.indices.IndicesClient.exists")
     @patch("elasticsearch.client.Elasticsearch.index")
@@ -286,7 +278,7 @@ class IFullTextIndexSerializableTC(
             es_json = basecontent.cw_adapt_to("IFullTextIndexSerializable").serialize()
             tes_json = translation.cw_adapt_to("IFullTextIndexSerializable").serialize()
             for attr, value in (
-                ("cw_etype", "BaseContent"),
+                ("cw_etype", "Article"),
                 ("eid", basecontent.eid),
                 ("content", "31 juin"),
                 ("content_en", "31 june"),
@@ -316,7 +308,7 @@ class IFullTextIndexSerializableTC(
             basecontent = cnx.find("BaseContent", eid=basecontent.eid).one()
             es_json = basecontent.cw_adapt_to("IFullTextIndexSerializable").serialize()
             for attr, value in (
-                ("cw_etype", "BaseContent"),
+                ("cw_etype", "Article"),
                 ("eid", basecontent.eid),
                 ("content", "31 juin"),
                 ("title", "programme"),
@@ -329,8 +321,12 @@ class IFullTextIndexSerializableTC(
     @patch("elasticsearch.client.Elasticsearch.index")
     def test_virtualexhibit(self, index, exists):
         with self.admin_access.cnx() as cnx:
-            s1 = cnx.create_entity("Service", category="cat", name="Service", short_name="s1")
-            s2 = cnx.create_entity("Service", category="cat", name="Service", short_name="s2")
+            s1 = cnx.create_entity(
+                "Service", category="cat", level="level-D", name="Service", short_name="s1"
+            )
+            s2 = cnx.create_entity(
+                "Service", category="cat", code="CRRP", name="Service", short_name="s2"
+            )
             extref = cnx.create_entity(
                 "ExternRef",
                 reftype="Virtual_exhibit",
@@ -343,28 +339,164 @@ class IFullTextIndexSerializableTC(
             self.assertEqual(es_json["reftype"], "virtual_exhibit")
             self.assertEqual(es_json["cw_etype"], "Virtual_exhibit")
             self.assertEqual(es_json["start_year"], 1982)
-            self.assertEqual(es_json["escategory"], "edito")
+            self.assertEqual(es_json["escategory"], "siteres")
             self.assertEqual(es_json["publisher"], ["s1", "s2"])
+            self.assertEqual(es_json["dates"], {"gte": 1982, "lte": 1982})
+            self.assertEqual(es_json["sortdate"], "1982-01-01")
+            self.assertEqual(
+                es_json["service"],
+                [
+                    {
+                        "code": s1.code,
+                        "eid": s1.eid,
+                        "level": s1.level,
+                        "title": s1.dc_title(),
+                    },
+                    {
+                        "code": s2.code,
+                        "eid": s2.eid,
+                        "level": s2.level,
+                        "title": s2.dc_title(),
+                    },
+                ],
+            )
 
     @patch("elasticsearch.client.indices.IndicesClient.exists")
     @patch("elasticsearch.client.Elasticsearch.index")
-    def test_manif_prog_html_is_stripped(self, index, exists):
+    def test_virtualexhibit_neg_date(self, index, exists):
         with self.admin_access.cnx() as cnx:
-            ce = cnx.create_entity
-            basecontent = ce("BaseContent", title="program", content="Bonjour <em>Bourvil</em>")
-            # link the basecontent to a CommemorationItem
-            commemo_item = ce(
-                "CommemorationItem",
-                title="Commemoration",
-                alphatitle="commemoration",
-                content="content",
-                commemoration_year=1500,
-                manif_prog=basecontent,
-                collection_top=ce("CommemoCollection", title="Moyen Age", year=1500),
+            s1 = cnx.create_entity("Service", category="cat", name="Service", short_name="s1")
+            s2 = cnx.create_entity("Service", category="cat", name="Service", short_name="s2")
+            extref = cnx.create_entity(
+                "ExternRef",
+                reftype="Virtual_exhibit",
+                title="externref-title",
+                url="http://toto",
+                start_year=-12,
+                stop_year=12,
+                exref_service=[s1, s2],
             )
-            cnx.commit()
-            es_json_commemo = commemo_item.cw_adapt_to("IFullTextIndexSerializable").serialize()
-            self.assertEqual(es_json_commemo["manif_prog"], "Bonjour Bourvil")
+            es_json = extref.cw_adapt_to("IFullTextIndexSerializable").serialize()
+            self.assertEqual(es_json["reftype"], "virtual_exhibit")
+            self.assertEqual(es_json["cw_etype"], "Virtual_exhibit")
+            self.assertEqual(es_json["start_year"], -12)
+            self.assertEqual(es_json["escategory"], "siteres")
+            self.assertEqual(es_json["publisher"], ["s1", "s2"])
+            self.assertEqual(es_json["dates"], {"gte": -12, "lte": 12})
+            self.assertEqual(es_json["sortdate"], "0000-01-01")
+
+    def test_newscontent_dates(self):
+        """
+        Trying: create a NewsContent with a start_date
+        Expecting: the dates field contains the start_date year / stop_date year
+                    as single interval value
+        """
+        with self.admin_access.cnx() as cnx:
+            newscontent = cnx.create_entity(
+                "NewsContent",
+                title="the-news",
+                content="the-content",
+                start_date=dt.date(2011, 1, 1),
+            )
+            es_json = newscontent.cw_adapt_to("IFullTextIndexSerializable").serialize()
+            self.assertEqual(es_json["dates"], {"gte": 2011, "lte": 2011})
+            self.assertEqual(es_json["sortdate"], "2011-01-01")
+
+    def test_commemorationitem_dates(self):
+        """
+        Trying: create a CommemorationItem with a "year"
+        Expecting: the dates field contains the year value as single interval value
+        """
+        with self.admin_access.cnx() as cnx:
+            commemo = cnx.create_entity(
+                "CommemorationItem",
+                title="commemoration",
+                alphatitle="commemoration",
+                subtitle="sous-titre",
+                content="contenu",
+                commemoration_year=2000,
+                start_year=1952,
+            )
+            es_json = commemo.cw_adapt_to("IFullTextIndexSerializable").serialize()
+            self.assertEqual(es_json["dates"], {"gte": 1952, "lte": 1952})
+
+    def test_commemorationitem_sortdate(self):
+        """
+        Trying: create a CommemorationItem with a "year" 52
+        Expecting: sortdate is correctly formated
+        """
+        with self.admin_access.cnx() as cnx:
+            commemo = cnx.create_entity(
+                "CommemorationItem",
+                title="commemoration",
+                alphatitle="commemoration",
+                subtitle="sous-titre",
+                content="contenu",
+                start_year=52,
+            )
+            es_json = commemo.cw_adapt_to("IFullTextIndexSerializable").serialize()
+            self.assertEqual(es_json["sortdate"], "0052-01-01")
+
+    def test_circular_dates(self):
+        """
+        Trying: create a Circular with a siaf_daf_signing_date
+        Expecting: the dates field contains the siaf_daf_signing_date year as single interval value
+        """
+        with self.admin_access.cnx() as cnx:
+            circular = cnx.create_entity(
+                "Circular", circ_id="circ01", title="Circular", status="in-effect"
+            )
+            es_json = circular.cw_adapt_to("IFullTextIndexSerializable").serialize()
+            self.assertNotIn("dates", es_json)
+            circular.cw_set(siaf_daf_signing_date=dt.date(2015, 3, 1))
+            es_json = circular.cw_adapt_to("IFullTextIndexSerializable").serialize()
+            self.assertEqual(es_json["dates"], {"gte": 2015, "lte": 2015})
+            self.assertEqual(es_json["sortdate"], "2015-03-01")
+
+    def test_basecontent_dates(self):
+        """
+        Trying: create a BaseContent with a previous modification_date, modify the Base Content
+        Expecting: the dates field must contain the initial modification_date year, then current
+            year after modification
+        """
+        with self.admin_access.cnx() as cnx:
+            basecontent = cnx.create_entity(
+                "BaseContent",
+                title="TOTO Titre",
+                content="Bonjour <em>Bourvil</em>",
+                creation_date=dt.date(2007, 1, 21),
+                modification_date=dt.date(2008, 2, 2),
+            )
+            es_json = basecontent.cw_adapt_to("IFullTextIndexSerializable").serialize()
+            self.assertEqual(es_json["dates"], {"gte": 2008, "lte": 2008})
+            self.assertEqual(es_json["sortdate"], "2008-02-02")
+            basecontent.cw_set(title="POUET Titre")
+            es_json = basecontent.cw_adapt_to("IFullTextIndexSerializable").serialize()
+            now = dt.datetime.now()
+            current_year = now.year
+            self.assertEqual(es_json["dates"], {"gte": current_year, "lte": current_year})
+            self.assertEqual(es_json["sortdate"], now.strftime("%Y-%m-%d"))
+
+    def test_card_service_map_dates(self):
+        """
+        Trying: create a Card, a Service, a Map
+        Expecting: the dates field must contain the current year
+        """
+        with self.admin_access.cnx() as cnx:
+            current_year = dt.datetime.now().year
+            card = cnx.create_entity(
+                "Card", wikiid="card-de", title="the-card", content="some-content"
+            )
+            es_json = card.cw_adapt_to("IFullTextIndexSerializable").serialize()
+            self.assertEqual(es_json["dates"], {"gte": current_year, "lte": current_year})
+
+            service = cnx.create_entity("Service", category="cat", name="Service", short_name="s1")
+            es_json = service.cw_adapt_to("IFullTextIndexSerializable").serialize()
+            self.assertEqual(es_json["dates"], {"gte": current_year, "lte": current_year})
+
+            map = cnx.create_entity("Map", title="map1", map_file=Binary(b""))
+            es_json = map.cw_adapt_to("IFullTextIndexSerializable").serialize()
+            self.assertEqual(es_json["dates"], {"gte": current_year, "lte": current_year})
 
     @patch("elasticsearch.client.indices.IndicesClient.exists")
     @patch("elasticsearch.client.Elasticsearch.index")
@@ -437,7 +569,7 @@ class IFullTextIndexSerializableTC(
                 {
                     "title": "map1",
                     "cw_etype": "Map",
-                    "escategory": "edito",
+                    "escategory": "siteres",
                     "ancestors": [s1.eid, s1_1.eid],
                 },
                 esdoc,
@@ -456,14 +588,13 @@ class IFullTextIndexSerializableTC(
                 subtitle="commemo-subtitle",
                 content="content",
                 commemoration_year=1500,
-                collection_top=ce("CommemoCollection", title="Moyen Age", year=1500),
             )
             esdoc = commemo_item.cw_adapt_to("IFullTextIndexSerializable").serialize()
             self.assertDictContainsSubset(
                 {
                     "title": "Commemoration",
                     "cw_etype": "CommemorationItem",
-                    "escategory": "commemorations",
+                    "escategory": "siteres",
                     "subtitle": "commemo-subtitle",
                 },
                 esdoc,
@@ -481,7 +612,6 @@ class IFullTextIndexSerializableTC(
                 subtitle="sous-titre",
                 content="contenu",
                 commemoration_year=1500,
-                collection_top=ce("CommemoCollection", title="Moyen Age", year=1500),
             )
             cnx.commit()
             translation = cnx.create_entity(
@@ -510,8 +640,75 @@ class IFullTextIndexSerializableTC(
                 self.assertEqual(es_json[attr], value)
                 self.assertEqual(tes_json[attr], value)
 
+    @patch("elasticsearch.client.indices.IndicesClient.exists")
+    @patch("elasticsearch.client.Elasticsearch.index")
+    def test_authorityrecord(self, index, exists):
+        with self.admin_access.cnx() as cnx:
+            service = cnx.create_entity(
+                "Service", category="other", name="Service", code="CODE", short_name="ADP"
+            )
+            name = "Jean Cocotte"
+            subject = cnx.create_entity(
+                "AgentAuthority",
+                label=name,
+                reverse_authority=cnx.create_entity(
+                    "AgentName",
+                    role="person",
+                    label="name",
+                ),
+            )
+            kind_eid = cnx.find("AgentKind", name="person")[0][0]
+            record = cnx.create_entity(
+                "AuthorityRecord",
+                record_id="FRAN_NP_006883",
+                agent_kind=kind_eid,
+                maintainer=service.eid,
+                reverse_name_entry_for=(
+                    cnx.create_entity("NameEntry", parts=name, form_variant="authorized"),
+                    cnx.create_entity("NameEntry", parts="Janot CotCot"),
+                ),
+                xml_support="foo",
+                start_date=dt.datetime(1940, 1, 1),
+                end_date=dt.datetime(2000, 5, 1),
+                reverse_occupation_agent=cnx.create_entity("Occupation", term="éleveur de poules"),
+                reverse_history_agent=cnx.create_entity(
+                    "History", text="<p>Il aimait les poules</p>"
+                ),
+                same_as=subject,
+            )
+            es_json = record.cw_adapt_to("IFullTextIndexSerializable").serialize()
+            expected = {
+                "alltext": "FRAN_NP_006883 Janot CotCot  éleveur de poules Il aimait les " "poules",
+                "creation_date": record.creation_date,
+                "cw_etype": "AuthorityRecord",
+                "cwuri": f"http://testing.fr/cubicweb/{record.eid}",
+                "dates": {"gte": 1940, "lte": 2000},
+                "eid": record.eid,
+                "estype": "AuthorityRecord",
+                "modification_date": record.modification_date,
+                "publisher": "ADP",
+                "sortdate": "1940-01-01",
+                "title": "Jean Cocotte",
+            }
+            self.assertDictEqual(expected, es_json)
 
-class ISuggestIndexSerializableTC(EsSerializableMixIn, PostgresTextMixin, testlib.CubicWebTC):
+    def test_dates_fa_es_doc(self):
+        didattrs = {}
+        self.assertTrue("dates" not in dates_for_es_doc(didattrs))
+        didattrs = {"startyear": 1500}
+        self.assertEqual(dates_for_es_doc(didattrs)["dates"], {"gte": 1500, "lte": 1500})
+        self.assertEqual(dates_for_es_doc(didattrs)["sortdate"], "1500-01-01")
+        didattrs = {"stopyear": 1600}
+        self.assertEqual(dates_for_es_doc(didattrs)["dates"], {"gte": 1600, "lte": 1600})
+        self.assertEqual(dates_for_es_doc(didattrs)["sortdate"], "1600-01-01")
+        didattrs = {"startyear": 1500, "stopyear": 1600}
+        self.assertEqual(dates_for_es_doc(didattrs)["dates"], {"gte": 1500, "lte": 1600})
+        self.assertEqual(dates_for_es_doc(didattrs)["sortdate"], "1500-01-01")
+
+
+class ISuggestIndexSerializableTC(
+    S3BfssStorageTestMixin, EsSerializableMixIn, PostgresTextMixin, testlib.CubicWebTC
+):
     def create_findingaid(self, cnx, eadid):
         return cnx.create_entity(
             "FindingAid",
@@ -541,15 +738,65 @@ class ISuggestIndexSerializableTC(EsSerializableMixIn, PostgresTextMixin, testli
             esdoc = loc1.cw_adapt_to("ISuggestIndexSerializable").serialize()
             expected = {
                 "count": 2,
+                "archives": 2,
+                "siteres": 0,
                 "cw_etype": "LocationAuthority",
-                "additional": "",
                 "grouped": False,
+                "letter": "l",
                 "text": "location 1",
+                "label": "location 1",
                 "urlpath": "location/{}".format(loc1.eid),
                 "eid": loc1.eid,
                 "type": "geogname",
+                "quality": False,
             }
-            self.assertDictContainsSubset(expected, esdoc)
+            self.assertDictEqual(expected, esdoc)
+
+    @patch("elasticsearch.client.indices.IndicesClient.exists")
+    @patch("elasticsearch.client.Elasticsearch.index")
+    def test_subject_authority(self, index, exists):
+        with self.admin_access.cnx() as cnx:
+            ce = cnx.create_entity
+            auth = ce("SubjectAuthority", label="Étienne Marcel", quality=True)
+            cnx.commit()
+            esdoc = auth.cw_adapt_to("ISuggestIndexSerializable").serialize()
+            expected = {
+                "count": 0,
+                "archives": 0,
+                "siteres": 0,
+                "cw_etype": "SubjectAuthority",
+                "grouped": False,
+                "letter": "e",
+                "text": "Étienne Marcel",
+                "label": "Étienne Marcel",
+                "urlpath": f"subject/{auth.eid}",
+                "eid": auth.eid,
+                "type": "subject",
+                "quality": True,
+            }
+            self.assertDictEqual(expected, esdoc)
+
+    @patch("elasticsearch.client.indices.IndicesClient.exists")
+    @patch("elasticsearch.client.Elasticsearch.index")
+    def test_authority_non_latin_letter(self, index, exists):
+        with self.admin_access.cnx() as cnx:
+            ce = cnx.create_entity
+            for label in ("Ленин", "猫"):
+                auth = ce("AgentAuthority", label=label, quality=1)
+                cnx.commit()
+                esdoc = auth.cw_adapt_to("ISuggestIndexSerializable").serialize()
+                self.assertEqual(esdoc["letter"], "#")
+
+    @patch("elasticsearch.client.indices.IndicesClient.exists")
+    @patch("elasticsearch.client.Elasticsearch.index")
+    def test_authority_non_letter(self, index, exists):
+        with self.admin_access.cnx() as cnx:
+            ce = cnx.create_entity
+            for label, expected in ((None, ""), ("123 rue des petits chats", "0"), ("# test", "!")):
+                auth = ce("AgentAuthority", label=label, quality=1)
+                cnx.commit()
+                esdoc = auth.cw_adapt_to("ISuggestIndexSerializable").serialize()
+                self.assertEqual(esdoc["letter"], expected)
 
     @patch("elasticsearch.client.indices.IndicesClient.exists")
     @patch("elasticsearch.client.Elasticsearch.index")
@@ -567,16 +814,12 @@ class ISuggestIndexSerializableTC(EsSerializableMixIn, PostgresTextMixin, testli
             cnx.commit()
             fa = self.create_findingaid(cnx, "Jacques Chirac")
             index = cnx.create_entity("AgentName", label="Chirac, Jacques", index=fa)
-            collection = cnx.create_entity(
-                "CommemoCollection", title="élection du Président", year=2019
-            )
             commemo_item = cnx.create_entity(
                 "CommemorationItem",
                 title="Commemoration",
                 alphatitle="commemoration",
                 content="content",
                 commemoration_year=2019,
-                collection_top=collection,
             )
             extref = cnx.create_entity(
                 "ExternRef", reftype="Virtual_exhibit", title="externref-title"
@@ -584,6 +827,7 @@ class ISuggestIndexSerializableTC(EsSerializableMixIn, PostgresTextMixin, testli
             grouped_agent = cnx.create_entity(
                 "AgentAuthority",
                 label="Chirac, Jacques",
+                quality=False,
                 reverse_authority=index,
                 reverse_related_authority=[commemo_item, extref],
             )
@@ -595,6 +839,9 @@ class ISuggestIndexSerializableTC(EsSerializableMixIn, PostgresTextMixin, testli
                 "grouped": False,
                 "text": "Chirac, Jacques",
                 "type": "agent",
+                "quality": False,
+                "siteres": 2,
+                "archives": 1,
             }
             self.assertDictContainsSubset(expected, esdoc)
             agent.group([grouped_agent.eid])
@@ -607,8 +854,255 @@ class ISuggestIndexSerializableTC(EsSerializableMixIn, PostgresTextMixin, testli
                 "grouped": True,
                 "text": "Chirac, Jacques",
                 "type": "agent",
+                "quality": False,
+                "siteres": 0,
+                "archives": 0,
             }
             self.assertDictContainsSubset(expected, esdoc)
+
+    @patch("elasticsearch.client.indices.IndicesClient.exists")
+    @patch("elasticsearch.client.Elasticsearch.index")
+    def test_card_cw_etype(self, index, exists):
+        """Trying: create a Card
+        Expecting; es_json['cw_etype'] of a Card must be "Article"
+        """
+        with self.admin_access.cnx() as cnx:
+            card = cnx.find("Card", wikiid="emplois-fr").one()
+            es_json = card.cw_adapt_to("IFullTextIndexSerializable").serialize()
+            self.assertEqual("Article", es_json["cw_etype"])
+            self.assertEqual("Card", es_json["estype"])
+
+    @patch("elasticsearch.client.indices.IndicesClient.exists")
+    @patch("elasticsearch.client.Elasticsearch.index")
+    def test_nomina_record_rm(self, index, exists):
+        """es_json['cw_etype'] of NominaRecords of RM type"""
+        with self.admin_access.cnx() as cnx:
+            service = cnx.create_entity(
+                "Service", category="cat", name="Landes", short_name="Landes", code="FRAD040"
+            )
+            stable_id = compute_nomina_stable_id(service.code, "23")
+            nomina = cnx.create_entity(
+                "NominaRecord",
+                stable_id=stable_id,
+                json_data={
+                    "c": {"c": "R P 392", "e": "0", "n": "22", "o": ["laboureur"]},
+                    "e": {
+                        "N": [
+                            {
+                                "d": {"y": "1867"},
+                                "l": {
+                                    "c": "France",
+                                    "cc": "FR",
+                                    "d": "Landes",
+                                    "dc": "40",
+                                    "p": "Arue",
+                                },
+                            }
+                        ],
+                        "R": [
+                            {
+                                "l": {
+                                    "c": "France",
+                                    "cc": "FR",
+                                    "d": "Landes",
+                                    "dc": "40",
+                                    "p": "Cère",
+                                }
+                            }
+                        ],
+                        "RM": [
+                            {
+                                "d": {"y": "1887-1889"},
+                                "l": {
+                                    "c": "France",
+                                    "cc": "FR",
+                                    "d": "Landes",
+                                    "dc": "40",
+                                    "p": "Mont-de-Marsan",
+                                },
+                            }
+                        ],
+                    },
+                    "p": [{"f": "Barthélémy", "n": "Duprat"}],
+                    "t": "RM",
+                    "u": "http://www.archives.landes.fr/ark:/35227/s0052cbf404e1290/52cc0a4a27570",
+                },
+                service=service,
+            )
+            cnx.commit()
+            es_json = nomina.cw_adapt_to("INominaIndexSerializable").serialize()
+            expected = {
+                "acte_type": "RM",
+                "alltext": "R P 392 NMN_E_0 22 laboureur NMN_BN 1867 NMN_R NMN_RM 1887-1889",
+                "authority": [],
+                "creation_date": nomina.creation_date,
+                "cw_etype": "NominaRecord",
+                "cwuri": f"http://testing.fr/cubicweb/basedenoms/{nomina.stable_id}",
+                "dates": {"gte": "1887", "lte": "1889"},
+                "eid": nomina.eid,
+                "forenames": ["Barthélémy"],
+                "locations": ["Arue", "Cère", "France", "Landes", "Mont-de-Marsan"],
+                "modification_date": nomina.modification_date,
+                "names": ["Duprat"],
+                "service": service.eid,
+                "stable_id": stable_id,
+            }
+            self.assertEqual(expected, es_json)
+
+    @patch("elasticsearch.client.indices.IndicesClient.exists")
+    @patch("elasticsearch.client.Elasticsearch.index")
+    def test_nomina_record_mort_14_18(self, index, exists):
+        """es_json['cw_etype'] of NominaRecords of Mort 14_18 type"""
+        with self.admin_access.cnx() as cnx:
+            service = cnx.create_entity(
+                "Service", category="cat", name="Ardennes", short_name="Ardennes", code="FRAD008"
+            )
+            stable_id = compute_nomina_stable_id(service.code, "888")
+            nomina = cnx.create_entity(
+                "NominaRecord",
+                stable_id=stable_id,
+                oai_id="888",
+                json_data={
+                    "c": {"c": "1R 155", "n": "110", "o": ["ferronnier"]},
+                    "e": {
+                        "N": {"d": [{"y": "1880"}], "l": [{"d": "Ardennes", "p": "Renwez"}]},
+                        "R": {
+                            "l": [
+                                {"d": "Ardennes", "p": "Château-Regnault-Bogny (Bogny-sur-Meuse)"}
+                            ]
+                        },
+                        "RM": {
+                            "d": [{"y": "1900"}],
+                            "l": [{"c": "France", "cc": "FR", "d": "Ardennes", "p": "Mézières"}],
+                        },
+                    },
+                    "p": [
+                        {"f": "Léon Gustave", "n": "Suquez"},
+                        {"f": "Jean Gustave", "n": "Suquez"},
+                    ],
+                    "t": "Môrt 14-18",
+                    "u": "https://archives.cd08.fr/ark:/75583/s0053eb9b6047b1f/53eb9b604f5b9",
+                },
+                service=service,
+            )
+            cnx.commit()
+            es_json = nomina.cw_adapt_to("INominaIndexSerializable").serialize()
+            expected = {
+                "acte_type": "MORT 14-18",
+                "alltext": "1R 155 110 ferronnier NMN_BN 1880 NMN_R NMN_RM 1900",
+                "authority": [],
+                "creation_date": nomina.creation_date,
+                "cw_etype": "NominaRecord",
+                "cwuri": f"http://testing.fr/cubicweb/basedenoms/{nomina.stable_id}",
+                "dates": None,
+                "eid": nomina.eid,
+                "forenames": ["Léon Gustave", "Jean Gustave"],
+                "names": ["Suquez", "Suquez"],
+                "locations": [
+                    "Ardennes",
+                    "Château-Regnault-Bogny (Bogny-sur-Meuse)",
+                    "France",
+                    "Mézières",
+                    "Renwez",
+                ],
+                "modification_date": nomina.modification_date,
+                "service": service.eid,
+                "stable_id": stable_id,
+            }
+            self.assertEqual(expected, es_json)
+
+    @patch("elasticsearch.client.indices.IndicesClient.exists")
+    @patch("elasticsearch.client.Elasticsearch.index")
+    def test_nomina_same_as_index(self, index, exists):
+        """Check that agent autority label"""
+        with self.admin_access.cnx() as cnx:
+            service = cnx.create_entity(
+                "Service", category="cat", name="Ardennes", short_name="Ardennes", code="FRAD008"
+            )
+            agent = cnx.create_entity("AgentAuthority", label="Toto Poulet")
+            stable_id = compute_nomina_stable_id(service.code, "888")
+            nomina = cnx.create_entity(
+                "NominaRecord",
+                stable_id=stable_id,
+                oai_id="888",
+                json_data={
+                    "c": {"c": "1R 155", "n": "110", "o": ["ferronnier"]},
+                    "e": {
+                        "RM": {
+                            "d": [{"y": "1900"}],
+                            "l": [{"c": "France", "cc": "FR", "d": "Ardennes", "p": "Mézières"}],
+                        },
+                    },
+                    "p": [{"f": "Léon Gustave", "n": "Suquez"}],
+                    "t": "RM",
+                    "u": "https://archives.cd08.fr/ark:/75583/s0053eb9b6047b1f/53eb9b604f5b9",
+                },
+                service=service,
+                same_as=agent,
+            )
+            cnx.commit()
+            es_json = nomina.cw_adapt_to("INominaIndexSerializable").serialize()
+            expected = {
+                "acte_type": "RM",
+                "alltext": "1R 155 110 ferronnier NMN_RM 1900 Toto Poulet",
+                "authority": [agent.eid],
+                "creation_date": nomina.creation_date,
+                "cw_etype": "NominaRecord",
+                "cwuri": f"http://testing.fr/cubicweb/basedenoms/{nomina.stable_id}",
+                "dates": {"gte": "1900", "lte": "1900"},
+                "eid": nomina.eid,
+                "forenames": ["Léon Gustave"],
+                "names": ["Suquez"],
+                "locations": [
+                    "Ardennes",
+                    "France",
+                    "Mézières",
+                ],
+                "modification_date": nomina.modification_date,
+                "service": service.eid,
+                "stable_id": stable_id,
+            }
+            self.assertEqual(expected, es_json)
+
+    @patch("elasticsearch.client.indices.IndicesClient.exists")
+    @patch("elasticsearch.client.Elasticsearch.index")
+    def test_nomina_acte_type(self, index, exists):
+        """Check the es acte_type is correct"""
+        with self.admin_access.cnx() as cnx:
+            service = cnx.create_entity(
+                "Service", category="cat", name="Ardennes", short_name="Ardennes", code="FRAD008"
+            )
+            stable_id = compute_nomina_stable_id(service.code, "888")
+            nomina = cnx.create_entity(
+                "NominaRecord",
+                stable_id=stable_id,
+                oai_id="888",
+                json_data={
+                    "c": {"c": "1R 155", "n": "110", "o": ["ferronnier"]},
+                    "p": [{"f": "Léon Gustave", "n": "Suquez"}],
+                    "t": "zz",
+                    "u": "https://archives.cd08.fr/ark:/75583/s0053eb9b6047b1f/53eb9b604f5b9",
+                },
+                service=service,
+            )
+            cnx.commit()
+            es_json = nomina.cw_adapt_to("INominaIndexSerializable").serialize()
+            expected = {
+                "acte_type": "AU",
+                "alltext": "1R 155 110 ferronnier",
+                "authority": [],
+                "creation_date": nomina.creation_date,
+                "cw_etype": "NominaRecord",
+                "cwuri": f"http://testing.fr/cubicweb/basedenoms/{nomina.stable_id}",
+                "dates": None,
+                "eid": nomina.eid,
+                "forenames": ["Léon Gustave"],
+                "modification_date": nomina.modification_date,
+                "names": ["Suquez"],
+                "service": service.eid,
+                "stable_id": stable_id,
+            }
+            self.assertEqual(expected, es_json)
 
 
 if __name__ == "__main__":

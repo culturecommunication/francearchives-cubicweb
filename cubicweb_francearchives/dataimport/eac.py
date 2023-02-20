@@ -32,7 +32,6 @@
 
 from collections import defaultdict
 
-from itertools import count
 from os.path import basename
 from time import time
 import logging
@@ -45,36 +44,13 @@ from cubicweb_eac.dataimport import ETYPES_ORDER_HINT
 from cubicweb_eac.sobjects import init_extid2eid_index as eac_init_extid2eid_index
 from cubicweb_skos.dataimport import dump_relations
 
-from cubicweb_francearchives.dataimport import log_in_db
+from cubicweb_francearchives.dataimport import log_in_db, es_bulk_index
+
 from cubicweb_francearchives.dataimport.stores import create_massive_store
 
 from cubicweb_francearchives.dataimport import sqlutil, to_unicode
 
-
-# XXX once 3.24 is released: from cubicweb.dataimport.stores import NullStore
-class NullStore(object):
-    """Store that do nothing, handy to measure time taken be above steps"""
-
-    def __init__(self):
-        self._eid_gen = count()
-
-    def prepare_insert_entity(self, *args, **kwargs):
-        return next(self._eid_gen)
-
-    def prepare_update_entity(self, etype, eid, **kwargs):
-        pass
-
-    def prepare_insert_relation(self, eid_from, rtype, eid_to, **kwargs):
-        pass
-
-    def flush(self):
-        pass
-
-    def commit(self):
-        pass
-
-    def finish(self):
-        pass
+from cubicweb_francearchives.storage import S3BfssStorageMixIn
 
 
 class MyImportLog(SimpleImportLog):
@@ -95,7 +71,8 @@ class MyImportLog(SimpleImportLog):
 def eac_import_file(service, store, fpath, extid2eid, log):
     fname = basename(fpath)
     import_log = MyImportLog(fname, threshold=logging.ERROR)
-    with open(fpath) as stream:
+    st = S3BfssStorageMixIn()
+    with st.storage_read_file(fpath) as stream:
         try:
             created, updated, record, not_visited = service.import_eac_stream(
                 stream, import_log, extid2eid=extid2eid, store=store, fpath=fpath
@@ -119,7 +96,8 @@ def eac_foreign_key_tables(schema):
 def postprocess_import_eac(cnx, created_authrecs, sameas_authorityrecords, log):
     updated_authrecs = postprocess_authorities(cnx, log)
     updated_authrecs.update(created_authrecs)
-    postprocess_same_as(cnx, sameas_authorityrecords, updated_authrecs)
+    postprocess_same_as(cnx, sameas_authorityrecords, updated_authrecs, log)
+    postprocess_index_es(cnx, updated_authrecs, log)
 
 
 def postprocess_authorities(cnx, log):
@@ -155,7 +133,7 @@ def postprocess_authorities(cnx, log):
         to_remove.append((exturi_eid,))
     cursor = cnx.cnxset.cu
     cursor.execute("DROP TABLE IF EXISTS exturi_to_remove")
-    cursor.execute("CREATE TABLE exturi_to_remove (eid integer)")
+    cursor.execute("CREATE TABLE exturi_to_remove (eid integer PRIMARY KEY)")
     cursor.executemany("INSERT INTO exturi_to_remove (eid) VALUES (%s)", to_remove)
     cursor.execute("SELECT delete_entities('cw_externaluri', 'exturi_to_remove')")
     cursor.execute("DROP TABLE exturi_to_remove")
@@ -163,8 +141,9 @@ def postprocess_authorities(cnx, log):
     return updated_authrecs
 
 
-def postprocess_same_as(cnx, sameas_authorityrecords, authrecords):
-    for (authrec_eid, record_id) in authrecords:
+def postprocess_same_as(cnx, sameas_authorityrecords, authrecords, log):
+    log.info("Start processing same_as relations")
+    for authrec_eid, record_id in authrecords:
         for autheid in sameas_authorityrecords.get(record_id, []):
             query = """
                 INSERT INTO same_as_relation (eid_from, eid_to)
@@ -173,6 +152,49 @@ def postprocess_same_as(cnx, sameas_authorityrecords, authrecords):
             """
             cnx.system_sql(query, {"auth": int(autheid), "auth_rec": authrec_eid})
     cnx.commit()
+    log.info("Finish processing same_as relations")
+
+
+def build_es_doc(cnx, eid, index_name, log):
+    rset = cnx.find("AuthorityRecord", eid=eid)
+    if not rset:
+        cnx.error(f"AuthorityRecord with eid {eid} not found")
+        return
+    entity = rset.one()
+    try:
+        serializer = entity.cw_adapt_to("IFullTextIndexSerializable")
+        json = serializer.serialize(complete=False)
+    except Exception:
+        cnx.error("[{}] Failed to serialize entity {}".format(index_name, entity.eid))
+        return
+    return {
+        "_op_type": "index",
+        "_index": index_name,
+        "_type": "_doc",
+        "_id": serializer.es_id,
+        "_source": json,
+    }
+
+
+def postprocess_index_es(cnx, updated_authrecs, log):
+    """reindex created/updated authority records
+
+    :param Connection cnx: database connection
+    :param Set updated_authrecs: Set of tuples (eid, record_id) of AuthorityRecords to be indexed
+    :param Logger log: logger
+    """
+    if updated_authrecs:
+        log.info("Start ES indexing.")
+        indexer = cnx.vreg["es"].select("indexer", cnx)
+        es = indexer.get_connection()
+        if es is None:
+            log.error("No connection to ES, skip ES indexing")
+            return
+        es_docs = [
+            build_es_doc(cnx, eid, indexer.index_name, log) for eid, record_id in updated_authrecs
+        ]
+        es_bulk_index(es, es_docs)
+        log.info("Finish ES indexing.")
 
 
 def init_extid2eid_index(cnx, source):

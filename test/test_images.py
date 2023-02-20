@@ -38,10 +38,10 @@ import unittest
 from cubicweb import Binary
 from cubicweb.devtools import testlib
 from cubicweb_francearchives.cssimages import static_css_dir, HERO_SIZES
-from cubicweb_francearchives.testutils import HashMixIn
+from cubicweb_francearchives.testutils import S3BfssStorageTestMixin
 
 
-class ImageTests(HashMixIn, testlib.CubicWebTC):
+class ImageTests(S3BfssStorageTestMixin, testlib.CubicWebTC):
     def setup_database(self):
         self.static_dir = static_css_dir(self.config.static_directory)
 
@@ -51,59 +51,75 @@ class ImageTests(HashMixIn, testlib.CubicWebTC):
 
     def cleanup_static_css(self):
         directory = static_css_dir(self.config.static_directory)
-        for fname in os.listdir(directory):
-            fullname = osp.join(directory, fname)
-            os.unlink(fullname)
+        if self.s3_bucket_name:
+            # TODO delete files
+            pass
+        else:
+            for fname in os.listdir(directory):
+                fullname = osp.join(directory, fname)
+                os.unlink(fullname)
+
+    def static_filepath(self, filepath):
+        if self.s3_bucket_name:
+            return f"static/css/{filepath}"
+        return osp.join(self.static_dir, filepath)
 
     def test_generate_thumbnails(self):
         """do not generate thumbnailes as cssid is specified"""
         with self.admin_access.cnx() as cnx:
-            ce = cnx.create_entity
-            section = ce("Section", name="decouvrir", title="Découvrir")
-            filepth = osp.join(self.datadir, "hero-decouvrir.jpg")
-            orig_width, orig_height = Image.open(filepth).size
-            with open(filepth, "rb") as stream:
-                image_file = ce(
-                    "File",
-                    data_name="hero-decouvrir.jpg",
-                    data_format="image/jpeg",
-                    data=Binary(stream.read()),
-                )
-                ce(
-                    "CssImage",
-                    cssid="hero-decouvrir",
-                    caption="Décourvir 15",
-                    order=2,
-                    cssimage_of=section,
-                    image_file=image_file,
-                )
-                cnx.commit()
+            section = cnx.create_entity("Section", name="decouvrir", title="Découvrir")
+            # upload the image for s3
+            self.get_or_create_imported_filepath("hero-decouvrir.jpg")
+            filepath = osp.join(self.datadir, "hero-decouvrir.jpg")
+            orig_width, orig_height = Image.open(filepath).size
+            with open(filepath, "rb") as stream:
+                content = stream.read()
+            image_file = cnx.create_entity(
+                "File",
+                data_name="hero-decouvrir.jpg",
+                data_format="image/jpeg",
+                data=Binary(content),
+            )
+            cnx.create_entity(
+                "CssImage",
+                cssid="hero-decouvrir",
+                caption="Décourvir 15",
+                order=2,
+                cssimage_of=section,
+                image_file=image_file,
+            )
+            cnx.commit()
             for size, suffix in HERO_SIZES:
                 image_path = "hero-decouvrir-%s.jpg" % suffix
-                image = Image.open(osp.join(self.static_dir, image_path))
+                content = self.getFileContent(self.static_filepath(image_path))
+                from io import BytesIO
+
+                image = Image.open(BytesIO(content))
                 self.assertEqual(image.size[0], size["w"] or orig_width)
 
     def test_dont_generate_thumbnails(self):
         """do not generate thumbnailes as cssid is not specified"""
         with self.admin_access.cnx() as cnx:
-            ce = cnx.create_entity
+            self.get_or_create_imported_filepath("hero-decouvrir.jpg")
             with open(osp.join(self.datadir, "hero-decouvrir.jpg"), "rb") as stream:
-                image_file = ce(
-                    "File",
-                    data_name="hero-decouvrir.jpg",
-                    data_format="image/jpeg",
-                    data=Binary(stream.read()),
-                )
-                ce("Image", caption="Décourvir 15", image_file=image_file)
-                cnx.commit()
+                content = stream.read()
+            cnx.create_entity(
+                "File",
+                title="static/css/decouvrir.jpg",
+                data_name="hero-decouvrir.jpg",
+                data_format="image/jpeg",
+                data=Binary(content),
+                reverse_image_file=cnx.create_entity("Image", caption="Décourvir 15"),
+            )
+            cnx.commit()
             for size, suffix in HERO_SIZES:
                 image_path = "hero-decouvrir-%s.jpg" % suffix
-                self.assertFalse(osp.isfile(osp.join(self.static_dir, image_path)))
+                self.assertFalse(self.fileExists(self.static_filepath(image_path)))
 
     def test_update_thumbnails(self):
         with self.admin_access.cnx() as cnx:
             ce = cnx.create_entity
-            sm_filename = osp.join(self.static_dir, "hero-gerer-sm.jpg")
+            self.get_or_create_imported_filepath("hero-decouvrir.jpg")
             with open(osp.join(self.datadir, "hero-decouvrir.jpg"), "rb") as stream:
                 image_file = ce(
                     "File",
@@ -113,19 +129,21 @@ class ImageTests(HashMixIn, testlib.CubicWebTC):
                 )
                 ce("CssImage", cssid="hero-gerer", order=1, caption="Gerer", image_file=image_file)
                 cnx.commit()
-                self.assertTrue(osp.isfile(sm_filename))
-            self.cleanup_static_css()
-            self.assertFalse(osp.isfile(sm_filename))
+            sm_filename = self.static_filepath("hero-gerer-sm.jpg")
+            content = self.getFileContent(sm_filename)
             image = cnx.find("CssImage", cssid="hero-gerer").one()
+            self.get_or_create_imported_filepath("hero-gerer.jpg")
             with open(osp.join(self.datadir, "hero-gerer.jpg"), "rb") as stream:
                 image.image_file[0].cw_set(data=Binary(stream.read()))
                 cnx.commit()
-            self.assertTrue(osp.isfile(sm_filename))
+            new_content = self.getFileContent(sm_filename)
+            self.assertNotEqual(content, new_content)
 
     def test_dont_update_thumbnails(self):
         with self.admin_access.cnx() as cnx:
             ce = cnx.create_entity
-            sm_filename = osp.join(self.static_dir, "hero-gerer-sm.jpg")
+            self.get_or_create_imported_filepath("hero-gerer.jpg")
+            sm_filename = self.static_filepath("hero-gerer-sm.jpg")
             with open(osp.join(self.datadir, "hero-decouvrir.jpg"), "rb") as stream:
                 image_file = ce(
                     "File",
@@ -135,12 +153,12 @@ class ImageTests(HashMixIn, testlib.CubicWebTC):
                 )
                 ce("Image", caption="Gerer", image_file=image_file)
                 cnx.commit()
-                self.assertFalse(osp.isfile(sm_filename))
+            self.assertFalse(self.isFile(sm_filename))
             image = cnx.find("Image").one()
             with open(osp.join(self.datadir, "hero-gerer.jpg"), "rb") as stream:
                 image.image_file[0].cw_set(data=Binary(stream.read()))
                 cnx.commit()
-            self.assertFalse(osp.isfile(sm_filename))
+            self.assertFalse(self.isFile(sm_filename))
 
 
 if __name__ == "__main__":

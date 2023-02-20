@@ -108,6 +108,8 @@ class CmsObjectsVarnish(FAVarnishMixin, IVarnishAdapter):
                 "Service",
                 "Circular",
                 "NewsContent",
+                "BaseContent",
+                "ExternRef",
             }
         )
     )
@@ -132,26 +134,29 @@ class SectionVarnish(CmsObjectsVarnish):
         return urls + self.ancestors_urls() + self.sitemap()
 
 
-def handle_on_homepage(entity, urls):
-    if entity.on_homepage:
-        urls.append("/")
-    elif hasattr(entity, "cw_edited") and not entity.cw_edited.saved:
-        old, new = entity.cw_edited.oldnewvalue("on_homepage")
-        if old:
-            # if this entity was on homepage we should purge homepage
-            urls.append("/")
-    elif hasattr(entity, "cw_edited") and entity.cw_edited.get("on_homepage") is False:
-        urls.append("/")
+def homepages(entity):
+    urls = ["/", "/gerer"]
+    if hasattr(entity, "cw_edited"):
+        if entity.on_homepage and set(("title", "header")).intersection(entity.cw_edited):
+            return urls
+        if "on_homepage" in entity.cw_edited:
+            return urls
+    return []
 
 
-class NewsVarnish(CmsObjectsVarnish):
-    __select__ = IVarnishAdapter.__select__ & is_instance("NewsContent")
+class NewsBaseContentVarnish(CmsObjectsVarnish):
+    __select__ = IVarnishAdapter.__select__ & is_instance("NewsContent", "BaseContent", "ExternRef")
 
     @extend_with_lang_prefixes
     def urls_to_purge(self):
         urls = [self.entity.rest_path()]
-        handle_on_homepage(self.entity, urls)
-        return urls + self.etype_urls() + self.ancestors_urls() + self.sitemap()
+        return (
+            urls
+            + self.etype_urls()
+            + self.ancestors_urls()
+            + self.sitemap()
+            + homepages(self.entity)
+        )
 
 
 class CommemoVarnish(CmsObjectsVarnish):
@@ -159,20 +164,12 @@ class CommemoVarnish(CmsObjectsVarnish):
 
     @extend_with_lang_prefixes
     def urls_to_purge(self):
-        urls = [self.entity.rest_path()] + self.sitemap()
-        handle_on_homepage(self.entity, urls)
-        if self.entity.collection_top:
-            collection = self.entity.collection_top[0].rest_path()
-            index = "%s/index" % collection
-            timeline = "%s/timeline" % collection
-            timeline_json = "%s.json" % timeline
-            return (
-                urls
-                + [collection, index, timeline, timeline_json]
-                + self.etype_urls()
-                + self.ancestors_urls()
-            )
-        return urls
+        return (
+            [self.entity.rest_path()]
+            + self.sitemap()
+            + homepages(self.entity)
+            + self.ancestors_urls()
+        )
 
 
 class FindingAidVarnish(FAVarnishMixin, IVarnishAdapter):
@@ -276,8 +273,30 @@ class FaqItemVarnishAdapter(IVarnishAdapter):
     __select__ = IVarnishAdapter.__select__ & is_instance("FaqItem")
 
     def faq(self):
-        return ["/faq"]
+        return ["faq/", "search/", "circulaires/", "services/"]
 
     @extend_with_lang_prefixes
     def urls_to_purge(self):
         return [self.entity.rest_path()] + self.faq()
+
+
+class SiteLinkVarnishAdapter(IVarnishAdapter):
+    __select__ = IVarnishAdapter.__select__ & is_instance("SiteLink")
+
+    def sitelinks(self):
+        return ["/sitelinks"]
+
+    @extend_with_lang_prefixes
+    def urls_to_purge(self):
+        return [self.entity.rest_path()] + self.sitelinks()
+
+
+class NominaRecord(IVarnishAdapter):
+    __select__ = IVarnishAdapter.__select__ & is_instance("NominaRecord")
+
+    def index_urls(self):
+        return [authority.absolute_url() for authority in self.entity.agent_indexes().entities()]
+
+    @extend_with_lang_prefixes
+    def urls_to_purge(self):
+        return [self.entity.rest_path()] + ["basedenoms/"]

@@ -15,7 +15,7 @@
 # economic rights, and the successive licensors have only limited liability.
 #
 # In this respect, the user's attention is drawn to the risks associated
-# with loading, using, modifying and/or developing or reproducing the
+# with loading, using, modifying and/or developing or reproducing thep
 # software by the user in light of its specific status of free software,
 # that may mean that it is complicated to manipulate, and that also
 # therefore means that it is reserved for developers and experienced
@@ -44,7 +44,7 @@ from cubicweb_francearchives.entities.es import (
 def get_children(cnx, section_eid):
     children = []
     rset = cnx.execute(
-        "Any X, T ORDERBY O WHERE S is IN (Section, CommemoCollection), "
+        "Any X, T ORDERBY O WHERE S is Section,"
         "X order O, "
         "S eid %(eid)s, S children X, X title T",
         {"eid": section_eid},
@@ -63,7 +63,7 @@ class Section(TranslatableCmsObject):
     __regid__ = "Section"
     rest_attr = "eid"
     fetch_attrs, cw_fetch_order = fetch_config(
-        ["order", "title", "subtitle", "content", "short_description"], order="DESC"
+        ["order", "title", "subtitle", "content", "short_description", "display_mode"], order="DESC"
     )
     i18nfields = ("title", "subtitle", "content", "short_description")
 
@@ -80,27 +80,26 @@ class Section(TranslatableCmsObject):
             return self.title
         return self.cw_adapt_to("ITemplatable").entity_param().title
 
-    def is_commemo_section(self):
-        return self.reverse_children and self.reverse_children[0].cw_etype == "CommemoCollection"
+    @property
+    def display_tree(self):
+        return self.display_mode == "mode_tree"
 
     @property
-    def commemo_section(self):
-        if self.is_commemo_section():
-            return self.reverse_children[0]
-        return None
+    def display_themes(self):
+        return self.display_mode == "mode_themes"
+
+    @property
+    def display_default(self):
+        return self.display_mode == "mode_no_display"
 
     @property
     def image(self):
-        images = self.reverse_cssimage_of or self.section_image
+        images = self.section_image or self.reverse_cssimage_of
         return images[0] if images else None
 
 
 class SectionTranslation(TranslationMixin, CmsObject):
     __regid__ = "SectionTranslation"
-
-    @property
-    def summary_policy(self):
-        return self.original_entity.summary_policy
 
 
 class SectionIFullTextIndexSerializable(

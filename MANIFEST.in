@@ -1,5 +1,5 @@
-recursive-include cubicweb_francearchives *.py *.css *.js *.jinja2 *.jpg *.json *.csv *.ttf *.otf *.eot *.svg *.xsl *.xslt *.html *.png *.woff *.woff2 *.xml *.yaml *.txt *.ico .editorconfig .jshintrc *.po *.pot *.scss *.md
-recursive-include doc *.html *.rst *.yaml
+recursive-include cubicweb_francearchives *.py *.css *.js *.jinja2 *.jpg *.json *.csv *.ttf *.otf *.eot *.svg *.xsl *.xslt *.html *.png *.woff *.woff2 *.xml *.yaml *.txt *.ico .editorconfig .jshintrc *.po *.pot *.scss *.md *.sql
+recursive-include doc *.html *.rst *.yaml *.example
 recursive-include a11y *.js *.json
 recursive-include appjs *.js
 include pyproject.toml
@@ -10,7 +10,7 @@ include LICENCE.txt Licence_CeCILL-C_V1-en.txt
 include francearchives_screenshot.jpg
 include *.js
 include pa11y.json
-recursive-include test *.py bootstrap_cubes *.XML *.csv *.jpg *.pdf *.png *.rdf *.rst *.txt *.xml *.xsd ccsv
+recursive-include test *.py bootstrap_cubes *.XML *.csv *.jpg *.pdf *.png *.rdf *.rst *.txt *.xml *.xsd ccsv *.json *.ttl
 # build from sass
 include cubicweb_francearchives/data/css/francearchives.bundle.css
 include cubicweb_francearchives/data/css/francearchives.bundle.css.map
@@ -20,6 +20,7 @@ include cubicweb_francearchives/data/bundle-pnialocation-map.js
 include cubicweb_francearchives/data/bundle-pnia-toc.js
 include cubicweb_francearchives/data/bundle-pnia-faq.js
 include cubicweb_francearchives/data/bundle-glossary.js
+include cubicweb_francearchives/data/*.geojson
 prune scss
 prune debian
 exclude gitfilter
@@ -30,5 +31,12 @@ exclude .prettierrc
 exclude .gitlab-ci.yml
 exclude .style.yapf
 exclude dev-requirements.txt
+exclude requirements.txt
 exclude tox.ini
+exclude .yamllint
 exclude Makefile
+exclude Makefile.docker
+exclude Dockerfile
+prune deploy
+exclude deploy.sh
+exclude env.example

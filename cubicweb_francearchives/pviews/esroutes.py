@@ -29,13 +29,40 @@
 # knowledge of the CeCILL-C license and that you accept its terms.
 #
 """elasticsearch-related views"""
+from pyramid import httpexceptions
+from pyramid.response import Response
+from pyramid.renderers import render
+
 from elasticsearch.exceptions import NotFoundError
 from elasticsearch_dsl.search import Search
 from elasticsearch_dsl import query as dsl_query
 
+
 from pyramid.view import view_config
 
 from cubicweb_elasticsearch.es import get_connection
+
+from cubicweb_francearchives import FEATURE_ADVANCED_SEARCH, FEATURE_SPARQL
+
+
+def jsonapi_error(status=None, details=None):
+    error = {}
+    if status:
+        error["status"] = int(status)
+    if details:
+        error["details"] = details
+    return error
+
+
+class JSONBadRequest(httpexceptions.HTTPBadRequest):
+    """Bad request exception with application/json Content-Type."""
+
+    def __init__(self, *errors):
+        body = {"errors": list(errors)}
+        super(JSONBadRequest, self).__init__(
+            content_type="application/json; charset=UTF-8",
+            body=render("json", body),
+        )
 
 
 @view_config(route_name="suggest", renderer="json", request_method=("GET", "HEAD"))
@@ -46,40 +73,161 @@ def suggest_view(request):
         return []
     cwconfig = request.registry["cubicweb.config"]
     get_connection(cwconfig)
-    search = Search(doc_type="_doc", index="{}_suggest".format(cwconfig["index-name"])).sort(
-        "-count"
-    )
-    must = [
-        {"match": {"text": {"query": query_string, "operator": "and"}}},
-        # do not show authorities without related documents
-        {"range": {"count": {"gte": 1}}},
-    ]
-    search.query = dsl_query.Bool(must=must)
-    try:
-        response = search.execute()
-    except NotFoundError:
-        return []
-    build_url = request.cw_request.build_url
     results = []
-    if response and response.hits.total:
+    responses = []
+    es_categories = ("archives", "siteres")
+    count_attr = "count"
+    req_escategories = request.params.get("escategory", "").strip()
+
+    # if req_escategories is one of the categories
+    build_url_kwargs = {}
+    if req_escategories in es_categories:
+        count_attr = req_escategories
+        build_url_kwargs["es_escategory"] = req_escategories
+
+    # else, take all categories together by default
+    if not build_url_kwargs:
+        build_url_kwargs["es_escategory"] = es_categories
+
+    for cw_etype in ("AgentAuthority", "LocationAuthority", "SubjectAuthority"):
+        search = Search(
+            doc_type="_doc", extra={"size": 15}, index="{}_suggest".format(cwconfig["index-name"])
+        ).sort("-count")
+        must = [
+            {"match": {"text": {"query": query_string, "operator": "and"}}},
+            # do not show authorities without related documents
+            {"range": {count_attr: {"gte": 1}}},
+            {"match": {"cw_etype": cw_etype}},
+        ]
+        search.query = dsl_query.Bool(must=must)
+        try:
+            response = search.execute()
+        except NotFoundError:
+            return []
+        build_url = request.cw_request.build_url
+        if response and response.hits.total:
+            responses.append(response)
+    nb_results = 7 if len(responses) > 1 else 15
+    for response in responses:
         _ = request.cw_request._
         countlabel_templates = (_("No result"), _("1 document"), _("{count} documents"))
-        for result in response:
-            count = result.count if hasattr(result, "count") else 0
+        for result in response[:nb_results]:
+            count = getattr(result, count_attr, 0)
             countlabel = countlabel_templates[min(count, 2)].format(count=count)
             indextype = result.type if "type" in result else result.cw_etype
+            if result.cw_etype == "SubjectAuthority":
+                url = build_url(result.urlpath, aug=True, **build_url_kwargs)
+            else:
+                url = build_url(result.urlpath, **build_url_kwargs)
             results.append(
                 {
-                    "url": build_url(result.urlpath),
+                    "url": url,
                     "text": result.text,
                     "countlabel": countlabel,
-                    "etype": _(indextype),
-                    "additional": result.additional,
+                    "etype": _(indextype).capitalize(),
                 }
             )
+    results.sort(key=lambda x: x.get("etype"))
     return results
+
+
+def authorities_view(request, regid):
+    cwreq = request.cw_request
+    viewsreg = cwreq.vreg["views"]
+    view = viewsreg.select(regid, cwreq, rset=None)
+    return Response(viewsreg.main_template(cwreq, "main-template", rset=None, view=view))
+
+
+@view_config(route_name="subjects", request_method=("GET", "HEAD"))
+def subjects_view(request):
+    return authorities_view(request, "subjects")
+
+
+@view_config(route_name="agents", request_method=("GET", "HEAD"))
+def agents_view(request):
+    return authorities_view(request, "agents")
+
+
+@view_config(route_name="locations", request_method=("GET", "HEAD"))
+def locations_view(request):
+    return authorities_view(request, "locations")
+
+
+if FEATURE_ADVANCED_SEARCH:
+
+    @view_config(route_name="advanced-search", request_method=("GET", "HEAD"))
+    def advanced_search_view(request):
+        cwreq = request.cw_request
+        cwreq.form.setdefault("vid", "advanced-search")
+        viewsreg = cwreq.vreg["views"]
+        view = viewsreg.select("advanced-search", cwreq, rset=None)
+        return Response(viewsreg.main_template(cwreq, "main-template", rset=None, view=view))
+
+
+if FEATURE_SPARQL:
+
+    @view_config(route_name="sparql-yasgui", request_method=("GET", "HEAD"))
+    def sparql_yasgui_view(request):
+        cwreq = request.cw_request
+        cwreq.form.setdefault("vid", "sparql-yasgui")
+        viewsreg = cwreq.vreg["views"]
+        view = viewsreg.select("sparql-yasgui", cwreq, rset=None)
+        return Response(viewsreg.main_template(cwreq, "main-template", rset=None, view=view))
+
+
+def json_config(**settings):
+    """Wraps view_config for JSON rendering."""
+    settings.setdefault("accept", "application/json")
+    settings.setdefault("renderer", "json")
+    return view_config(**settings)
+
+
+if FEATURE_ADVANCED_SEARCH:
+
+    def get_es_index(request, cwconfig):
+        index = request.matchdict["index"]
+        if index == "all":
+            return f"{cwconfig['index-name']}_all"
+        if index == "suggest":
+            return f"{cwconfig['index-name']}_suggest"
+        if index == "services":
+            return cwconfig["kibana-services-index-name"]
+
+    @json_config(route_name="advanced_search")
+    def advanced_search(request):
+        cwconfig = request.registry["cubicweb.config"]
+        index = get_es_index(request, cwconfig)
+        cwreq = request.cw_request
+        if index:
+            es = get_connection(cwconfig)
+            if not es:
+                cwreq.error("[advanced search] no connection to ES (not configured)")
+                raise JSONBadRequest(
+                    jsonapi_error(
+                        status=501,
+                        details=cwreq._("En error occurred (no es connection). Please, try again."),
+                    )
+                )
+            try:
+                return es.search(index=index, body=request.json_body)
+            except Exception as err:
+                cwreq.error("[advanced seach] %s" % err)
+                raise JSONBadRequest(jsonapi_error(status=501, details=err))
+        else:
+            cwreq.error("[advanced seach] no index provided")
+        raise JSONBadRequest(
+            jsonapi_error(status=501, details=cwreq._("En error occurred. Please, try again."))
+        )
 
 
 def includeme(config):
     config.add_route("suggest", "/_suggest")
+    config.add_route("subjects", "/subjects")
+    config.add_route("agents", "/agents")
+    config.add_route("locations", "/locations")
+    if FEATURE_ADVANCED_SEARCH:
+        config.add_route("advanced-search", "/advancedSearch")
+        config.add_route("advanced_search", r"/advanced_search/{index}")
+    if FEATURE_SPARQL:
+        config.add_route("sparql-yasgui", "/sparql")
     config.scan(__name__)

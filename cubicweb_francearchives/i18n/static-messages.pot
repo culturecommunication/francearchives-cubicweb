@@ -93,13 +93,16 @@ msgstr ""
 msgid "Other_plural"
 msgstr ""
 
+msgid "Article_plural"
+msgstr ""
+
 msgid "Publication_plural"
 msgstr ""
 
-msgid "###ToSearch###"
+msgid "SearchHelp_plural"
 msgstr ""
 
-msgid "inventory"
+msgid "PageOl"
 msgstr ""
 
 msgid "Change the navigation language"
@@ -114,12 +117,8 @@ msgstr ""
 msgid "Go to the section"
 msgstr ""
 
-msgid "Go to the site:"
-msgstr ""
-
 msgid "- New window"
 msgstr ""
-
 
 msgid "Go back to the FranceArchives"
 msgstr ""
@@ -127,34 +126,8 @@ msgstr ""
 msgid "FranceArchives: Portail National des Archives de France"
 msgstr ""
 
-msgid "Follow FranceArchives on Facebook"
-msgstr ""
-
-msgid "Follow FranceArchives on Twitter"
-msgstr ""
-
-msgid "Follow FranceArchives on Youtube"
-msgstr ""
-
-msgid "Go to Google+"
-msgstr ""
-
-
-msgid "Share FranceArchives on Facebook"
-msgstr ""
-
 msgid "Share FranceArchives on Twitter"
 msgstr ""
-
-msgid "Share FranceArchives on Youtube"
-msgstr ""
-
-msgid "Share FranceArchives on Google+"
-msgstr ""
-
-msgid "Go to FranceArchives page on LinkedIn"
-msgstr ""
-
 
 msgid "Open the menu"
 msgstr ""
@@ -190,4 +163,88 @@ msgid "Collapse the toc"
 msgstr ""
 
 msgid "Need help?"
+msgstr ""
+
+msgid "public_sites"
+msgstr ""
+
+msgid "archives_sites"
+msgstr ""
+
+msgid "search_notebooks"
+msgstr ""
+
+msgid "usefull_links"
+msgstr ""
+
+msgid "Follow us on Twitter"
+msgstr ""
+
+msgid "do_index"
+msgstr ""
+
+msgid "How to search on FranceArchives?"
+msgstr ""
+
+msgid "Translate in fr"
+msgstr ""
+
+msgid "Share on facebook"
+msgstr ""
+
+msgid "Share on twitter"
+msgstr ""
+
+msgid "Share by mail"
+msgstr ""
+
+msgid "Copy link"
+msgstr ""
+
+msgid "Translate in en"
+msgstr ""
+
+msgid "Translate in es"
+msgstr ""
+
+msgid "Translate in de"
+msgstr ""
+
+msgid "year"
+msgstr ""
+
+msgid "accessibility_map_info"
+msgstr ""
+
+msgid "Go to FranceArchives homepage"
+msgstr ""
+
+msgid "main menu"
+msgstr ""
+
+msgid "breadcrumb"
+msgstr ""
+
+msgid "quick access links"
+msgstr ""
+
+msgid "Links"
+msgstr ""
+
+msgid "Select a department or all services"
+msgstr ""
+
+msgid "Fold all"
+msgstr ""
+
+msgid "Expand image"
+msgstr ""
+
+msgid "Consult the digitized version of"
+msgstr ""
+
+msgid "in a new window"
+msgstr ""
+
+msgid "Page number"
 msgstr ""

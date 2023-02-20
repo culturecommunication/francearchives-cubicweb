@@ -35,16 +35,18 @@ import os.path as osp
 import logging
 
 from cubicweb_francearchives.dataimport import default_service_name
+from cubicweb_francearchives.storage import S3BfssStorageMixIn
 
 
 def pdf_infos(filepath):
-    pipe = S.Popen(["/usr/bin/pdftotext", filepath, "-"], stdout=S.PIPE)
-    basepath = osp.basename(filepath)
-    try:
-        text = pipe.stdout.read().decode("utf-8")
-    except Exception:
-        logging.exception("failed to extract text from %s", filepath)
-        text = ""
+    with S3BfssStorageMixIn().storage_handle_tmpfile_from_file(filepath) as fpath:
+        pipe = S.Popen(["/usr/bin/pdftotext", fpath, "-"], stdout=S.PIPE)
+        basepath = osp.basename(filepath)
+        try:
+            text = pipe.stdout.read().decode("utf-8")
+        except Exception:
+            logging.exception("failed to extract text from %s", filepath)
+            text = ""
     return {
         "publisher": default_service_name(basepath),
         "title": basepath,

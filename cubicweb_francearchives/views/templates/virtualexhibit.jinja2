@@ -1,79 +1,30 @@
-{% from "./mixins.jinja2" import imagelist %}
-{% if recents %}
-<div class="row">
-    <div class="col-lg-8">
-        <article id="article" class="virtualexhibit-view">
-          <h1><span class="sr-only">{{ _(entity.__regid__) }} : </span>{{ entity.title | e }}</h1>
-{% else %}
-<article id="article" class="virtualexhibit-view">
-    <h1>{{ entity.title | e }}</h1>
-    <div class="row">
-         <div class="col-lg-9">
-{% endif %}
-          {% if date %}
-             <div class="content-metadata">
-                <div class="row">
-                      <div class="col-xs-4 content-metadata-item">
-                          <i class="fa fa-calendar-o" aria-hidden="true"></i>
-                          <span class="date">{{ date }}</span>
-                      </div>
-                  </div>
-              </div>
-           {% else %}
-             <div class="empty-content-metadata"></div>
-           {% endif %}
-           {% if entity.header %}
-              {{ entity.header | e }}
-            {% endif %}
-            {{ imagelist(images, default_picto_src) }}
-            {{ entity.printable_value('content') }}
-            <div class="clearfix"></div>
-            {% for propname, value in main_props %}
-              <div class="row indexes-values">
-                   {% if propname is none %}
-                      <div class="col-md-12">{{ value }}</div>
-                   {% else %}
-                      <div class="col-md-3 indexes-values__title">{{ propname }}</div>
-                      <div class="col-md-9">{{ value }}</div>
-                   {% endif %}
-              </div>
-  {% endfor %}
-
-  {% if not recents %}
-         </div>
+{% from "./mixins.jinja2" import imagelist, content_metadata, index_values, sharelinks, translations, modalfaq, related_docs -%}
+<div class="row article-page-container">
+    <div class="{% if entities -%}col-xl-6 {% else -%} col-xl-9 {% endif -%}article-content">
+        <article id="article" class="{{ entity.cw_etype|lower }}-view">
+            <h1><span class="visually-hidden">{{ _(entity.__regid__) }} : </span>{{ entity.title | e }}</h1>
+            {{  sharelinks(sharelinks_data, _) }}
+            {{ content_metadata(metadata, _) }}
+            <div class="article__content">
+                {{ imagelist(images, default_picto_src) }}
+                {{ entity.printable_value('content') }}
+            </div>
+            {% if website_url -%}
+            <div class="article-buttons-wrapper">
+                <a class="blue-button" href="{{ website_url }}"
+                    target="_blank" rel="nofollow noopener noreferrer"
+                    title="{{ _("Consult the virtual exhibits") }} {{ _("- New window") }}">
+                     {{ _("Consult the virtual exhibits") }}
+                     <i class="fa fa-external-link" aria-hidden="true"></i>
+                 </a>
+            </div>
+           {% endif -%}
+         </article>
+         {% if main_props |e -%}
+           {{ index_values(main_props) }}
+         {% endif-%}
     </div>
-</article>
-  {% else %}
-        </article>
-    </div>
-    <aside class="siderelated col-lg-4 hidden-print">
-        <h1 class="no-style siderelated__header">{{ recent_label }}</h1>
-        {% for recent_entity in recents %}
-        <div class="siderelated__content-item">
-            {% if recent_entity.img_src %}
-            <img src="{{ recent_entity.img_src }}"
-                 class="thumbnail"
-                 alt="{{ recent_entity.img_alt }}"
-            />
-            {% else %}
-            <img src="{{ default_picto_src }}"
-                 class="thumbnail" alt="" />
-            {% endif %}
-            <h2 class="siderelated__content-item__title">
-                <a href="{{ recent_entity.href }}">{{ recent_entity.title }}</a>
-            </h2>
-            {% if recent_entity.date %}
-            <p class="siderelated__content-item__date">
-                <i class="fa fa-calendar-o" aria-hidden="true" ></i>
-                {{ recent_entity.date }}
-            </p>
-            {% endif %}
-        </div>
-        {% endfor %}
-        <p>
-            <a href="{{ all_link.url }}"
-               class="siderelated__more-content" title="{{ all_link.label }}"></a>
-        </p>
-    </aside>
+    {% if entities -%}
+       {{ related_docs(entities, all_links, recent_label, _) }}
+    {% endif -%}
 </div>
-{% endif %}

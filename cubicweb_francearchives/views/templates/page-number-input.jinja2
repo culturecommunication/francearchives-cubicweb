@@ -1,0 +1,13 @@
+<div class="search-results__page-input d-print-none">
+    <span>{{ _('Page')}}</span>
+    <form id="page-number-input-form" action="{{ page_number_form_action }}">
+        {% for name, values in page_number_params.items() %}
+          {% for value in values %}
+            <input type="hidden" name="{{ name |e}}" value="{{ value | escape }}" />
+          {% endfor %}
+        {% endfor %}
+        <label for="page-number-input" class="visually-hidden">{{ _('Go to page')}}</label>
+        <input id="page-number-input" name="page" type="number" min="1" max="{{ number_of_pages }}" value="{{ current_page }}" title="{{ _("Page number")}}" class="form-control facet__focusable-item"/>
+    </form>
+  <span>{{ _('out of %s') % number_of_pages }}</span>
+</div>

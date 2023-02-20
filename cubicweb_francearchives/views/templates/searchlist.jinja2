@@ -1,89 +1,165 @@
 {# XXX must be conditionalized by cls.display_results_info + content depends on etype #}
-
-<h1 class="sr-only">{{ _('Search results') }}</h1>
-{% if results_title %}
-{% block result_title %}
-<h2 class="sr sr-title">
-    <span class="sr sr-nbresults">{{ results_title }}</span>
-    {% if query_string %}
-      <span class="sr sr-text">&nbsp;-&nbsp;</span>
-      <span class="sr-only">{{ _('for the query:')  }} </span>
-      <span class="sr sr-text">{{ query_string | escape }}</span>
-    {% endif %}
-</h2>
-{% endblock %}
-{% endif %}
-
-{% if extra_link %}
-<div class="row sr-title">
-  <a href="{{ extra_link.href }}" title="{{ extra_link.title }}">
-    {{ extra_link.text }}
-  </a>
+{% if site_tour_url or advanced_search %}
+<section class="search-page-container">
+ <div class="help-actions">
+   {% if advanced_search %}
+      <a id="as-modify-link" class="blue-button" href="/advancedSearch">{{_("Modify your search")}}</a>
+   {% endif %}
+   {% if site_tour_url %}
+   <button id="start-tour" class="blue-button" data-jsondata="{{ site_tour_url }}">{{ _("Launch the tour") }}</button>
+   {% endif %}
 </div>
-{% endif %}
-{% if response.hits.total.value %}
 
-  {# etype facet bar #}
-  {% if not restrict_to_single_etype %}
-    <div class="row document-category-facet hidden-print hidden-xs">
-      {% for dcf in document_category_facets %}
-        {% if dcf.count > 0 and not dcf.selected %}
-          <a href="{{ dcf.url | escape }}" class="document-facet">
+</section>
+{% endif %}
+<section class="search-results-container row">
+  {% if header %}
+  <div class="section-context">
+    {% block context_abstract %}
+    <h1>{{ header.title }}
+    {% if header.subtitle %}
+    <span class="search-subtitle">{{ header.subtitle }}</span>
+    {% endif %}</h1>
+    {% if letters %}
+    {% include "letters.jinja2" %}
+    {% endif %}
+    {%- if header.properties %}
+    <div class="section-context__info">
+      {% for propname, value in header.properties %}
+      <div class="row">
+        <p class="col-md-3 offset-md-1 label">{{ propname }}</p>
+        {% if value | is_list %}
+          <ul class="list list-unstyled col-md-7 offset-md-right-1">
+          {% for val in value %}
+            <li>{{ val |safe}}</li>
+          {% endfor %}
+          </ul>
+        {% else %}
+          <p class="col-md-7 offset-md-right-1">{{ value |safe}}</p>
         {% endif %}
-        <div class="col-xs-2 document-category
-                    {{ 'document-category--last' if loop.last }}
-                    picto picto-{{ dcf.category }}
-                    {{ 'picto-' + dcf.category + '--selected' if dcf.selected }}"
-                    >
-          <span class="facet__label">{{ dcf.label }}</span>
-          <span>[ {{ dcf.count | format_number(req) }} ]</span>
-        </div>
-        {% if dcf.count > 0 and not dcf.selected %}
-          </a>
-        {% endif %}
+      </div>
       {% endfor %}
     </div>
+    {% endif %}
+    {% if rdf_formats %}
+      {% include "rdf-download-button.jinja2" %}
+    {% endif %}
+    {% endblock %}
+  </div>
   {% endif %}
-
   {# facets #}
+  {%- if display_facets %}
   <aside id="aside-main-left" class="col-lg-4 cwjs-aside">
+    {% include "search-summary.jinja2" %}
+    {% if response.hits.total.value %}
+    <h2 class="search-section">{{ _('Refine your search:')}}</h2>
     {# fulltext facet #}
     {% include "fulltext-facet.jinja2" %}
-
     {# other facets #}
-    {% for facet in facets %}
-    {{ facet }}
-    {% endfor %}
+    <div class="facets">
+      {% for facet in facets %}
+      {{ facet }}
+      {% endfor %}
+      {# date facet #}
+      {% include "date-facet.jinja2" %}
+    </div>
+    {% endif %}
   </aside>
-
+  {% endif -%}
   {# results #}
-  <div id="content-results" class="col-lg-8">
-    <h2>{{ search_title }}</h2>
+  <div id="search-results" class="col-lg-8">
+    {% if response.hits.total.value >= 10000 %}
+    <p class="result_number_warning">{{ _("es_result_limit") }}</p>
+    {% endif %}
+    {% if results_title %}
+    <div class="search-results__options">
+      <div class="col-sm-12 col-md-{% if display_sort_options %}4{% else %}6{% endif %} text-md-start search-results__title">
+        {% block result_title %}
+        <span class="visually-hidden">{{ _('Search results') }} </span>
+        <h1 class="sr">
+          <span class="sr sr-nbresults">{{ results_title |e }}</span>
+          {% if query_string %}
+          <span class="visually-hidden">{{ _('for the query:')  }} {{ query_string |e}}</span>
+          {% endif %}
+        </h1>
+        {% endblock %}
+      </div>
+      {% if response.hits.total.value %}
+      {# sort_options #}
+      {% if display_sort_options %}
+      <div class="col-sm-12 col-md-4 text-md-center search-results__sort-options">
+        <div class="dropdown">
+          <span class="dropdown__label">{{ _('Sort by') }}{{ _(":") }}</span>
+          <button class="btn pnia-dropdown-toggle" id="sort-options-dropdown-link" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {{sort_options.current_label}}<i class="fa fa-angle-down"></i>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="sort-options-dropdown-link">
+            {% for value in sort_options.options_links %}
+            <li><a class="dropdown-item" href="{{value.url}}">{{value.label |e}}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      {% endif %}
+      {# items_per_page #}
+      <div class="col-sm-12 col-md-{% if display_sort_options %}4{% else %}6{% endif %} text-md-end search-results__items-per-page">
+        <div class="dropdown">
+          <span class="dropdown__label">{{ _('Results per page') }}{{ _(":") }}</span>
+          <button class="btn pnia-dropdown-toggle" id="items-dropdown-link" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            {{items_per_page_links.current_label}}<i class="fa fa-angle-down"></i>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="items-dropdown-link">
+            {% for value in items_per_page_links.options_links %}
+            <li><a class="dropdown-item" href="{{value.url}}">{{value.label |e}}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+    <div class="clearfix"></div>
+    {% endif %}
+    {% if fuzzy_extra_link %}
+    <div class="clearfix"></div>
+    <div class="search-results__extra_msg">
+      {{ fuzzy_extra_link.pretext}}
+      <a href="{{ fuzzy_extra_link.href }}" title="{{ fuzzy_extra_link.title }}">
+        {{ fuzzy_extra_link.text }}
+      </a>
+      {% if fuzzy_extra_link.posttext %}
+      {{ fuzzy_extra_link.posttext}}
+      {% endif %}
+    </div>
+    {% endif %}
+    {% if augmented_extra_link %}
+    <div class="clearfix"></div>
+    <div class="search-results__extra_msg">
+      {{ augmented_extra_link}}
+    </div>
+    {% endif %}
     <ul class="list list-unstyled">
       {% for item in search_results %}
-        <li>
-          {{ item }}
-        </li>
-      {% endfor %}
-    </ul>
-
-    <span class="sr-only">{{ _('Pagination') }}</span>
-    <ul class="pagination hidden-print">
-      {% for page_link in pagination %}
-      <li {% if page_link.current %}class="active"{% endif %}>
-        {% if page_link.link %}
-        <a href="{{ page_link.link }}" title="{{ page_link.title }}">
-        {{ page_link.name }}
-        {% if page_link.hidden_label %}
-        <span class="sr-only">{{ page_link.hidden_label }}</span>
-        {% endif %}
-        </a>
-        {% else %}
-        <span>{{ page_link.name }}</span>
-        {% endif %}
+      <li>
+        {{ item }}
       </li>
       {% endfor %}
     </ul>
+    {# pagination #}
+    {{ page_link}}
+    {% if first_previous_pages or next_last_pages %}
+    <div class="search-results__pages d-print-none">
+      <span class="visually-hidden">{{ _('Pagination') }}</span>
+      <nav class="pagination d-print-none" aria-label="pagination">
+        {% for page_link in first_previous_pages %}
+        {% include "pagelink.jinja2" %}
+        {% endfor %}
+        {# page  number input #}
+        {% include "page-number-input.jinja2" %}
+        {% for page_link in next_last_pages %}
+        {% include "pagelink.jinja2" %}
+        {% endfor %}
+      </nav>
+    </div>
+    {% endif %}
   </div>
-
-{% endif %}
+</section>

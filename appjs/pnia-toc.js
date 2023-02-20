@@ -27,26 +27,14 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL-C license and that you accept its terms.
  */
-
-/* global StickySidebar */
+/* global $ */
 
 import {each} from 'lodash/collection'
-
-function initToc() {
-    var sidebar = new StickySidebar('.sticky-toc', {
-        topSpacing: 20,
-        bottomSpacing: 20,
-        containerSelector: '.article__content',
-        innerWrapperSelector: '.ui-toc',
-    })
-    return sidebar
-}
 
 function buildToc(uitoc) {
     if (uitoc === null) {
         return
     }
-    initToc()
 
     const nested = uitoc.querySelectorAll('.toc ul')
     // hide h+1 summary level(
@@ -55,7 +43,6 @@ function buildToc(uitoc) {
     })
     const toc = uitoc.querySelector('.toc'),
         toggleLink = uitoc.querySelector('.toc-links .toggle-menu')
-
     if (uitoc.querySelectorAll('.toc ul.hidden').length === 0) {
         toggleLink.classList.add('hidden')
     }
@@ -67,12 +54,14 @@ function buildToc(uitoc) {
                 ul.classList.add('hidden')
             })
             label = toggleLink.dataset.labelCollapse
+            $(toggleLink).attr('aria-expanded', 'false')
         } else {
             each(nested, (ul) => {
                 ul.classList.remove('hidden')
             })
             toggleLink.dataset['collapsed'] = false
             label = toggleLink.dataset.labelExpand
+            $(toggleLink).attr('aria-expanded', 'true')
         }
         toc.classList.toggle('expanded')
         toggleLink.innerHTML = label
@@ -90,12 +79,20 @@ function buildToc(uitoc) {
 
     each(toc.querySelectorAll('.toc > li > a[href^="#"]'), (anchor) => {
         anchor.addEventListener('click', function (e) {
+            var $link = $(this)
             each(nested, (ul) => {
                 ul.classList.add('hidden')
             })
             each(e.target.parentNode.querySelectorAll('ul'), (ul) => {
                 ul.classList.remove('hidden')
             })
+            each(uitoc.querySelectorAll('.toc li a + ul.hidden'), (ul) => {
+                let link = ul.previousElementSibling
+                if (link !== null) {
+                    $(link).attr('aria-expanded', 'false')
+                }
+            })
+            $link.attr('aria-expanded', 'true')
             e.stopPropagation() // do not close the menu
         })
     })
@@ -150,5 +147,5 @@ function buildToc(uitoc) {
 }
 
 document.addEventListener('DOMContentLoaded', () =>
-    buildToc(document.querySelector('.ui-toc')),
+    buildToc(document.querySelector('.sticky-toc')),
 )

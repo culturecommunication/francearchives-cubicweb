@@ -1,23 +1,26 @@
-<section class="faqview">
+<section class="faq-view document-view">
   {% block head %}
     <h1>{{ title }}</h1>
   {% endblock %}
-  <div class="faq-tools">
-    <span id="faq-toggle-fold"
-        data-label-collapse="{{ _('Unfold all') }}"
-        data-label-expand="{{ _('Fold all') }}">
-      <i class="fa fa-angle-right"></i> {{_('Unfold all') }}
-    </span>
+  <div class="faq-tools d-print-none">
+    <button id="faq-toggle-fold" type="button"
+            data-label-collapse="{{_('Fold all') }}"
+            data-label-expand="{{_('Unfold all') }}"
+            aria-expanded="false" aria-controls="faqs">
+            {{_('Unfold all') }}
+    </button>
   </div>
-  {% for category, faq in faqs %}
-  <div id="{{category}}" class="faq_category">
-    <div class="faq_category__title">
-      <h2>{{ _(category) }}</h2>
+  <div id="faqs">
+    {% for category, faq in faqs %}
+    <div id="{{category}}" class="faq_category">
+         <div class="faq_category__title">
+              <h2>{{ _(category) }}</h2>
+         </div>
+         <div class="faq_category__items">
+         {% from "./mixins.jinja2" import faqitems %}
+         {{ faqitems(faq, category, editable, _, 3) }}
+         </div>
     </div>
-    <div class="faq_category__items">
-      {% from "./mixins.jinja2" import faqitems %}
-      {{  faqitems(faq, category, editable, _) }}
-    </div>
+    {% endfor %}
   </div>
-  {% endfor %}
 </section>

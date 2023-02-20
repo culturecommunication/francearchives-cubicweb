@@ -106,3 +106,35 @@ class SQLUtilsBaseTC(PostgresTextMixin, testlib.CubicWebTC):
             ):
                 got = cnx.system_sql(query, {"label": label}).fetchall()[0][0]
                 self.assertIn(got, expected)
+
+    def test_translations(self):
+        """test translate_entity postgres function"""
+        with self.admin_access.cnx() as cnx:
+            basecontent = cnx.create_entity(
+                "BaseContent", title="Programme", content="<h1>31 juin</h1>", header="chapo"
+            )
+            cnx.commit()
+            cnx.create_entity(
+                "BaseContentTranslation",
+                language="en",
+                title="Program",
+                content="<h1>31 june</h1>",
+                translation_of=basecontent,
+            )
+            cnx.commit()
+            query = "SELECT TRANSLATE_ENTITY(%(eid)s, %(attr)s, %(lang)s)"
+            for expected, attr, lang in (
+                ("Programme", "title", "fr"),
+                ("Program", "title", "en"),
+                ("chapo", "header", "fr"),
+                ("chapo", "header", "en"),
+            ):
+                got = cnx.system_sql(
+                    query,
+                    {
+                        "eid": basecontent.eid,
+                        "attr": attr,
+                        "lang": lang,
+                    },
+                ).fetchall()[0][0]
+                self.assertEqual(expected, got)

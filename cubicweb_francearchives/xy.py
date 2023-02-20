@@ -28,10 +28,6 @@
 # The fact that you are presently reading this means that you have had
 # knowledge of the CeCILL-C license and that you accept its terms.
 #
-from rdflib import URIRef, Literal, Namespace, ConjunctiveGraph
-from rdflib import term
-
-from cubicweb.xy import xy
 
 # try to register jsonld plugin
 try:
@@ -41,24 +37,6 @@ try:
     register("jsonld", Serializer, "rdflib_jsonld.serializer", "JsonLDSerializer")
 except ImportError:
     pass
-
-namespaces = {
-    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-    "skos": "http://www.w3.org/2004/02/skos/core#",
-    "foaf": "http://xmlns.com/foaf/0.1/",
-    "dcmitype": "http://purl.org/dc/dcmitype/",
-    "dcterms": "http://purl.org/dc/terms/",
-    "owl": "http://www.w3.org/2002/07/owl#",
-    "schema": "http://schema.org/",
-    "edm": "http://www.europeana.eu/schemas/edm/",
-    "ore": "http://www.openarchives.org/ore/terms/",
-    "rdaGr2": "http://rdvocab.info/ElementsGr2",
-    "crm": "http://www.cidoc-crm.org/rdfs/cidoc_crm_v5.0.2_english_label.rdfs#",
-}
-
-
-NS_VARS = {ns: Namespace(uri) for ns, uri in list(namespaces.items())}
 
 
 class VocabAdapter(object):
@@ -80,28 +58,9 @@ class VocabAdapter(object):
         return adapter
 
 
-def conjunctive_graph():
-    """factory to build a ``ConjunctiveGraph`` and bind all namespaces"""
-    graph = ConjunctiveGraph()
-    for vocab, rdfns in list(NS_VARS.items()):
-        graph.bind(vocab, rdfns)
-    return graph
-
-
-def register_prefixes():
-    for prefix, uri in list(namespaces.items()):
-        xy.register_prefix(prefix, uri, overwrite=True)
-
-
 def add_statements_to_graph(graph, rdf_adapter):
     add = graph.add
-    for subj, rvocab, propname, obj, prop_props in rdf_adapter.statements():
-        if prop_props is None:  # XXX this means it's a relation
-            # safety belt around malformed uris that might be found
-            # in catalogues / dlweb / etc. (cf. #3072330)
-            if term._is_valid_uri(obj):
-                add((URIRef(subj), getattr(NS_VARS[rvocab], propname), URIRef(obj)))
-        else:
-            # Don't generate rdf statement with unspecified value
-            if obj is not None and obj != "":
-                add((URIRef(subj), getattr(NS_VARS[rvocab], propname), Literal(obj, **prop_props)))
+    for triple in rdf_adapter.triples():
+        add(triple)
+    for prefix, rdfns in rdf_adapter.used_namespaces.items():
+        graph.bind(prefix, rdfns)

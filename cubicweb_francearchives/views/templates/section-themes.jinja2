@@ -1,0 +1,35 @@
+{% if entities %}
+<section class="section-themes-wrapper">
+  <div class="section-themes-container">
+    <div class="section-themes-header">
+      <h2 id="section-title" class="section-themes-title">{{ _("Explore themes")}}</h2>
+    </div>
+    <div class="theme-columns">
+      {% for entity in entities %}
+      <div class="theme">
+        <div class="theme-img-top">
+          <a href="{{ entity.url }}" aria-hidden="true">
+            <img class="img-fluid" alt="" src="{{ entity.image_src }}" />
+          </a>
+          <p class="theme-tag">
+            <a href="{{ entity.url }}">
+              {{ entity.label|e }}
+            </a>
+            <span class="small-black-triangle"></span>
+          </p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <ul class="section-themes">
+        {% for entity in entities %}
+        <li>
+          <h1 class="no-style no-style__inline no-style__nobold">
+            <a href="{{ entity.url }}">{{ entity.label|e }}</a>
+          </h1>
+        </li>
+        {% endfor %}
+       </ul>
+  </div>
+</section>
+{% endif %}

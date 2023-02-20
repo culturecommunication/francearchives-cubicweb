@@ -47,7 +47,7 @@ is_master = False
 
 
 def pytest_xdist_setupnodes(config, specs):
-    """ called before any remote node is set up. """
+    """called before any remote node is set up."""
     global is_master
     is_master = True
     # FIRT create template for sqlite

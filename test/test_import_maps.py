@@ -34,9 +34,14 @@ from cubicweb.devtools import testlib
 
 from cubicweb_francearchives.dataimport.maps import import_maps
 
+from cubicweb_francearchives.testutils import S3BfssStorageTestMixin
 
-class ImporMapsTC(testlib.CubicWebTC):
+
+class ImporMapsTC(S3BfssStorageTestMixin, testlib.CubicWebTC):
     def test_import_maps(self):
+        """
+        This test tests the inital import. It was not adapted to s3
+        """
         directory = self.datapath("maps")
         with self.admin_access.cnx() as cnx:
             sec = cnx.create_entity("Section", title="Mes ancêtres")

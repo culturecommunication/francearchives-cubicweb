@@ -38,23 +38,35 @@ from cubicweb import Binary
 
 from cubicweb_francearchives import init_bfss
 
-from cubicweb_francearchives.dataimport.ead import (
-    generate_ape_ead_file_from_xml,
-    decode_filepath,
-    compute_ape_relpath,
-)
-from cubicweb_francearchives.dataimport.eadreader import preprocess_ead
 from cubicweb_francearchives.dataimport import load_services_map
+
+from cubicweb_francearchives.dataimport.ead import generate_ape_ead_xml
+
+from cubicweb_francearchives.dataimport.eadreader import preprocess_ead
+from cubicweb_francearchives.storage import S3BfssStorageMixIn
+
+
+def generate_ape_ead_file_by_storage(cnx, ape_ead_fspath, tree, ir_name, stable_id, service_infos):
+    """
+    Generate the right ape-ead filepath depending on the storage
+    """
+    # FIXME s3 we should not take account of cnx.vreg.config["appfiles-dir"]
+    # which must be ""
+    if ape_ead_fspath:
+        return ape_ead_fspath.getvalue()
+    ape_filepath = generate_ape_ead_xml(
+        cnx, cnx.vreg.config, tree, ir_name, stable_id, service_infos
+    )
+    return S3BfssStorageMixIn().storage_handle_ape_ead_filepath(ape_filepath)
 
 
 def create_file(cnx, filepath):
     cnx.transaction_data["fs_importing"] = True
-    ufilepath = osp.abspath(decode_filepath(filepath))
+    ufilepath = S3BfssStorageMixIn().storage_ufilepath(filepath)
     basepath = osp.basename(ufilepath)
     return cnx.create_entity(
         "File",
         **{
-            "title": basepath,
             "data": Binary(ufilepath.encode("utf-8")),
             "data_format": str(mimetypes.guess_type(filepath)[0]),
             "data_name": basepath,
@@ -166,25 +178,18 @@ def generate_ape_ead_xml_from_eids(cnx, eids):
 
 def _generate_ape_ead_from_xml(cnx, rset):
     services_map = load_services_map(cnx)
-    appfiles = cnx.vreg.config["appfiles-dir"]
-    for (fa_eid, fa_name, fa_stable_id, fspath, ape_ead_fspath, service_code) in rset:
+    for fa_eid, fa_name, fa_stable_id, fspath, ape_ead_fspath, service_code in rset:
         xml_path = fspath.getvalue()
         try:
             # if not (osp.exists(xml_path) and osp.isfile(xml_path)):
             tree = preprocess_ead(xml_path)
         except Exception as ex:
-            print(
-                "[ape_ead] Could not generate ape_ead_file for {f} : {e}".format(
-                    e=ex, f=fa_stable_id
-                )
-            )
+            print(f"[ape_ead] Could not generate ape_ead_file for {fa_stable_id}: {ex}")
             continue
         service_infos = get_service_infos(services_map, service_code)
-        ape_ead_fspath = ape_ead_fspath.getvalue() if ape_ead_fspath else None
-        ape_filepath = ape_ead_fspath or osp.join(
-            appfiles, compute_ape_relpath(cnx, fa_name, service_infos)
+        ape_filepath = generate_ape_ead_file_by_storage(
+            cnx, ape_ead_fspath, tree, fa_name, fa_stable_id, service_infos
         )
-        generate_ape_ead_file_from_xml(cnx, tree, service_infos, fa_stable_id, ape_filepath)
         if not ape_ead_fspath:
             ape_file = create_file(cnx, ape_filepath)
             cnx.execute(
@@ -288,7 +293,8 @@ def generate_ape_ead_other_sources_from_eids(cnx, eids):
 
 def _generate_ape_ead_from_other_sources(cnx, rset):
     services_map = load_services_map(cnx)
-    appfiles = cnx.vreg.config["appfiles-dir"]
+    # FIXME s3 we should not take account of cnx.vreg.config["appfiles-dir"]
+    # which must be ""
     for (
         fa,
         fa_name,
@@ -297,24 +303,18 @@ def _generate_ape_ead_from_other_sources(cnx, rset):
         ape_ead_fspath,
         service_code,
     ) in rset.iter_rows_with_entities():
-        service_infos = get_service_infos(services_map, service_code)
-        ape_ead_fspath = ape_ead_fspath.getvalue() if ape_ead_fspath else None
-        ape_filepath = ape_ead_fspath or osp.join(
-            appfiles, compute_ape_relpath(cnx, fa_eadid, service_infos)
-        )
         try:
             ead_etree = fa.cw_adapt_to("OAI_EAD").dump(as_xml=True)
         except Exception as ex:
-            print(
-                "[ape-ead oai] Could not generate ape_ead_file for {f} : {e}".format(
-                    e=ex, f=fa_eadid
-                )
-            )
+            print(f"[ape-ead oai] Could not generate ape_ead_file for {fa_eadid}: {ex}")
             continue
         # important! release cw cache cache
         fa.cw_clear_all_caches()
         cnx.drop_entity_cache()
-        generate_ape_ead_file_from_xml(cnx, ead_etree, service_infos, fa_stable_id, ape_filepath)
+        service_infos = get_service_infos(services_map, service_code)
+        ape_filepath = generate_ape_ead_file_by_storage(
+            cnx, ape_ead_fspath, ead_etree, fa_eadid, fa_stable_id, service_infos
+        )
         if not ape_ead_fspath:
             ape_file = create_file(cnx, ape_filepath)
             cnx.execute(

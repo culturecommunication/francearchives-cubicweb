@@ -30,6 +30,7 @@
 #
 
 
+import logging
 from cubicweb import mail, _
 from cubicweb.web import ProcessFormError
 from cubicweb.web import formfields as ff
@@ -74,6 +75,7 @@ respond to : %(name)s, %(email)s
     def publish_form(self):
         """Captcha field is hidden from humans. If captcha is filled
         there is a bug chance that it was done by a robot"""
+        logger = logging.getLogger(__name__)
         form = self._cw.vreg["forms"].select("contact", self._cw)
         captcha = self._cw.form.get("captcha")
         if captcha:
@@ -84,9 +86,12 @@ respond to : %(name)s, %(email)s
             recipient = self._cw.vreg.config["contact-email"]
             msg = self.build_email(recipient, data)
             try:
+                logger.info(f"sending e-mail to {recipient}")
                 self._cw.vreg.config.sendmails([(msg, (recipient,))])
                 msg = self._cw._("Your message has been send.")
-            except Exception:
+                logger.info(f"e-mail has been sent to {recipient}")
+            except Exception as exception:
+                logging.error(exception)
                 msg = self._cw._("Your message could not be send. Please try again.")
             return {"errors": errors, "msg": msg}
         else:
@@ -125,13 +130,16 @@ class ContactFormRenderer(AbstractPniaStaticFormRenderer):
     def template_attrs(self):
         _ = self._cw._
         return {
+            "_": _,
             "submit_value": _("Send your message"),
             "required_info": _("This field is required"),
-            "contact_name_label": _("Name:"),
-            "contact_email_label": _("Email:"),
-            "contact_object_label": _("Object:"),
-            "contact_message_label": _("Message:"),
+            "contact_name_label": _("Your name"),
+            "contact_email_label": _("Your email"),
+            "contact_object_label": _("Object of the message"),
+            "contact_message_label": _("Your message"),
             "contact_captcha_label": _("Captcha:"),
+            "email_error": _("Please enter a valid email address. For exemple: name@domain.fr"),
+            "object_select_message": _("Please select the object of your message"),
             "contact_objects": [
                 _("contact_object_1"),
                 _("contact_object_2"),

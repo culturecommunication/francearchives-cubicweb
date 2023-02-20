@@ -1,0 +1,4 @@
+@prefix rico: <https://www.ica.org/standards/RiC/ontology#> .
+
+<http://testing.fr/cubicweb/subject/{{eid}}> a rico:ActivityType, rico:Concept ;
+    rico:name "Loutre" .

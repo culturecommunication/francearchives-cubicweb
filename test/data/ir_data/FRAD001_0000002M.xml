@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ead>
+  <eadheader>
+    <eadid>FRAD001_0000002L_TESTchloePERSNAME</eadid>
+    <filedesc>
+      <titlestmt>
+        <titleproper>Administration du département de l'Ain</titleproper>
+        <author>par Olivia Davesne et Valéry Vesson ; sous la direction de Florence Beaume,
+          Directeur des Archives Départementales de l'Ain</author>
+      </titlestmt>
+      <editionstmt>
+        <p>Version électronique réalisée à partir du répertoire imprimé de la série L : Les archives
+          de la Révolution dans l'Ain,rédigé par Jérôme Croyet, Jérôme Dupasquier et Brigitte Ladde
+          sous la direction de Paul Cattin, Bourg en Bresse, 2003 </p>
+        <edition>1re édition électronique</edition>
+      </editionstmt>
+      <publicationstmt>
+        <publisher>Archives départementales de l'Ain</publisher>
+        <address>
+          <addressline>Bourg-en-Bresse</addressline>
+        </address>
+        <date normal="2009-10">octobre 2009</date>
+      </publicationstmt>
+    </filedesc>
+    <profiledesc>
+      <creation>Instrument de recherche produit au moyen du logiciel Arkhéïa Aide au classement de
+        la société Anaphore sarl, version 3-4 du mercredi 8 avril 2009. Date de l'export : mercredi
+        14 octobre 2009 (14:18 h)mercredi 8 avril 2009mercredi 14 octobre 2009<date
+          normal="2009-04-08">mercredi 8 avril 2009</date><date normal="2009-10-14">mercredi 14
+          octobre 2009</date></creation>
+      <langusage>Instrument de recherche rédigé en <language langcode="fre"
+        >français</language></langusage>
+      <descrules>Répertoire rédigé conformément à la norme ISAD(G) et aux règles de la
+        DTD/EAD</descrules>
+    </profiledesc>
+  </eadheader>
+  <archdesc level="fonds">
+    <did>
+      <unitid label="Cotes extrêmes">2 L 1-302</unitid>
+      <unittitle>Administration du département de l'Ain</unittitle>
+      <unitdate normal="1667/1815">1667-1815</unitdate>
+      <physdesc>
+        <genreform source="liste-typedocAC">Document d'archives</genreform>
+        <extent label="Nombre d'éléments">302 unités de description</extent>
+        <extent label="Métrage linéaire" unit="ml">18,20 ml</extent>
+      </physdesc>
+      <repository>Archives départementales de l'Ain</repository>
+      <origination>
+        <corpname role="producteur" altrender="administration">Administration du département de
+          l'Ain</corpname>
+      </origination>
+    </did>
+    <bioghist>
+      <head>Biographie ou histoire</head>
+      <p>Le 1er juillet 1886, <persname>CHRISTIAN FIZE</persname>
+	  <geogname>L'ILE AUX
+          MERVEILLES</geogname> Louis-Charles Vinet et Charles Egasse, grands propriétaires secondés
+        par quelques personnalités du monde agricole local, s'asso</p>
+    </bioghist>
+    <scopecontent audience="external">
+      <p><persname>CHRISTIAN FIZE</persname> <geogname>L'ILE AUX MERVEILLES</geogname> Classement
+        inspiré du cadre de classement des archives communales de 1926 :</p>
+      <p>Lois et décrets ; conseil général : délibérations et arrêtés ; directoire : délibérations
+        et arrêtés ; correspondance ; requêtes ; actes du procureur général-syndic ; administration
+        générale ; élections et personnel ; état civil ; population, économie sociale, statistique ;
+        subsistances ; mesures d'exception ; contributions ; douanes ; affaires militaires ; police,
+        justice, surveillance générale ; comptabilité, finances ; bâtiments ; biens nationaux ;
+        bois, biens communaux ; travaux publics ; navigation, régime des eaux ; postes,
+        communications ; cultes ; assistance et prévoyance ; instruction publique ; archives,
+        bibliothèques, Beaux-Arts.</p>
+      <p>Les registres de délibérations du conseil et d'arrêtés du directoire ont été distincts
+        jusqu'à la mise en place en l'an III de l'organisme unique : l'administration centrale du
+        département. Ils sont incontestablement le volet le plus intéressant de ce fonds.</p>
+      <p>Pour la recherche, il est à noter qu'aux archives de l'administration centrale se mêlent
+        les papiers du procureur général-syndic</p>
+    </scopecontent>
+    <accessrestrict>
+      <legalstatus> Archives publiques </legalstatus>
+      <accessrestrict>
+        <p>Selon les modalités du règlement de la salle de lecture</p>
+      </accessrestrict>
+    </accessrestrict>
+    <userestrict>
+      <p>Selon les modalités du règlement de la salle de lecture</p>
+    </userestrict>
+    <otherfindaid>
+      <p>Archives départementales de l'Ain. Les archives de la Révolution dans l'Ain, répertoire
+        numérique rédigé par Jérôme Croyet, Jérôme Dupasquier et Brigitte Ladde sous la direction de
+        Paul Cattin, Bourg en Bresse, 2003, p.167-192. </p>
+      <p>Pour des informations en ligne sur le contexte historique de production et de conservation
+        de ces documents, ainsi que pour des sources complémentaires, voir Les archives de la
+        Révolution dans l'Ain : introduction générale (lien disponible ci-dessus) </p>
+      <archref href="FRAD01_0000000L.xml"
+        title="Les archives de la Révolution dans l'Ain : introduction générale" show="new"
+      > </archref>
+    </otherfindaid>
+    <bibliography>
+      <p>Administration centrale du département de l'Ain. Tableau de dépréciation du papier-monnoie
+        fait en exécution de la Loi de 5 Messidor an V, Bourg-en-Bresse, an V, 4 p. (BIB L 2-2)</p>
+      <p>CROYET Jérôme. Immigration forcée et prémice du nationalisme italien : la Légion Italique
+        et l'armée de réserve dans l'Ain. Ventôse-Messidor an VIII, Archives départementales de
+        l'Ain, Bourg en Bresse, 2001, 20 p., 1 planche HT (BIB L 66-2)</p>
+      <p>CROYET Jérôme. Lettres de grognards de l'Ain, Archives départementales de l'Ain,
+        Bourg-en-Bresse, sd., 5 p. (BIB L 65-14)</p>
+      <p>DUMAS, Alexandre. Les compagnons de Jéhu, Rencontre, Lausanne, 1967, 696 p. (BIB E 553)</p>
+      <p>FAVARD. Brillat-Savarin. Le fascinant destin d'un conseiller à la Cour de cassation, ASLAB,
+        Paris, 1998, 60 p., ill coul (BIB D 1201)</p>
+      <p>GOSSIN. Rapport sur la réduction des districts en général, et particulièrement sur ceux du
+        Département de l'Ain ; Suite du procès-verbal de l'Assemblée nationale du samedi 16 octobre
+        1790, au matin. Imprimerie nationale, Paris, [1790], 12+34 p. (BIB D 240)</p>
+      <p>OZUN. Règlement provisoire pour l'école centrale du département de l'Ain, P.F. Bottier,
+        Bourg-en-Bresse, 1960, p. 59, ill BIB L 66-7)</p>
+      <p>PERCEVEAUX, Paul. Un procès-verbal pour stationnement irrégulier en 1789, Visages de l'Ain,
+        n° 52, Bourg-en-Bresse, 1960, p.59, ill (BIB RHL 43)</p>
+      <p>RIBOUD, Thomas : mémoire, opinions, proclamations, 1790-1791 (BIB L 52-9 ,11 et 13)</p>
+      <p>RIBOUD, Louis. Rapport contenant les détails principaux de la gestion du Directoire du
+        Département de l'Ain jusqu'au 1er novembre 1790, Philipon, Bourg-en-Bresse, 1790, XII+148 p.
+        (BIB D 1244)</p>
+      <p>RUBAT-BRANGIER : Proclamation de l'assemblée administrative du département de l'Ain,10 juin
+        1790. ( BIB L 52-10).&amp;lt;/P[ETET]gt; </p>
+    </bibliography>
+    <controlaccess>
+      <genreform type="typir">Recherche détaillée</genreform>
+    </controlaccess>
+    <dsc type="in-depth">
+
+
+      <c id="26602" level="otherlevel" otherlevel="groupe-de-dossiers">
+        <did>
+          <unittitle type="titre">Organisation administrative<persname>CHRISTIAN FIZE</persname> 
+        <subject>LES LICORNES 26602</subject></unittitle>
+        </did>
+
+
+        <c id="26605">
+          <did>
+            <unittitle type="titre">Mise en place générale <geogname>L'ILE AUX
+          MERVEILLES 26605</geogname></unittitle>
+          </did>
+
+
+          <c id="26608" level="file">
+            <did>
+              <unitid type="">2 L 58</unitid>
+              <unittitle>19 mai 1790-10 germinal an VIII<unitdate normal="1790-05-19/1800-03-31">19
+                  mai 1790-10 germinal an VIII</unitdate></unittitle>
+              <unitdate normal=""/>
+              <physdesc>
+                <p><genreform type="typir">Recherche détaillée 26608</genreform></p>
+                <dimensions/>
+              </physdesc>
+            </did>
+            <scopecontent audience="external">
+              <p>Création et fonctionnement du directoire du département : administrateurs,
+                organisation des bureaux, matériel (19 mai 1790-7 vendémiaire an V). </p>
+              <p>A signaler : </p>
+              <p>liste des électeurs qui ont concouru à la formation du département ; </p>
+              <p>tableau des administrateurs du département et des districts ; </p>
+              <p>"Division des bureaux du département de l'Ain et détail des affaires qui s'y
+                traitent " ; </p>
+              <p>"De l'influence que doit avoir la nouvelle forme d'administration sur le
+                département de l'Ain (discours lu le 7 juin 1790 à l'ouverture de la première
+                session du corps administratif, par M. Riboud, procureur général syndic
+                &amp;amp;amp; imprimé par ordre de l'Assemblée) "</p>
+              <p>Création et fonctionnement des directoires de districts, des cantons et communes :
+                à signaler acquisition par la commune de Châtillon de douze rubans tricolores et
+                douze cocardes (26 mai 1790-10 germinal an VIII) </p>
+              <p>Cachets : fabrication, gravure (9 mars 1791-30 nivôse an VI) </p>
+              <p>Lettres d'envoi, accusés <subject>ACCUSES 26608</subject> de réception (19 juillet 1790-2e jour complémentaire an
+                VII).</p>
+            </scopecontent>
+          </c>
+        </c>
+      </c>
+    </dsc>
+  </archdesc>
+</ead>

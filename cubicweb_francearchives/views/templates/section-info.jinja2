@@ -1,0 +1,30 @@
+<script type="text/javascript">
+  var setSearchBarOnlySiteResources = false;
+</script>
+
+<section class="document-view">
+  <div class="section-context">
+    <div class="row">
+      {% if img_src %}
+        <div class="col-md-4">
+          <img class="img-fluid thumbnail" src="{{ img_src }}" alt="{{ img_alt | escape }}">
+        </div>
+        <div class="col-md-8">
+      {% else %}
+        <div class="col-lg-9 col-xl-8">
+      {% endif %}
+        <h1>
+          <span class="entity-title">{{ entity.title }}</span>
+          {% if entity.subtitle %}
+          <span class="entity-subtitle">{{ entity.printable_value("subtitle") }}</span>
+          {% endif %}
+        </h1>
+        {% if entity.printable_value("content") %}
+        <div class="section-context__info">
+          {{ entity.printable_value("content") }}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>

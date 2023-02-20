@@ -36,25 +36,27 @@ from logilab.mtconverter import xml_escape
 from logilab.common.decorators import cachedproperty
 
 from cubicweb import _
-from cubicweb.utils import json_dumps
+from cubicweb.utils import json_dumps, UStringIO
 from cubicweb.schema import display_name
 from cubicweb.predicates import is_instance, empty_rset, one_line_rset, none_rset
 from cubicweb.view import View, EntityView
 from cubicweb.web.views.primary import PrimaryView, URLAttributeView
 
-from cubicweb_francearchives.utils import merge_dicts, id_for_anchor
+from cubicweb_francearchives.entities.rdf import RDF_FORMAT_EXTENSIONS
+from cubicweb_francearchives.utils import merge_dicts
 from cubicweb_francearchives.views import JinjaViewMixin, get_template, blank_link_title
 
 
 def all_services(req):
     return req.execute(
-        "Any X, D, N ORDERBY Z WHERE X is Service, X dpt_code D, "
-        'X zip_code Z, X name N, X level "level-D", NOT X annex_of Y'
+        "Any X, D, N, LAT, LONG ORDERBY Z WHERE X is Service, X dpt_code D, "
+        'X zip_code Z, X name N, X level "level-D", NOT X annex_of Y, '
+        "X latitude LAT, X longitude LONG"
     ).entities()
 
 
 class SocialNetworkUrLAttributeView(URLAttributeView):
-    """ open the url in a new tab"""
+    """open the url in a new tab"""
 
     __select__ = URLAttributeView.__select__ & is_instance("SocialNetwork")
 
@@ -96,10 +98,77 @@ class DeptMapForm(object):
         req.add_onload(jscmd)
 
 
+class DeptGeoMapForm(object):
+    template = get_template("dpt-map-geo-form.jinja2")
+
+    def render(self, req, services, selected_dpt=None):
+        req.add_js("cubes.pnia_map.js")
+        return self.template.render(
+            _=req._, base_url=req.base_url(), services=services, selected_dpt=selected_dpt
+        )
+
+
+class LeafletServiceMapView(JinjaViewMixin, View):
+    __regid__ = "leaflet-service-map"
+    template = get_template("services-leaflet-map.jinja2")
+
+    def add_css(self):
+        for css in (
+            "leaflet.css",
+            "LeafletStyleSheet.css",
+            "MarkerCluster.Default.css",
+        ):
+            self._cw.add_css(css)
+
+    def add_js(self):
+        for js in (
+            "leaflet.js",
+            "leaflet-sidebar.min.js",
+            "leaflet.markercluster.js",
+            "bundle-pniaservices-map.js",
+            "leaflet.zoomhome.min.js",
+        ):
+            self._cw.add_js(js)
+
+    def call(self):
+        _ = self._cw._
+        self.add_css()
+        self.add_js()
+        dept_map_form = DeptGeoMapForm()
+        dpt = self._cw.form.get("dpt")
+        if not isinstance(dpt, str):
+            # dpt must by a string, not a list
+            dpt = ""
+        render = dept_map_form.render(self._cw, all_services(self._cw), dpt)
+        self.call_template(
+            map_form=render,
+            markerurl=self._cw.build_url("services-map.json", dpt=self._cw.form.get("dpt", "")),
+            geojson=self._cw.data_url("departements-version-simplifiee.geojson"),
+            zoom=self._cw.form.get("zoom", ""),
+            _=self._cw._,
+            labels={
+                "contact": _("Contact"),
+                "address": _("Address"),
+                "phone": _("Phone number"),
+                "email": _("Email"),
+                "mailing_address": _("Write to us"),
+                "website": _("Website"),
+                "code_insee": _("Code INSEE commune"),
+                "opening": _("Opening period"),
+                "annual_closure": _("Annual closure"),
+                "coordinates": _("GPS coordinates"),
+                "social_network": _("SocialNetwork_plural"),
+                "useful_info": _("Useful information"),
+                "fa_link": _("see service related documents"),
+                "nomina_link": _("see service related nominarecords"),
+            },
+        )
+
+
 class AbstractDptServiceMapView(JinjaViewMixin, View):
     __abstract__ = True
     __regid__ = "dpt-service-map"
-    template = get_template("dpt-map.jinja2")
+    template = get_template("services-map.jinja2")
     title = None
 
     def call(self):
@@ -110,20 +179,25 @@ class AbstractDptServiceMapView(JinjaViewMixin, View):
         title = self.title
         if title:
             breadcrumbs.append((b_url("annuaire/departements"), title))
-        dept_map_form = DeptMapForm()
-        render = dept_map_form.render(self._cw, all_services(self._cw), self.selected_service())
-        ctx = {
-            "breadcrumbs": breadcrumbs,
-            "map_form": render,
-            "service_directory_content": self.service_directory_content(),
-        }
-        return self.call_template(**ctx)
+        self.call_template(
+            _=_,
+            title=self.title,
+            a11y_alert=self.a11y_alert,
+            mobile_alert=self._cw._("map_mobile_alert"),
+            breadcrumbs=breadcrumbs,
+            service_directory_content=self.service_directory_content(),
+            map=self._cw.view("leaflet-service-map", rset=self.cw_rset),
+        )
 
     def service_directory_content(self):
         return ""
 
     def selected_service(self):
         raise NotImplementedError()
+
+    @property
+    def a11y_alert(self):
+        return None
 
 
 class NoDepartmentMapView(AbstractDptServiceMapView):
@@ -137,9 +211,16 @@ class NoDepartmentMapView(AbstractDptServiceMapView):
 
     @property
     def title(self):
-        return self._cw._("Archives Departementales")
+        return self._cw._("All services")
 
     def selected_service(self):
+        return None
+
+    @property
+    def a11y_alert(self):
+        return self._cw._("a11y_all_services_map_info: {link}").format(
+            link=self._cw.build_url("services")
+        )
         return None
 
 
@@ -151,7 +232,7 @@ class DepartmentMapView(AbstractDptServiceMapView):
         return self.cw_rset.one().name
 
     def service_directory_content(self):
-        return self._cw.view("primary", rset=self.cw_rset)
+        return self._cw.view("service-dpt-content", rset=self.cw_rset)
 
     def selected_service(self):
         return self.cw_rset.one().dpt_code
@@ -163,11 +244,42 @@ class MainInfo(EntityView):
 
     def render_fa_components_link(self, entity):
         anyfa = self._cw.execute(
-            "Any 1 WHERE EXISTS(F service X, NOT X code NULL, X eid %(e)s)", {"e": entity.eid}
+            """Any 1 WHERE EXISTS(F service X, NOT X code NULL,
+               F is FindingAid,
+               X eid %(e)s)""",
+            {"e": entity.eid},
         )
         if anyfa:
             title = self._cw._("see service related documents")
-            self.w(T.a(title, href=xml_escape(entity.documents_url())))
+            self.w(
+                T.a(
+                    title,
+                    klass="blue-button",
+                    href=xml_escape(entity.documents_url()),
+                )
+            )
+
+    def render_nomina_link(self, entity):
+        anyfa = self._cw.execute(
+            """Any 1 WHERE EXISTS(N service X, NOT X code NULL,
+               N is NominaRecord,
+               X eid %(e)s)""",
+            {"e": entity.eid},
+        )
+        if anyfa:
+            title = self._cw._("see service related nominarecords")
+            with T.div(self.w):
+                self.w(T.a(title, Class="blue-button", href=xml_escape(entity.nominarecords_url())))
+
+    def render_download_rdf(self, entity):
+        download_button = get_template("rdf-download-button.jinja2")
+        return download_button.render(
+            _=self._cw._,
+            rdf_formats=[
+                (f"{entity.absolute_url()}/rdf.{extension}", name)
+                for extension, name in RDF_FORMAT_EXTENSIONS.items()
+            ],
+        )
 
     def render_physical_address(self, entity):
         address = [
@@ -184,28 +296,30 @@ class MainInfo(EntityView):
             str(T.meta(content="fr", itemprop="addressCountry")),
         ]
         return str(
-            T.div(
+            T.span(
                 *address_tags,
                 itemprop="address",
                 itemscope="itemscope",
-                itemtype="http://schema.org/PostalAddress"
+                itemtype="http://schema.org/PostalAddress",
+                klass="col-sm-8"
             )
         )
 
     def render_parent_service(self, parent):
         return str(
-            T.div(
-                T.span(parent.dc_title(), itemprop="legalName"),
+            T.p(
+                T.a(
+                    parent.dc_title(), href=xml_escape(parent.absolute_url()), itemprop="legalName"
+                ),
                 itemprop="parentOrganization",
                 itemscope="itemscope",
                 itemtype="http://schema.org/Organization",
+                klass="col-sm-8",
             )
         )
 
     def render_hidden_microdata(self, entity):
         """those data are hidden from html"""
-        if entity.fax:
-            self.w(T.meta(content=entity.fax, itemprop="faxNumber"))
         for child in entity.reverse_annex_of:
             self.w(
                 T.meta(
@@ -216,16 +330,22 @@ class MainInfo(EntityView):
                 )
             )
 
-    def entity_call(self, entity):
+    def entity_call(self, entity, with_title=True):
+        heading_level = 3 if with_title else 2
         with T.section(
             self.w,
             klass="service-info",
             itemscope="itemscope",
             itemtype="http://schema.org/Organization",
         ):
-            self.w(
-                T.h2(entity.dc_title(), itemprop="legalName", id=id_for_anchor(entity.dc_title()))
-            )
+            if with_title:
+                self.w(
+                    T.h2(
+                        entity.dc_title(),
+                        itemprop="legalName",
+                        klass="mb-4",
+                    )
+                )
             website_link, email_link = None, None
             website_url = entity.printable_value("website_url")
             if website_url:
@@ -247,7 +367,7 @@ class MainInfo(EntityView):
             email = entity.printable_value("email")
             if email:
                 email_link = str(T.a(T.span(email, itemprop="email"), href="mailto:%s" % email))
-            contact_label = _("director") if entity.level == "level-D" else _("contact_name")
+            contact_label = _("Director") if entity.level == "level-D" else _("Contact")
             contact_name = entity.printable_value("contact_name")
             if contact_name:
                 contact_name = str(T.span(contact_name, itemprop="employee"))
@@ -265,40 +385,107 @@ class MainInfo(EntityView):
             address = entity.address
             if address:
                 address = self.render_physical_address(entity)
-            with T.dl(self.w, klass="dl-horizontal"):
+            gps = None
+            if entity.latitude and entity.longitude:
+                buff = UStringIO()
+                bw = buff.write
+                with T.span(bw, itemprop="geo"):
+                    bw(f"{entity.latitude}, {entity.longitude}")
+                    bw(T.meta(content=entity.latitude, itemprop="latitude"))
+                    bw(T.meta(content=entity.longitude, itemprop="longitude"))
+                gps = buff.getvalue()
+            with T.div(self.w, klass="row "):
                 for attr, value in (
                     (_("main_service"), main_service_link),
                     (contact_label, contact_name),
-                    (_("phone_number"), phone_number),
-                    (_("email"), email_link),
-                    (_("address"), address),
-                    (_("write to us"), entity.mailing_address),
-                    (_("zip_code"), entity.zip_code),
-                    (_("opening_period"), opening_period),
-                    (_("annual_closure"), entity.printable_value("annual_closure")),
-                    (_("website_url"), website_link),
+                    (_("Phone number"), phone_number),
+                    (_("Email"), email_link),
+                    (_("Address"), address),
+                    (_("Write to us"), entity.mailing_address),
+                    (_("Opening period"), opening_period),
+                    (_("Annual closure"), entity.printable_value("annual_closure")),
+                    (_("Website"), website_link),
+                    (_("Code INSEE commune"), entity.code_insee_commune),
+                    (_("GPS coordinates"), gps),
                     (
-                        _("service_social_network"),
+                        _("SocialNetwork_plural"),
                         ", ".join(
                             e.view("urlattr", rtype="url") for e in entity.service_social_network
                         ),
                     ),
                 ):
                     if value:
-                        self.w(T.dt(display_name(self._cw, attr, context="Service")))
-                        self.w(T.dd(value))
+                        self.w(
+                            T.p(
+                                display_name(self._cw, attr, context="Service"),
+                                klass="service-info__title col-sm-4",
+                                role="heading",
+                                aria_level=heading_level,
+                            )
+                        )
+                        if value.startswith("<p"):
+                            # it's html
+                            self.w(value)
+                        else:
+                            self.w(T.p(value, klass="col-sm-8"))
             other = entity.printable_value("other")
             if other:
                 self.w(other)
-            self.render_fa_components_link(entity)
+            with T.div(self.w, klass="service-buttons-wrapper"):
+                self.render_fa_components_link(entity)
+                self.render_nomina_link(entity)
+                self.w(self.render_download_rdf(entity))
             self.render_hidden_microdata(entity)
+
+
+class DptContextMixIn:
+    def display_dpt_context(self, entity):
+        rset = self._cw.execute(
+            """Any X, N ORDERBY N WHERE X dpt_code C, Y dpt_code C,
+               X name N, Y eid %(e)s, NOT X identity Y""",
+            {"e": entity.eid},
+        )
+        if rset:
+            with T.section(self.w, id="archives-services"):
+                entities = sorted(rset.entities(), key=lambda x: x.name or x.name2)
+                for e in entities:
+                    self.w(e.view("service-maininfo"))
+
+
+class ServiceDptContent(DptContextMixIn, EntityView):
+    __regid__ = "service-dpt-content"
+    __select__ = EntityView.__select__ & is_instance("Service")
+
+    def entity_call(self, entity):
+        with T.div(self.w, Class="services-info visually-hidden"):
+            entity.view("service-maininfo", w=self.w)
+            rset = entity.related("annex_of", "object")
+            if rset:
+                with T.section(self.w):
+                    self.wview("service-maininfo", rset=rset)
+            if entity.level == "level-D":
+                self.display_dpt_context(entity)
 
 
 class Service(PrimaryView):
     __select__ = PrimaryView.__select__ & is_instance("Service")
 
+    def add_css(self):
+        for css in ("leaflet.css", "LeafletStyleSheet.css"):
+            self._cw.add_css(css)
+
+    def add_js(self):
+        for js in ("leaflet.js", "PruneCluster.js", "bundle-pniaservice-map.js"):
+            self._cw.add_js(js)
+
+    def render_entity(self, entity):
+        self.add_css()
+        self.add_js()
+        with T.div(self.w, Class="service-view document-view"):
+            super().render_entity(entity)
+
     def render_entity_title(self, entity):
-        self.w(T.h1(entity.name or ""))
+        self.w(T.h1(entity.dc_title()))
 
     def _prepare_side_boxes(self, entity):
         return ()
@@ -307,31 +494,22 @@ class Service(PrimaryView):
         pass
 
     def render_entity_attributes(self, entity):
-        entity.view("service-maininfo", w=self.w)
+        with T.div(self.w, klass="row"):
+            with T.div(self.w, klass="col-xl-6"):
+                entity.view("service-maininfo", w=self.w, with_title=False)
+            if entity.latitude and entity.longitude:
+                with T.div(self.w, klass="d-none d-md-block col-xl-6 service-geo-map"):
+                    with T.div(self.w):
+                        self.w(
+                            T.p(self._cw._("accessibility_map_info"), Class="sr-only d-print-none")
+                        )
+                        markerurl = self._cw.build_url("services-map.json", srv=entity.eid)
+                        self.w(T.div(id="service-map", data_markerurl=markerurl))
 
     def render_entity_relations(self, entity):
         # service annexes
         rset = entity.related("annex_of", "object")
         if rset:
             with T.section(self.w):
-                self.wview("service-maininfo", rset=rset)
-        if entity.level != "level-D":
-            return
-        rset = self._cw.execute(
-            "Any X ORDERBY N WHERE X category C, "
-            "Y category C, "
-            "X name N, "
-            "X level %(l)s, "
-            "Y eid %(e)s, NOT X annex_of Z, "
-            "NOT X identity Y",
-            {"e": entity.eid, "l": "level-C"},
-        )
-        if rset:
-            with T.section(self.w, id="archives-services"):
-                # XXX remove name2 attibute for Service?
-                entities = sorted(rset.entities(), key=lambda x: x.name or x.name2)
-                for e in entities:
-                    self.w(e.view("service-maininfo"))
-                    rset = e.related("annex_of", "object")
-                    if rset:
-                        self.wview("service-maininfo", rset=rset)
+                with T.div(self.w, klass="col-xl-6"):
+                    self.wview("service-maininfo", rset=rset)

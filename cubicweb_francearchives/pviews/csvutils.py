@@ -40,16 +40,43 @@ def alignment_csv(req):
         "Any X,XN,N,AN,A WHERE "
         "X is IN (AgentAuthority, LocationAuthority, SubjectAuthority), "
         "X label N, X is XE, XE name XN, "
-        "X same_as A, A is AE, AE name AN, NOT A is ExternalUri"
+        "X same_as A, A is AE, AE name AN, "
+        "NOT A is IN (ExternalUri, NominaRecord)"
     )
-    for (index_eid, index_etype, index_preflabel, align_etype, align_eid) in rset.rows:
+    for index_eid, index_etype, index_preflabel, align_etype, align_eid in rset.rows:
+        index_etype = index_etype[: -len("Authority")].lower()
+        rest = align_etype.lower()
+        props = {
+            "index_entry": index_preflabel,
+            "index_url": req.build_url("{}/{}".format(index_etype, index_eid)),
+            "aligned_url": req.build_url("{}/{}".format(rest, align_eid)),
+        }
+        rows.append([(props[h] or "") for h in headers])
+
+    # nominarecord
+    rset = req.execute(
+        "Any X,XN,N,AN,A,AI WHERE "
+        "X is IN (AgentAuthority, LocationAuthority, SubjectAuthority), "
+        "X label N, X is XE, XE name XN, "
+        "X same_as A, A is AE, AE name AN, A stable_id AI, "
+        "A is NominaRecord"
+    )
+    for (
+        index_eid,
+        index_etype,
+        index_preflabel,
+        align_etype,
+        align_eid,
+        align_stableid,
+    ) in rset.rows:
         index_etype = index_etype[: -len("Authority")].lower()
         props = {
             "index_entry": index_preflabel,
             "index_url": req.build_url("{}/{}".format(index_etype, index_eid)),
-            "aligned_url": req.build_url("{}/{}".format(align_etype.lower(), align_eid)),
+            "aligned_url": req.build_url("basedenoms/{}".format(align_stableid)),
         }
         rows.append([(props[h] or "") for h in headers])
+
     # external url
     rset = req.execute(
         "Any X,XN,N,AU WHERE "
@@ -57,7 +84,7 @@ def alignment_csv(req):
         "X label N, X is XE, XE name XN, "
         "X same_as A, A is ExternalUri, A uri AU"
     )
-    for (index_eid, index_etype, index_preflabel, align_url) in rset.rows:
+    for index_eid, index_etype, index_preflabel, align_url in rset.rows:
         index_etype = index_etype[: -len("Authority")].lower()
         props = {
             "index_entry": index_preflabel,

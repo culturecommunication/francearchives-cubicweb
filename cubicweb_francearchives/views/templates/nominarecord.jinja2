@@ -1,0 +1,84 @@
+{% from "./mixins.jinja2" import index_values, sharelinks, content_metadata -%}
+{% from "./mixins.jinja2" import index_values -%}
+<section id="document" class="nominarecord-view finding-document document-view">
+  <div class="page-main-content">
+    {%- block head -%}
+    <h1><span class="visually-hidden">{{ _(entity.__regid__) }} : </span>{{ entity.dc_title() }}</h1>
+    {%- endblock -%}
+    {%- set publisher_title = entity.publisher_title -%}
+    <div class="left-col">
+     {% if digitized_url -%}
+      <div class="document-header document-digit-versions">
+        <div class="header-buttons-wrapper">
+          <div class="grey-button" role="button">
+            <a href="{{ digitized_url }}"
+               title="{{ _("Consult the site link")}} {{ _("- New window") }}"
+               {% if publisher.xiti %}
+               data-xiti-level="C"
+               data-xiti-type="{{ publisher.xiti.type }}"
+               data-xiti-name="{{ publisher.xiti.digitized_version }}"
+               data-xiti-n2="{{ publisher.xiti.n2}}"
+               {% endif %}
+               target="_blank" rel="noopener noreferrer nofollow">
+              {{_("Consult the digitized version")}}
+              <i class="fa fa-external-link" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+     {% endif -%}
+      <div class="nominarecord-info">
+        {% for propname, value in main_props -%}
+        <div class="row">
+          <p class="nominarecord-info__title col-sm-4" role="heading" aria-level="2">{{ propname }}</p>
+          {% if value %}
+          {% if value | is_list %}
+          <ul class="list list-unstyled col-sm-7 offset-md-right-1">
+            {% for val in value %}
+            <li>{{ val }}</li>
+            {% endfor %}
+          </ul>
+          {% else %}
+          <p class="col-sm-8">{{ value }}</p>
+          {% endif %}
+          {% endif %}
+        </div>
+        {% endfor -%}
+      </div>
+    </div>
+    <div class="clearfix"></div>
+    {% if faqs %}
+    {% from "./mixins.jinja2" import modalfaq %}
+    {{  modalfaq(faqs, _) }}
+    {% endif %}
+  </div>
+  {%- if publisher -%}
+  <div class="ir-right-sidebar right-col">
+    <div class="ir-location">
+      <div class="ir-location__header">
+        <h2>{{ _('To consult this document') }}{{_(':')}}</h2>
+        <p class="publisher-title">{{ publisher.title }}</p>
+      </div>
+      <div class="ir-location__buttons">
+        {% if source_url %}
+        <a class="service-site-button blue-button" href="{{ source_url }}"
+           title="{{ _("Consult the digitized version of")  }} {{ entity.dc_title() }} {{ _('in a new window') }}"
+           {% if publisher.xiti %}
+           data-xiti-level="C"
+           data-xiti-type="{{ publisher.xiti.type }}"
+           data-xiti-name="{{ publisher.xiti.access_site}}"
+           data-xiti-n2="{{ publisher.xiti.n2}}"
+           {% endif %}
+           target="_blank" rel="noopener noreferrer nofollow" >
+           {{_("Consult the digitized version") }}
+          <i class="fa fa-external-link" aria-hidden="true"></i>
+        </a>
+        {% endif %}
+        {% if publisher.contact_url %}
+        <a class="service-url-button white-button" href="{{ publisher.contact_url }}">{{ publisher.contact_label }}</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {%- endif -%}
+</section>

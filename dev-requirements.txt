@@ -4,7 +4,8 @@ pytest
 mock
 polib
 pifpaf
-pyramid_redis_sessions
 pyramid_debugtoolbar
-https://hg.logilab.org/users/siaf/yams/archive/tip.tar.bz2#egg=yams
-logilab-common==1.4.4
+pytest-xdist
+black
+moto
+pip-tools

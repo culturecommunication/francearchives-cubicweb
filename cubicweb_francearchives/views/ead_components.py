@@ -59,6 +59,18 @@ class TreeOnelineView(EntityView):
                     w(xml_escape(title))
 
 
+def display_tree_last_item(req, w, item, _class):
+    w(f"""<div class="{_class}">""")
+    full_title = item[3] or item[4] or "???"  # did.dc_title
+    title = cut_words(full_title, 230)
+    href = xml_escape(req.build_url(f"facomponent/{item[1]}"))
+    if full_title != title:
+        w(f"""<a href="{href}" title="{xml_escape(full_title)}">{xml_escape(title)}</a>""")
+    else:
+        w(f"""<a href="{href}">{xml_escape(full_title)}</a>""")
+    w("</div>")
+
+
 class AbstractFindingAidTreeComponent(EntityCtxComponent):
     __abstract__ = True
     __regid__ = "findinaid.tree"
@@ -75,14 +87,7 @@ class AbstractFindingAidTreeComponent(EntityCtxComponent):
         service = entity.related_service
         if service:
             service_label = service.dc_title()
-            tooltip = self._cw._("Search all documents for publisher %s") % service_label
-            w(
-                '<a title="{}" href="{}">{}</a>'.format(
-                    xml_escape(tooltip),
-                    xml_escape(service.documents_url()),
-                    xml_escape(service_label),
-                )
-            )
+            w("<span>{}</span>".format(xml_escape(service_label)))
         else:
             w(entity.publisher)
 
@@ -93,11 +98,11 @@ class AbstractFindingAidTreeComponent(EntityCtxComponent):
             with T.section(w, id="detailed-path"):
                 with T.div(w, Class="detailed-path-root-level"):
                     with T.div(w, Class="row"):
-                        with T.div(w, Class="col-md-1"):
-                            w(T.span(Class="detailed-path-root-picto"))
-                        with T.div(w, Class="col-md-11"):
-                            self.display_service_link(entity, w)
-                with T.div(w, Class="detailed-path-inner-levels"):
+                        with T.div(w, id="tree-hierarchy", Class="col-md-9"):
+                            with T.a(w, Class="title-of-fa-tree"):
+                                w(T.h2(self._cw._("Description context :"), Class="no-style"))
+                with T.div(w, Class="detailed-path-inner-levels col"):
+                    self.display_service_link(entity, w)
                     self.render_tree(w, entity, tree_items)
             w(T.div(Class="clearfix"))
 
@@ -116,8 +121,7 @@ class AbstractFindingAidTreeComponent(EntityCtxComponent):
                     for i, item in enumerate(tree_items, 1):
                         _class = "detailed-path-list-item-last" if total == i else item_class
                         with T.li(w):
-                            # XXX FIXE here is only one level present
-                            w(item.view("tree-oneline", selected=entity.eid, _class=_class))
+                            display_tree_last_item(self._cw, w, item, _class=_class)
 
 
 class FindingAidTreeComponent(AbstractFindingAidTreeComponent):
@@ -125,14 +129,13 @@ class FindingAidTreeComponent(AbstractFindingAidTreeComponent):
 
     def tree_items(self, entity):
         return self._cw.execute(
-            "Any C,CI,D,DT,DI,DS,DSF "
+            "Any C,CI,D,DT,DI "
             "ORDERBY CO "
             "WHERE X top_components C, X eid %(x)s, "
             "C stable_id CI, C did D, D unittitle DT, "
-            "D unitid DI, C description DS, "
-            "C description_format DSF, C component_order CO",
+            "D unitid DI, C component_order CO",
             {"x": entity.eid},
-        ).entities()
+        )
 
 
 class FAComponentTreeComponent(AbstractFindingAidTreeComponent):

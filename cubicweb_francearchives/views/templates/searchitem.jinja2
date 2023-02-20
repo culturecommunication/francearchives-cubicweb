@@ -1,53 +1,60 @@
 <div class="document row">
-  <div class="hidden-xs col-sm-4">
-    <a href="{{ entity.url }}"
-       title="{{ entity.link_title }}"
-       aria-hidden="true"
-       class="picto image-link">
-      <img class="img-responsive"
-           src="{{ illustration | escape }}"
-           data-defaultsrc="{{ default_picto_src }}"
-           alt="{{ illustration_alt | escape }}"
-           />
-       <span class="sr-only">{{ entity.title }}</span>
-    </a>
-  </div>
-  <div class="col-xs-10 col-sm-7">
-    <div class="informations">
-      <div class="document-title">{{ entity.alink }}</div>
+    <div class="informations-header row">
+      <div class="document-title col-sm-9">{{ entity.alink }}</div>
 
       {% block subtitle %} {% endblock %}
+      {% if logo %}
+      <div class="informations-content-logo col-sm-3 picto">
+          <img class="img-fluid"
+            src="{{ logo.src | escape }}"
+            data-defaultsrc="{{ logo.srcs }}"
+            alt="{{ _("Service")}}: {{ logo.alt | escape }}"
+          />
+      </div>
+      {% endif %}
+    </div>
+    <div class="informations-content row">
+      {% if illustration %}
+      <div class="informations-content-image col-md-3 col-sm-8">
+        <a href="{{ entity.url }}"
+          class="picto" tabindex="-1"
+          aria-hidden="true">
+          <img class="img-fluid"
+            src="{{ illustration.src | escape }}"
+            data-defaultsrc="{{ illustration.srcs }}"
+            alt="{{ illustration.alt | escape }}"
+          />
+        </a>
+        {%- if iiif_logo %}
+          <img src="{{ iiif_logo.src }}" alt="iiif_logo.alt" width="24" height="24">
+        {% endif -%}
+      </div>
+      {% endif %}
+      <div class="informations-content-text {% if not illustration %}offset-md-3 {% endif%}col-md-9 col-sm-12">
 
-      {% if highlights %}
-        <div class="document-excerpt">{{ _('Notice excerpt:') }}</div>
-           <blockquote class="document-excerpt__text">
-           {% for value in highlights %}
+        {% block itemprops_top %}
+        {% from "./mixins.jinja2" import itemprops %}
+          {{ itemprops(item_properties["top"], _) }}
+        {% endblock %}
+
+        {% if highlights %}
+        <div class="document-excerpt-container row">
+          <div class="document-excerpt col-sm-12 col-md-4">{{ highlights_label }}</div>
+          <blockquote class="document-excerpt__text col-sm-11 col-md-8">
+          {% for value in highlights %}
             <p>…{{ value }}…</p>
            {% endfor %}
            </blockquote>
-      {% endif %}
+        </div>
+        {% endif %}
 
-      {% block itemprops %}
-        {% for label, value in item_properties %}
-          {% if value %}
-            <div class="document-properties">
-              {% if label is none %}
-                {{ value }}
-              {% else %}
-                {{ label }}{{ _(':') }}{{ value }}
-              {% endif %}
-            </div>
-          {% endif %}
-        {% endfor %}
-      {% endblock %}
+        {% block itemprops_bottom %}
+        {% from "./mixins.jinja2" import itemprops %}
+          {{ itemprops(item_properties["bottom"], _) }}
+        {% endblock %}
+        {%- block extra %}
+        {% endblock -%}
 
+      </div>
     </div>
-  </div>
-  <div class="col-xs-2 col-sm-1">
-    {% block rightcol %}
-    <div class="picto picto--small
-                picto-{{ document_category }}
-                picto-{{ document_category }}--selected"></div>
-    {% endblock %}
-  </div>
-</div>
+ </div>

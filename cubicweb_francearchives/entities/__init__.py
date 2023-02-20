@@ -36,6 +36,7 @@ from collections import defaultdict
 import hashlib
 
 import math
+from logilab.common.decorators import cachedproperty
 
 from cubicweb import _
 
@@ -43,25 +44,27 @@ from cubicweb_card.entities import Card as BaseCard
 from cubicweb_file.entities import File as BaseFile
 
 
-from cubes.skos.entities import Concept as BaseConcept
+from cubicweb_skos.entities import Concept as BaseConcept
+from rdflib.graph import ConjunctiveGraph
 
-from cubicweb_francearchives.xy import conjunctive_graph, add_statements_to_graph, namespaces
+from cubicweb_francearchives.views import format_date
+from cubicweb_francearchives.xy import add_statements_to_graph
 
 
 ETYPE_CATEGORIES = {
-    "Person": _("archives"),
-    "Circular": _("circulars"),
-    "Service": _("services"),
-    "NewsContent": _("edito"),
-    "BaseContent": _("edito"),
-    "ExternRef": _("edito"),
-    "Section": _("edito"),
-    "Map": _("edito"),
-    "Card": _("edito"),
-    "CommemorationItem": _("commemorations"),
-    "CommemoCollection": _("commemorations"),
+    "Circular": _("siteres"),
+    "Service": _("siteres"),
+    "NewsContent": _("siteres"),
+    "BaseContent": _("siteres"),
+    "ExternRef": _("siteres"),
+    "Section": _("siteres"),
+    "Map": _("siteres"),
+    "Card": _("siteres"),
+    "CommemorationItem": _("siteres"),
     "FindingAid": _("archives"),
     "FAComponent": _("archives"),
+    # "AuthorityRecord": _("archives"),
+    # for the moment don't show AuthorityRecord in global search
 }
 
 DOC_CATEGORY_ETYPES = defaultdict(list)
@@ -93,6 +96,14 @@ class Card(BaseCard):
     def uuid_value(self):
         return self.wikiid
 
+    @cachedproperty
+    def fmt_creation_date(self):
+        return format_date(self.creation_date, self._cw, fmt="d MMMM y")
+
+    @property
+    def fmt_modification_date(self):
+        return format_date(self.modification_date, self._cw, fmt="d MMMM y")
+
 
 def system_source_absolute_url(self, *args, **kwargs):
     """override default absolute_url to avoid calling cw_metainformation"""
@@ -104,7 +115,7 @@ def system_source_absolute_url(self, *args, **kwargs):
     else:
         method = None
     if method in (None, "view"):
-        kwargs["_restpath"] = self.rest_path(False)
+        kwargs["_restpath"] = self.rest_path()
     else:
         kwargs["rql"] = "Any X WHERE X eid %s" % self.eid
     return self._cw.build_url(method, **kwargs)
@@ -160,14 +171,19 @@ class FAFile(BaseFile):
         """
         if value is None and self.data is not None:
             value = self.data.getvalue()
+        # we assume self._cw.vreg.config['hash-algorithm'] must be "sha1", thus
+        # we dont check it
         if value is not None:
             return compute_file_data_hash(value)
 
-    def check_hash(self, hash_value, value):
+    def check_hash(self):
         """rewrite v.2.0.1 cubicweb_file.entity.check_hash method to
         be complient with the `compute_hash` method implementatio
         """
-        return hash_value == self.compute_hash(value)
+        if self.data_hash:
+            value = self.data and self.data.getvalue()
+            return self.data_hash == self.compute_hash(value)
+        return True
 
     def formatted_size(self):
         """
@@ -188,13 +204,24 @@ class FAFile(BaseFile):
         size = round(data_size / math.pow(1024, i), 2)
         return "{} {}".format(size, labels[i])
 
+    def get_filepath(self, attr):
+        """
+        return filepath key for s3 or filepath for BFSS
+        """
+        rset = self._cw.execute("Any FSPATH(D) WHERE X eid %s, X %s D" % (self.eid, attr))
+        key = rset.rows[0][0].getvalue()
+        if isinstance(key, bytes):
+            key = key.decode("utf-8")
+        return key
+
 
 def entity2schemaorg(entity):
     sorg = entity.cw_adapt_to("rdf.schemaorg")
     if sorg is not None:
-        graph = conjunctive_graph()
+        graph = ConjunctiveGraph()
         add_statements_to_graph(graph, sorg)
-        return graph.serialize(format="json-ld", context=namespaces, indent=2)
+        context = {prefix: str(ns) for prefix, ns in sorg.used_namespaces.items()}
+        return graph.serialize(format="json-ld", context=context, indent=2)
     return None
 
 

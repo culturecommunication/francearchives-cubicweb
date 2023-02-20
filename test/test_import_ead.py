@@ -46,7 +46,12 @@ from cubicweb import NoResultError
 from cubicweb.devtools.testlib import BaseTestCase, CubicWebTC
 from cubicweb.dataimport.stores import RQLObjectStore
 
-from cubicweb_francearchives.testutils import PostgresTextMixin, EADImportMixin, HashMixIn
+from cubicweb_francearchives.testutils import (
+    PostgresTextMixin,
+    EADImportMixin,
+    HashMixIn,
+    S3BfssStorageTestMixin,
+)
 from cubicweb_francearchives.testutils import format_date
 from cubicweb_francearchives.utils import merge_dicts, pick
 from cubicweb_francearchives.dataimport import (
@@ -68,6 +73,17 @@ def find_component(cnx, unitid):
     if rset:
         return rset.one()
     return None
+
+
+def get_concept(cnx, label):
+    return cnx.execute("Any C WHERE L label_of C, L label %(l)s", {"l": label}).one()
+
+
+def get_fa_redirects(cnx):
+    query = """
+    SELECT eadid, from_stable_id, to_stable_id
+    FROM fa_redirects"""
+    return cnx.system_sql(query).fetchall()
 
 
 class EADTests(BaseTestCase, HashMixIn):
@@ -128,7 +144,7 @@ class EADTests(BaseTestCase, HashMixIn):
     def test_parse_unitdate(self):
         ead_path = self.datapath("FRAN_IR_000224.xml")
         tree = eadreader.preprocess_ead(ead_path)
-        reader = eadreader.EADXMLReader(tree)
+        reader = eadreader.EADXMLReader(tree, lambda x: x)
         self.assertEqual(
             pick(reader.fa_properties["did"], "unitdate", "startyear", "stopyear"),
             {
@@ -157,7 +173,7 @@ class EADTests(BaseTestCase, HashMixIn):
     def test_ignore_invalid_components(self):
         ead_path = self.datapath("FRAD0XX_00001.xml")
         tree = eadreader.preprocess_ead(ead_path)
-        reader = eadreader.EADXMLReader(tree)
+        reader = eadreader.EADXMLReader(tree, lambda x: x)
         comp_ids = [cnode.get("id") for cnode, cprops in reader.walk()]
         self.assertEqual(comp_ids, ["tt1-1", "tt2", "tt2-1", "tt2-1-3"])
 
@@ -185,7 +201,7 @@ class EADNodropImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
 
     def test_facomponent_data_ok_with_nodrop(self):
         with self.admin_access.cnx() as cnx:
-            self.import_filepath(cnx, self.datapath("FRAN_IR_022409.xml"))
+            self.import_filepath(cnx, "FRAN_IR_022409.xml")
             fa = cnx.find("FindingAid").one()
             self.assertEqual(fa.description, None)
             self.assertEqual(fa.description, None)
@@ -198,6 +214,11 @@ class EADNodropImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
 
 
 class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
+    @classmethod
+    def init_config(cls, config):
+        super(EADImporterTC, cls).init_config(config)
+        config.set_option("instance-type", "consultation")
+
     def setup_database(self):
         super(EADImporterTC, self).setup_database()
         with self.admin_access.cnx() as cnx:
@@ -225,7 +246,7 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
                 xml_support="foo",
             )
             cnx.commit()
-            self.import_filepath(cnx, self.datapath("FRAN_IR_022409.xml"))
+            self.import_filepath(cnx, "FRAN_IR_022409.xml")
             fa = cnx.find("FindingAid").one()
             rset = cnx.execute(
                 """Any R, I, L, T WHERE FA eid %(fae)s,
@@ -258,7 +279,7 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
 
     def test_facomponent_data(self):
         with self.admin_access.cnx() as cnx:
-            self.import_filepath(cnx, self.datapath("FRAN_IR_022409.xml"))
+            self.import_filepath(cnx, "FRAN_IR_022409.xml")
             fa = cnx.find("FindingAid").one()
             self.assertEqual(fa.description, None)
             self.assertEqual(fa.description, None)
@@ -271,25 +292,25 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
 
     def test_name_stable_id_ead(self):
         with self.admin_access.cnx() as cnx:
-            self.import_filepath(cnx, self.datapath("FRAN_IR_022409.xml"))
+            self.import_filepath(cnx, "FRAN_IR_022409.xml")
             fa = cnx.find("FindingAid").one()
             self.assertEqual("FRAN_IR_022409", fa.eadid)
             self.assertEqual("FRAN_IR_022409.xml", fa.name)
             self.assertEqual(fa.stable_id, usha1(fa.name))
 
-    def test_facomponent_name_stable_id_ead(self):
+    def test_ir_stable_id_ead(self):
         """Test generated FindingAid and FAComponent stable_ids"""
 
         with self.admin_access.cnx() as cnx:
-            self.import_filepath(cnx, self.datapath("FRAN_IR_0261167_excerpt.xml"))
+            self.import_filepath(cnx, "FRAN_IR_0261167_excerpt.xml")
             fi = cnx.find("FindingAid").one()
             self.assertEqual(fi.stable_id, "c4b17d67cb5e8e884590ab98a864c81d48239053")
             fa = cnx.find("FAComponent").one()
-            self.assertEqual(fa.stable_id, "c97f63529b4450e34b8c548d0e97b063bfa8e4bd")
+            self.assertEqual(fa.stable_id, "7a4b5ef85c8014a08654e3c741a337ffdee60b4f")
 
     def test_publicationstmt(self):
         with self.admin_access.cnx() as cnx:
-            self.import_filepath(cnx, self.datapath("FRAN_IR_022409.xml"))
+            self.import_filepath(cnx, "FRAN_IR_022409.xml")
             faheader = cnx.find("FAHeader").one()
             self.assertEqual(
                 faheader.titleproper,
@@ -309,7 +330,7 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
     def test_physdesc(self):
         fa_rql = "Any X WHERE X is FAComponent, X did D, D unitid %(u)s"
         with self.admin_access.cnx() as cnx:
-            self.import_filepath(cnx, self.datapath("frad001_0000200j.xml"))
+            self.import_filepath(cnx, "frad001_0000200j.xml")
             fa = cnx.execute(fa_rql, {"u": "200 J 28"}).one()
             did = fa.did[0]
             expected = """<div class="ead-section ead-physdesc"><div class="ead-wrapper"><div class="ead-p"><b class="ead-autolabel">Description physique:</b>  &lt;lb&gt;&lt;/lb&gt; </div></div>
@@ -319,7 +340,7 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
 
     def test_titlestmt(self):
         with self.admin_access.cnx() as cnx:
-            self.import_filepath(cnx, self.datapath("FRAD095_00442.xml"))
+            self.import_filepath(cnx, "FRAD095_00442.xml")
             faheader = cnx.find("FAHeader").one()
             expected = """<div class="ead-wrapper"><div>    <h1>Etude notariale de Franconville (1518-1907)</h1>R&#xE9;pertoire num&#xE9;rique.<div>Patrick Clervoy, sous la direction de Patrick Lapalu et Marie-H&#xE9;l&#xE8;ne Peltier, directeur des Archives d&#xE9;partementales du Val-d'Oise</div></div></div>"""  # noqa
             self.assertEqual(faheader.titlestmt, expected)
@@ -327,7 +348,7 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
     def test_embedded_facomponent_dao(self):
         fc_rql = "Any X WHERE X is FAComponent, X did D, D unitid %(u)s"
         with self.admin_access.cnx() as cnx:
-            self.import_filepath(cnx, self.datapath("FRAD095_00374.xml"))
+            self.import_filepath(cnx, "FRAD095_00374.xml")
             fc = cnx.execute(fc_rql, {"u": "3Q7 753 - 893"}).one()
             did = fc.did[0]
             self.assertEqual(did.unittitle, "Instruments de recherche.")
@@ -362,24 +383,24 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
         """specific rules for Vendée"""
         fc_rql = "Any X WHERE X is FAComponent, X did D, D unitid %(u)s"
         with self.admin_access.cnx() as cnx:
-            self.import_filepath(cnx, self.datapath("FRAD085_6Fi.xml"))
+            self.import_filepath(cnx, "FRAD085_6Fi.xml")
             fc = cnx.execute(fc_rql, {"u": "6 Fi 1130"}).one()
-            got = sorted([(d.url, d.illustration_url, d.role) for d in fc.digitized_versions])
-            url = "http://www.archinoe.net/cg85/visu_serie.php?serie=6Fi&dossier=2Num8/2Num8_126/2Num8_126_001&page=1&pagefin=1"  # noqa
-            expected = [(url, "Fr\\Ad85\\2Num8\\2Num8_126\\2Num8_126_001.jpg", "thumbnail")]
-            self.assertEqual(got, expected)
+            got = [(d.url, d.illustration_url, d.role) for d in fc.digitized_versions]
+            expected = [
+                ("1", None, "nombre"),
+                (None, "Fr\\Ad85\\2Num8\\2Num8_126\\2Num8_126_001.jpg", "thumbnail"),
+            ]
+            self.assertCountEqual(got, expected)
 
     def test_facomponent_dao_FRAD085_2C(self):
         """specific rules for Vendée"""
         fc_rql = "Any X WHERE X is FAComponent, X did D, D unitid %(u)s"
         with self.admin_access.cnx() as cnx:
-            self.import_filepath(cnx, self.datapath("FRAD085_2C.xml"))
+            self.import_filepath(cnx, "FRAD085_2C.xml")
             fc = cnx.execute(fc_rql, {"u": "2 C 2"}).one()
-            got = sorted([(d.url, d.illustration_url, d.role) for d in fc.digitized_versions])
-            url = "http://www.archinoe.net/cg85/visu_serie.php?serie=2C&dossier=2Num286/018/2C2&page=1&pagefin=52"  # noqa
-            expected = [(url, None, "répertoire")]
-            self.assertEqual(got, expected)
-            self.assertEqual(fc.digitized_urls, [url])
+            got = [(d.url, d.illustration_url, d.role) for d in fc.digitized_versions]
+            expected = [("52", None, "nombre"), ("FR\\Ad85\\2Num286\\018\\2C2", None, "répertoire")]
+            self.assertCountEqual(got, expected)
 
     def test_facomponent_digitized_urls_FRAD084(self):
         """Test digitized_urls.
@@ -389,16 +410,45 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
         """
         fc_rql = "Any X WHERE X is FAComponent, X did D, D unitid %(u)s"
         with self.admin_access.cnx() as cnx:
-            self.import_filepath(cnx, self.datapath("ir_data/FRAD084_IR0000412.xml"))
+            self.import_filepath(cnx, "ir_data/FRAD084_IR0000412.xml")
             fc = cnx.execute(fc_rql, {"u": "74 J 2"}).one()
             self.assertFalse(fc.digitized_urls)
+
+    def test_findingaid_digitized_urls(self):
+        """Test digitized_urls.
+
+        Trying: import a FindingAid with daogroup
+        Expecting: 1 digitized_versions is created for the FindingAid
+        """
+        with self.admin_access.cnx() as cnx:
+            self.import_filepath(cnx, "ir_data/FRAD066_1B.xml")
+            fa = cnx.find("FindingAid").one()
+            got = [(d.url, d.illustration_url, d.role) for d in fa.digitized_versions]
+            expected = [
+                ("https://archive.org/details/inventairesommai13arch/page/n6/mode/2up", None, None),
+            ]
+            self.assertCountEqual(got, expected)
+
+    def test_findingaid_digitized_urls_not_in_es_doc(self):
+        """Test digitized_urls.
+
+        Trying: import a FindingAid with daogroup
+        Expecting: 1 digitized_versions is created for the FindingAid and present in es
+        """
+        with self.admin_access.cnx() as cnx:
+            self.import_filepath(cnx, "ir_data/FRAD066_1B.xml")
+            fa = cnx.find("FindingAid").one()
+            dvs = fa.digitized_versions
+            self.assertEqual(1, len(dvs))
+            adapter = fa.cw_adapt_to("IFullTextIndexSerializable")
+            self.assertNotIn("digitized_versions", adapter.serialize())
 
     def test_facomponent_relatedmaterial_FRAD067(self):
         """specific rules for Bas-Rhin"""
         fc_rql = "Any X WHERE X is FAComponent, X did D, D unitid %(u)s"
         with self.admin_access.cnx() as cnx:
             fpath = "FRAD067_1_FRAD067_EDF1_archives_paroissiales.xml"
-            self.import_filepath(cnx, self.datapath(fpath))
+            self.import_filepath(cnx, fpath)
             fc = cnx.execute(fc_rql, {"u": "2 G"}).one()
             url = "http://archives.bas-rhin.fr/media/96780/2G0Tabledesparoissesdef.pdf"
             relatedmaterial = (
@@ -412,7 +462,7 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
         fc_rql = "Any X WHERE X is FAComponent, X did D, D unitid %(u)s"
         with self.admin_access.cnx() as cnx:
             fpath = "FRAD062_ir_9fi_02_permaliens.xml"
-            self.import_filepath(cnx, self.datapath(fpath))
+            self.import_filepath(cnx, fpath)
             fc = cnx.execute(fc_rql, {"u": "9 Fi 1"}).one()
             # role image
             url = "http://archivesenligne.pasdecalais.fr/ark:/64297/5e7c97997adc45bcdafd11b170ae7b11"  # noqa
@@ -425,7 +475,7 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
     def test_index_entries_inheritance(self):
         fc_rql = "Any X WHERE X is FAComponent, X did D, D unitid %(u)s"
         with self.admin_access.cnx() as cnx:
-            self.import_filepath(cnx, self.datapath("FRAD095_00374.xml"))
+            self.import_filepath(cnx, "FRAD095_00374.xml")
             fc = cnx.execute(fc_rql, {"u": "3Q7 753 - 893"}).one()
             subjects = [i.label for i in fc.subject_indexes().entities()]
             self.assertCountEqual(subjects, ["ENREGISTREMENT"])
@@ -436,8 +486,7 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
     def test_authority_entries_facomponent(self):
         with self.admin_access.cnx() as cnx:
             fc_rql = "Any X WHERE X is FAComponent, X did D, D unitid %(u)s"
-            self.import_filepath(cnx, self.datapath("FRAN_IR_050263.xml"))
-            fc = None
+            self.import_filepath(cnx, "FRAN_IR_050263.xml")
             for e in cnx.execute(
                 fc_rql, {"u": "MC/ET/LXXXVI/1565-MC/ET/LXXXVI/2197 - MC/ET/LXXXVI/1984"}
             ).entities():
@@ -458,11 +507,107 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
             ]
             self.assertCountEqual(expected, index_entries)
 
+    def test_indexes_facomponents(self):
+        with self.admin_access.cnx() as cnx:
+            self.import_filepath(cnx, "FRAD090_2r_index.xml")
+            fc = cnx.execute(
+                "Any X WHERE X is FAComponent, X did D, D unitid %(u)s",
+                {"u": "a011497973827MCtiYb"},
+            ).one()
+            index_entries = [
+                (
+                    ie.authority[0].cw_etype,
+                    ie.authority[0].label,
+                    ie.type,
+                )
+                for ie in fc.reverse_index
+            ]
+            expected = [
+                ("SubjectAuthority", "archdesc-controlaccess-function", "function"),
+                ("SubjectAuthority", "archdesc-controlaccess-genreform", "genreform"),
+                ("SubjectAuthority", "archdesc-bioghist-subject", "subject"),
+                ("SubjectAuthority", "archdesc-physdesc-genreform", "genreform"),
+                ("LocationAuthority", "normal-archdesc-scopecontent-geogname", "geogname"),
+                ("AgentAuthority", "archdesc-unittitle-corpname", "corpname"),
+                ("AgentAuthority", "cdid-unittitle-famname", "famname"),
+                ("LocationAuthority", "cdid-bioghist-geogname", "geogname"),
+                ("AgentAuthority", "cdid-bioghist-corpname", "corpname"),
+                ("SubjectAuthority", "cdid-scopecontent-subject-p", "subject"),
+                ("SubjectAuthority", "normal-cdid-scopecontent-subject-bare", "subject"),
+                ("SubjectAuthority", "cdid-controlaccess-subject", "subject"),
+                ("SubjectAuthority", "cdid-controlacess-occupation", "occupation"),
+                ("SubjectAuthority", "normal-cdid-physdesc-genreform", "genreform"),
+            ]
+            self.assertCountEqual(expected, index_entries)
+
+    def test_indexes_findingaid(self):
+        with self.admin_access.cnx() as cnx:
+            self.import_filepath(cnx, "FRAD090_2r_index.xml")
+            fa = cnx.find("FindingAid").one()
+            index_entries = [
+                (
+                    ie.authority[0].cw_etype,
+                    ie.authority[0].label,
+                    ie.type,
+                )
+                for ie in fa.reverse_index
+            ]
+            expected = [
+                ("SubjectAuthority", "archdesc-controlaccess-function", "function"),
+                ("SubjectAuthority", "archdesc-controlaccess-genreform", "genreform"),
+                ("SubjectAuthority", "archdesc-bioghist-subject", "subject"),
+                ("LocationAuthority", "normal-archdesc-scopecontent-geogname", "geogname"),
+                ("AgentAuthority", "archdesc-unittitle-corpname", "corpname"),
+                ("SubjectAuthority", "archdesc-physdesc-genreform", "genreform"),
+            ]
+            self.assertCountEqual(expected, index_entries)
+
+    def test_indexes_within_p(self):
+        with self.admin_access.cnx() as cnx:
+            self.import_filepath(cnx, "ir_data/FRAD001_0000002M.xml")
+            fa = cnx.find("FindingAid").one()
+            index_entries = [
+                (
+                    ie.authority[0].cw_etype,
+                    ie.authority[0].label,
+                    ie.type,
+                )
+                for ie in fa.reverse_index
+            ]
+            expected = [
+                ("AgentAuthority", "Administration du département de l'Ain", "corpname"),
+                ("AgentAuthority", "CHRISTIAN FIZE", "persname"),
+                ("SubjectAuthority", "Document d'archives", "genreform"),
+                ("LocationAuthority", "L'ILE AUX MERVEILLES", "geogname"),
+                ("SubjectAuthority", "Recherche détaillée", "genreform"),
+            ]
+            self.assertCountEqual(expected, index_entries)
+            fa = cnx.execute("Any X WHERE X is FAComponent, X did D, D unitid '2 L 58'").one()
+            index_entries = [
+                (
+                    ie.authority[0].cw_etype,
+                    ie.authority[0].label,
+                    ie.type,
+                )
+                for ie in fa.reverse_index
+            ]
+            expected = [
+                ("SubjectAuthority", "ACCUSES 26608", "subject"),
+                ("AgentAuthority", "CHRISTIAN FIZE", "persname"),
+                ("SubjectAuthority", "Document d'archives", "genreform"),
+                ("SubjectAuthority", "LES LICORNES 26602", "subject"),
+                ("LocationAuthority", "L'ILE AUX MERVEILLES", "geogname"),
+                ("LocationAuthority", "L'ILE AUX MERVEILLES 26605", "geogname"),
+                ("SubjectAuthority", "Recherche détaillée", "genreform"),
+                ("SubjectAuthority", "Recherche détaillée 26608", "genreform"),
+            ]
+            self.assertCountEqual(expected, index_entries)
+
     def test_empty_unitid(self):
         with self.admin_access.cnx() as cnx:
             fc_rql = "Any X WHERE X is FAComponent, X did D, D unittitle %(u)s"
             fname = "ir_data/FRAD051_est_ead_affichage.xml"
-            self.import_filepath(cnx, self.datapath(fname))
+            self.import_filepath(cnx, fname)
             fc = cnx.execute(fc_rql, {"u": "1458-1992"}).one()
             self.assertFalse(fc.did[0].unitid)
 
@@ -473,13 +618,13 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
         """
         with self.admin_access.cnx() as cnx:
             fname = "ir_data/FRAD051_est_ead_affichage.xml"
-            self.import_filepath(cnx, self.datapath(fname))
+            self.import_filepath(cnx, fname)
             self.assertIsNone(cnx.find("FindingAid").one().oai_id)
 
     def test_findingaid_bioghist(self):
         with self.admin_access.cnx() as cnx:
             fname = "ir_data/FRAD051_est_ead_affichage.xml"
-            self.import_filepath(cnx, self.datapath(fname))
+            self.import_filepath(cnx, fname)
             fa = cnx.execute("Any X WHERE X is FindingAid").one()
             expected = '<div class="ead-p">bioghist: A concise essay or chronology'
             self.assertIn(expected, fa.bioghist)
@@ -487,7 +632,7 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
     def test_facomponent_physdesc(self):
         with self.admin_access.cnx() as cnx:
             fname = "ir_data/FRAD051_est_ead_affichage.xml"
-            self.import_filepath(cnx, self.datapath(fname))
+            self.import_filepath(cnx, fname)
             fc_rql = "Any X WHERE X is FAComponent, X did D, D unittitle %(u)s"
             fc = cnx.execute(fc_rql, {"u": "1458-1992"}).one()
             for label in ("label extent", "dimensions_label"):
@@ -496,7 +641,7 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
     def test_facomponent_materialspec(self):
         with self.admin_access.cnx() as cnx:
             fname = "ir_data/FRAD051_est_ead_affichage.xml"
-            self.import_filepath(cnx, self.datapath(fname))
+            self.import_filepath(cnx, fname)
             fc_rql = "Any X WHERE X is FAComponent, X did D, D unittitle %(u)s"
             fc = cnx.execute(fc_rql, {"u": "1458-1992"}).one()
             for label in (
@@ -509,7 +654,7 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
     def test_facomponent_notes(self):
         with self.admin_access.cnx() as cnx:
             fname = "ir_data/FRAD051_est_ead_affichage.xml"
-            self.import_filepath(cnx, self.datapath(fname))
+            self.import_filepath(cnx, fname)
             fc_rql = "Any X WHERE X is FAComponent, X did D, D unittitle %(u)s"
             fc = cnx.execute(fc_rql, {"u": "1458-1992"}).one()
             expected = """<div class="ead-wrapper">
@@ -524,7 +669,7 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
     def test_findingaid_changes(self):
         with self.admin_access.cnx() as cnx:
             fname = "ir_data/FRAD051_est_ead_affichage.xml"
-            self.import_filepath(cnx, self.datapath(fname))
+            self.import_filepath(cnx, fname)
             fa = cnx.execute("Any X WHERE X is FindingAid").one()
             self.assertIn("May 5, 1997", fa.fa_header[0].changes)
             expected = "This electronic finding aid was updated to"
@@ -533,7 +678,7 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
     def test_findingaid_notes(self):
         with self.admin_access.cnx() as cnx:
             fname = "ir_data/FRAD051_est_ead_affichage.xml"
-            self.import_filepath(cnx, self.datapath(fname))
+            self.import_filepath(cnx, fname)
             fa = cnx.execute("Any X WHERE X is FindingAid").one()
             expected = """<div class="ead-wrapper">
             <ul class="ead-list-unmarked"><li>odd. item. Department of Economic Affairs: Industrial Policy Group: Registered
@@ -548,7 +693,7 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
     def test_services_normalization(self):
         with self.admin_access.cnx() as cnx:
             cnx.commit()
-            self.import_filepath(cnx, self.datapath("FRAN_IR_022409.xml"))
+            self.import_filepath(cnx, "FRAN_IR_022409.xml")
             fa = cnx.find("FindingAid").one()
             service = cnx.find("Service", code="fran").one()
             self.assertEqual(fa.related_service.eid, service.eid)
@@ -563,13 +708,13 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
         with self.admin_access.cnx() as cnx:
             service = cnx.create_entity("Service", code="FRAD001", category="foo")
             cnx.commit()
-            self.import_filepath(cnx, self.datapath("ir_data/frad001_ec_thol.xml"))
+            self.import_filepath(cnx, "ir_data/frad001_ec_thol.xml")
             fa = cnx.find("FindingAid").one()
             self.assertEqual(fa.related_service, service)
 
     def test_agent_index_creation(self):
         with self.admin_access.cnx() as cnx:
-            self.import_filepath(cnx, self.datapath("FRAN_IR_0261167_excerpt.xml"))
+            self.import_filepath(cnx, "FRAN_IR_0261167_excerpt.xml")
             self.assertEqual(len(cnx.find("AgentName")), 4)
             fa = cnx.find("FindingAid").one()
             agents = [
@@ -594,7 +739,7 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
 
     def test_subject_index_creation(self):
         with self.admin_access.cnx() as cnx:
-            self.import_filepath(cnx, self.datapath("FRAN_IR_0261167_excerpt.xml"))
+            self.import_filepath(cnx, "FRAN_IR_0261167_excerpt.xml")
             self.assertEqual(len(cnx.find("Subject")), 13)
             fa = cnx.find("FindingAid").one()
             subjects = [(i.label, i.type, i.role) for i in fa.subject_indexes().entities()]
@@ -630,7 +775,7 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
 
     def test_location_index_creation(self):
         with self.admin_access.cnx() as cnx:
-            self.import_filepath(cnx, self.datapath("FRAN_IR_0261167_excerpt.xml"))
+            self.import_filepath(cnx, "FRAN_IR_0261167_excerpt.xml")
             self.assertEqual(len(cnx.find("Geogname")), 2)
             fa = cnx.find("FindingAid").one()
             locations = [(i.label, i.type) for i in fa.geo_indexes().entities()]
@@ -644,9 +789,17 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
             ]
             self.assertCountEqual(expected, locations)
 
+    def test_pdf_unique_index_metadata(self):
+        with self.admin_access.cnx() as cnx:
+            self.import_filepath(cnx, "pdf/FRAC13004_IC_II.pdf")
+            fa = cnx.find("FindingAid").one()
+            self.assertEqual(20, fa.agent_indexes().rowcount)
+            self.assertEqual(46, fa.subject_indexes().rowcount)
+            self.assertEqual(1, fa.geo_indexes().rowcount)
+
     def test_findingaid_data(self):
         with self.admin_access.cnx() as cnx:
-            self.import_filepath(cnx, self.datapath("FRAD095_00259.XML"))
+            self.import_filepath(cnx, "FRAD095_00259.XML")
             fa = cnx.find("FindingAid").one()
             self.assertEqual(fa.eadid, "FRAD095_00259")
             self.assertEqual(fa.description, None)
@@ -664,7 +817,7 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
 
     def test_findingaid_data_FRAD09_1r(self):
         with self.admin_access.cnx() as cnx:
-            self.import_filepath(cnx, self.datapath("FRAD090_1r_retoucheFA.xml"))
+            self.import_filepath(cnx, "FRAD090_1r_retoucheFA.xml")
             fa = cnx.find("FindingAid").one()
             self.assertEqual(fa.eadid, "archref")
             self.assertEqual(fa.did[0].unitid, "unitid: 1 R 109-277")
@@ -679,7 +832,7 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
 
     def test_authority_in_es_docs(self):
         with self.admin_access.cnx() as cnx:
-            es_docs = self.import_filepath(cnx, self.datapath("FRAN_IR_0261167_excerpt.xml"))
+            es_docs = self.import_filepath(cnx, "FRAN_IR_0261167_excerpt.xml")
             aa = cnx.find("AgentAuthority", label="Direction de l'eau").one()
             self.assertEqual(len(es_docs), 2)
             fa_es_doc, comp_es_doc = es_docs
@@ -694,13 +847,13 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
 
     def test_singleton_bibliography_div(self):
         with self.admin_access.cnx() as cnx:
-            self.import_filepath(cnx, self.datapath("FRAD095_00442.xml"))
+            self.import_filepath(cnx, "FRAD095_00442.xml")
             fa = cnx.find("FindingAid").one()
             self.assertFalse(fa.bibliography)
 
     def test_singleton_arrangement_div(self):
         with self.admin_access.cnx() as cnx:
-            self.import_filepath(cnx, self.datapath("FRAD095_00442.xml"))
+            self.import_filepath(cnx, "FRAD095_00442.xml")
             fa = cnx.find("FindingAid").one()
             expected = (
                 '<div class="ead-section ead-arrangement">'
@@ -711,7 +864,7 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
 
     def test_singleton_accruals_div(self):
         with self.admin_access.cnx() as cnx:
-            self.import_filepath(cnx, self.datapath("FRAD095_00442.xml"))
+            self.import_filepath(cnx, "FRAD095_00442.xml")
             fa = cnx.find("FindingAid").one()
             expected = (
                 """<div class="ead-section ead-accruals">"""
@@ -722,7 +875,7 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
 
     def test_singleton_appraisal_div(self):
         with self.admin_access.cnx() as cnx:
-            self.import_filepath(cnx, self.datapath("FRAD095_00442.xml"))
+            self.import_filepath(cnx, "FRAD095_00442.xml")
             fa = cnx.find("FindingAid").one()
             expected = (
                 '<div class="ead-section ead-appraisal">'
@@ -730,6 +883,35 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
                 "Aucun</div></div></div>"
             )
             self.assertIn(expected, fa.description)
+
+    def test_multiple_accessrestrict_divs(self):
+        """
+        Trying: import an IR with multiple accessrestrict
+        Expecting: all accessrestricts are present on the FindingAid
+        """
+        with self.admin_access.cnx() as cnx:
+            self.import_filepath(cnx, "ir_data/FRANMT_IR_1996_94.xml")
+            fa = cnx.find("FindingAid").one()
+            expected = """<div class="ead-section ead-accessrestrict"><div class="ead-wrapper">
+      Archives priv&#xE9;es. Les documents produits avant 1946 sont consid&#xE9;r&#xE9;s comme des archives priv&#xE9;es. C'est &#xE0; cette date seulement que l'entreprise est nationalis&#xE9;e.
+    </div>
+<div class="ead-wrapper">
+      Microfilms &#xAB; librement communicables &#xBB;. En effet, les d&#xE9;lais applicables sont ceux du Code du patrimoine par analogie avec les archives publiques : ils sont aujourd'hui tous &#xE9;chus.
+    </div>
+<div class="ead-wrapper">Publiable sur internet</div></div>"""  # noqa
+            self.assertEqual(expected, fa.accessrestrict)
+
+    def test_multiple_userestrict_divs(self):
+        """
+        Trying: import an IR with multiple userestrict
+        Expecting: all userestrict are present in the FindingAid
+        """
+        with self.admin_access.cnx() as cnx:
+            self.import_filepath(cnx, "ir_data/FRANMT_IR_1996_94.xml")
+            fa = cnx.find("FindingAid").one()
+            expected = """<div class="ead-section ead-userestrict"><div class="ead-wrapper"> La r&#xE9;utilisation des documents microfilm&#xE9;s est gratuite et libre, sous r&#xE9;serve des dispositions relatives aux droits de propri&#xE9;t&#xE9; intellectuelle et au respect de la vie priv&#xE9;e (voir les modalit&#xE9;s d'application sur le site internet des ANMT). </div>
+<div class="ead-wrapper"> Test. </div></div>"""  # noqa
+            self.assertEqual(expected, fa.userestrict)
 
     def test_concept_alignment(self):
         """
@@ -750,44 +932,47 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
             cnx.create_entity(
                 "Label", label="poIssON", language_code="fr", kind="alternative", label_of=c2
             )
+            for label in ("function", "notaire", "étude"):
+                cnx.create_entity(
+                    "Concept",
+                    in_scheme=scheme,
+                    reverse_label_of=cnx.create_entity(
+                        "Label", label=label, language_code="fr", kind="preferred"
+                    ),
+                )
             cnx.commit()
             self.import_filepath(
                 cnx,
-                self.datapath("FRAN_IR_0261167_excerpt.xml"),
+                "FRAN_IR_0261167_excerpt.xml",
                 autodedupe_authorities="service/strict",
             )
-            same_as_rset = cnx.execute("Any X WHERE X is SubjectAuthority, X same_as C")
-            self.assertEqual(len(same_as_rset), 2)
-            poisson = cnx.find("SubjectAuthority", label="Poisson").one()
-            self.assertEqual(poisson.same_as[0].eid, c2.eid)
 
-    def test_digitized_versions_in_es_docs(self):
+            same_as_rset = cnx.execute("Any X WHERE X is SubjectAuthority, X same_as C")
+            self.assertEqual(len(same_as_rset), 5)
+            for label in ("poisson", "Poisson"):
+                poisson = cnx.find("SubjectAuthority", label="Poisson").one()
+                self.assertEqual(poisson.same_as[0].eid, c2.eid)
+            for label, stype in (
+                ("function", "function"),
+                ("notaire", "occupation"),
+                ("étude", "genreform"),
+            ):
+                subject = cnx.find("SubjectAuthority", label=label).one()
+                self.assertEqual(subject.same_as[0].eid, get_concept(cnx, label).eid)
+                self.assertEqual(subject.reverse_authority[0].type, stype)
+                self.assertTrue(subject.quality)
+
+    def test_dao(self):
         url = "https://www.siv.archives-nationales.culture.gouv.fr/mm/media/download/FRDAFAN85_OF9v173541_L-min.jpg"  # noqa
         with self.admin_access.cnx() as cnx:
-            self.import_filepath(cnx, self.datapath("FRAN_IR_051016_excerpt.xml"))
+            self.import_filepath(cnx, "FRAN_IR_051016_excerpt.xml")
             fc = cnx.find("FAComponent", component_order=0).one()
             self.assertEqual(len(fc.digitized_versions), 2)
             self.assertEqual(fc.illustration_url, url)
-            adapter = fc.cw_adapt_to("IFullTextIndexSerializable")
-            self.assertEqual(
-                [
-                    {
-                        "illustration_url": None,
-                        "role": "UNKNOWN",
-                        "url": "https://www.siv.archives-nationales.culture.gouv.fr/siv/rechercheconsultation/consultation/multimedia/Galerie.action?mediaParam==?UTF-8?B?RlJEQUZBTjg1X09GOXYxNzM1NDFfTC5qcGcjRlJEQUZBTjg1X09GOXYxNzM1NDVfTC5qcGc=?=&udTitle==?UTF-8?B?UExBTi1ERS1MQS1UT1VS?=&xpointer=&mmName",  # noqa
-                    },
-                    {
-                        "illustration_url": url,
-                        "role": "thumbnail",
-                        "url": None,
-                    },
-                ],
-                adapter.serialize()["digitized_versions"],
-            )
 
     def test_daogrp(self):
         with self.admin_access.cnx() as cnx:
-            self.import_filepath(cnx, self.datapath("FRAD095_00374.xml"))
+            self.import_filepath(cnx, "FRAD095_00374.xml")
             comp = find_component(cnx, "3Q7 1 - 752")
             self.assertEqual(len(comp.digitized_versions), 0)
             comp = find_component(cnx, "3Q7 1 - 7")
@@ -822,7 +1007,7 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
 
     def test_component_order(self):
         with self.admin_access.cnx() as cnx:
-            self.import_filepath(cnx, self.datapath("FRAN_IR_051016_excerpt.xml"))
+            self.import_filepath(cnx, "FRAN_IR_051016_excerpt.xml")
             fac_unitids = sorted(
                 (comp.component_order, comp.did[0].unitid)
                 for comp in cnx.find("FAComponent").entities()
@@ -835,24 +1020,47 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
                 ],
             )
 
+    def test_findingaid_support_hash_import_pdf(self):
+        """
+        Trying: import pdf file
+        Expecting: findingaid_support data_hash is correctly set
+        """
+        with self.admin_access.cnx() as cnx:
+            self.import_filepath(cnx, "FRSHD_PUB_00000345_0001.pdf")[0]
+            fa_support = cnx.execute("Any X WHERE F findingaid_support X").one()
+            self.assertEqual(fa_support.data_hash, fa_support.compute_hash())
+            self.assertTrue(fa_support.check_hash())
+
     def test_pdf_metadata(self):
         with self.admin_access.cnx() as cnx:
-            es_doc = self.import_filepath(cnx, self.datapath("FRSHD_PUB_00000345_0001.pdf"))[0]
+            es_doc = self.import_filepath(cnx, "FRSHD_PUB_00000345_0001.pdf")[0]
             fa = cnx.find("FindingAid").one()
-            rset = cnx.find("SubjectAuthority", label="Journal des marches et opérations (JMO)")
-            self.assertEqual(len(rset), 1)
+            jmo = cnx.find("SubjectAuthority", label="Journal des marches et opérations (JMO)")
+            self.assertEqual(len(jmo), 1)
             index_entries = es_doc["_source"]["index_entries"]
-            self.assertEqual(len(index_entries), 1)
-            self.assertEqual(
-                index_entries[0],
-                {
-                    "type": "subject",
-                    "normalized": "journal des marches et operations jmo",
-                    "label": "Journal des marches et opérations (JMO)",
-                    "role": "index",
-                    "authority": rset.one().eid,
-                    "authfilenumber": None,
-                },
+            self.assertEqual(len(index_entries), 2)
+            self.assertCountEqual(
+                index_entries,
+                [
+                    {
+                        "authfilenumber": None,
+                        "authority": jmo[0][0],
+                        "label": "Journal des marches et opérations (JMO)",
+                        "normalized": "journal des marches et operations jmo",
+                        "role": "index",
+                        "type": "subject",
+                    },
+                    {
+                        "authfilenumber": None,
+                        "authority": cnx.find(
+                            "SubjectAuthority", label="Instrument de recherche (archives)"
+                        )[0][0],
+                        "label": "Instrument de recherche (archives)",
+                        "normalized": "instrument de recherche archives",
+                        "role": "index",
+                        "type": "genreform",
+                    },
+                ],
             )
             self.assertEqual(
                 fa.dc_title(),
@@ -864,22 +1072,26 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
             self.assertEqual(fa.did[0].stopyear, 1964)
             self.assertEqual(fa.did[0].physdesc, None)
             self.assertEqual(fa.did[0].lang_description, None)
+            self.assertTrue(1, len(fa.digitized_versions))
+            expected_url = "http://francearchives.fr/image.png"
+            self.assertEqual(expected_url, fa.illustration_url)
+            self.assertEqual(expected_url, fa.thumbnail_dest)
             self.assertIn("Service historique", fa.did[0].origination)
 
     def test_name_stable_id_pdf_with_metadata(self):
         """stable_id is based in the filename with extension:
         - column 'identifiant_fichier' of metadata file with extension:"""
         with self.admin_access.cnx() as cnx:
-            self.import_filepath(cnx, self.datapath("FRSHD_PUB_00000345_0001.pdf"))
+            self.import_filepath(cnx, "FRSHD_PUB_00000345_0001.pdf")
             fa = cnx.find("FindingAid").one()
             self.assertEqual("FRSHD_PUB_00000345_0001", fa.eadid)
             self.assertEqual("FRSHD_PUB_00000345_0001.pdf", fa.name)
             self.assertEqual(fa.stable_id, usha1(fa.name))
 
     def test_name_stable_id_pdf_without_metadata(self):
-        """ stable id is based on filename without extension"""
+        """stable id is based on filename without extension"""
         with self.admin_access.cnx() as cnx:
-            self.import_filepath(cnx, self.datapath("pdf/FRSHD_PUB_00000345_0002.pdf"))
+            self.import_filepath(cnx, "pdf/FRSHD_PUB_00000345_0002.pdf")
             fa = cnx.find("FindingAid").one()
             self.assertEqual("FRSHD_PUB_00000345_0002", fa.eadid)
             self.assertEqual("FRSHD_PUB_00000345_0002", fa.name)
@@ -888,7 +1100,7 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
     def test_nonregr_unittile_not_null(self):
         """unittitle should not be null: use unitdata instead (cf. #58785477)"""
         with self.admin_access.cnx() as cnx:
-            self.import_filepath(cnx, self.datapath("ir_data/FRANOM_01250_excerpt.xml"))
+            self.import_filepath(cnx, "ir_data/FRANOM_01250_excerpt.xml")
             title = cnx.execute(
                 "Any DT WHERE D is Did, D unitid %(id)s, D unittitle DT",
                 {"id": "FR ANOM 91 / 2 M 242 a"},
@@ -897,7 +1109,7 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
 
     def test_extptr_when_ark_is_specified(self):
         with self.admin_access.cnx() as cnx:
-            self.import_filepath(cnx, self.datapath("ir_data/FRANOM_01250_excerpt.xml"))
+            self.import_filepath(cnx, "ir_data/FRANOM_01250_excerpt.xml")
             extpr = cnx.execute(
                 "Any X WHERE D extptr X, D unitid %(id)s", {"id": "FR ANOM 91 / 2 M 242 a"}
             )[0][0]
@@ -905,21 +1117,166 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
 
     def test_ape_ead_path(self):
         with self.admin_access.cnx() as cnx:
-            filepath = self.datapath("ir_data/v1/FRAD095_00374.xml")
+            filepath = "ir_data/v1/FRAD095_00374.xml"
             self.import_filepath(cnx, filepath)
             fa = cnx.find("FindingAid").one()
             self.assertEqual(len(fa.ape_ead_file), 1)
             ape_filepath = cnx.execute(
                 "Any FSPATH(D) WHERE X ape_ead_file F, F data D, X eid %(x)s", {"x": fa.eid}
             )[0][0].getvalue()
-            self.assertEqual(
-                ape_filepath,
-                self.datapath("tmp/ape-ead/FRAD095/ape-FRAD095_00374.xml").encode("utf-8"),
+            # FIXME s3 we shoud not take account of cnx.vreg.config["appfiles-dir"] which must be ""
+            expected_path = self.get_filepath_by_storage(
+                f"{self.config['appfiles-dir']}/ape-ead/FRAD095/ape-FRAD095_00374.xml"
+            ).encode("utf-8")
+            self.assertEqual(ape_filepath, expected_path)
+            self.assertTrue(self.fileExists(ape_filepath))
+
+    def test_ape_ead_deleted(self):
+        with self.admin_access.cnx() as cnx:
+            filepath = "ir_data/v1/FRAD095_00374.xml"
+            self.import_filepath(cnx, filepath)
+            fa = cnx.find("FindingAid").one()
+            self.assertTrue(cnx.execute("Any X WHERE X ape_ead_file F"))
+            delete_from_filename(
+                cnx, fa.stable_id, is_filename=False, interactive=False, esonly=False
             )
+            cnx.commit()
+            self.assertFalse(cnx.find("FindingAid"))
+            self.assertFalse(cnx.execute("Any X WHERE X ape_ead_file F"))
+
+    def test_ape_ead_legalstatus(self):
+        """Test legalstatus display of FAComponent.
+
+        Trying: import in IR with <legalstatus type="arch_privee" altrender="Archives privées">
+        Expecting: legalstatus@altrender value is found in ape_ead <accessrestrict>
+
+        """
+        with self.admin_access.cnx() as cnx:
+            cnx.create_entity(
+                "Service",
+                code="FRAD040",
+                category="L",
+            )
+            cnx.commit()
+            filepath = "ir_data/FRAD040_000020FI__fiche_img.xml"
+            self.import_filepath(cnx, filepath)
+            fi = cnx.find("FindingAid").one()
+            ape_ead_file = fi.ape_ead_file[0]
+            content = ape_ead_file.data.read()
+            tree = etree.fromstring(content)
+            for accessrestrict in tree.xpath(
+                "//e:archdesc/e:accessrestrict", namespaces={"e": tree.nsmap[None]}
+            ):
+                html = etree.tostring(accessrestrict).decode("utf-8")
+                if "<head>Statut juridique</head>" in html:
+                    expected = """<p>Archives priv&#233;es. Les documents produits avant 1946"""
+                    self.assertIn(expected, html)
+
+    def test_ape_ead_archdesc_tags_1(self):
+        """Test legalstatus display of FAComponent.
+
+        Trying: import in IR
+        Expecting: exptected attributes are found in ape_ead <accessrestrict>
+
+        """
+        with self.admin_access.cnx() as cnx:
+            cnx.create_entity(
+                "Service",
+                code="FRAD040",
+                category="L",
+            )
+            cnx.commit()
+            filepath = "ir_data/FRAD040_000020FI__fiche_img.xml"
+            self.import_filepath(cnx, filepath)
+            fi = cnx.find("FindingAid").one()
+            ape_ead_file = fi.ape_ead_file[0]
+            content = ape_ead_file.data.read()
+            tree = etree.fromstring(content)
+            for tag in ("bioghist", "acqinfo", "scopecontent", "arrangement", "userestrict"):
+                res = tree.xpath(f"//e:archdesc/e:{tag}", namespaces={"e": tree.nsmap[None]})
+                self.assertEqual(1, len(res))
+
+            accessrestricts = tree.xpath(
+                "//e:archdesc/e:accessrestrict", namespaces={"e": tree.nsmap[None]}
+            )
+            self.assertEqual(2, len(accessrestricts))
+
+    def test_ape_ead_archdesc_tags_2(self):
+        """Test legalstatus display of FAComponent.
+
+        Trying: import in IR
+        Expecting: exptected attributes are found in ape_ead <accessrestrict>
+
+        """
+        with self.admin_access.cnx() as cnx:
+            cnx.create_entity(
+                "Service",
+                code="FRAD040",
+                category="L",
+            )
+            cnx.commit()
+            filepath = "ir_data/FRANMT_IR_1996_94.xml"
+            self.import_filepath(cnx, filepath)
+            fi = cnx.find("FindingAid").one()
+            ape_ead_file = fi.ape_ead_file[0]
+            content = ape_ead_file.data.read()
+            tree = etree.fromstring(content)
+            for tag in (
+                "custodhist",
+                "arrangement",
+                "scopecontent",
+                "phystech",
+                "bioghist",
+                "acqinfo",
+                "userestrict",
+                "langmaterial",
+                "originalsloc",
+                "relatedmaterial",
+                "bibliography",
+                "controlaccess",
+            ):
+                res = tree.xpath(f"//e:archdesc/e:{tag}", namespaces={"e": tree.nsmap[None]})
+                if tag in ("userestrict",):
+                    self.assertEqual(2, len(res))
+                else:
+                    self.assertEqual(1, len(res))
+
+            accessrestricts = tree.xpath(
+                "//e:archdesc/e:accessrestrict", namespaces={"e": tree.nsmap[None]}
+            )
+            self.assertEqual(3, len(accessrestricts))
+
+    def test_ape_ead_accessrestrict(self):
+        """Test multiples accessrestrict of FindingAid.
+
+        Trying: import in IR with multiple accessrestrict
+        Expecting: all accessrestricts are present in ape_ead
+
+        """
+        with self.admin_access.cnx() as cnx:
+            cnx.commit()
+            filepath = "ir_data/FRANMT_IR_1996_94.xml"
+            self.import_filepath(cnx, filepath)
+            fi = cnx.find("FindingAid").one()
+            ape_ead_file = fi.ape_ead_file[0]
+            content = ape_ead_file.data.read()
+            tree = etree.fromstring(content)
+            nodes = tree.xpath("//e:archdesc/e:accessrestrict", namespaces={"e": tree.nsmap[None]})
+            for accessrestrict in tree.xpath(
+                "//e:archdesc/e:accessrestrict", namespaces={"e": tree.nsmap[None]}
+            ):
+                p = accessrestrict.xpath("e:p", namespaces={"e": tree.nsmap[None]})
+                self.assertTrue(
+                    any(
+                        p[0].text.startswith(word)
+                        for word in ("Archives", "Microfilms", "Publiable")
+                    )
+                )
+            self.assertEqual(3, len(nodes))
 
     def test_index_authorities(self):
         with self.admin_access.cnx() as cnx:
-            self.import_filepath(cnx, self.datapath("FRAC95300_1DHP_rpnum_001.xml"))
+            self.import_filepath(cnx, "FRAC95300_1DHP_rpnum_001.xml")
             fa = cnx.find("FindingAid").one()
             for itype in ("persname", "corpname", "name", "famname", "geogname"):
                 agents = list(fa.main_indexes(itype).entities())
@@ -927,37 +1284,44 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
 
     def test_import_findingaid_bioghist(self):
         with self.admin_access.cnx() as cnx:
-            filepath = self.datapath("ir_data/FRMAEE/FRMAEE_0001MA030.xml")
+            filepath = "ir_data/FRMAEE/FRMAEE_0001MA030.xml"
             self.import_filepath(cnx, filepath)
             fa = cnx.find("FindingAid").one()
             expected = "Rabat le 28 mai 1947"
             self.assertIn(expected, fa.bioghist)
 
     def test_import_findingaid_fa_support(self):
+        """
+        Trying: import a XML file
+        Expecting: findingaid_support exists
+        """
         with self.admin_access.cnx() as cnx:
-            filepath = self.datapath("ir_data/FRMAEE/FRMAEE_0001MA030.xml")
+            filepath = "ir_data/FRMAEE/FRMAEE_0001MA030.xml"
             self.import_filepath(cnx, filepath)
             fa = cnx.find("FindingAid").one()
             fa_support_filepath = cnx.execute(
                 "Any FSPATH(D) WHERE X findingaid_support F, F data D, X eid %(x)s", {"x": fa.eid}
             )[0][0].getvalue()
-            self.assertEqual(fa_support_filepath, filepath.encode("utf-8"))
+            self.assertEqual(fa_support_filepath, self.imported_filepath.encode("utf-8"))
+            self.assertTrue(self.fileExists(fa_support_filepath))
 
-    def test_import_findingaid_fa_support_hash(self):
+    def test_findingaid_support_hash_import_ead(self):
         """
-        Trying: create a File
-        Expecting: File.data_sha1hex is equal to expected
+        Trying: import a XML file
+        Expecting: findingaid_support data_hash is correctly set
         """
         with self.admin_access.cnx() as cnx:
-            filepath = self.datapath("ir_data/FRMAEE/FRMAEE_0001MA030.xml")
+            filepath = "ir_data/FRMAEE/FRMAEE_0001MA030.xml"
             self.import_filepath(cnx, filepath)
-            fa = cnx.find("FindingAid").one()
+            fa_support = cnx.execute("Any X WHERE F findingaid_support X").one()
             expected = "da645ebf68b20274d25dae40d9109dba0bd42f4c"
-            self.assertEqual(expected, fa.findingaid_support[0].data_hash)
+            self.assertEqual(expected, fa_support.data_hash)
+            self.assertEqual(fa_support.data_hash, fa_support.compute_hash())
+            self.assertTrue(fa_support.check_hash())
 
     def test_import_findingaid_referenced_files(self):
         with self.admin_access.cnx() as cnx:
-            filepath = self.datapath("ir_data/FRMAEE/FRMAEE_0001MA030.xml")
+            filepath = "ir_data/FRMAEE/FRMAEE_0001MA030.xml"
             self.import_filepath(cnx, filepath)
             fa = cnx.find("FindingAid").one()
             sha1_maroc = "c7e79ea17f70586cb16c723b06832a7d9154fa20"
@@ -981,41 +1345,116 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
                 expected = '<a href="../file/{}"'.format(f91)
                 self.assertIn(expected, fac.additional_resources)
             self.assertEqual(cnx.find("File").rowcount, 9)
+            for fpath in cnx.execute(
+                f"""Any {self.fkeyfunc}(D) WHERE X fa_referenced_files F, F data D"""
+            ):
+                self.assertTrue(self.fileExists(fpath[0].getvalue()))
 
     def test_import_relfiles(self):
         with self.admin_access.cnx() as cnx:
             self.assertFalse(cnx.execute("Any X WHERE X is File"))
-            filepath = self.datapath("ir_data/FRMAEE/FRMAEE_0001MA030.xml")
+            filepath = "ir_data/FRMAEE/FRMAEE_0001MA030.xml"
             self.import_filepath(cnx, filepath)
-            filepath = self.datapath("ir_data/FRMAEE/RELFILES/FRMAEE_1BIP_1919-1994.pdf")
+            filepath = "ir_data/FRMAEE/RELFILES/FRMAEE_1BIP_1919-1994.pdf"
             self.import_filepath(cnx, filepath)
             self.assertEqual(len(cnx.find("FindingAid")), 1)
             self.assertEqual(len(cnx.find("FAComponent")), 1)
 
     def test_import_relfiles_symlink(self):
         with self.admin_access.cnx() as cnx:
-            filepath = self.datapath("ir_data/FRMAEE/FRMAEE_0001MA030.xml")
+            filepath = "ir_data/FRMAEE/FRMAEE_0001MA030.xml"
             self.import_filepath(cnx, filepath)
             rset = cnx.execute(
-                "Any S, FSPATH(D) LIMIT 1 WHERE F data_hash S, " "X fa_referenced_files F, F data D"
+                """Any S, FSPATH(D) LIMIT 1 WHERE F data_hash S,
+                   X fa_referenced_files F, F data D,
+                   F data_name 'FRMAEE_MN_179CPCOM_Maroc.pdf'"""
             )
             data_sha1hex = rset[0][0]
             pdfpath = rset[0][1].getvalue()
-            self.assertTrue(pdfpath.endswith(b"179CPCOM_Maroc.pdf"))
-            destpath = osp.join(
-                self.config["appfiles-dir"],
-                "{}_{}".format(data_sha1hex, osp.basename(pdfpath).decode("utf-8")),
-            )
+            self.assertTrue(self.fileExists(self.get_filepath_by_storage(filepath)))
+            # old symlinks
+            if self.s3_bucket_name:
+                destpath = self.get_filepath_by_storage(
+                    f"{data_sha1hex}_{osp.basename(pdfpath).decode('utf-8')}"
+                )
+            else:
+                destpath = self.get_filepath_by_storage(
+                    f"{self.config['appfiles-dir']}/{data_sha1hex}_{osp.basename(pdfpath).decode('utf-8')}"  # noqa
+                )
             self.assertNotEqual(destpath.encode("utf-8"), pdfpath)
-            self.assertTrue(osp.isfile(destpath))
-            self.assertTrue(osp.islink(destpath))
+            self.assertTrue(self.fileExists(destpath))
+            if not self.s3_bucket_name:
+                self.assertTrue(osp.islink(destpath))
+
+    def _test_files(self, cnx, fdata, deleted=False):
+        for data_sha1hex, fpath in fdata:
+            self.assertTrue(self.fileExists(fpath))
+            self.assertTrue(self.fileExists(self.get_filepath_by_storage(fpath)))
+            # test symlinks
+            if self.s3_bucket_name:
+                destpath = self.get_filepath_by_storage(f"{data_sha1hex}_{osp.basename(fpath)}")
+                if deleted:
+                    self.assertFalse(self.fileExists(destpath))
+                else:
+                    self.assertTrue(self.fileExists(destpath))
+            else:
+                destpath = self.get_filepath_by_storage(
+                    f"{self.config['appfiles-dir']}/{data_sha1hex}_{osp.basename(fpath)}"  # noqa
+                )
+                # not implement yet
+                self.assertTrue(self.fileExists(destpath))
+
+    def test_delete_findingaid_referenced_files(self):
+        """
+        Trying: create a findingaid with referenced files and pdf and delete it
+        Expecting: all files are removed
+        """
+        with self.admin_access.cnx() as cnx:
+            filepath = "ir_data/FRMAEE/FRMAEE_0001MA030.xml"
+            self.import_filepath(cnx, filepath)
+            fa = cnx.find("FindingAid").one()
+            sha1_maroc = "c7e79ea17f70586cb16c723b06832a7d9154fa20"
+            maroc = "{}/FRMAEE_MN_179CPCOM_Maroc.pdf".format(sha1_maroc)
+            sha1_61 = "05651f43e045d343c3d220950b7b060978e3c322"
+            f61 = "{}/9BIP_1914-1961.pdf".format(sha1_61)
+            f1, f2, f3, f4 = fa.fa_referenced_files
+            self.assertCountEqual(
+                [f.data_hash for f in fa.fa_referenced_files], [sha1_maroc] * 3 + [sha1_61]
+            )
+            for fsha1 in [maroc, f61]:
+                expected = '<a href="../file/{}"'.format(fsha1)
+                self.assertIn(expected, fa.additional_resources)
+            fac = cnx.find("FAComponent").one()
+            sha1_91 = "e5d25c18f08e3e4a0d15d360dc2b7bfad86832d9"
+            f91 = "{}/FRMAEE_1BIP_1919-1994.pdf".format(sha1_91)
+            self.assertCountEqual(
+                [f.data_hash for f in fac.fa_referenced_files], [sha1_91, sha1_maroc, sha1_61]
+            )
+            for fsha1 in [f91]:
+                expected = '<a href="../file/{}"'.format(f91)
+                self.assertIn(expected, fac.additional_resources)
+            self.assertEqual(cnx.find("File").rowcount, 9)
+            fdata = [
+                (h, f.getvalue().decode("utf-8"))
+                for h, f in cnx.execute(
+                    f"""DISTINCT Any S, {self.fkeyfunc}(D) WHERE X fa_referenced_files F,
+                        F data D, F data_hash S"""
+                )
+            ]
+            self._test_files(cnx, fdata)
+            delete_from_filename(
+                cnx, fa.stable_id, is_filename=False, interactive=False, esonly=False
+            )
+            cnx.commit()
+            self.assertFalse(cnx.find("FindingAid"))
+            self._test_files(cnx, fdata, deleted=True)
 
     def test_import_pdffiles(self):
         with self.admin_access.cnx() as cnx:
             self.assertFalse(cnx.execute("Any X WHERE X is File"))
-            filepath = self.datapath("ir_data/FRMAEE/FRMAEE_0001MA030.xml")
+            filepath = "ir_data/FRMAEE/FRMAEE_0001MA030.xml"
             self.import_filepath(cnx, filepath)
-            filepath = self.datapath("ir_data/FRMAEE/PDF/FRMAEE_1BIP_1919-1994.pdf")
+            filepath = "ir_data/FRMAEE/PDF/FRMAEE_1BIP_1919-1994.pdf"
             self.import_filepath(cnx, filepath)
             self.assertEqual(len(cnx.find("FindingAid")), 2)
             self.assertEqual(len(cnx.find("FAComponent")), 1)
@@ -1023,16 +1462,46 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
     def test_import_pdffiles_symlink(self):
         """test that the symlink to the appfiles-dir is set for the pdf file"""
         with self.admin_access.cnx() as cnx:
-            filepath = self.datapath("ir_data/FRMAEE/PDF/FRMAEE_1BIP_1919-1994.pdf")
+            filepath = "ir_data/FRMAEE/PDF/FRMAEE_1BIP_1919-1994.pdf"
             self.import_filepath(cnx, filepath)
             pdffile = cnx.execute("Any F WHERE X findingaid_support F").one()
-            destpath = osp.join(
-                self.config["appfiles-dir"],
-                "{}_{}".format(pdffile.data_hash, osp.basename(filepath)),
-            )
+            self.assertEqual(pdffile.data_hash, pdffile.compute_hash())
+            self.assertTrue(pdffile.check_hash())
+            self.assertTrue(self.fileExists(self.get_filepath_by_storage(filepath)))
+            if self.s3_bucket_name:
+                destpath = self.get_filepath_by_storage(
+                    f"{pdffile.data_hash}_{osp.basename(filepath)}"
+                )
+            else:
+                destpath = self.get_filepath_by_storage(
+                    f"{self.config['appfiles-dir']}/{pdffile.data_hash}_{osp.basename(filepath)}"
+                )
             self.assertNotEqual(destpath, filepath)
-            self.assertTrue(osp.isfile(destpath))
-            self.assertTrue(osp.islink(destpath))
+            self.assertTrue(self.fileExists(destpath))
+            if not self.s3_bucket_name:
+                self.assertTrue(osp.islink(destpath))
+
+    def test_delete_s3_pdffiles_symlink(self):
+        """
+        Trying: create a findingaid from PDF and delete it
+        Expecting: Pdf file is no more accessible
+        """
+        if not self.s3_bucket_name:
+            from pytest import skip
+
+            skip("Not implemented for BFSS storage")
+        with self.admin_access.cnx() as cnx:
+            filepath = "ir_data/FRMAEE/PDF/FRMAEE_1BIP_1919-1994.pdf"
+            self.import_filepath(cnx, filepath)
+            fa = cnx.find("FindingAid").one()
+            pdffile = cnx.execute("Any F WHERE X findingaid_support F").one()
+            destpath = self.get_filepath_by_storage(f"{pdffile.data_hash}_{osp.basename(filepath)}")
+            self.assertTrue(self.fileExists(destpath))
+            delete_from_filename(
+                cnx, fa.stable_id, is_filename=False, interactive=False, esonly=False
+            )
+            cnx.commit()
+            self.assertFalse(self.fileExists(destpath))
 
     def test_imported_authority_in_es_docs(self):
         """Test that index_entires are correcty set in esdoc for imported PDFs"""
@@ -1040,7 +1509,7 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
             cnx.create_entity("Service", code="FRANMT", category="foo")
             cnx.create_entity("LocationAuthority", label="Dunkerque (Nord, France)")
             cnx.commit()
-            filepath = self.datapath("ir_data/FRANMT/PDF/FRANMT_3_AQ_INV.pdf")
+            filepath = "ir_data/FRANMT/PDF/FRANMT_3_AQ_INV.pdf"
             es_docs = self.import_filepath(cnx, filepath)
             self.assertEqual(1, len(cnx.find("FindingAid")))
             for es_doc in es_docs:
@@ -1056,9 +1525,7 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
         Expecting: FindingAid and FAComponent have creation_date attribute
         """
         with self.admin_access.cnx() as cnx:
-            fa_es_doc, comp_es_doc = self.import_filepath(
-                cnx, self.datapath("FRAN_IR_0261167_excerpt.xml")
-            )
+            fa_es_doc, comp_es_doc = self.import_filepath(cnx, "FRAN_IR_0261167_excerpt.xml")
             fa = cnx.find(eid=fa_es_doc["_source"]["eid"], etype="FindingAid").one()
             self.assertEqual(
                 format_date(fa.creation_date), format_date(fa_es_doc["_source"]["creation_date"])
@@ -1069,29 +1536,50 @@ class EADImporterTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
                 format_date(comp_es_doc["_source"]["creation_date"]),
             )
 
+    def test_findingaid_stable_id(self):
+        """Import a FindingAid with prefix
+        Trying: import a FindingAid
+        Expecting: this stable_id is the one expected
+        """
+        with self.admin_access.cnx() as cnx:
+            self.import_filepath(cnx, "ir_data/FRAN_IR_000061.xml")
+            self.assertEqual(
+                cnx.execute("Any N WHERE X findingaid_support F, F data_name N")[0][0],
+                "FRAN_IR_000061.xml",
+            )
+            self.assertEqual(
+                cnx.execute("Any S WHERE X is FindingAid, X stable_id S")[0][0],
+                "549fb7cbf0e1115ee00c488d1ab0e11ff771f3dc",
+            )
+
     def test_AN_sortdate(self):
         """Test for sortdate index
         Trying: import and reimport a FindingAid
         Expecting: an FAComponent with len(did.startyear) < 4  has no es["sortdate"]
         """
         with self.admin_access.cnx() as cnx:
-            self.import_filepath(cnx, self.datapath("ir_data/FRAN_IR_000061.xml"))
+            self.import_filepath(cnx, "ir_data/FRAN_IR_000061.xml")
             fc = cnx.execute(
                 "Any F WHERE F is FAComponent, F stable_id %(f)s",
-                {"f": "8ead84a4a13d701875c5bed694154d42d2ae8b8e"},
+                {"f": "3d9ba1d8864018be11e1aedfe32073186c655d30"},
             ).one()
             self.assertEqual(fc.did[0].startyear, 149)
             doc = fc.cw_adapt_to("IFullTextIndexSerializable").serialize()
             self.assertEqual(doc["sortdate"], None)
 
 
-class EADreImportTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
+class EADReImportTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
+    @classmethod
+    def init_config(cls, config):
+        super(EADReImportTC, cls).init_config(config)
+        config.set_option("instance-type", "consultation")
+
     readerconfig = merge_dicts(
         {}, EADImporterTC.readerconfig, {"reimport": True, "nodrop": False, "force_delete": True}
     )
 
     def setup_database(self):
-        super(EADreImportTC, self).setup_database()
+        super(EADReImportTC, self).setup_database()
         with self.admin_access.cnx() as cnx:
             cnx.create_entity(
                 "Service",
@@ -1105,13 +1593,13 @@ class EADreImportTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
     def test_index_reimport(self):
         with self.admin_access.cnx() as cnx:
             fpath = "FRAN_IR_050263.xml"
-            self.import_filepath(cnx, self.datapath(fpath))
+            self.import_filepath(cnx, fpath)
             hugo = cnx.execute(
                 "Any X WHERE X is AgentAuthority, X label %(l)s", {"l": "Hugo, Victor"}
             ).one()
             self.assertEqual(len(hugo.reverse_authority[0].index), 1)
             # reimport the same file
-            self.import_filepath(cnx, self.datapath(fpath))
+            self.import_filepath(cnx, fpath)
             # we shell have only one AgentAuthority for Hugo, Victor
             new_hugo = cnx.execute(
                 "Any X WHERE X is AgentAuthority, X label %(l)s", {"l": "Hugo, Victor"}
@@ -1123,7 +1611,7 @@ class EADreImportTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
         `fa_references_files` and check that old files are deleted"""
         with self.admin_access.cnx() as cnx:
             self.assertFalse(cnx.find("File").rowcount)
-            filepath = self.datapath("ir_data/FRMAEE/FRMAEE_0001MA030.xml")
+            filepath = "ir_data/FRMAEE/FRMAEE_0001MA030.xml"
             self.import_filepath(cnx, filepath)
             fa = cnx.find("FindingAid").one()
             self.assertEqual(
@@ -1142,7 +1630,7 @@ class EADreImportTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
             # ead.xml, ape.xml + 4 fa pdf + 3 fac pdf
             self.assertEqual(cnx.find("File").rowcount, 9)
             # reimport a new version
-            filepath = self.datapath("ir_data/FRMAEE_v2/FRMAEE_0001MA030.xml")
+            filepath = "ir_data/FRMAEE_v2/FRMAEE_0001MA030.xml"
             self.import_filepath(cnx, filepath)
             fa = cnx.find("FindingAid").one()
             self.assertFalse(fa.fa_referenced_files)
@@ -1154,7 +1642,7 @@ class EADreImportTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
             # ead.xml, ape.xml + 0 fa pdf + 2 fac pdf
             self.assertEqual(cnx.find("File").rowcount, 4)
             for eid, path in list(deleted_files.items()):
-                self.assertTrue(osp.exists(path))
+                self.assertTrue(self.fileExists(path))
                 # but not in db
                 with self.assertRaises(NoResultError):
                     cnx.find("File", eid=eid).one()
@@ -1162,7 +1650,7 @@ class EADreImportTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
     def test_reimport_findingaid_referenced_files(self):
         with self.admin_access.cnx() as cnx:
             self.assertFalse(cnx.execute("Any X WHERE X is File"))
-            filepath = self.datapath("ir_data/FRMAEE/FRMAEE_0001MA030.xml")
+            filepath = "ir_data/FRMAEE/FRMAEE_0001MA030.xml"
             self.import_filepath(cnx, filepath)
             fa = cnx.find("FindingAid").one()
             fa_support = fa.findingaid_support[0]
@@ -1181,14 +1669,78 @@ class EADreImportTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
                 with self.assertRaises(NoResultError):
                     cnx.find("File", eid=eid).one()
 
+    def test_reimport_fa_referenced_symlinks(self):
+        """
+        Trying: import and reimport a FindingAid with referenced_files
+        Expecting: symlinks to the appfiles-dir are set for referenced files and still
+        present after reimport
+        """
+        with self.admin_access.cnx() as cnx:
+            filepath = "ir_data/FRMAEE/FRMAEE_0001MA030.xml"
+            self.import_filepath(cnx, filepath)
+            # reimport the same file
+            self.import_filepath(cnx, filepath)
+            rset = cnx.execute(
+                """Any S, FSPATH(D) LIMIT 1 WHERE F data_hash S,
+                   X fa_referenced_files F, F data D,
+                   F data_name 'FRMAEE_MN_179CPCOM_Maroc.pdf'"""
+            )
+            data_sha1hex = rset[0][0]
+            pdfpath = rset[0][1].getvalue()
+            self.assertTrue(self.fileExists(self.get_filepath_by_storage(filepath)))
+            # old symlinks
+            if self.s3_bucket_name:
+                destpath = self.get_filepath_by_storage(
+                    f"{data_sha1hex}_{osp.basename(pdfpath).decode('utf-8')}"
+                )
+            else:
+                destpath = self.get_filepath_by_storage(
+                    f"{self.config['appfiles-dir']}/{data_sha1hex}_{osp.basename(pdfpath).decode('utf-8')}"  # noqa
+                )
+            self.assertNotEqual(destpath.encode("utf-8"), pdfpath)
+            # ensure the original pdf still exists
+            self.assertTrue(self.fileExists(destpath))
+            if not self.s3_bucket_name:
+                self.assertTrue(osp.islink(destpath))
+
+    def test_reimport_pdffile_symlinks(self):
+        """
+        Trying: import and reimport a FindingAid from a Pdf
+        Expecting: symlink to the appfiles-dir is set for the pdf file and still
+        present after reimport
+        """
+        with self.admin_access.cnx() as cnx:
+            filepath = "ir_data/FRMAEE/PDF/FRMAEE_1BIP_1919-1994.pdf"
+            self.import_filepath(cnx, filepath)
+            pdffile = cnx.execute("Any F WHERE X findingaid_support F").one()
+            self.assertTrue(self.fileExists(self.get_filepath_by_storage(filepath)))
+            if self.s3_bucket_name:
+                destpath = self.get_filepath_by_storage(
+                    f"{pdffile.data_hash}_{osp.basename(filepath)}"
+                )
+            else:
+                destpath = self.get_filepath_by_storage(
+                    f"{self.config['appfiles-dir']}/{pdffile.data_hash}_{osp.basename(filepath)}"
+                )
+            self.assertTrue(self.fileExists(destpath))
+            if not self.s3_bucket_name:
+                self.assertTrue(osp.islink(destpath))
+            # reimport the same file
+            self.import_filepath(cnx, filepath)
+            self.assertTrue(self.fileExists(self.get_filepath_by_storage(filepath)))
+            # ensure the original pdf still exists
+            self.assertTrue(self.fileExists(destpath))
+            if not self.s3_bucket_name:
+                self.assertTrue(osp.islink(destpath))
+
     def test_failed_reimport(self):
         """tests that a previously imported FindingAid is not deleted after a failed
         reimport"""
         with self.admin_access.cnx() as cnx:
-            filepath = self.datapath("ir_data/FRMAEE_OK/FRMAEE_0001MA001.xml")
+            filepath = "ir_data/FRMAEE_OK/FRMAEE_0001MA001.xml"
             self.import_filepath(cnx, filepath)
             fa = cnx.find("FindingAid").one()
-            filepath = self.datapath("ir_data/FRMAEE_KO/FRMAEE_0001MA001.xml")
+            filepath = "ir_data/FRMAEE_KO/FRMAEE_0001MA001.xml"
             # ensure the second file has errors
             with self.assertRaises(Exception):
                 etree.parse(filepath)
@@ -1197,9 +1749,57 @@ class EADreImportTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
             # the previously imported FindingAid is still there
             self.assertEqual(fa.eid, cnx.find("FindingAid").one().eid)
 
+    def test_reimport_ir_with_different_filename(self):
+        """
+        Trying: import and reimport IR with same eadid but different filenames
+        Expecting: Only one FindingAid is created
+        """
+        with self.admin_access.cnx() as cnx:
+            self.import_filepath(cnx, "ir_data/FRANOM_01250_excerpt.xml")
+            self.assertEqual(1, cnx.execute("Any COUNT(X) WHERE X is FindingAid")[0][0])
+            fi = cnx.find("FindingAid", eadid="FRANOM_01250").one()
+            stable_id = fi.stable_id
+            modification_date = fi.modification_date
+            # reimport an IR with eadid == FRANOM_01250
+            for fpath in ("ir_data/Franom_01250.xml", "ir_data/FRANOM_01250_excerpt.xml"):
+                self.import_filepath(cnx, fpath)
+                self.assertEqual(1, cnx.execute("Any COUNT(X) WHERE X is FindingAid")[0][0])
+                fi = cnx.find("FindingAid", eadid="FRANOM_01250").one()
+                self.assertEqual(stable_id, fi.stable_id)
+                self.assertNotEqual(modification_date, fi.modification_date)
+                modification_date = fi.modification_date
+            # reimport an IR with eadid == franom_01250
+            self.import_filepath(cnx, "ir_data/franom_01250_test.xml")
+            self.assertEqual(1, cnx.execute("Any COUNT(X) WHERE X is FindingAid")[0][0])
+            fi = cnx.find("FindingAid", eadid="franom_01250").one()
+            self.assertEqual(stable_id, fi.stable_id)
+            self.assertNotEqual(modification_date, fi.modification_date)
+            self.assertFalse(cnx.find("FindingAid", eadid="FRANOM_01250"))
+            modification_date = fi.modification_date
+            # reimport an IR with eadid == FRANOM_01250
+            self.import_filepath(cnx, "ir_data/Franom_01250.xml")
+            self.assertEqual(1, cnx.execute("Any COUNT(X) WHERE X is FindingAid")[0][0])
+            fi = cnx.find("FindingAid", eadid="FRANOM_01250").one()
+            self.assertEqual(stable_id, fi.stable_id)
+            self.assertNotEqual(modification_date, fi.modification_date)
+            self.assertFalse(cnx.find("FindingAid", eadid="franom_01250"))
+            # check fa_redirects table
+            self.assertCountEqual(
+                [
+                    ("franom_01250", "2cd1385685ef4eea4d8b8168085cddba9b63281b", stable_id),
+                    ("FRANOM_01250", "b4508d9b609e96573486fcf740cd0b0764e219ea", stable_id),
+                ],
+                get_fa_redirects(cnx),
+            )
+
 
 class EADFullMigrationTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
     """tests for full data reimport"""
+
+    @classmethod
+    def init_config(cls, config):
+        super(EADFullMigrationTC, cls).init_config(config)
+        config.set_option("instance-type", "consultation")
 
     readerconfig = merge_dicts(
         {},
@@ -1225,7 +1825,7 @@ class EADFullMigrationTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
             )
             cnx.commit()
             fpath = "FRAN_IR_050263.xml"
-            self.import_filepath(cnx, self.datapath(fpath))
+            self.import_filepath(cnx, fpath)
             authority_eids = cnx.execute(
                 "Any X WHERE X is IN (AgentAuthority, " "SubjectAuthority, LocationAuthority)"
             ).rows
@@ -1235,7 +1835,7 @@ class EADFullMigrationTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
 
             cnx.commit()
             self.assertEqual(0, cnx.execute(index_rql).rowcount)
-            self.import_filepath(cnx, self.datapath(fpath))
+            self.import_filepath(cnx, fpath)
             self.assertEqual(73, cnx.execute(index_rql).rowcount)
             # we shell still have the same authorities
             new_authority_eids = cnx.execute(
@@ -1244,7 +1844,7 @@ class EADFullMigrationTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
             self.assertCountEqual(new_authority_eids, authority_eids)
 
 
-class ESOnlyTests(PostgresTextMixin, CubicWebTC):
+class ESOnlyTests(S3BfssStorageTestMixin, PostgresTextMixin, CubicWebTC):
     @property
     def readerconfig(self):
         return {
@@ -1271,7 +1871,7 @@ class ESOnlyTests(PostgresTextMixin, CubicWebTC):
             did2 = cnx.create_entity("Did", unitid="did2", unittitle="title2")
             comp = cnx.create_entity(
                 "FAComponent",
-                stable_id="c97f63529b4450e34b8c548d0e97b063bfa8e4bd",
+                stable_id="7a4b5ef85c8014a08654e3c741a337ffdee60b4f",
                 did=did2,
                 finding_aid=fa,
             )
@@ -1283,30 +1883,31 @@ class ESOnlyTests(PostgresTextMixin, CubicWebTC):
         store = RQLObjectStore(cnx)
         r = ead.Reader(self.readerconfig, store)
         services_map = load_services_map(cnx)
+        filepath = self.get_or_create_imported_filepath(filepath)
         service_infos = service_infos_from_filepath(filepath, services_map)
         return r.import_filepath(filepath, service_infos)
 
     def test_esonly_indexation(self):
         with self.admin_access.cnx() as cnx:
-            es_docs = self.import_filepath(cnx, self.datapath("FRAN_IR_0261167_excerpt.xml"))
+            es_docs = self.import_filepath(cnx, "FRAN_IR_0261167_excerpt.xml")
             self.assertEqual(len(es_docs), 2)
             fa_es_doc, comp_es_doc = es_docs
             self.assertEqual(fa_es_doc["_id"], "c4b17d67cb5e8e884590ab98a864c81d48239053")
             self.assertEqual(fa_es_doc["_source"]["eid"], self.fa_eid)
-            self.assertEqual(comp_es_doc["_id"], "c97f63529b4450e34b8c548d0e97b063bfa8e4bd")
+            self.assertEqual(comp_es_doc["_id"], "7a4b5ef85c8014a08654e3c741a337ffdee60b4f")
             self.assertEqual(comp_es_doc["_source"]["eid"], self.comp_eid)
 
     def test_html_strip(self):
         with self.admin_access.cnx() as cnx:
-            es_docs = self.import_filepath(cnx, self.datapath("FRAN_IR_0261167_excerpt.xml"))
+            es_docs = self.import_filepath(cnx, "FRAN_IR_0261167_excerpt.xml")
             self.assertEqual(len(es_docs), 2)
             fa_es_doc, comp_es_doc = es_docs
-            self.assertEqual(comp_es_doc["_id"], "c97f63529b4450e34b8c548d0e97b063bfa8e4bd")
+            self.assertEqual(comp_es_doc["_id"], "7a4b5ef85c8014a08654e3c741a337ffdee60b4f")
             self.assertEqual(comp_es_doc["_source"]["description"], "Coucou tout le monde")
 
     def test_authority_in_es_index_docs(self):
         with self.admin_access.cnx() as cnx:
-            es_docs = self.import_filepath(cnx, self.datapath("FRAN_IR_0261167_excerpt.xml"))
+            es_docs = self.import_filepath(cnx, "FRAN_IR_0261167_excerpt.xml")
             self.assertEqual(len(es_docs), 2)
             fa_es_doc, comp_es_doc = es_docs
             self.assertIsNone(
@@ -1317,9 +1918,21 @@ class ESOnlyTests(PostgresTextMixin, CubicWebTC):
                 ][0]["authority"]
             )
 
+    def test_authority_quality(self):
+        """
+        Trying: import IR and create authorities
+        Expecting: authorities are not aligned and not qualified
+        """
+        with self.admin_access.cnx() as cnx:
+            self.import_filepath(cnx, "FRAN_IR_0261167_excerpt.xml")
+            for cw_etype in ("SubjectAuthority", "AgentAuthority", "LocationAuthority"):
+                for auth in cnx.find(cw_etype):
+                    self.assertFalse(auth.same_as)
+                    self.assertFalse(auth.quality)
+
     def test_originators_in_facomp_docs(self):
         with self.admin_access.cnx() as cnx:
-            es_docs = self.import_filepath(cnx, self.datapath("FRAN_IR_0261167_excerpt.xml"))
+            es_docs = self.import_filepath(cnx, "FRAN_IR_0261167_excerpt.xml")
             self.assertEqual(len(es_docs), 2)
             fa_es_doc, comp_es_doc = es_docs
             self.assertEqual(fa_es_doc["_source"]["originators"], ["Direction de l'eau"])
@@ -1327,7 +1940,7 @@ class ESOnlyTests(PostgresTextMixin, CubicWebTC):
 
     def test_dates_in_es_docs(self):
         with self.admin_access.cnx() as cnx:
-            es_docs = self.import_filepath(cnx, self.datapath("FRAN_IR_0261167_excerpt.xml"))
+            es_docs = self.import_filepath(cnx, "FRAN_IR_0261167_excerpt.xml")
             self.assertEqual(len(es_docs), 2)
             fa_es_doc, comp_es_doc = es_docs
             startyear, stopyear = 1922, 2001
@@ -1344,11 +1957,11 @@ class ReimportESonlyTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
     def test_authority_in_es_index_docs(self):
         with self.admin_access.cnx() as cnx:
             self.readerconfig = dict(self.readerconfig, esonly=False)
-            es_docs = self.import_filepath(cnx, self.datapath("FRAN_IR_0261167_excerpt.xml"))
+            es_docs = self.import_filepath(cnx, "FRAN_IR_0261167_excerpt.xml")
             self.readerconfig = dict(self.readerconfig, esonly=True)
             firstaa = cnx.find("AgentAuthority", label="Direction de l'eau").one()
         with self.admin_access.cnx() as cnx:
-            es_docs = self.import_filepath(cnx, self.datapath("FRAN_IR_0261167_excerpt.xml"))
+            es_docs = self.import_filepath(cnx, "FRAN_IR_0261167_excerpt.xml")
             secondaa = cnx.find("AgentAuthority", label="Direction de l'eau").one()
             # eid should not have changed since we import in `nodrop` mode
             self.assertEqual(firstaa.eid, secondaa.eid)
@@ -1367,9 +1980,7 @@ class ReimportESonlyTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
     def test_es_attributes(self):
         with self.admin_access.cnx() as cnx:
             self.readerconfig = dict(self.readerconfig, esonly=False)
-            fa_docs, comp_docs = self.import_filepath(
-                cnx, self.datapath("FRAN_IR_0261167_excerpt.xml")
-            )
+            fa_docs, comp_docs = self.import_filepath(cnx, "FRAN_IR_0261167_excerpt.xml")
             service = fa_docs["_source"].pop("service")
             self.assertEqual(set(service.keys()), {"code", "eid", "level", "title"})
             self.assertEqual(
@@ -1397,6 +2008,7 @@ class ReimportESonlyTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
                     "startyear",
                     "sortdate",
                     "escategory",
+                    "digitized",
                     "creation_date",
                 },
             )
@@ -1420,7 +2032,6 @@ class ReimportESonlyTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
                     "sortdate",
                     "publisher",
                     "digitized",
-                    "digitized_versions",
                     "index_entries",
                     "originators",
                     "fa_stable_id",
@@ -1432,12 +2043,17 @@ class ReimportESonlyTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
             )
 
 
-class ReimportTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
+class EADReImportTTC(EADImportMixin, PostgresTextMixin, CubicWebTC):
     readerconfig = merge_dicts({}, EADImportMixin.readerconfig, {"nodrop": False})
+
+    @classmethod
+    def init_config(cls, config):
+        super(EADReImportTTC, cls).init_config(config)
+        config.set_option("instance-type", "consultation")
 
     def test_reimport_ead(self):
         with self.admin_access.cnx() as cnx:
-            self.import_filepath(cnx, self.datapath("ir_data/v1/FRAD095_00374.xml"))
+            self.import_filepath(cnx, "ir_data/v1/FRAD095_00374.xml")
             c1, c11, c12 = cnx.execute(
                 "Any C ORDERBY I " "WHERE C is FAComponent, C did D, D unitid I"
             ).entities()
@@ -1450,7 +2066,7 @@ class ReimportTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
             )
             cnx.commit()
             delete_from_filename(cnx, "FRAD095_00374.xml", interactive=False, esonly=False)
-            self.import_filepath(cnx, self.datapath("ir_data/v2/FRAD095_00374.xml"))
+            self.import_filepath(cnx, "ir_data/v2/FRAD095_00374.xml")
             c1new, c11new, c12new, c21new = cnx.execute(
                 "Any C ORDERBY I " "WHERE C is FAComponent, C did D, D unitid I"
             ).entities()
@@ -1467,18 +2083,14 @@ class ReimportTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
     def test_config_reimport_esonly(self, ignore_mock):
         """in esonly mode ``ignore_filepath`` method should never be called"""
         with self.admin_access.cnx() as cnx:
-            self.import_filepath(
-                cnx, self.datapath("FRAN_IR_022409.xml"), reimport=True, esonly=True
-            )
-            self.import_filepath(
-                cnx, self.datapath("FRAN_IR_022409.xml"), reimport=True, esonly=True
-            )
+            self.import_filepath(cnx, "FRAN_IR_022409.xml", reimport=True, esonly=True)
+            self.import_filepath(cnx, "FRAN_IR_022409.xml", reimport=True, esonly=True)
             self.assertFalse(ignore_mock.called)
 
     def test_config_reimport(self):
         with self.admin_access.cnx() as cnx:
-            self.import_filepath(cnx, self.datapath("FRAN_IR_022409.xml"))
-            self.import_filepath(cnx, self.datapath("FRAN_IR_022409.xml"), reimport=True)
+            self.import_filepath(cnx, "FRAN_IR_022409.xml")
+            self.import_filepath(cnx, "FRAN_IR_022409.xml", reimport=True)
             rset = cnx.find("FindingAid")
             self.assertEqual(len(rset), 1)
 
@@ -1486,9 +2098,9 @@ class ReimportTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
         with self.admin_access.cnx() as cnx:
             self.readerconfig = dict(self.readerconfig, reimport=True, force_delete=True)
             filename = "FRAD085_2C_disparu d'Algérie.xml"
-            self.import_filepath(cnx, self.datapath(filename))
+            self.import_filepath(cnx, filename)
             eid = cnx.find("FindingAid").one().eid
-            self.import_filepath(cnx, self.datapath(filename))
+            self.import_filepath(cnx, filename)
             self.assertNotEqual(eid, cnx.find("FindingAid").one().eid)
 
     def test_creation_date_ead_import(self):
@@ -1501,7 +2113,7 @@ class ReimportTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
             filepath = "FRAN_IR_0261167_excerpt.xml"
             fmt = "%a %b %d %H:%M:%S %Y"
             self.readerconfig = dict(self.readerconfig, reimport=True, force_delete=True)
-            fa_es_doc, comp_es_doc = self.import_filepath(cnx, self.datapath(filepath))
+            fa_es_doc, comp_es_doc = self.import_filepath(cnx, filepath)
             creation_date = datetime(1914, 4, 5)
             fa_old = cnx.find("FindingAid").one()
             adapter = fa_old.cw_adapt_to("IFullTextIndexSerializable")
@@ -1524,7 +2136,7 @@ class ReimportTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
                 fa_old_date.strftime(fmt),
             )
             # reimport the file
-            fa_es_doc, comp_es_doc = self.import_filepath(cnx, self.datapath(filepath))
+            fa_es_doc, comp_es_doc = self.import_filepath(cnx, filepath)
             fa = cnx.find("FindingAid").one()
             comp = cnx.find("FAComponent").one()
             self.assertNotEqual(fa_old.eid, fa.eid)
@@ -1552,7 +2164,7 @@ class ReimportTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
             filepath = "FRSHD_PUB_00000345_0001.pdf"
             fmt = "%a %b %d %H:%M:%S %Y"
             self.readerconfig = dict(self.readerconfig, reimport=True, force_delete=True)
-            self.import_filepath(cnx, self.datapath(filepath))[0]
+            self.import_filepath(cnx, filepath)[0]
             fi_old = cnx.find("FindingAid").one()
             adapter = fi_old.cw_adapt_to("IFullTextIndexSerializable")
             self.assertEqual(
@@ -1566,7 +2178,7 @@ class ReimportTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
                 creation_date.strftime(fmt),
                 cnx.find("FindingAid").one().creation_date.strftime(fmt),
             )
-            self.import_filepath(cnx, self.datapath(filepath))[0]
+            self.import_filepath(cnx, filepath)[0]
             fi = cnx.find("FindingAid").one()
             self.assertNotEqual(fi_old.eid, fi.eid)
             self.assertEqual(creation_date.strftime(fmt), fi.creation_date.strftime(fmt))
@@ -1580,7 +2192,7 @@ class ReimportTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
 class DeleteTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
     def test_delete_ead_alone(self):
         with self.admin_access.cnx() as cnx:
-            self.import_filepath(cnx, self.datapath("ir_data/v1/FRAD095_00374.xml"))
+            self.import_filepath(cnx, "ir_data/v1/FRAD095_00374.xml")
             c1, c11, c12 = cnx.execute(
                 "Any C ORDERBY I " "WHERE C is FAComponent, C did D, D unitid I"
             ).entities()
@@ -1608,11 +2220,11 @@ class DeleteTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
 
     def test_delete_one_ead(self):
         with self.admin_access.cnx() as cnx:
-            self.import_filepath(cnx, self.datapath("FRAN_IR_051016_excerpt.xml"))
+            self.import_filepath(cnx, "FRAN_IR_051016_excerpt.xml")
             initial_fas = [fa.eid for fa in cnx.find("FindingAid").entities()]
             initial_facs = [fac.eid for fac in cnx.find("FAComponent").entities()]
             initial_dvs = [dv.eid for dv in cnx.find("DigitizedVersion").entities()]
-            self.import_filepath(cnx, self.datapath("ir_data/v1/FRAD095_00374.xml"))
+            self.import_filepath(cnx, "ir_data/v1/FRAD095_00374.xml")
             self.assertEqual(len(cnx.find("FindingAid")), 2)
             self.assertEqual(len(cnx.find("FAComponent")), len(initial_facs) + 3)
             cnx.commit()
@@ -1650,7 +2262,7 @@ class PushEntitiesTests(PostgresTextMixin, CubicWebTC):
 class EADXMLReaderTests(BaseTestCase):
     def test_fa_properties(self):
         tree = eadreader.preprocess_ead(self.datapath("FRAN_IR_0261167_excerpt.xml"))
-        reader = eadreader.EADXMLReader(tree)
+        reader = eadreader.EADXMLReader(tree, lambda x: x)
         fa_properties = reader.fa_properties
         self.assertIn("Art 1-6 : poissons migrateurs", fa_properties["scopecontent"])
         self.assertIn("dossiers par departement : syntheses", fa_properties["scopecontent"])
@@ -1679,6 +2291,7 @@ class EADXMLReaderTests(BaseTestCase):
                 "bibliography_format": "text/html",
                 "bioghist": None,
                 "bioghist_format": "text/html",
+                "daos": [],
                 "description": None,
                 "description_format": "text/html",
                 "did": {
@@ -1699,7 +2312,7 @@ class EADXMLReaderTests(BaseTestCase):
 
     def test_index_entries(self):
         tree = eadreader.preprocess_ead(self.datapath("FRAN_IR_0261167_excerpt.xml"))
-        reader = eadreader.EADXMLReader(tree)
+        reader = eadreader.EADXMLReader(tree, lambda x: x)
         index_entries = reader.fa_properties["index_entries"]
         expected = [
             {
@@ -1837,7 +2450,7 @@ class EADXMLReaderTests(BaseTestCase):
 
     def test_fa_origination(self):
         tree = eadreader.preprocess_ead(self.datapath("FRAN_IR_0261167_excerpt.xml"))
-        reader = eadreader.EADXMLReader(tree)
+        reader = eadreader.EADXMLReader(tree, lambda x: x)
         self.assertEqual(
             reader.fa_properties["origination"],
             [

@@ -31,10 +31,13 @@
 
 """cubicweb-francearchives cssimages"""
 
+from io import BytesIO
 import os.path as osp
 from PIL import Image
+
 from cubicweb import Binary
 
+from cubicweb_francearchives import static_css_dir, S3_ACTIVE
 
 # sizes from css
 HERO_SIZES = (
@@ -45,12 +48,6 @@ HERO_SIZES = (
     ({"w": None, "q": 5}, "lr"),
     ({"w": None}, "xl"),
 )
-
-STATIC_CSS_DIRECTORY = "css"
-
-
-def static_css_dir(static_directory):
-    return osp.join(static_directory, STATIC_CSS_DIRECTORY)
 
 
 def thumbnail_name(basename, suffix, ext):
@@ -67,17 +64,24 @@ def generate_thumbnails(cnx, image_file, image_path, sizes):
         width = size.get("w", orig_width) or orig_width
         height = size.get("h", orig_height) or orig_height
         quality = size.get("q", 100)
-        thumb.thumbnail((width, height), Image.ANTIALIAS)
+        thumb.thumbnail((width, height), Image.LANCZOS)
         basename, ext = osp.splitext(image_path)
         thumb_name = thumbnail_name(basename, suffix, ext)
-        thumbpath = osp.join(static_dir, thumb_name)
-        thumb.save(thumbpath, quality=quality)
-        with open(thumbpath, "rb") as thumbfile:
-            cnx.create_entity(
-                "File",
-                **{
-                    "data": Binary(thumbfile.read()),
-                    "data_format": image_file.data_format,
-                    "data_name": thumb_name,
-                }
-            )
+        if S3_ACTIVE:
+            byte_io = BytesIO()
+            thumb.save(byte_io, "PNG", quality=quality)
+            content = byte_io.getvalue()
+        else:
+            thumbpath = osp.join(static_dir, thumb_name)
+            thumb.save(thumbpath, quality=quality)
+            with open(thumbpath, "rb") as thumbfile:
+                content = thumbfile.read()
+        cnx.create_entity(
+            "File",
+            **{
+                "title": f"static/css/{thumb_name}",
+                "data": Binary(content),
+                "data_format": image_file.data_format,
+                "data_name": thumb_name,
+            }
+        )

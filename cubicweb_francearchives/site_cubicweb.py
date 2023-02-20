@@ -91,6 +91,26 @@ options = (
         },
     ),
     (
+        "nomina-services-dir",
+        {
+            "type": "string",
+            "default": REQUIRED,
+            "help": "directory containing nomina harvested/imported files",
+            "group": "nomina",
+            "level": 2,
+        },
+    ),
+    (
+        "nomina-index-name",
+        {
+            "type": "string",
+            "default": REQUIRED,
+            "help": "name of the elasticsearch index for nomina data",
+            "group": "nomina",
+            "level": 2,
+        },
+    ),
+    (
         "newsletter-cypher-seed",
         {
             "type": "string",
@@ -173,6 +193,36 @@ options = (
             "level": 2,
         },
     ),
+    (
+        "sparql_endpoint",
+        {
+            "type": "string",
+            "default": "",
+            "help": ("Sparql endpoint"),
+            "group": "Sparql",
+            "level": 2,
+        },
+    ),
+    (
+        "xiti_site",
+        {
+            "type": "string",
+            "default": "",
+            "help": ("Xiti: value for xiti_site"),
+            "group": "Xiti",
+            "level": 2,
+        },
+    ),
+    (
+        "xiti_n2",
+        {
+            "type": "string",
+            "default": "",
+            "help": ("Xiti: value for n2"),
+            "group": "Xiti",
+            "level": 2,
+        },
+    ),
 )
 
 
@@ -187,6 +237,19 @@ class NORMALIZE_ENTRY(FunctionDescr):
 
 
 register_function(NORMALIZE_ENTRY)
+
+
+class TRANSLATE_ENTITY(FunctionDescr):
+    minargs = maxargs = 3
+    rtype = "String"
+    supported_backends = ("postgres", "sqlite")
+
+    def as_sql_sqlite(self, args):
+        # translate_entity is a noop for sqlite
+        return ", ".join(args)
+
+
+register_function(TRANSLATE_ENTITY)
 
 
 #

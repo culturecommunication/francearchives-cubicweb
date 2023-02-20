@@ -38,7 +38,11 @@ from cubicweb import Binary
 from cubicweb.devtools import testlib
 from cubicweb.pyramid.test import PyramidCWTest
 
-from cubicweb_francearchives.testutils import PostgresTextMixin, XMLCompMixin, HashMixIn
+from cubicweb_francearchives.testutils import (
+    PostgresTextMixin,
+    XMLCompMixin,
+    S3BfssStorageTestMixin,
+)
 from cubicweb_francearchives.dataimport import dc
 
 from pgfixtures import setup_module, teardown_module  # noqa
@@ -54,7 +58,7 @@ BASE_SETTINGS = {
 
 
 class FindingAidExportApeEADTC(
-    HashMixIn, PyramidCWTest, PostgresTextMixin, XMLCompMixin, testlib.CubicWebTC
+    S3BfssStorageTestMixin, PyramidCWTest, PostgresTextMixin, XMLCompMixin, testlib.CubicWebTC
 ):
     maxDiff = None
     settings = BASE_SETTINGS
@@ -115,17 +119,17 @@ class FindingAidExportApeEADTC(
         ead = root.xpath("//e:{verb}/e:record/e:metadata/x:ead".format(verb=verb), namespaces=ns)[0]
         return ead
 
-    def test_ead_export(self):
+    def test_ead_export_1(self):
         with self.admin_access.cnx() as cnx:
             cnx.create_entity(
                 "Service", code="FRAD092", short_name="AD 92", level="level-D", category="foo"
             )
             cnx.commit()
             with cnx.allow_all_hooks_but("es"):
-                fpath = self.datapath("csv", "FRAD092_9FI_cartes-postales.csv")
+                fpath = "FRAD092_9FI_cartes-postales.csv"
+                fpath = self.get_or_create_imported_filepath(f"csv/{fpath}")
                 config = self.readerconfig.copy()
                 dc.import_filepath(cnx, config, fpath)
-
         with self.admin_access.web_request() as req:
             fa = req.execute("Any X WHERE X is FindingAid, X stable_id S").one()
             fa_stable_id = fa.stable_id

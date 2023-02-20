@@ -36,8 +36,10 @@ from cubicweb import Binary
 from cubicweb.devtools.testlib import CubicWebTC
 from cubicweb_francearchives import views
 
+from cubicweb_francearchives.testutils import S3BfssStorageTestMixin
 
-class EntityXitiTests(CubicWebTC):
+
+class EntityXitiTests(S3BfssStorageTestMixin, CubicWebTC):
     def test_circular_chapters(self):
         with self.admin_access.cnx() as cnx:
             circular = cnx.create_entity(
@@ -67,11 +69,6 @@ class EntityXitiTests(CubicWebTC):
             )
             self.assertEqual(s1.cw_adapt_to("IXiti").chapters, ["Service", "FRAD075"])
 
-    def test_commemocollection_chapters(self):
-        with self.admin_access.cnx() as cnx:
-            coll = cnx.create_entity("CommemoCollection", year=2017, title="commemo 2017")
-            self.assertEqual(coll.cw_adapt_to("IXiti").chapters, ["CommemoCollection", "2017"])
-
     def test_commemoitem_chapters(self):
         with self.admin_access.cnx() as cnx:
             item = cnx.create_entity(
@@ -91,18 +88,23 @@ class EntityXitiTests(CubicWebTC):
                 bc.cw_adapt_to("IXiti").chapters, ["BaseContent", bc.uuid, "the-title"]
             )
 
-    def test_publication_chapters(self):
+    def test_basecontent_publication_chapters(self):
         with self.admin_access.cnx() as cnx:
             bc = cnx.create_entity(
                 "BaseContent",
+                content_type="Publication",
                 title="the-title",
-                reverse_children=cnx.create_entity(
-                    "Section", title="Publication", name="publication"
-                ),
+                reverse_children=cnx.create_entity("Section", title="Publication", name="Section"),
             )
             self.assertEqual(
                 bc.cw_adapt_to("IXiti").chapters, ["Publication", bc.uuid, "the-title"]
             )
+
+    def test_basecontent_search_help_chapters(self):
+        with self.admin_access.cnx() as cnx:
+            bc = cnx.create_entity("BaseContent", title="the-title", content_type="SearchHelp")
+            cnx.commit()
+            self.assertEqual(bc.cw_adapt_to("IXiti").chapters, ["SearchHelp", bc.uuid, "the-title"])
 
     def test_newscontent_chapters(self):
         with self.admin_access.cnx() as cnx:
@@ -114,7 +116,7 @@ class EntityXitiTests(CubicWebTC):
     def test_map_chapters(self):
         with self.admin_access.cnx() as cnx:
             m1 = cnx.create_entity("Map", map_file=Binary(b""), title="the-title")
-            self.assertEqual(m1.cw_adapt_to("IXiti").chapters, ["Map", m1.uuid, "the-title"])
+            self.assertEqual(m1.cw_adapt_to("IXiti").chapters, ["Map", str(m1.eid), "the-title"])
 
     def test_findingaid_chapters_noservice(self):
         with self.admin_access.cnx() as cnx:
@@ -219,6 +221,22 @@ class EntityXitiTests(CubicWebTC):
                 facomp.cw_adapt_to("IXiti").chapters, ["FAComponent", "FRAD084", "fc-stable-id"]
             )
 
+    def test_nominarecord_service(self):
+        with self.admin_access.cnx() as cnx:
+            service = cnx.create_entity(
+                "Service", code="FRAD008", short_name="AD 92", level="level-D", category="foo"
+            )
+            record = cnx.create_entity(
+                "NominaRecord",
+                stable_id="FRAD008_42",
+                json_data={"p": [{"n": "Valjean"}], "t": "RM"},
+                service=service.eid,
+            )
+            cnx.commit()
+            self.assertEqual(
+                record.cw_adapt_to("IXiti").chapters, ["NominaRecord", "FRAD008", "FRAD008_42"]
+            )
+
 
 def _template_context(req, vid):
     viewsreg = req.vreg["views"]
@@ -227,7 +245,7 @@ def _template_context(req, vid):
     return tmpl.template_context(view)
 
 
-class ViewsNoXitiTests(CubicWebTC):
+class ViewsNoXitiTests(S3BfssStorageTestMixin, CubicWebTC):
     """test suite to make sure no xiti markup is added when not configured"""
 
     def test_404_chapters(self):
@@ -236,16 +254,17 @@ class ViewsNoXitiTests(CubicWebTC):
             self.assertNotIn("xiti", ctx)
 
 
-class ViewsXitiTests(CubicWebTC):
+class ViewsXitiTests(S3BfssStorageTestMixin, CubicWebTC):
     def setUp(self):
         super(ViewsXitiTests, self).setUp()
         # add the xiti configuration parameters required by thi test suite
-        views.load_portal_config(self.config)
-        views.PORTAL_CONFIG["xiti"] = {"site": "12345", "n2": "1"}
+        self.config.global_set_option("xiti_site", "12345")
+        self.config.global_set_option("xiti_n2", "1")
 
     def tearDown(self):
         super(ViewsXitiTests, self).tearDown()
-        views.PORTAL_CONFIG.pop("xiti", None)
+        if views.PORTAL_CONFIG:
+            views.PORTAL_CONFIG.pop("xiti", None)
 
     def test_home_chapters(self):
         with self.admin_access.web_request() as req:
@@ -293,14 +312,98 @@ class ViewsXitiTests(CubicWebTC):
 
     @patch("cubicweb_francearchives.views.search.PniaElasticSearchView.do_search")
     def test_search_chapters_service(self, _search):
-        with self.admin_access.web_request("inventaires", es_publisher="FRAD084") as req:
+        with self.admin_access.cnx() as cnx:
+            service = cnx.create_entity(
+                "Service", category="cat", short_name="AD Vaucluse", code="FRAD084"
+            )
+            cnx.commit()
+        with self.admin_access.web_request(f"inventaires/{service.code}") as req:
             ctx = _template_context(req, "esearch")
             self.assertDictEqual(
                 ctx["xiti"],
                 {
                     "site": "12345",
                     "n2": "1",
-                    "pagename": "search::inventaires::frad084",
+                    "pagename": "search::inventaires/frad084",
+                },
+            )
+
+    @patch("cubicweb_francearchives.views.search.PniaElasticSearchView.do_search")
+    def test_search_chapters_publisher_short_name(self, _search):
+        """Search AD Vaucluse IR
+
+        Trying: use service short_name as `es_publisher` param value (old style)
+
+        Expecting: no service code / eid / short name is found for xiti
+        """
+
+        with self.admin_access.cnx() as cnx:
+            service = cnx.create_entity(
+                "Service", category="cat", short_name="AD Vaucluse", code="FRAD084"
+            )
+            cnx.commit()
+        with self.admin_access.web_request("search", es_publisher=service.short_name) as req:
+            ctx = _template_context(req, "esearch")
+            self.assertDictEqual(
+                ctx["xiti"],
+                {
+                    "site": "12345",
+                    "n2": "1",
+                    "pagename": "search::search",
+                },
+            )
+
+    @patch("cubicweb_francearchives.views.search.PniaElasticSearchView.do_search")
+    def test_search_chapters_publisher_eid(self, _search):
+        """Search AD Vaucluse IR
+
+        Trying: use service eid as `es_publisher` param value (new style)
+
+        Expecting: service short name is found for xiti
+        """
+        with self.admin_access.cnx() as cnx:
+            service = cnx.create_entity(
+                "Service", category="cat", short_name="AD Vaucluse", code="FRAD084"
+            )
+            cnx.commit()
+        with self.admin_access.web_request("search", es_publisher=service.eid) as req:
+            ctx = _template_context(req, "esearch")
+            self.assertDictEqual(
+                ctx["xiti"],
+                {
+                    "site": "12345",
+                    "n2": "1",
+                    "pagename": "search::search::ad_vaucluse",
+                },
+            )
+
+    @patch(
+        "cubicweb_francearchives.views.search.authorities.PniaAuthoritiesElasticSearchView.do_search"  # noqa
+    )
+    def test_qualified_agents(self, _search):
+        with self.admin_access.web_request(let="a") as req:
+            ctx = _template_context(req, "agents")
+            self.assertDictEqual(
+                ctx["xiti"],
+                {
+                    "site": "12345",
+                    "n2": "1",
+                    "pagename": "authorities::agents",
+                },
+            )
+
+    @patch(
+        "cubicweb_francearchives.views.search.authorities.PniaAuthoritiesElasticSearchView.do_search"  # noqa
+    )
+    def test_qualified_locations(self, _search):
+        with self.admin_access.web_request(let="a") as req:
+            ctx = _template_context(req, "locations")
+            self.assertDictEqual(
+                ctx["xiti"],
+                {
+                    "site": "12345",
+                    "n2": "1",
+                    "pagename": "authorities::locations",
                 },
             )
 
@@ -330,6 +433,7 @@ class ViewsXitiTests(CubicWebTC):
                     "n2": "1",
                     "access_site": "service::frad084::site_access",
                     "thumbnail_access_site": "service::frad084::thumbnail_site_access",
+                    "digitized_version": "service::frad084::digitized_version",
                 },
             )
 

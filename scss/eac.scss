@@ -10,8 +10,6 @@
 }
 
 .maintenance-event {
-    margin-to: 1em;
-    margin-bottom: 1em;
 
     &__description {
 	margin-left: 1em;
@@ -37,4 +35,31 @@
   &__description p{
     margin: 0;
   }
+}
+
+ul.eac-children-list {
+   list-style-type: none;
+   padding-left: 0;
+   margin-top: 1rem;
+   padding-bottom: 1rem;
+
+}
+
+.eac-label {
+  font-weight: 700;
+}
+
+.agent-place {
+  &__role {
+    font-weight: 700;
+  }
+
+}
+
+.authorityrecord-view .main-properties .index-value-title{
+  margin-top: 2rem;
+ }
+
+.authorityrecord-view .main-properties .indexes-values {
+  padding-bottom: 0;
 }

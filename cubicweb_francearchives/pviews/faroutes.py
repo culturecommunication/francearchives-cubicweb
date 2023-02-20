@@ -36,13 +36,14 @@ import logging
 from pyramid.view import view_config
 from pyramid.response import Response
 from pyramid.httpexceptions import HTTPNotFound, HTTPFound
+from rdflib.graph import ConjunctiveGraph
 
 from rql import TypeResolverException
 
 
 from cubicweb import crypto, NoResultError
 
-from cubicweb_francearchives.xy import conjunctive_graph, add_statements_to_graph, namespaces
+from cubicweb_francearchives.xy import add_statements_to_graph
 from cubicweb_francearchives.utils import find_card
 from cubicweb_francearchives.entities.cms import Service
 
@@ -51,6 +52,26 @@ from .csvutils import alignment_csv, indices_csv
 
 
 LOG = logging.getLogger(__name__)
+
+
+def create_rdf_response(entity, format):
+    RDF_FORMAT_TO_MIMETYPE = {
+        "nt": "application/n-triples",
+        "n3": "text/n3",
+        "ttl": "text/turtle",
+        "jsonld": "application/ld+json",
+    }
+    rdf_adapter = entity.cw_adapt_to("rdf")
+    graph = ConjunctiveGraph()
+    add_statements_to_graph(graph, rdf_adapter)
+    if format in RDF_FORMAT_TO_MIMETYPE:
+        content_type = RDF_FORMAT_TO_MIMETYPE[format]
+    else:  # fallback to xml
+        content_type = "application/rdf+xml"
+
+    return Response(
+        graph.serialize(format=content_type), content_type=f"{content_type}; charset=UTF-8"
+    )
 
 
 def rqlrequest_factory(request, rql, vid=None):
@@ -84,44 +105,14 @@ def rqlbased_view(request):
     return Response(viewsreg.main_template(cwreq, "main-template", rset=ctx["rset"], view=view))
 
 
-def dpt_map_view(cwreq, dpt=None):
-    if dpt:
-        rset = cwreq.execute(
-            "Any X,XN,XC ORDERBY X "
-            'WHERE X is Service, X level "level-D", '
-            "X dpt_code %(dpt)s, X name XN, X dpt_code XC, "
-            "NOT X annex_of Y",
-            {"dpt": dpt.upper()},
-        )
-        if rset:
-            if len(rset) != 1:
-                LOG.warning(
-                    "Got %s service(s) instead of 1 for dpt %s " 'and level "level-D"',
-                    len(rset),
-                    dpt.upper(),
-                )
-                # the dpt-service-map view assumes there's either 0 or 1 result.
-                # if there's more than one, pick arbitrarily the first one created
-                # in order to display a service and make everything editable.
-                # It's just a safety belt, a hook should forbid this specific case
-                rset = rset.limit(1)
-        else:
-            rset = None
-    else:
-        rset = None
-    viewsreg = cwreq.vreg["views"]
-    view = viewsreg.select("dpt-service-map", cwreq, rset=rset)
-    return Response(viewsreg.main_template(cwreq, "main-template", rset=rset, view=view))
-
-
 def all_services(req):
     rset = req.execute(
-        "Any S,SN,SN2,SSN,SPN,SF,SE,SA,SZ,SC,SCC,SU,SOP,SCODE,"
+        "Any S,SN,SN2,SSN,SPN,SINSEE,SE,SA,SZ,SC,SCC,SU,SOP,SCODE,"
         "SWU,SL,SI,SIF,SIFH,SIFN,PARENT,SDC,SML "
         "ORDERBY SL,SN,PARENT "
         "WHERE S is Service, S name SN, S name2 SN2, S short_name SSN, "
         "S mailing_address SML, S dpt_code SDC, "
-        "S phone_number SPN, S fax SF, S email SE, S address SA, "
+        "S phone_number SPN, S code_insee_commune SINSEE, S email SE, S address SA, "
         "S zip_code SZ, S city SC, S contact_name SCC, "
         "S service_image SI?, SI image_file SIF?, "
         "SIF data_hash SIFH, SIF data_name SIFN, "
@@ -137,7 +128,7 @@ def annuaire_vcard_view(request):
     vcards = []
     for service in all_services(cwreq).entities():
         card = service.cw_adapt_to("vcard").vcard()
-        vcards.append(card.serialize().decode("utf-8"))
+        vcards.append(card.serialize())
     return Response("\n\n".join(vcards), content_type="text/vcard")
 
 
@@ -150,17 +141,6 @@ def annuaire_csv_view(request):
         rows.append(icsv.csv_row())
     headers = icsv.headers  # pick headers from any adapaters
     return {"rows": rows, "headers": headers}
-
-
-@view_config(route_name="annuaire-dpt", request_method=("GET", "HEAD"))
-def annuaire_dpt_view(request):
-    cwreq = request.cw_request
-    return dpt_map_view(cwreq, cwreq.form.get("dpt"))
-
-
-@view_config(route_name="annuaire-explicit-dpt", request_method=("GET", "HEAD"))
-def annuaire_explicitdpt_view(request):
-    return dpt_map_view(request.cw_request, request.matchdict["dpt"])
 
 
 @view_config(route_name="alignment", request_method=("GET", "HEAD"), renderer="csv")
@@ -237,17 +217,9 @@ def findingaids_view(request):
 @view_config(route_name="faq", request_method=("GET", "HEAD"))
 def faq_view(request):
     cwreq = request.cw_request
-    if cwreq.vreg.config.get("instance-type") != "cms":
-        card = find_card(cwreq, "faq")
-        if card is None:
-            raise HTTPNotFound()
-        rset = card.as_rset()
-        viewsreg = cwreq.vreg["views"]
-        view = viewsreg.select("primary", cwreq, rset=rset)
-    else:
-        rset = cwreq.execute("Any X, A, Q WHERE X is FaqItem, X question Q, X answer A")
-        viewsreg = cwreq.vreg["views"]
-        view = viewsreg.select("faq", cwreq, rset=rset)
+    rset = cwreq.execute("Any X, A, Q WHERE X is FaqItem, X question Q, X answer A")
+    viewsreg = cwreq.vreg["views"]
+    view = viewsreg.select("faq", cwreq, rset=rset)
     return Response(viewsreg.main_template(cwreq, "main-template", rset=rset, view=view))
 
 
@@ -259,7 +231,8 @@ def service_documents_view(request):
         raise HTTPNotFound()
     cwreq.form.setdefault("vid", "esearch")
     cwreq.form.setdefault("es_escategory", "archives")
-    cwreq.form.setdefault("es_publisher", service.publisher())
+    cwreq.form.setdefault("es_publisher", service.eid)
+    cwreq.form.setdefault("inventory", True)
     viewsreg = cwreq.vreg["views"]
     view = viewsreg.select("esearch", cwreq, rset=None)
     return Response(viewsreg.main_template(cwreq, "main-template", rset=None, view=view))
@@ -271,20 +244,30 @@ def findingaid_rdf_view(request):
     etype = cwreq.vreg.case_insensitive_etypes[request.matchdict["etype"]]
     entity = cwreq.find(etype, stable_id=request.matchdict["stable_id"]).one()
     # XXX HTTPNotFound() on error
-    rdf_adapter = entity.cw_adapt_to("rdf.edm")
-    graph = conjunctive_graph()
-    add_statements_to_graph(graph, rdf_adapter)
     format = request.matchdict["format"].split(".", 1)[1]
-    if format == "n3":
-        content_type = "text/rdf+n3"
-    elif format == "ttl":
-        content_type = "application/x-turtle"
-    elif format == "nt":
-        content_type = "text/plain"
-    else:  # fallback to xml
-        content_type = "application/rdf+xml"
-        format = "pretty-xml"
-    return Response(graph.serialize(format=format, context=namespaces), content_type=content_type)
+    return create_rdf_response(entity, format)
+
+
+@view_config(route_name="eid-rdf", request_method=("GET", "HEAD"))
+def eid_rdfformat_view(request):
+    cwreq = request.cw_request
+    request_etype = request.matchdict["etype"]
+    if request_etype in ("agent", "location", "subject"):
+        request_etype = f"{request_etype}authority"
+    etype = cwreq.vreg.case_insensitive_etypes[request_etype]
+    entity = cwreq.find(etype, eid=request.matchdict["eid"]).one()
+    # XXX HTTPNotFound() on error
+    format = request.matchdict["format"].split(".", 1)[1]
+    return create_rdf_response(entity, format)
+
+
+@view_config(route_name="authorityrecord-rdf", request_method=("GET", "HEAD"))
+def authorityrecord_rdfformat_view(request):
+    cwreq = request.cw_request
+    entity = cwreq.find("AuthorityRecord", record_id=request.matchdict["record_id"]).one()
+    # XXX HTTPNotFound() on error
+    format = request.matchdict["format"].split(".", 1)[1]
+    return create_rdf_response(entity, format)
 
 
 @view_config(route_name="findingaid-csv", renderer="csv", request_method=("GET", "HEAD"))
@@ -314,40 +297,21 @@ def circulars_csv_view(request):
     return {"rows": rows, "headers": headers}
 
 
+@view_config(route_name="authorityrecord-csv", renderer="csv", request_method=("GET", "HEAD"))
+def authorityrecord_csv_view(request):
+    cwreq = request.cw_request
+    etype = cwreq.vreg.case_insensitive_etypes[request.matchdict["etype"]]
+    entity = cwreq.find(etype, record_id=request.matchdict["record_id"]).one()
+    adapter = entity.cw_adapt_to("entity.main_props")
+    data = adapter.properties(export=True, vid="text", text_format="text/plain")
+    filename = "%s.csv" % entity.record_id
+    request.response.content_disposition = "attachment;filename=" + filename
+    return {"headers": [d[0] for d in data], "rows": [[d[1] for d in data]]}
+
+
 REWRITE_RULES = [
     (
-        "commemocoll-index",
-        r"/commemo/recueil-{year:\d+}/index",
-        {
-            "vid": "commemo-alpha-index",
-            "rql": "Any X WHERE X is CommemoCollection, X year %(year)s",
-        },
-    ),
-    (
-        "commemocoll-timeline-json",
-        r"/commemo/recueil-{year:\d+}/timeline.json",
-        {
-            "vid": "pnia.vtimeline.json",
-            "rql": "Any X WHERE X is CommemoCollection, X year %(year)s",
-        },
-    ),
-    (
-        "commemocoll-timeline",
-        r"/commemo/recueil-{year:\d+}/timeline",
-        {
-            "vid": "pnia.vtimeline",
-            "rql": "Any X WHERE X is CommemoCollection, X year %(year)s",
-        },
-    ),
-    (
-        "commemocoll",
-        r"/commemo/recueil-{year:\d+}/",
-        {
-            "vid": "primary",
-            "rql": "Any X WHERE X is CommemoCollection, X year %(year)s",
-        },
-    ),
-    (
+        # XXX should we remove this route ?
         "commemoitem",
         r"/commemo/recueil-{year:\d+}/{commemo:\d+}",
         {
@@ -365,7 +329,7 @@ REWRITE_RULES = [
     ),
     (
         "topsection",
-        r"/{section:(decouvrir|comprendre|gerer)}",
+        r"/{section:(rechercher|decouvrir|comprendre|gerer)}",
         {
             "vid": "primary",
             "rql": ("Any S WHERE S is Section, NOT EXISTS(X children S), " "S name %(section)s"),
@@ -469,8 +433,6 @@ def includeme(config):
     config.add_route("absolute-url", r"/uuid/{etype:\w+}/{uuid:\w+}")
     config.add_route("annuaire-vcard", "/annuaire.vcf")
     config.add_route("annuaire-csv", "/annuaire.csv")
-    config.add_route("annuaire-dpt", "/annuaire/departements")
-    config.add_route("annuaire-explicit-dpt", r"/annuaire/departements/{dpt:\d+[AB]}")
     config.add_route("indices-csv", "/indices-{type}.csv")
     for route, path, context in REWRITE_RULES:
         config.add_route(route, path, factory=partial(rqlrequest_factory, **context))
@@ -500,14 +462,23 @@ def includeme(config):
         #       because pyramid seems to introspect the view object and behaves
         #       differently according to the number of parameters (e.g. 2 here)
         config.add_view(startup_view_factory(vid), route_name=path, request_method=("GET", "HEAD"))
-    config.add_route("all-documents", "/inventaires/")
+    config.add_route("all-documents", "/inventaires")
     config.add_route("nlconfirm", "/nlconfirm")
     config.add_route("service-documents", "/inventaires/{service}")
     config.add_route(
         "findingaid-rdf",
-        r"/{etype:(findingaid|facomponent)}/{stable_id}/{format:rdf\.(xml|n3|nt|ttl)}",
+        r"/{etype:(findingaid|facomponent)}/{stable_id}/{format:rdf\.(xml|n3|nt|ttl|jsonld)}",
+    )
+    config.add_route(
+        "eid-rdf",
+        r"/{etype:(service|agent|location|subject)}/{eid}/{format:rdf\.(xml|n3|nt|ttl|jsonld)}",
+    )
+    config.add_route(
+        "authorityrecord-rdf",
+        r"/{etype:authorityrecord}/{record_id}/{format:rdf\.(xml|n3|nt|ttl|jsonld)}",
     )
     config.add_route("findingaid-csv", r"/{etype:(findingaid|facomponent)}/{stable_id}.csv")
+    config.add_route("authorityrecord-csv", r"/{etype:authorityrecord}/{record_id}.csv")
     config.add_route("alignment", "/alignment.csv")
     config.add_route("fa-map", "/carte-inventaires")
     config.add_route("fa-map-json", "/fa-map.json")
@@ -518,4 +489,5 @@ def includeme(config):
     config.add_route("circulars-csv", "/circulaires.csv")
     config.add_route("glossary", "/glossaire")
     config.add_notfound_view(startup_view_factory("404", status_code=404), append_slash=HTTPFound)
+
     config.scan(__name__)

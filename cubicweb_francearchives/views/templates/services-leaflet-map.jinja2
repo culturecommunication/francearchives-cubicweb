@@ -1,0 +1,48 @@
+{{ map_form }}
+<div id="services-dpt-sidebar" class="leaflet-sidebar collapsed d-none" aria-hidden="true">
+  <div class="leaflet-sidebar-tabs">
+    <ul role="tablist">
+      <li><a href="#services" role="tab"><i class="fa fa-bars active"></i></a></li>
+      <li><a href="#help" role="tab"><i class="fa fa-question"></i></a></li>
+    </ul>
+  </div>
+  <div class="leaflet-sidebar-content">
+    <div class="leaflet-sidebar-pane" id="services">
+      <h2 class="leaflet-sidebar-header">{{ labels['useful_info'] }}
+        <span class="leaflet-sidebar-close"><i class="fa fa fa-caret-right"></i></span>
+      </h2>
+      <div class="leaflet-sidebar-empty-data"><p>{{ _('Select a service to display information') }}</p></div>
+      <div class="leaflet-sidebar-pane-services d-none">
+        <div class="service"></div>
+        <ul class="service-infos">
+          <li class="contact"><p><b class="contact-label">{{ labels['contact'] }}</b><b>{{ _(":") }}</b><span/></p></li>
+          <li class="phone"><p><b>{{ labels['phone'] }}{{ _(":") }}</b><span/></p></li>
+          <li class="email"><p><b>{{ labels['email'] }}{{ _(":") }}</b><span/></p></li>
+          <li class="address"><p><b>{{ labels['address'] }}{{ _(":") }}</b> <span/></p></li>
+          <li class="mailing_address"><p><b>{{ labels['mailing_address'] }}{{ _(":") }}</b> <span/></p></li>
+          <li class="opening_period"><p><b>{{ labels['opening'] }}{{ _(":") }}</b><span/></p></li>
+          <li class="annual_closure"><p><b>{{ labels['annual_closure'] }}{{ _(":") }}</b><span/></p></li>
+          <li class="website"><p><b>{{ labels['website'] }}{{ _(":") }}</b> <span class="text-nowrap" /></p> </li>
+          <li class="code_insee"><p><b>{{ labels['code_insee'] }}{{ _(":") }}</b> <span/></p> </li>
+          <li class="gps"><p><b>{{ labels['coordinates'] }}{{ _(":") }}</b> <span/></p> </li>
+          <li class="social_network"><p><b>{{ labels['social_network'] }}{{ _(":") }}</b> <span/></p> </li>
+        </ul>
+        <div class="fi-link">
+          <a class="white-button">{{ labels['fa_link']}}</a>
+        </div>
+        <div class="nomina-link white-button">
+          <a>{{ labels['nomina_link']}}</a>
+        </div>
+      </div>
+    </div>
+    <div class="leaflet-sidebar-pane" id="help">
+      <h2 class="leaflet-sidebar-header"> {{ _("Help") }}
+        <span class="leaflet-sidebar-close"><i class="fa fa-caret-right"></i></span></h2>
+      <p>{{ _('services_map_help') }}</p>
+    </div>
+    </div>
+</div>
+<div id="services-dpt-map" data-jsondata="{{ geojson }}" data-markerurl="{{ markerurl }}" data-zoom="{{ zoom }}"
+     class="leaflet-container leaflet-touch leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom"
+     style="float: left; outline: none; display:inline-block;" aria-hidden="true">
+</div>

@@ -28,6 +28,7 @@
 # The fact that you are presently reading this means that you have had
 # knowledge of the CeCILL-C license and that you accept its terms.
 #
+
 import re
 import sys
 import time
@@ -55,12 +56,11 @@ from cubicweb import Binary
 from cubicweb.dataimport.importer import ExtEntity, ExtEntitiesImporter
 from cubicweb.devtools.fake import FakeRequest
 
+from cubicweb_francearchives import Authkey
 from cubicweb_francearchives.entities import compute_file_data_hash
-
 from cubicweb_francearchives.dataimport.meminfo import memprint
 from cubicweb_francearchives.utils import remove_html_tags
-from cubicweb_francearchives.utils import pick
-from cubicweb_francearchives import Authkey
+from cubicweb_francearchives.utils import pick, TRANSMAP, NO_PUNCT_MAP
 
 LOGGER = logging.getLogger()
 
@@ -69,22 +69,10 @@ RELFILES_DIR = "RELFILES"
 
 OAIPMH_DC_PATH = "oaipmh/dc"
 OAIPMH_EAD_PATH = "oaipmh/ead"
+QUALITY_SERVICE_EID = -1
 
-NO_PUNCT_MAP = dict.fromkeys((ord(c) for c in string.punctuation), " ")
-
-
-def _build_transmap():
-    transmap = {}
-    for i in range(2 ** 16 - 1):
-        newc = unormalize(chr(i), substitute="_")
-        if len(newc) == 1:
-            transmap[i] = ord(newc)
-        else:
-            transmap[i] = newc
-    return transmap
-
-
-TRANSMAP = _build_transmap()
+logging.getLogger("ead.transform").setLevel(logging.CRITICAL)
+logging.getLogger("glamconv.transform").setLevel(logging.CRITICAL)
 
 
 def es_bulk_index(es, es_docs, max_retry=3, **kwargs):
@@ -207,6 +195,7 @@ class IndexImporterMixin(object):
         self.indices = {}
         self._current_service = None
         self.all_authorities = {}
+        self.sames_as = set([])
         super(IndexImporterMixin, self).__init__(*args, **kwargs)
 
     @cachedproperty
@@ -226,6 +215,50 @@ class IndexImporterMixin(object):
             key = Authkey(fa_stable_id, type, label, indexrole)
             self.auth_history[key.as_tuple()] = auth
 
+    def _init_blacklisted_authorities(self):
+        """for now all blacklisted authorities are Subjects"""
+        self.blacklisted_authorities = []
+        sql = self.store._cnx.system_sql
+        cu = sql("select label from blacklisted_authorities")
+        self.blacklisted_authorities = [e for e, in cu.fetchall()]
+
+    def global_authorities_rql_parts(self, auth_types):
+        # return rqlquery with:
+        # eid, label (normalized or not), etype, service_eid (0), sortorder
+        #
+        # 1. take grouping authorities eid with their grouped labels (sortorder 2)
+        #
+        # 2. take grouping authorities eid with their own labels (sortorder 1)
+        #
+        # 3. take selfstanding authorities with their own labels (sortorder 0)
+        #
+        # order is use to fill self.all_authorities and self.global_authorities dictionaries
+        # so order 0 will be overwritten by order 1 and 2 and
+        # in case of grouping and selfstanding authorities with a same label the
+        # grouping one will finally be kept.
+        #
+        return " UNION ".join(
+            """
+                   (DISTINCT Any A, {{label}}, T, 0, 2 WHERE
+                       GA is ET, ET name T,
+                       A is {auth}, GA is {auth},
+                       GA grouped_with A, GA label L)
+                   UNION
+                   (DISTINCT Any A, {{label}}, T, 0, 1 WHERE
+                       A is ET, ET name T,
+                       A is {auth},
+                       GA grouped_with A, A label L)
+                   UNION
+                   (DISTINCT Any A, {{label}}, T, 0, 0 WHERE
+                       A is ET, ET name T,
+                       A is {auth},
+                       NOT EXISTS(GA grouped_with A), NOT EXISTS(A grouped_with A2), A label L)
+            """.format(
+                auth=auth
+            )
+            for auth in auth_types
+        )
+
     def _init_authorities(self):
         autodedupe_authorities = self.index_policy.get("autodedupe_authorities")
         self.log.info("Start initiating authorities with index policy: %r", autodedupe_authorities)
@@ -240,79 +273,85 @@ class IndexImporterMixin(object):
         else:
             label = "L"
         if global_or_service == "global":
-            # self.all_authorities only store one tuple (etype, label, S?) for
-            # normalized or not normalized label the order of records is important:
-            #
-            # 1. at first take authorties the authorties with label "L" are grouped in
-            #    as they are most likely to to added in self.all_authorities
-            #
-            # 2. then take authorities with label "L" with other authorties grouped in
-            #
-            # 3. at last take authorities with label "L" which neither are grouped nor
-            #    have grouped in authorities
-            #
-            # XXX TODO: actually S variable is allways NONE, but must contains
-            #           authority type if exists
-            rql = """
-                 DISTINCT Any A, L, T, S, O ORDERBY O WITH A, L, T, S, O BEING (
-                   (DISTINCT Any A, {label}, T, NULL, 2 WHERE
-                       GA is ET, ET name T,
-                       A is in (SubjectAuthority, LocationAuthority, AgentAuthority),
-                       GA grouped_with A, GA label L)
-                   UNION
-                   (DISTINCT Any A, {label}, T, NULL, 1 WHERE
-                       A is ET, ET name T,
-                       A is in (SubjectAuthority, LocationAuthority, AgentAuthority),
-                       A1 grouped_with A, A label L)
-                   UNION
-                   (DISTINCT Any A, {label}, T, NULL, 0 WHERE
-                       A is ET, ET name T,
-                       A is in (SubjectAuthority, LocationAuthority, AgentAuthority),
-                       NOT EXISTS(A1 grouped_with A), NOT EXISTS(A grouped_with A2), A label L)
-            )
-            """
+            # load all existing authorities
+            auth_types = ("SubjectAuthority", "LocationAuthority", "AgentAuthority")
+            rql = self.global_authorities_rql_parts(auth_types)
         else:
-            # 1. orphan authorities
-            #    this fist query is a built UNION instead of basic rql query like:
+            # load all orphan authorities in order to try to recycle them. This data
+            # will later be completed with the particular service related authorities in
+            # update_authorities_cache method
+            #
+            auth_types = ("AgentAuthority", "LocationAuthority")
+            # the first query is a built UNION instead of basic rql query like:
             #       Any A WHERE A is IN (AgentAuthority, LocationAuthority, SubjectAuthority), NOT
             #       EXISTS(I authority A)
-            #    because of bug in rql2sql (not so easy to reproduce in unit test)
+            # because of bug in rql2sql (not so easy to reproduce in unit test)
             #
-            #   eliminate grouped authorities
+            # Authorities linked exclusively by :
+            #  1. `related_authority` to "CommemorationItem", "ExternRef", "BaseContent"
+            #  2. `same_as` to "AuthorityRecord", "ExternalUri", "ExternalId"
+            #
+            #  (e.g not linked by an Findingaid "NOT EXISTS(I authority A))
+            # are included in the orphan resultset aswell
+            #
             rql = " UNION ".join(
                 '(Any A, {{label}}, "{0}", 0, 0 WHERE A is {0}, A label L, '
                 "NOT EXISTS(I authority A), "
-                "NOT EXISTS(A1 grouped_with A), NOT EXISTS(A grouped_with A2) "
+                "NOT EXISTS(A1 grouped_with A), NOT EXISTS(A grouped_with A2), "
+                "A quality False"  # qualified authorities are processed as such
                 ")".format(auth)
-                for auth in ("AgentAuthority", "LocationAuthority", "SubjectAuthority")
+                for auth in auth_types
             )
             rql += " UNION " + "UNION ".join(
                 '(Any A, {{label}}, "{0}", 0, 1 WHERE A is {0}, A label L, '
                 "NOT EXISTS(I authority A), "
-                "A1 grouped_with A "
+                "A1 grouped_with A, "
+                "A quality False"  # qualified authorities are processed as such
                 ")".format(auth)
-                for auth in ("AgentAuthority", "LocationAuthority", "SubjectAuthority")
+                for auth in auth_types
             )
             # add grouped authorities targets with source authority's label
             rql += " UNION " + "UNION ".join(
                 '(Any A, {{label}}, "{0}", 0, 2 WHERE A is {0}, GA label L, '
-                "GA grouped_with A, NOT EXISTS(I authority A))".format(auth)
-                for auth in ("AgentAuthority", "LocationAuthority", "SubjectAuthority")
+                "GA grouped_with A, "
+                "NOT EXISTS(I authority A), "
+                "A quality False"  # qualified authorities are processed as such
+                ")".format(auth)
+                for auth in auth_types
             )
-            rql = "DISTINCT Any A, L, T, S, O ORDERBY O WITH A, L, T, S, O BEING ({0})".format(rql)
+            # add qualified (and not grouped) authorities: normally grouped
+            # authorities are automatically dequalified in grouping
+            rql += " UNION " + "UNION ".join(
+                '(Any A, {{label}}, "{0}", {1}, 3 WHERE A is {0}, A label L, '
+                "A quality True, "
+                "NOT EXISTS(A grouped_with A1) "  # should not exist
+                ")".format(auth, QUALITY_SERVICE_EID)
+                for auth in auth_types
+            )
+            # add all SubjectAuthorities as they must always be treated globally (e.g #74018090)
+            rql += " UNION  " + self.global_authorities_rql_parts(("SubjectAuthority",))
+        rql = "DISTINCT Any A, L, T, S, O ORDERBY O WITH A, L, T, S, O BEING ({0})".format(rql)
         execute = self.store._cnx.execute
-        # `all_authorities` is first initialize as global_authorities then we will call
+        # `all_authorities` is first initialized as global_authorities then we will call
         # `update_authorities_cache` to update `all_authorities`
         self.all_authorities = self.global_authorities = {
-            hash((t, l, s)): a
-            for a, l, t, s, o in execute(rql.format(label=label), build_descr=False)
+            hash((etype, label, service_eid)): eid
+            for eid, label, etype, service_eid, order in execute(
+                rql.format(label=label), build_descr=False
+            )
         }
+        self.log.info(f"Found {len(self.all_authorities)} all_authorities")
 
     def update_authorities_cache(self, service_eid):
         """This will update `all_authorities` attribute.
 
         To perform this update we use authorities linked to service (one
         with `service_eid`) through FindingAid or through FAComponent via FindingAid
+
+        Authorities linked exclusively by:
+           1. `related_authority` to "CommemorationItem", "ExternRef", "BaseContent"
+           2. `same_as` to "AuthorityRecord", "ExternalUri", "ExternalId"
+        are already included in the self.all_authorities dictionary
         """
         if self._current_service == service_eid:
             return self.all_authorities
@@ -368,34 +407,13 @@ class IndexImporterMixin(object):
           JOIN cw_findingaid fa ON fa.cw_eid = fac.cw_finding_aid
         WHERE fa.cw_service = %(s)s
          """
-        q = (
-            " union ".join(
-                template.format(etype=e, authtable=at, indextable=it, label=label, a1label=a1label)
-                for e, at, it in (
-                    ("LocationAuthority", "cw_locationauthority", "cw_geogname"),
-                    ("SubjectAuthority", "cw_subjectauthority", "cw_subject"),
-                    ("AgentAuthority", "cw_agentauthority", "cw_agentname"),
-                )
-            )
-            + " union "
-            + """
-            SELECT DISTINCT a.cw_eid, {label}, 'AgentAuthority'
-            FROM
-              cw_agentauthority a
-              JOIN cw_person p ON p.cw_authority = a.cw_eid
-            WHERE
-              p.cw_service = %(s)s
-            UNION
-            SELECT DISTINCT a.cw_eid, {a1label}, 'AgentAuthority'
-            FROM
-              cw_agentauthority a
-              JOIN grouped_with_relation ga ON a.cw_eid=ga.eid_to
-              JOIN cw_agentauthority a1 ON a1.cw_eid = ga.eid_from
-              JOIN cw_person p ON p.cw_authority = a.cw_eid
-            WHERE
-              p.cw_service = %(s)s
-        """.format(
-                label=label, a1label=a1label
+        # for now SubjectAuthorities are always treated globally (e.g #74018090)
+        # and thus they are already present in self.all_authorities and self.global_authorities
+        q = " union ".join(
+            template.format(etype=e, authtable=at, indextable=it, label=label, a1label=a1label)
+            for e, at, it in (
+                ("LocationAuthority", "cw_locationauthority", "cw_geogname"),
+                ("AgentAuthority", "cw_agentauthority", "cw_agentname"),
             )
         )
         self.all_authorities = self.global_authorities.copy()
@@ -407,9 +425,9 @@ class IndexImporterMixin(object):
         )
         for autheid, authlabel, authtype in sql(q, {"s": service_eid}).fetchall():
             self.all_authorities[hash((authtype, authlabel, service_eid))] = autheid
-        self.log.info("end fetching authorities %s", service_eid)
+        self.log.info("End fetching authorities %s", service_eid)
 
-    def create_authority(self, authtype, indextype, label, service, hist_key):
+    def create_authority(self, authtype, indextype, label, quality, service, hist_key):
         if hist_key.as_tuple() in self.auth_history:
             return self.auth_history[hist_key.as_tuple()]
         keys = self.build_authority_key(authtype, label, service)
@@ -418,38 +436,74 @@ class IndexImporterMixin(object):
                 return self.all_authorities[key]
         key = keys[0]  # preferred key is in first position
         self.all_authorities[key] = self.global_authorities[key] = auth = self.create_entity(
-            authtype, {"label": label}
+            authtype, {"label": label, "quality": quality}
         )["eid"]
         return auth
 
     def build_authority_key(self, authtype, label, service):
         autodedupe_authorities = self.index_policy.get("autodedupe_authorities")
-        if not autodedupe_authorities or autodedupe_authorities == "service/strict":
+        # always present quality labels firts
+        if authtype == "SubjectAuthority":
+            if not autodedupe_authorities or autodedupe_authorities.endswith("/strict"):
+                keys = [(authtype, label, QUALITY_SERVICE_EID), (authtype, label, 0)]
+            else:
+                keys = [
+                    (authtype, normalize_entry(label), QUALITY_SERVICE_EID),
+                    (authtype, normalize_entry(label), 0),
+                ]
+        elif not autodedupe_authorities or autodedupe_authorities == "service/strict":
             keys = [
+                (authtype, label, QUALITY_SERVICE_EID),
                 (authtype, label, service),
                 # in service case we should also try to align on orphan authorities
                 (authtype, label, 0),
             ]
         elif autodedupe_authorities == "service/normalize":
             keys = [
+                (authtype, normalize_entry(label), QUALITY_SERVICE_EID),
                 (authtype, normalize_entry(label), service),
                 # in service case we should also try to align on orphan authorities
+                # and on SubjectAuthorities always imported globally
                 (authtype, normalize_entry(label), 0),
             ]
         elif autodedupe_authorities == "global/normalize":
-            keys = [(authtype, normalize_entry(label), None)]
+            keys = [
+                (authtype, normalize_entry(label), QUALITY_SERVICE_EID),
+                (authtype, normalize_entry(label), 0),
+            ]
         elif autodedupe_authorities == "global/strict":
-            keys = [(authtype, label, None)]
+            keys = [(authtype, label, QUALITY_SERVICE_EID), (authtype, label, 0)]
         return [hash(key) for key in keys]
 
     def create_index(self, infos, target, fa_attrs):
         # key will be fields for Geogname, AgentName, Subject entities
         # and values are set of targets that will be index relations
+        # if authority is blacklisted, do nothing
+        indextype, authtype = self.type_map[infos["type"]]
+        # if SubjectAuthority is blacklisted, do nothing
+        if authtype == "SubjectAuthority" and infos["label"] in self.blacklisted_authorities:
+            return
         key = Authkey(fa_attrs["stable_id"], infos["type"], infos["label"], infos["role"])
+        sames_as = []
+        # same_as
+        authfilenumber = infos["authfilenumber"]
+        if authfilenumber is not None:
+            authrecord_eid = self.authority_records.get(authfilenumber)
+            if authrecord_eid:
+                sames_as.append(authrecord_eid)
+        if infos["type"] in ("subject", "function", "occupation", "genreform"):
+            concept = self.concepts.get(infos["label"].lower())
+            if concept is not None:
+                sames_as.append(concept)
         if key.as_tuple() not in self.indices:
-            indextype, authtype = self.type_map[infos["type"]]
+            quality = bool(sames_as)
             autheid = self.create_authority(
-                authtype, infos["type"], infos["label"], fa_attrs.get("service"), hist_key=key
+                authtype,
+                infos["type"],
+                infos["label"],
+                quality,
+                fa_attrs.get("service"),
+                hist_key=key,
             )
             attrs = dict(pick(infos, "role", "label", "authfilenumber"), authority=autheid)
             attrs["type"] = infos["type"]
@@ -459,15 +513,10 @@ class IndexImporterMixin(object):
             indexeid, autheid = self.indices[key.as_tuple()]
         self.add_rel(indexeid, "index", target)
         # same_as
-        authfilenumber = infos["authfilenumber"]
-        if authfilenumber is not None:
-            authrecord_eid = self.authority_records.get(authfilenumber)
-            if authrecord_eid:
-                self.add_rel(autheid, "same_as", authrecord_eid)
-        if infos["type"] == "subject":
-            concept = self.concepts.get(infos["label"].lower())
-            if concept is not None:
-                self.add_rel(autheid, "same_as", concept)
+        for entity_eid in sames_as:
+            if (autheid, entity_eid) not in self.sames_as:
+                self.add_rel(autheid, "same_as", entity_eid)
+                self.sames_as.add((autheid, entity_eid))
         # add authority link to infos for elasticsearch
         infos["authority"] = autheid
 
@@ -489,12 +538,19 @@ def int_or_none(value):
     return None
 
 
-def clean_row(row):
+def clean_row_dc_csv(row):
     for key, value in list(row.items()):
         if isinstance(value, bytes):
             row[key] = value.decode("utf-8")
         row[key] = row[key].strip()
         row[key.lower().strip()] = row.pop(key)
+    for indextype in (
+        "index_matiere",
+        "index_collectivite",
+        "index_personne",
+        "index_lieu",
+    ):
+        row[indextype] = [s.strip() for s in re.split(INDEX_SEP_RE, row[indextype])]
     return row
 
 
@@ -502,13 +558,22 @@ class CSVIntegrityError(Exception):
     pass
 
 
-def load_metadata_file(metadata_filepath, csv_filename=None):
-    """expected columns are:
-    ['identifiant_URI', 'date1' 'date2',
-    'description', 'format', 'langue', 'index_collectivite',
-    'index_lieu', 'conditions_acces', 'index_personne', 'origine',
-    'conditions_utilisation', 'identifiant_fichier',
-    'source_complementaire', 'titre', 'type', 'source_image', 'index_matiere']
+INDEX_SEP_RE = re.compile(r";(?![^\(\)]*\))")
+
+
+def load_metadata_file(read_func, metadata_filepath, csv_filename=None):
+    """
+
+    :read_func: read function for file
+    :metadata_filepath: filepath to the file to read
+    :csv_filename: csv filename
+
+    expected columns are:
+    ["identifiant_fichier", "titre", "origine", "date1" , "date2" , "description",
+    "type",  # not used
+     "format" ,"index_matiere", "index_lieu" , "index_personne" ,"index_collectivite",
+    "langue", "conditions_acces", "conditions_utilisation", "source_complementaire",
+    "identifiant_URI", "source_image"]
     """
     all_metadata = {}
     csv_empty_value = 'Missing required value for column "{col}", row "{row}"'
@@ -517,15 +582,18 @@ def load_metadata_file(metadata_filepath, csv_filename=None):
     mandatory_columns = ("identifiant_fichier", "titre")
     errors = []
     csv_filenames = []
-    with open(metadata_filepath) as f:
+    with read_func(metadata_filepath) as f:
         reader = csv.DictReader(f)
-        for i, row in enumerate(reader):
-            if i == 0:
+        for i, row in enumerate(reader, 1):
+            if i == 1:
                 errors.extend(
                     [csv_missing_col.format(col=col) for col in mandatory_columns if col not in row]
                 )
                 if errors:
                     break
+            # skip empty lignes
+            if not any(row.values()):
+                continue
             errors.extend(
                 [
                     csv_empty_value.format(row=i, col=col)
@@ -535,14 +603,7 @@ def load_metadata_file(metadata_filepath, csv_filename=None):
             )
             csv_filenames.append(row["identifiant_fichier"].strip())
             if not errors:
-                row = clean_row(row)
-                for indextype in (
-                    "index_matiere",
-                    "index_collectivite",
-                    "index_personne",
-                    "index_lieu",
-                ):
-                    row[indextype] = [s.strip() for s in row[indextype].split(";")]
+                row = clean_row_dc_csv(row)
                 # extension is not removed from 'identifiant_fichier' but
                 # probaly should be as it is dont in default_csv_metadata
                 all_metadata[row["identifiant_fichier"].strip()] = row
@@ -627,7 +688,7 @@ class OptimizedExtEntitiesImporter(ExtEntitiesImporter):
 
 
 class ExtentityWithIndexImporter(IndexImporterMixin, OptimizedExtEntitiesImporter):
-    """ add Index optimization """
+    """add Index optimization"""
 
     def __init__(
         self,
@@ -649,6 +710,7 @@ class ExtentityWithIndexImporter(IndexImporterMixin, OptimizedExtEntitiesImporte
         # `_init_authorities()`
         self.store = store
         self._init_authorities()
+        self._init_blacklisted_authorities()
         self._init_auth_history()
         if extid2eid is None:
             extid2eid = {}
@@ -667,54 +729,6 @@ class ExtentityWithIndexImporter(IndexImporterMixin, OptimizedExtEntitiesImporte
             service_eid = service_extids.pop()
         self.update_authorities_cache(service_eid)
         extid2eid.update(self.all_authorities)
-
-    def complete_extentities(self, extentities):
-        """process the `extentities` flow and add missing `AgentAuthority`.
-
-        When importing nomina entities, only ``Person`` extentities are
-        created, leaving the responsibility to get / create corresponding
-        ``AgentAuthority`` to the extentity importer.
-        """
-        for e in extentities:
-            if e.etype == "Person":
-                label = " ".join([first(e.values["name"]) or "", first(e.values["forenames"])])
-                authority_hist_key = ("xxx-no-stable-id-for-person-xxx", "AgentAuthority", label)
-                if authority_hist_key in self.auth_history:
-                    e.values["authority"] = {self.auth_history[authority_hist_key]}  # XXX
-                else:
-                    service_extid = first(e.values["service"])
-                    service_eid = int(service_extid.split("-")[1])
-                    keys = self.build_authority_key("AgentAuthority", label, service_eid)
-                    for key in keys:
-                        if key in self.all_authorities:
-                            e.values["authority"] = {key}
-                            break
-                    else:
-                        key = keys[0]
-                        ext = ExtEntity("AgentAuthority", key, {"label": {label}})
-                        e.values["authority"] = {key}
-                        self.all_authorities[key] = ext.extid
-                        yield ext
-            yield e
-
-    def import_entities(self, extentities):
-        super(ExtentityWithIndexImporter, self).import_entities(
-            self.complete_extentities(extentities)
-        )
-
-
-def create_ead_index_table(cnx):
-    cnx.system_sql("DROP TABLE IF EXISTS dataimport_ead_index")
-    cnx.system_sql(
-        """CREATE TABLE dataimport_ead_index (
-id serial,
-index_type varchar(16),
-label varchar(256),
-role varchar(64),
-targets integer[],
-authority_eid integer
-    )"""
-    )
 
 
 @contextmanager
@@ -749,6 +763,11 @@ def strip_html(html):
 
 
 def strip_nones(props, defaults=None):
+    """Strip None or empty strings.
+
+    :param dict props: map to clean up
+    :param dict defaults: values to replace None or empty strings by
+    """
     if defaults is None:
         defaults = {}
     for key, value in list(props.items()):
@@ -815,25 +834,25 @@ def default_csv_metadata(title):
         "identifiant_fichier": title,  # ead
         "titre": title,
         "origine": default_service_name(title),
-        "index_matiere": None,
+        "date1": None,
+        "date2": None,
         "description": None,
-        "index_personne": None,
-        "index_collectivite": None,
-        "startyear": None,
-        "stopyear": None,
-        "year": None,
         "type": None,
         "format": None,
-        "langue": None,
-        "source_complementaire": None,
+        "index_matiere": None,
         "index_lieu": None,
+        "index_personne": None,
+        "index_collectivite": None,
+        "langue": None,
         "conditions_acces": None,
         "conditions_utilisation": None,
+        "source_complementaire": None,
         "identifiant_uri": None,  # dao
+        "source_image": None,
     }
 
 
-def facomponent_stable_id(identifier, fa_stable_id):
+def component_stable_id_for_dc(identifier, fa_stable_id):
     if isinstance(identifier, str):
         identifier = identifier.encode("utf-8")
     if isinstance(fa_stable_id, str):

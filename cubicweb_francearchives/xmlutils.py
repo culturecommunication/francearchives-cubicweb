@@ -30,12 +30,16 @@
 #
 
 """ xml utility functions"""
+import hashlib
+from lxml import etree
 from lxml import html as lxml_html
 from .utils import is_external_link
 
 import logging
 
 import re
+
+from cubicweb_francearchives.utils import remove_html_tags
 
 
 def to_unicode(el):
@@ -71,8 +75,7 @@ def process_html_as_xml(func):
             return html
         if fragments:
             func(fragments[0], *args, **kwargs)
-        html = "".join(to_unicode(fragment) for fragment in fragments)
-        return html
+        return "".join(to_unicode(fragment) for fragment in fragments)
 
     return wrapper
 
@@ -98,38 +101,23 @@ def add_title_on_external_links(cnx, node, href=None):
         node.set("title", title)
 
 
-def fix_fa_external_links(root, cnx):
-    """this method is used in views"""
-    nodes = root.xpath("//*[@href]")
-    tobe_removed = []
-    for node in nodes:
-        href = node.attrib["href"]
-        if href.startswith("//"):
-            node.set("href", "http:{}".format(href))
-            href = node.attrib["href"]
-        if is_external_link(href, cnx.base_url()):
-            # add _blank target
-            add_title_on_external_links(cnx, node, href)
-        elif is_francearchive_relatif_link(href):
-            rel = node.attrib.get("rel")
-            if rel == "nofollow noopener noreferrer":
-                del node.attrib["rel"]
-            if "target" in node.attrib:
-                del node.attrib["target"]
-        else:
-            # remove links with relative path
-            # (cf. https://extranet.logilab.fr/ticket/54134093)
-            tobe_removed.append(node)
-    for node in tobe_removed:
-        try:
-            node.getparent().remove(node)
-        except Exception:
-            pass
+def clean_internal_link(href):
+    """
+    clean wrong internal urls,
+    remove trailing # et "edit" added by users
+
+    cf. https://extranet.logilab.fr/ticket/74004621
+    """
+    for end in ("#/edit", "/", "#"):
+        href = re.sub(f"{end}$", "", href)
+    return href
 
 
 def fix_links(root, cnx, *args, **kwargs):
     """take html as first argument `root`. This argument is then transformed
     in etree root by process_html_as_xml
+
+    also clean wrong internal urls
 
     """
     base_url = cnx.base_url()
@@ -157,6 +145,10 @@ def fix_links(root, cnx, *args, **kwargs):
                 node.set("rel", "nofollow noopener noreferrer")
                 node.set("target", "_blank")
             else:
+                # clean internal urls
+                new_href = clean_internal_link(href)
+                if new_href != href:
+                    node.set("href", new_href)
                 for attr in ("target", "rel"):
                     if attribs.get(attr):
                         attribs.pop(attr)
@@ -165,7 +157,7 @@ def fix_links(root, cnx, *args, **kwargs):
         for image in images:
             image.set("alt", content)
         if images:
-            if "class" in attribs:
+            if "class" in attribs and "image-link" not in attribs["class"]:
                 css_class = "{} image-link".format(attribs["class"])
             else:
                 css_class = "image-link"
@@ -205,3 +197,140 @@ def fix_images(root, *args, **kwargs):
 def enhance_accessibility(html, cnx, *args, **kwargs):
     fix_links(html, cnx, *args, **kwargs)
     fix_images(html, *args, **kwargs)
+
+
+def add_subtitles_html(root, cnx, **kwargs):
+    lang = kwargs.get("lang", None)
+    # change the language for translations
+    if lang:
+        old_lang = cnx.lang
+        cnx.set_language(lang)
+    for idx, node in enumerate(root.xpath('//div[@class="media-subtitles"]')):
+        prev = node.getprevious()
+        if prev is None:
+            continue
+        for child in prev:
+            prev.remove(child)
+        node_id = f"transcript-{hashlib.sha1(etree.tostring(node)).hexdigest()}"
+        if prev.attrib.get("class") == "media-subtitles-button":
+            a = etree.SubElement(
+                prev,
+                "a",
+                **{
+                    "aria-expanded": "false",
+                    "data-label-expand": cnx._("Display transcription"),
+                    "data-label-collapse": cnx._("Hide transcription"),
+                    "aria-controls": node_id,
+                }
+            )
+            a.text = cnx._("Display transcription")
+            node.set("id", node_id)
+            node.set("class", "media-subtitles hidden")
+    if lang:
+        cnx.set_language(old_lang)
+
+
+@process_html_as_xml
+def handle_subtitles(root, cnx, **kwargs):
+    add_subtitles_html(root, cnx, **kwargs)
+
+
+def insert_labels(cnx, root, labels):
+    for label in labels:
+        _class = "ead-section ead-%s" % label
+        for parent in root.xpath("//div[@class='%s']" % _class):
+            # test the empty parent
+            if not any(r.strip() for r in parent.xpath(".//child::*/text()")):
+                continue
+            if not parent.xpath(".//div[@class='ead-label']"):
+                div = '<div class="ead-label">%s</div>' % cnx._("%s_label" % label)
+                parent.insert(0, etree.XML(div))
+
+
+def translate_labels(cnx, root):
+    for node in root.xpath("//div[@class='ead-label']"):
+        node.text = cnx._(node.text)
+
+
+@process_html_as_xml
+def fix_fa_external_links(root, cnx, labels=None):
+    """take html as first argument `root`. This argument is then transformed
+    in etree root by process_html_as_xml.
+
+    This method is used to modify links on the fly in views"""
+    nodes = root.xpath("//*[@href]")
+    tobe_removed = []
+    for node in nodes:
+        href = node.attrib["href"]
+        if href.startswith("//"):
+            node.set("href", "http:{}".format(href))
+            href = node.attrib["href"]
+        if is_external_link(href, cnx.base_url()):
+            # add _blank target
+            add_title_on_external_links(cnx, node, href)
+        elif is_francearchive_relatif_link(href):
+            rel = node.attrib.get("rel")
+            if rel == "nofollow noopener noreferrer":
+                del node.attrib["rel"]
+            if "target" in node.attrib:
+                del node.attrib["target"]
+        else:
+            # remove links with relative path
+            # (cf. https://extranet.logilab.fr/ticket/54134093)
+            tobe_removed.append(node)
+    for node in tobe_removed:
+        try:
+            node.getparent().remove(node)
+        except Exception:
+            pass
+    if labels:
+        insert_labels(cnx, root, labels)
+    else:
+        translate_labels(cnx, root)
+
+
+def format_html(html, text_format="text/html"):
+    if html and remove_html_tags(html).strip():
+        if text_format != "text/html":
+            # XXX use mtc_transform
+            return remove_html_tags(html).strip()
+        return html
+    return None
+
+
+def process_html(cnx, html, text_format="text/html", labels=None):
+    if html:
+        processed = fix_fa_external_links(html, cnx, labels)
+        if processed:
+            return format_html(processed, text_format)
+    return html
+
+
+def insert_link_to_text(root, cnx, *args, **kwargs):
+    """Insert a@href before the a text
+
+    :param string html: html to be transformed in etree root by process_html_as_xml
+    :param Connection cnx: connection
+    """
+    nodes = root.xpath("//*[@href]")
+    for node in nodes:
+        href = node.attrib["href"]
+        node.text = f"({href}) {node.text}"
+
+
+def process_html_for_csv(html, cnx):
+    """Remove html tags. Extract and keep same information from html tags
+
+    :param Element root: html transformed in etree Element by process_html_as_xml
+    :param Connection cnx: connection
+    """
+    if html is None:
+        return None
+    try:
+        # Etree does not like HTML without a single root element
+        # so we need to wrap it inside a div.
+        tree = etree.fromstring("<div>{}</div>".format(html))
+    except etree.XMLSyntaxError:
+        return remove_html_tags(html.strip())
+    insert_link_to_text(tree, cnx)
+    return " ".join(tree.xpath("//text()")).strip()

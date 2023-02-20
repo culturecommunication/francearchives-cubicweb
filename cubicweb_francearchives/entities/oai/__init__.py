@@ -185,17 +185,3 @@ class OAIRepository(AnyEntity):
     def oai_params(self):
         url = urllib.parse.urlparse(self.url)
         return urllib.parse.parse_qs(url.query)
-
-    @property
-    def last_successful_import(self):
-        rset = self._cw.execute(
-            "Any OIT ORDERBY OIT DESC LIMIT 1 "
-            "WHERE OIT oai_repository X, X eid %(x)s, "
-            'OIT in_state S, S name "wfs_oaiimport_completed"',
-            {"x": self.eid},
-        )
-        if rset:
-            oai_import = rset.one()
-            wf = oai_import.cw_adapt_to("IWorkflowable")
-            return wf.latest_trinfo().creation_date
-        return None

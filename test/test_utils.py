@@ -41,18 +41,33 @@ from cubicweb.devtools.testlib import CubicWebTC
 from cubicweb.uilib import remove_html_tags
 
 from cubicweb_francearchives import GLOSSARY_CACHE
-from cubicweb_francearchives.utils import find_card
-from cubicweb_francearchives.entities.faproperties import process_html, fix_links as fa_fix_links
+from cubicweb_francearchives.dataimport import (
+    normalize_for_filepath,
+    PUNCTUATION,
+    pdf,
+    normalize_entry,
+    clean,
+)
+from cubicweb_francearchives.xmlutils import process_html, fix_fa_external_links as fa_fix_links
+
+from cubicweb_francearchives.testutils import S3BfssStorageTestMixin
 from cubicweb_francearchives.views.forms import EMAIL_REGEX
-from cubicweb_francearchives.dataimport import normalize_entry, clean
 from cubicweb_francearchives.views.search import PniaElasticSearchView
-from cubicweb_francearchives.utils import id_for_anchor, merge_dicts
-from cubicweb_francearchives.xmlutils import enhance_accessibility
-from cubicweb_francearchives.utils import is_absolute_url, reveal_glossary
-from cubicweb_francearchives.dataimport import normalize_for_filepath, PUNCTUATION
+from cubicweb_francearchives.utils import (
+    is_absolute_url,
+    reveal_glossary,
+    find_card,
+    id_for_anchor,
+    merge_dicts,
+)
+from cubicweb_francearchives.xmlutils import (
+    enhance_accessibility,
+    process_html_for_csv,
+    handle_subtitles,
+)
 
 
-class UtilsTest(CubicWebTC):
+class UtilsTest(S3BfssStorageTestMixin, CubicWebTC):
     def test_fa_fix_links_1(self):
         html = '<div class="ead-p"> <a href="www.archives.valdoise.fr">Archives <b>départementales</b> du Val</a></div>'
         expected = '<div class="ead-p"> <a href="www.archives.valdoise.fr" rel="nofollow noopener noreferrer" target="_blank" title="Archives départementales du Val - New window">Archives <b>départementales</b> du Val</a></div>'
@@ -121,6 +136,20 @@ class UtilsTest(CubicWebTC):
         labels = ["custodhist"]
         with self.admin_access.cnx() as cnx:
             got = process_html(cnx, html, labels=labels)
+            self.assertEqual(got, expected)
+
+    def test_process_links_for_csv_ok(self):
+        html = """<div class="related-productors"><a href="http://localhost:9998/fr/authorityrecord/FRAN_NP_003944" title="">France. Ministère des Universités (1974-1981)</a><div class="related-productors__dates"><span class="eac-sub-label">dates :</span> 5/07/1974-31/12/1975</div></div>"""
+        expected = """(http://localhost:9998/fr/authorityrecord/FRAN_NP_003944) France. Ministère des Universités (1974-1981) dates :  5/07/1974-31/12/1975"""
+        with self.admin_access.cnx() as cnx:
+            got = process_html_for_csv(html, cnx)
+            self.assertEqual(got, expected)
+
+    def test_process_links_for_csv_ko(self):
+        html = """<a href="http://localhost:9998/fr/authorityrecord/FRAN_NP_003944" title="">France. Ministère des Universités (1974-1981)</a><div class="related-productors__dates"><span class="eac-sub-label">dates :</span> 5/07/1974-31/12/1975</div></div>"""
+        expected = """France. Ministère des Universités (1974-1981)dates : 5/07/1974-31/12/1975"""
+        with self.admin_access.cnx() as cnx:
+            got = process_html_for_csv(html, cnx)
             self.assertEqual(got, expected)
 
     def test_merge_dicts(self):
@@ -235,81 +264,37 @@ class UtilsTest(CubicWebTC):
         # params: number_of_items (items_per_page, max_pages, max_pagination_links)
         results_per_page = 10
 
-        pesv = PniaElasticSearchView()
-        pesv._cw = Mock()
-        pesv._cw.form = Mock()
-
         # No need to paginate
-        pesv._cw.form.copy = MagicMock(return_value={"page": 1})
-        self.assertEqual(len(pesv.pagination(results_per_page)), 0)
+        req = Mock()
+        req.form = {"page": 1}
+        pesv = PniaElasticSearchView(req=req)
+        pagination = pesv.pagination(results_per_page)
+        self.assertEqual(len(pagination[0]), 0)
+        self.assertEqual(len(pagination[1]), 0)
 
-        # [1] 2 > (only 1 item on the second page)
-        pesv._cw.form.copy = MagicMock(return_value={"page": 1})
-        self.assertEqual(len(pesv.pagination(results_per_page + 1)), 3)
+        #  Page 1 out of 2 > >> (only 1 item on the second page)
+        req = Mock()
+        req.form = {"page": 1}
+        pesv = PniaElasticSearchView(req=req)
+        pagination = pesv.pagination(results_per_page + 1)
+        self.assertEqual(len(pagination[0]), 0)
+        self.assertEqual(len(pagination[1]), 2)
 
-        # [1] 2 >
-        pesv._cw.form.copy = MagicMock(return_value={"page": 1})
-        self.assertEqual(len(pesv.pagination(results_per_page * 2)), 3)
+        # << < Page 2 out of 5 > >>
+        req = Mock()
+        req.form = {"page": 2}
+        pesv = PniaElasticSearchView(req=req)
+        pagination = pesv.pagination(results_per_page * 5)
+        self.assertEqual(len(pagination[0]), 2)
+        self.assertEqual(len(pagination[1]), 2)
 
-        # [1] 2 3 >
-        pesv._cw.form.copy = MagicMock(return_value={"page": 1})
-        self.assertEqual(len(pesv.pagination(results_per_page * 3)), 4)
-
-        # < 1 [2] 3 4 5 >
-        pesv._cw.form.copy = MagicMock(return_value={"page": 2})
-        self.assertEqual(len(pesv.pagination(results_per_page * 5)), 7)
-
-        # < 1 2 3 4 5 6 [7]
-        pesv._cw.form.copy = MagicMock(return_value={"page": 7})
-        self.assertEqual(len(pesv.pagination(results_per_page * 7)), 8)
-
-        # [1] 2 3 4 5 … 30 >
-        pesv._cw.form.copy = MagicMock(return_value={"page": 1})
-        self.assertEqual(len(pesv.pagination(results_per_page * 30)), 8)
-
-        # < 1 [2] 3 4 5 … 30 >
-        pesv._cw.form.copy = MagicMock(return_value={"page": 2})
-        self.assertEqual(len(pesv.pagination(results_per_page * 30)), 9)
-
-        # < 1 … 26 27 28 29 [30]
-        pesv._cw.form.copy = MagicMock(return_value={"page": 30})
-        self.assertEqual(len(pesv.pagination(results_per_page * 30)), 8)
-
-        # < 1 … 26 27 28 [29] 30 >
-        pesv._cw.form.copy = MagicMock(return_value={"page": 29})
-        self.assertEqual(len(pesv.pagination(results_per_page * 30)), 9)
-
-        # < 1 … 13 14 [15] 16 … 30 >
-        pesv._cw.form.copy = MagicMock(return_value={"page": 15})
-        self.assertEqual(len(pesv.pagination(results_per_page * 30)), 10)
-
-        # < 1 … 13 14 [15] 16 17 … 30 >
-        pesv._cw.form.copy = MagicMock(return_value={"page": 15})
-        self.assertEqual(len(pesv.pagination(results_per_page * 30, max_pagination_links=7)), 11)
-
-    def test_get_pagination_range(self):
-        # params: current_page, number_of_pages, window
-        pesv = PniaElasticSearchView()
-
-        # left hand side
-        self.assertListEqual(pesv.get_pagination_range(1, 10, 3), [1, 2, 3])
-        self.assertListEqual(pesv.get_pagination_range(2, 10, 3), [1, 2, 3])
-        self.assertListEqual(pesv.get_pagination_range(3, 10, 3), [2, 3, 4])
-
-        # middle
-        self.assertListEqual(pesv.get_pagination_range(5, 10, 3), [4, 5, 6])
-
-        # right hand side
-        self.assertListEqual(pesv.get_pagination_range(9, 10, 3), [8, 9, 10])
-        self.assertListEqual(pesv.get_pagination_range(10, 10, 3), [8, 9, 10])
-
-        # even window
-        self.assertListEqual(pesv.get_pagination_range(5, 10, 4), [3, 4, 5, 6])
-
-        # Abberant values
-        self.assertListEqual(pesv.get_pagination_range(11, 10, 4), [7, 8, 9, 10])
-        self.assertListEqual(pesv.get_pagination_range(3, 5, 10), [1, 2, 3, 4, 5])
-        self.assertListEqual(pesv.get_pagination_range(3, 5, 1), [3])
+        # << < Page [7] out of 7
+        req = Mock()
+        req.form = {"page": 7}
+        pesv = PniaElasticSearchView(req=req)
+        pagination = pesv.pagination(results_per_page * 7)
+        self.assertEqual(len(pagination[0]), 2)
+        self.assertEqual(len(pagination[1]), 0)
 
     def test_clean_up_punctuation(self):
         """Test filename clean-up.
@@ -377,7 +362,7 @@ class UtilsTest(CubicWebTC):
         self.assertCountEqual(actual, expected)
 
 
-class XMlUtilsTest(CubicWebTC):
+class XMlUtilsTest(S3BfssStorageTestMixin, CubicWebTC):
     def test_link_remove_empty_title(self):
         html = """<div><a href="www.archives.valdoise.fr" title="">Archives départementales du Val-d'Oise</a></div>"""  # noqa
         target = 'rel="nofollow noopener noreferrer" target="_blank"'
@@ -544,6 +529,24 @@ class XMlUtilsTest(CubicWebTC):
         expected = "commune-de-pierrebenite--archives--communales"
         self.assertEqual(id_for_anchor(title), expected)
 
+    def test_clean_internal_links(self):
+        """also see the case of https://extranet.logilab.fr/ticket/73968852"""
+        expected = """<div><a href="../article/37704">Article</a></div>"""
+        for html in (
+            """<div><a href="../article/37704#/">Article</a></div>""",
+            """<div><a href="../article/37704/">Article</a></div>""",
+            """<div><a href="../article/37704#/edit">Article</a></div>""",
+            """<div><a href="../article/37704/#/edit">Article</a></div>""",
+        ):
+            with self.admin_access.cnx() as cnx:
+                self.assertEqual(enhance_accessibility(html, cnx), expected)
+
+    def test_media_subtitles(self):
+        html = '<div class="media-subtitles-button"></div><div class="media-subtitles"><p>Impl&eacute;mentation des adapteurs RDF pour traduire les entit&eacute;s suivantes en RiC-O</p></div>'
+        expected = """<div class="media-subtitles-button"><a aria-expanded="false" data-label-expand="Display transcription" data-label-collapse="Hide transcription" aria-controls="transcript-5bb61c2d60ef581a9f574a0b807483c9bd27f425">Display transcription</a></div><div class="media-subtitles hidden" id="transcript-5bb61c2d60ef581a9f574a0b807483c9bd27f425"><p>Implémentation des adapteurs RDF pour traduire les entités suivantes en RiC-O</p></div>"""
+        with self.admin_access.cnx() as cnx:
+            self.assertEqual(handle_subtitles(html, cnx), expected)
+
 
 class GlossaryUtilsTest(CubicWebTC):
     def setUp(self):
@@ -571,12 +574,21 @@ class GlossaryUtilsTest(CubicWebTC):
             )
             term = cnx.find("GlossaryTerm", term="Inventaire d'archives").one()
             got = reveal_glossary(cnx, text).replace("&#39;", "'")
-            expected = """<p>Le portail rassemble les <a data-content="Inventaire d'archives descritpion" rel="popover" class="glossary-term" data-placement="auto" href="{url}glossaire#{term}" target="_blank">inventaires d'archives
+            expected = f"""<p>Le portail rassemble les <a data-bs-content="Inventaire d'archives descritpion" data-bs-toggle="popover" class="glossary-term" data-bs-placement="auto" data-bs-trigger="hover focus" data-bs-html="true" href="http://testing.fr/cubicweb/glossaire#{term.eid}" target="_blank">inventaires d'archives
 <i class="fa fa-question"></i>
-</a> de toute la France</p>""".format(
-                url=cnx.base_url(), term=term.eid
-            )
+</a> de toute la France</p>"""  # noqa
             self.assertEqual(got, expected)
+
+
+class ImportUtiles(S3BfssStorageTestMixin, CubicWebTC):
+    def test_pdf_info(self):
+        """
+        Trying: create a pdf file and extract the text
+        Expecting: the text is extracted
+        """
+        pdffile = self.get_or_create_imported_filepath(f"pdf.pdf")
+        data = pdf.pdf_infos(pdffile)
+        self.assertEqual(data["text"], "Test\nCirculaire chat\n\n\x0c")
 
 
 if __name__ == "__main__":

@@ -192,7 +192,7 @@ class ApeEadTransformationTest(PostgresTextMixin, CubicWebTC):
         self.assertEqual(len(daos), 0)
 
     def test_ape_ead_conversion_dao_xlinks(self):
-        """test an dao """
+        """test an dao"""
         filepath = "FRAD051_61Fi.xml"
         ape_filepath = self.ape_ead_filepath(filepath)
         fa_url = "https://francearchives.fr/findingaid/3d6c85cc8e4fa93d57d4c01c18d232ccc5a0d270"

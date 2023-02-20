@@ -33,9 +33,8 @@
 modname = "francearchives"
 distname = "cubicweb-francearchives"
 
-numversion = (2, 9, 2)
+numversion = (2, 21, 4)
 version = ".".join(str(num) for num in numversion)
-
 license = "CeCILL-C"
 author = "LOGILAB S.A. (Paris, FRANCE)"
 author_email = "contact@logilab.fr"
@@ -43,33 +42,39 @@ description = "FranceArchives"
 web = "https://github.com/culturecommunication/francearchives-cubicweb-edition"
 
 __depends__ = {
-    "pyramid": None,
-    "cubicweb[pyramid,crypto]": ">= 3.26.0,<3.27.0",
-    "cubicweb-file": ">= 2.3.0",
-    "cubicweb-link": ">= 1.8.0",
-    "cubicweb-eac": ">= 0.9.1",
-    "cubicweb-prov": ">= 0.4.0",
+    "pyramid": "< 1.10.6",
+    "cubicweb": ">= 3.37.0,<3.38.0",
+    "cubicweb-file": ">= 3.4.0",
+    "cubicweb-link": ">= 1.11.1",
+    "cubicweb-eac": ">= 1.5.2, <1.6.0",
+    "cubicweb-prov": ">= 0.6.0",
     "cubicweb-skos": None,
-    "cubicweb-elasticsearch": ">= 0.8.0",
-    "cubicweb-varnish": ">= 0.5.1",
-    "cubicweb-card": ">= 1.1.2",
+    "cubicweb-elasticsearch": ">= 0.13.0, <0.14.0",
+    "cubicweb-varnish": ">= 0.7.0",
+    "cubicweb-card": ">= 1.3.0",
     "cubicweb-sentry": None,
+    "cubicweb-s3storage": ">= 3.2.0,<3.3.0",
+    "cubicweb-prometheus": ">= 0.3.0,<0.4.0",
     "sentry-sdk": None,
     "sickle": ">= 0.7.0",
-    "glamconv": ">= 0.1.8",
-    "cubicweb-oaipmh": ">= 0.6.1",
-    "cwtags": ">= 1.1.0",
-    "rdflib": ">= 4.2.0",
-    "rdflib-jsonld": None,
+    "geojson": ">=2.5.0",
+    "glamconv": "== 0.2.0",
+    "cubicweb-oaipmh": ">= 0.9.0, <0.10.0",
+    "cwtags": ">= 1.2.3",
     "jinja2": None,
     "babel": None,
     "PyYAML": None,
     "pillow": None,
+    "polib": "~= 1.1.1",
     "requests": None,
-    "urllib3": "> 1.21.1,<1.25",
-    "psycopg2": None,
+    "psycopg2-binary": None,
+    "pyramid-session-redis": ">=1.6.3,<1.7.0",
     "vobject": ">= 0.9.3",
+    "yams": "== 0.48.0",
     "tqdm": None,
+    # NOTE remove as soon as https://forge.extranet.logilab.fr/cubicweb/cubicweb/-/issues/538
+    # has been resolved
+    "pycryptodomex": "== 3.14.1",
 }
 
 classifiers = [

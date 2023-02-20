@@ -43,24 +43,17 @@ PNIA_JAVASCRIPTS = [
     data("jquery-3.1.1.min.js"),
     data("jquery-typeahead/jquery.typeahead.min.js"),
     data("cubes.pnia_portal.js"),
-    data("js/bootstrap.min.js"),
+    data("js/bootstrap.bundle.min.js"),
+    data("bundle-pnia-mainmenu.js"),
 ]  # noqa
 
-# to be removed
-ARCHIVES_TOPIC = data("images/body_topics_imagespace-440x295px.jpg")
-ARCHIVES_NEWS = data("images/body_timeline_info-image-535x235.jpg")
+IIIF_LOGO = data("images/logo-iiif.png")
 DOCUMENT_IMG = data("images/FranceArchives_NoImage-narrow.jpg")
+DIGITIZED_IMG = data("images/FranceArchives_NoDigitized.png")
+AMP_LOGO = data("images/logo_francearchives_amp.png")
 # country (languages) flags
 
 FLAG_FR = data("images/header_topbar_language-france.png")
 FLAG_EN = data("images/header_topbar_language-united-kingdom.png")
 FLAG_DE = data("images/header_topbar_language-germany.png")
 FLAG_ES = data("images/header_topbar_language-spain.png")
-
-PICTO_DOCTYPE_DEFAULT = data("images/body_document.png")
-# PICTO_DOCTYPE_FACOMPONENT = data('images/body_highlights_item3-gerer.png')
-# PICTO_DOCTYPE_FINDINGAID = data('images/body_highlights_item3-gerer.png')
-PICTO_DOCTYPE_ARCHIVES = data("images/body_highlights_item3-gerer.png")
-
-# XXX to be removed
-ARCHIVES_TOPIC = data("images/body_topics_imagespace-440x295px.jpg")

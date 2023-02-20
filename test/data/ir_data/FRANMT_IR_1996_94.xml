@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ead PUBLIC "+//ISBN 1-931666-00-8//DTD ead.dtd (Encoded Archival Description (EAD) Version 2002)//EN" "../../../DTD2002/ead.dtd">
+<ead xmlns:xlink="http://www.w3.org/1999/xlink">
+  <eadheader>    <eadid identifier="FRANMT_IR_1996_94" countrycode="FR" mainagencycode="FRANMT">FRANMT_IR_1996_94</eadid><filedesc>   <titlestmt>    <titleproper>Union-accident-vol (L')</titleproper><subtitle>Répertoire numérique</subtitle><author>Bertrand GILLE, conservateur, complété par Gersende PIERNAS, chargée d'études documentaires</author></titlestmt><publicationstmt>   <date>1952, complété en 2011</date><publisher>Archives nationales du monde du travail</publisher></publicationstmt></filedesc><profiledesc>    <creation>Cet instrument de recherche a été généré avec la suite Ligeo Archives<date normal="2021/2021">09/02/2021</date></creation><langusage>Instrument de recherche rédigé en<language>français</language></langusage><descrules>Instrument de recherche rédigé conformément à la norme générale et internationale de description archivistique (ISAD-G) du Conseil international des archives, deuxième édition, 2000.</descrules></profiledesc></eadheader>
+  <archdesc level="fonds" id="ark--60879-1082413">
+    <did>
+      <unittitle>Union-accidents-vol (L')</unittitle>
+      <unitid>1996 94 M1 à M4<extptr xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://recherche-anmt.culture.gouv.fr/ark:/60879/1082413"/></unitid>
+      <unitid type="ancienne_cote">45 AQ 1 à 9</unitid>
+      <unitid type="ancienne_cote">82 Mi 1 à 4</unitid>
+      <physdesc>4 bobines de microfilm.</physdesc>
+      <unitdate normal="1909/1931" label="ligeo-date-automatique">1909 - 1931</unitdate>
+      <origination>
+        <corpname authfilenumber="1675" role="entreprise">Union-Accidents-Vol (L’)</corpname>
+      </origination>
+    </did>
+    <custodhist> Ces microfilms ont été réalisés par les Archives nationales (site de Paris) en 1952, sous la double cote 82Mi et 45AQ (cette dernière étant la cote "fictive" des documents originaux, prêtés par l'Union des assurances de Paris - UAP). </custodhist>
+    <arrangement>
+      <note>Plan de classement</note>
+    </arrangement>
+    <scopecontent>Ces microfilms reproduisent des procès-verbaux des conseils d’administration et des assemblées générales de la compagnie.</scopecontent>
+    <phystech type="etat_materiel"> A </phystech>
+    <accessrestrict>
+      <legalstatus type="arch_privee" altrender="Archives privées">Les documents produits avant 1946 sont considérés comme des archives privées. C'est à cette date seulement que l'entreprise est nationalisée.</legalstatus>
+    </accessrestrict>
+    <accessrestrict type="commentaire">
+      <note type="commentaire">Microfilms « librement communicables ». En effet, les délais applicables sont ceux du Code du patrimoine par analogie avec les archives publiques : ils sont aujourd'hui tous échus.</note>
+    </accessrestrict>
+    <accessrestrict type="statut_publication">Publiable sur internet</accessrestrict>
+    <bioghist>Cette compagnie est fondée, après le vote de la loi sur les accidents du travail, par le groupe qui dirige les autres branches de l'Union. En 1931, elle est absorbée par la branche Incendie. Elle est nationalisée en 1946.</bioghist>
+    <acqinfo> Les microfilms ont été transférés en 1996 au Centre des archives du monde du travail à Roubaix et recotés 1996 94 M. </acqinfo>
+    <userestrict> La réutilisation des documents microfilmés est gratuite et libre, sous réserve des dispositions relatives aux droits de propriété intellectuelle et au respect de la vie privée (voir les modalités d'application sur le site internet des ANMT). </userestrict>
+    <userestrict> Test. </userestrict>
+    <langmaterial label="langue">  <language langcode="fre"/></langmaterial>
+    <originalsloc> Les documents originaux reproduits par les microfilms ont été restitués à leurs propriétaires : ils ne sont pas conservés par les Archives nationales. Le master des microfilms est conservé au Centre national du microfilm et de la numérisation. </originalsloc>
+    <relatedmaterial type="description_generale">Voir également aux Archives nationales du monde du travail (Roubaix) : 1996 99 M. Union incendie risques divers. 1828-1946.</relatedmaterial>
+    <bibliography> Comité scientifique pour l'histoire de l'assurance, Guide des sources sur l'histoire de l'assurance, 2007.  </bibliography>
+    <controlaccess>   <subject source="thesaurus_W_ANMT" authfilenumber="3d76046c2d4b921b09ecdc0a7ff26d0f">compagnie d'assurance</subject><geogname source="pays_territoire" authfilenumber="53e35981e3a9c45ea2a536b0249ddca2" role="cartographie">FRANCE</geogname></controlaccess>
+    <dsc type="in-depth">
+
+
+<c level="file" altrender="ligeo-branche-simplifie" id="ark--60879-1082414">    <did>     <unittitle>Conseil d'administration.</unittitle><unitdate normal="1909/1931" label="ligeo-date-automatique">1909 - 1931</unitdate><unitid>1996 94 M1 à M4<extptr xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://recherche-anmt.culture.gouv.fr/ark:/60879/1082414"/></unitid><physdesc>  <extent type="ligeo-recolement">0.16</extent></physdesc></did><scopecontent>Procès-verbaux.</scopecontent><arrangement id="ligeo-A">Classement définitif</arrangement>
+
+
+<c level="file" altrender="ligeo-article-simplifie" id="ark--60879-673394.1082415">     <did>        <unittitle>29 septembre 1909 au 21 février 1917.</unittitle><unitdate normal="1909-09-29/1917-02-21" label="ligeo-date-automatique">29 septembre 1909-21 février 1917</unitdate><container>Conditionnement global de la tablette : Boites à microfilms</container><unitid>1996 94 M1<extptr xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://recherche-anmt.culture.gouv.fr/ark:/60879/673394.1082415"/></unitid><unitid type="ancienne_cote">45 AQ 1 à 2</unitid><unitid type="ancienne_cote">82 Mi 1</unitid><physdesc>  <extent type="ligeo-recolement" unit="ml">0.04</extent></physdesc></did><phystech type="etat_materiel"> F </phystech><arrangement id="ligeo-A">Classement définitif</arrangement><controlaccess>  <genreform source="genreform" authfilenumber="cdfc8ce3294ebd502965d1357f1a5285">microforme</genreform></controlaccess>
+</c>
+
+
+<c level="file" altrender="ligeo-article-simplifie" id="ark--60879-673395.1082416">     <did>        <unittitle>28 février 1917 au 23 janvier 1924.</unittitle><unitdate normal="1917-02-28/1924-01-23" label="ligeo-date-automatique">28 février 1917-23 janvier 1924</unitdate><container>Conditionnement global de la tablette : Boites à microfilms</container><unitid>1996 94 M2<extptr xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://recherche-anmt.culture.gouv.fr/ark:/60879/673395.1082416"/></unitid><unitid type="ancienne_cote">45 AQ 3 à 4</unitid><unitid type="ancienne_cote">82 Mi 2</unitid><physdesc>  <extent type="ligeo-recolement" unit="ml">0.04</extent></physdesc></did><phystech type="etat_materiel"> F </phystech><arrangement id="ligeo-A">Classement définitif</arrangement><controlaccess>  <genreform source="genreform" authfilenumber="cdfc8ce3294ebd502965d1357f1a5285">microforme</genreform></controlaccess>
+</c>
+
+
+<c level="file" altrender="ligeo-article-simplifie" id="ark--60879-673396.1082417">     <did>        <unittitle>30 janvier 1924 au 26 mars 1930.</unittitle><unitdate normal="1924-01-30/1930-03-26" label="ligeo-date-automatique">30 janvier 1924-26 mars 1930</unitdate><container>Conditionnement global de la tablette : Boites à microfilms</container><unitid>1996 94 M3<extptr xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://recherche-anmt.culture.gouv.fr/ark:/60879/673396.1082417"/></unitid><unitid type="ancienne_cote">45 AQ 5 à 6</unitid><unitid type="ancienne_cote">82 Mi 3</unitid><physdesc>  <extent type="ligeo-recolement" unit="ml">0.04</extent></physdesc></did><phystech type="etat_materiel"> F </phystech><arrangement id="ligeo-A">Classement définitif</arrangement><controlaccess>  <genreform source="genreform" authfilenumber="cdfc8ce3294ebd502965d1357f1a5285">microforme</genreform></controlaccess>
+</c>
+
+
+<c level="file" altrender="ligeo-article-simplifie" id="ark--60879-673397.1082418">     <did>        <unittitle>2 avril 1930 au 18 février 1931.</unittitle><unitdate normal="1930-04-02/1931-02-18" label="ligeo-date-automatique">2 avril 1930-18 février 1931</unitdate><container>Conditionnement global de la tablette : Boites à microfilms</container><unitid>1996 94 M4<extptr xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://recherche-anmt.culture.gouv.fr/ark:/60879/673397.1082418"/></unitid><unitid type="ancienne_cote">45 AQ 7 à 9</unitid><unitid type="ancienne_cote">82 Mi 4</unitid><physdesc>  <extent type="ligeo-recolement" unit="ml">0.04</extent></physdesc></did><phystech type="etat_materiel"> F </phystech><arrangement id="ligeo-A">Classement définitif</arrangement><controlaccess>  <genreform source="genreform" authfilenumber="cdfc8ce3294ebd502965d1357f1a5285">microforme</genreform></controlaccess>
+</c>
+
+</c>
+
+
+<c level="file" altrender="ligeo-simple-standardisadg" id="ark--60879-1082419">    <did>      <unittitle>Assemblées générales.</unittitle><unitdate normal="1909-09-29/1931-12-02" label="ligeo-date-automatique">29 septembre 1909-2 décembre 1931</unitdate><unitid>1994 94 M4<extptr xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://recherche-anmt.culture.gouv.fr/ark:/60879/1082419"/></unitid><unitid type="ancienne_cote">45 AQ 7 à 9</unitid><unitid type="ancienne_cote">82 Mi 4</unitid></did><arrangement id="ligeo-A">Classement définitif</arrangement><scopecontent>Procès-verbaux.</scopecontent>
+</c>
+</dsc></archdesc>
+</ead>

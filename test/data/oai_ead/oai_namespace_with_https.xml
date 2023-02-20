@@ -1,0 +1,1176 @@
+<OAI-PMH xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance" xmlns="https://www.openarchives.org/OAI/2.0/" xsi:schemaLocation="https://www.openarchives.org/OAI/2.0/ https://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
+	<responseDate>2022-09-08T11:33:26</responseDate>
+	<request  verb="ListRecords" metadataPrefix="ead">https://www.servicehistorique.sga.defense.gouv.fr/oai-pmh</request>
+	<ListRecords>
+		<record>
+				<header>					<identifier>SHDGR_INV_1F_Seconde_République</identifier>					<datestamp>2019-06-27T15:24:45Z</datestamp>				</header>				<metadata><ead>
+            <eadheader>
+                <eadid identifier="SHDGR_INV_GRF_Seconde République" countrycode="fr" url="https://www.servicehistorique.sga.defense.gouv.fr/ark/41457">SHDGR_INV_GRF_Seconde République</eadid>
+                <filedesc>
+                    <titlestmt>
+                        <titleproper>
+                           Seconde République - GR F
+                        </titleproper>
+                        <subtitle/>
+                        <author/>
+                    </titlestmt>
+                    <publicationstmt>
+                        <publisher>Service historique de la Défense</publisher>
+                        <date>15/03/2021</date>
+                        <address><addressline>Vincennes</addressline></address>
+                    </publicationstmt>
+                </filedesc>
+            </eadheader>
+            <archdesc level="otherlevel" otherlevel="Série">
+                <did>
+                    <unitid countrycode="fr">GR/1/F</unitid>
+                    <unittitle>Seconde République. 
+                    </unittitle>
+                    <unitdate label="Dates extrÃªmes" normal="1848/1853">1848-1853</unitdate>
+                    <physdesc>
+                        <extent>79 articles</extent>
+                    </physdesc>
+                    <langmaterial>Français</langmaterial>
+                    <daogrp>
+                        <daoloc href="THOTDESC.GED_LNK"/>
+                    </daogrp>
+                </did>
+                <acqinfo>
+                    <p>Versement et dons</p>
+                </acqinfo>
+                <scopecontent>
+                    <p>La série GR F regroupe l’ensemble des archives de l’administration de la guerre pour la période de la Seconde République. La série GR F n’est pas subdivisée. En ce qui concerne le coup d’État du 2 décembre, il est indispensable de la compléter par la consultation de la sous-série GR G8, correspondance générale du Second Empire, et surtout des cartons cotés GR G8 186 à GR G8 197, consacrés à l’insurrection de 1851.</p>
+                </scopecontent>
+                <accessrestrict>
+                    <p>Librement communicable</p>
+                </accessrestrict>
+                <originalsloc>
+                    <p>Vincennes</p>
+                </originalsloc>
+                <relatedmaterial>
+                    <p>"Archives de l'Armée de Terre :</p>
+<p>_ série SHD/GR, I (circonscriptions militaires) ;</p>
+<p>_ série SHD/GR, J (justice militaire) ;</p>
+<p>_ série SHD/GR, K (entrées extraordinaires) ;</p>
+<p>_ sous-série SHD/GR, 1M (mémoires et reconnaissances) ;</p>
+<p>_ sous-série SHD/GR, 4M (historiques manuscrits de régiments) ;</p>
+<p>_ série SHD/GR, X (toutes les subdivisions de cette série, sauf Xab, Xaf, Xk et Xl) ;</p>
+<p>_ sous-séries SHD/GR, Yb, Yc et Yd (personnel) ;</p>
+<p>_ séries SHD/GR, V et W (archives de l’artillerie et du génie) ;</p>
+<p> "</p>
+                </relatedmaterial>
+                <otherfindaid>
+                    <p>"Inventaire des archives conservées au Service historique de l’état-major de l’armée (archives modernes), 2e édition, Paris, 1954</p>
+<p>Répertoire numérique dactylographié de la série F. "</p>
+                </otherfindaid>
+                <controlaccess>
+                    <subject>SECONDE RéPUBLIQUE</subject>
+                </controlaccess>
+                <dsc>
+                        <c level="recordgrp">
+                            <did>
+                                <unittitle>Correspondance générale. 
+                                </unittitle>
+                                <unitdate label="Dates extrÃªmes" normal="1848/1852">1848-1852</unitdate>
+                                <unitdate label="PÃ©riode ou date">janvier 1842-décembre 1852</unitdate>
+                                <daogrp>
+                                    <daoloc href="THOTDESC.GED_LNK"/>
+                                </daogrp>
+                            </did>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 1</unitid>
+                                        <unittitle>Janvier-23 février 1848.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1848/1848">1848-1848</unitdate>
+                                        <unitdate label="PÃ©riode ou date">janvier-23 février 1848</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                    <scopecontent>
+                                        <p>Dons et offrandes à la patrie.</p>
+                                    </scopecontent>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 2</unitid>
+                                        <unittitle>22 février-4mars 1848.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1848/1848">1848-1848</unitdate>
+                                        <unitdate label="PÃ©riode ou date">22 février-4mars 1848</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 3</unitid>
+                                        <unittitle>4-20 mars 1848.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1848/1848">1848-1848</unitdate>
+                                        <unitdate label="PÃ©riode ou date">4-20 mars 1848</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                    <scopecontent>
+                                        <p>Correspondance relative à l’organisation des gardes nationales mobiles.</p>
+                                    </scopecontent>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 4</unitid>
+                                        <unittitle>21-31 mars 1848.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1848/1848">1848-1848</unitdate>
+                                        <unitdate label="PÃ©riode ou date">21-31 mars 1848</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 5</unitid>
+                                        <unittitle>1er-15 avril 1848.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1848/1848">1848-1848</unitdate>
+                                        <unitdate label="PÃ©riode ou date">1er-15 avril 1848</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                    <scopecontent>
+                                        <p>Souscription de la garnison de Lyon en faveur des ouvriers de la ville.</p>
+                                    </scopecontent>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 6</unitid>
+                                        <unittitle>16-30 avril 1848.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1848/1848">1848-1848</unitdate>
+                                        <unitdate label="PÃ©riode ou date">16-30 avril 1848</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 7</unitid>
+                                        <unittitle>Mai 1848.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1848/1848">1848-1848</unitdate>
+                                        <unitdate label="PÃ©riode ou date">mai 1848</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 8</unitid>
+                                        <unittitle>25 mai-15 juin 1848.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1848/1848">1848-1848</unitdate>
+                                        <unitdate label="PÃ©riode ou date">25 mai-15 juin 1848</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 9</unitid>
+                                        <unittitle>16-31 juin 1848.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1848/1848">1848-1848</unitdate>
+                                        <unitdate label="PÃ©riode ou date">16-31 juin 1848</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                    <scopecontent>
+                                        <p>Insurrection de juin 1848.</p>
+                                    </scopecontent>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 10</unitid>
+                                        <unittitle>1er-25 juillet 1848.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1848/1848">1848-1848</unitdate>
+                                        <unitdate label="PÃ©riode ou date">1er-25 juillet 1848</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 11</unitid>
+                                        <unittitle>26 juillet - 31 août 1848.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1848/1848">1848-1848</unitdate>
+                                        <unitdate label="PÃ©riode ou date">26 juillet - 31 août 1848</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 12</unitid>
+                                        <unittitle>1er septembre - 15 octobre 1848.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1848/1848">1848-1848</unitdate>
+                                        <unitdate label="PÃ©riode ou date">1er septembre - 15 octobre 1848</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 13</unitid>
+                                        <unittitle>16 octobre - 24 novembre 1848.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1848/1848">1848-1848</unitdate>
+                                        <unitdate label="PÃ©riode ou date">16 octobre - 24 novembre 1848</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 14</unitid>
+                                        <unittitle>25 novembre - 31 décembre 1848.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1848/1848">1848-1848</unitdate>
+                                        <unitdate label="PÃ©riode ou date">25 novembre - 31 décembre 1848</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 19</unitid>
+                                        <unittitle>janvier 1849.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1849/1849">1849-1849</unitdate>
+                                        <unitdate label="PÃ©riode ou date">janvier 1849</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 20</unitid>
+                                        <unittitle>Février 1849.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1849/1849">1849-1849</unitdate>
+                                        <unitdate label="PÃ©riode ou date">février 1849</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 21</unitid>
+                                        <unittitle>1er-24 mars 1849.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1849/1849">1849-1849</unitdate>
+                                        <unitdate label="PÃ©riode ou date">1er-24 mars 1849</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 22</unitid>
+                                        <unittitle>25 mars-1er avril 1849.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1849/1849">1849-1849</unitdate>
+                                        <unitdate label="PÃ©riode ou date">25 mars-1er avril 1849</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 23</unitid>
+                                        <unittitle>16 avril-14 mai 1849.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1849/1849">1849-1849</unitdate>
+                                        <unitdate label="PÃ©riode ou date">16 avril-14 mai 1849</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 24</unitid>
+                                        <unittitle>15-31 mai 1849.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1849/1849">1849-1849</unitdate>
+                                        <unitdate label="PÃ©riode ou date">15-31 mai 1849</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 25</unitid>
+                                        <unittitle>1er-15 juin 1849.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1849/1849">1849-1849</unitdate>
+                                        <unitdate label="PÃ©riode ou date">1er-15 juin 1849</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 26</unitid>
+                                        <unittitle>16-30 juin 1849.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1849/1849">1849-1849</unitdate>
+                                        <unitdate label="PÃ©riode ou date">16-30 juin 1849</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 27</unitid>
+                                        <unittitle>Juillet 1849.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1849/1849">1849-1849</unitdate>
+                                        <unitdate label="PÃ©riode ou date">juillet 1849</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 28</unitid>
+                                        <unittitle>1er août-16 septembre 1849.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1849/1849">1849-1849</unitdate>
+                                        <unitdate label="PÃ©riode ou date">1er août-16 septembre 1849</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 29</unitid>
+                                        <unittitle>17 septembre-30 octobre 1849.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1849/1849">1849-1849</unitdate>
+                                        <unitdate label="PÃ©riode ou date">17 septembre-30 octobre 1849</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 30</unitid>
+                                        <unittitle>1er novembre-31 décembre 1849.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1849/1849">1849-1849</unitdate>
+                                        <unitdate label="PÃ©riode ou date">1er novembre-31 décembre 1849</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 31</unitid>
+                                        <unittitle>1er janvier-20 février 1850.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1850/1850">1850-1850</unitdate>
+                                        <unitdate label="PÃ©riode ou date">1er janvier-20 février 1850</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 32</unitid>
+                                        <unittitle>21 février-31 mars 1850.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1850/1850">1850-1850</unitdate>
+                                        <unitdate label="PÃ©riode ou date">21 février-31 mars 1850</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 33</unitid>
+                                        <unittitle>Avril 1850.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1850/1850">1850-1850</unitdate>
+                                        <unitdate label="PÃ©riode ou date">avril 1850</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 34</unitid>
+                                        <unittitle>1er-31 mai 1850.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1850/1850">1850-1850</unitdate>
+                                        <unitdate label="PÃ©riode ou date">1er-31 mai 1850</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 35</unitid>
+                                        <unittitle>1er juin-15 juillet 1850.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1850/1850">1850-1850</unitdate>
+                                        <unitdate label="PÃ©riode ou date">1er juin-15 juillet 1850</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 36</unitid>
+                                        <unittitle>16 juillet-31 août 1850.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1850/1850">1850-1850</unitdate>
+                                        <unitdate label="PÃ©riode ou date">16 juillet-31 août 1850</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 37</unitid>
+                                        <unittitle>1er-30 septembre 1850.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1850/1850">1850-1850</unitdate>
+                                        <unitdate label="PÃ©riode ou date">1er-30 septembre 1850</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 38</unitid>
+                                        <unittitle>1er-31 octobre 1850.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1850/1850">1850-1850</unitdate>
+                                        <unitdate label="PÃ©riode ou date">1er-31 octobre 1850</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 39</unitid>
+                                        <unittitle>1er-30 novembre 1850.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1850/1850">1850-1850</unitdate>
+                                        <unitdate label="PÃ©riode ou date">1er-30 novembre 1850</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 40</unitid>
+                                        <unittitle>1er-31 décembre 1850.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1850/1850">1850-1850</unitdate>
+                                        <unitdate label="PÃ©riode ou date">1er-31 décembre 1850</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 41 bis</unitid>
+                                        <unittitle>Janvier 1851.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1851/1851">1851-1851</unitdate>
+                                        <unitdate label="PÃ©riode ou date">janvier 1851</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 42</unitid>
+                                        <unittitle>Février 1851.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1851/1851">1851-1851</unitdate>
+                                        <unitdate label="PÃ©riode ou date">février 1851</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 42 bis</unitid>
+                                        <unittitle>Mars 1851.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1851/1851">1851-1851</unitdate>
+                                        <unitdate label="PÃ©riode ou date">mars 1851</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 43</unitid>
+                                        <unittitle>Avril 1851.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1851/1851">1851-1851</unitdate>
+                                        <unitdate label="PÃ©riode ou date">avril 1851</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 44</unitid>
+                                        <unittitle>Mai 1851.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1851/1851">1851-1851</unitdate>
+                                        <unitdate label="PÃ©riode ou date">mai 1851</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 45</unitid>
+                                        <unittitle>Juin 1851.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1851/1851">1851-1851</unitdate>
+                                        <unitdate label="PÃ©riode ou date">juin 1851</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 46</unitid>
+                                        <unittitle>Juillet 1851.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1851/1851">1851-1851</unitdate>
+                                        <unitdate label="PÃ©riode ou date">juillet 1851</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 46 bis</unitid>
+                                        <unittitle>Août 1851.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1851/1851">1851-1851</unitdate>
+                                        <unitdate label="PÃ©riode ou date">août 1851</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 47</unitid>
+                                        <unittitle>Septembre 1851.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1851/1851">1851-1851</unitdate>
+                                        <unitdate label="PÃ©riode ou date">septembre 1851</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 48</unitid>
+                                        <unittitle>1er-25 octobre 1851.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1851/1851">1851-1851</unitdate>
+                                        <unitdate label="PÃ©riode ou date">1er-25 octobre 1851</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 49</unitid>
+                                        <unittitle>25 octobre-5 novembre 1851.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1851/1851">1851-1851</unitdate>
+                                        <unitdate label="PÃ©riode ou date">25 octobre-5 novembre 1851</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 50</unitid>
+                                        <unittitle>16-30 novembre 1851.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1851/1851">1851-1851</unitdate>
+                                        <unitdate label="PÃ©riode ou date">16-30 novembre 1851</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 51</unitid>
+                                        <unittitle>1er-5 décembre 1851.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1851/1851">1851-1851</unitdate>
+                                        <unitdate label="PÃ©riode ou date">1er-5 décembre 1851</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 52</unitid>
+                                        <unittitle>6-10 décembre 1851.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1851/1851">1851-1851</unitdate>
+                                        <unitdate label="PÃ©riode ou date">6-10 décembre 1851</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 53</unitid>
+                                        <unittitle>11-20 décembre 1851.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1851/1851">1851-1851</unitdate>
+                                        <unitdate label="PÃ©riode ou date">11-20 décembre 1851</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 54</unitid>
+                                        <unittitle>21-31 décembre 1851.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1851/1851">1851-1851</unitdate>
+                                        <unitdate label="PÃ©riode ou date">21-31 décembre 1851</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 56</unitid>
+                                        <unittitle>1er-15 janvier 1852.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1852/1852">1852-1852</unitdate>
+                                        <unitdate label="PÃ©riode ou date">1er-15 janvier 1852</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 57</unitid>
+                                        <unittitle>16-31 janvier 1852.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1852/1852">1852-1852</unitdate>
+                                        <unitdate label="PÃ©riode ou date">16-31 janvier 1852</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 58</unitid>
+                                        <unittitle>Février 1852.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1852/1852">1852-1852</unitdate>
+                                        <unitdate label="PÃ©riode ou date">février 1852</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 59</unitid>
+                                        <unittitle>Mars 1852.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1852/1852">1852-1852</unitdate>
+                                        <unitdate label="PÃ©riode ou date">mars 1852</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 60</unitid>
+                                        <unittitle>Avril 1852.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1852/1852">1852-1852</unitdate>
+                                        <unitdate label="PÃ©riode ou date">avril 1852</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 61</unitid>
+                                        <unittitle>Mai 1852.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1852/1852">1852-1852</unitdate>
+                                        <unitdate label="PÃ©riode ou date">mai 1852</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 62</unitid>
+                                        <unittitle>Juin 1852.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1852/1852">1852-1852</unitdate>
+                                        <unitdate label="PÃ©riode ou date">juin 1852</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 63</unitid>
+                                        <unittitle>Juillet 1852.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1852/1852">1852-1852</unitdate>
+                                        <unitdate label="PÃ©riode ou date">juillet 1852</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 64</unitid>
+                                        <unittitle>Août 1852.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1852/1852">1852-1852</unitdate>
+                                        <unitdate label="PÃ©riode ou date">août 1852</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 65</unitid>
+                                        <unittitle>Septembre 1852.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1852/1852">1852-1852</unitdate>
+                                        <unitdate label="PÃ©riode ou date">septembre 1852</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 66</unitid>
+                                        <unittitle>Octobre 1852.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1852/1852">1852-1852</unitdate>
+                                        <unitdate label="PÃ©riode ou date">octobre 1852</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 67</unitid>
+                                        <unittitle>Novembre 1852.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1852/1852">1852-1852</unitdate>
+                                        <unitdate label="PÃ©riode ou date">novembre 1852</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 68</unitid>
+                                        <unittitle>Décembre 1852.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1852/1852">1852-1852</unitdate>
+                                        <unitdate label="PÃ©riode ou date">décembre 1852</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c></c>
+                        <c level="file">
+                            <did>
+                                <unitid countrycode="fr">GR 1 F 18</unitid>
+                                <unittitle>Correspondance générale. - Révolution de 1848, insurrection du 13 juin 1849, prisonniers, jugement de l’affaire du général de Bréa. 
+                                </unittitle>
+                                <unitdate label="Dates extrÃªmes" normal="1848/1849">1848-1849</unitdate>
+                                <daogrp>
+                                    <daoloc href="THOTDESC.GED_LNK"/>
+                                </daogrp>
+                            </did>
+                                                   </c>
+                        <c level="file">
+                            <did>
+                                <unitid countrycode="fr">GR 1 F 15</unitid>
+                                <unittitle>Garde nationale mobile de Paris (mai-décembre 1848). 
+                                </unittitle>
+                                <unitdate label="Dates extrÃªmes" normal="1848/1848">1848-1848</unitdate>
+                                <daogrp>
+                                    <daoloc href="THOTDESC.GED_LNK"/>
+                                </daogrp>
+                            </did>
+                            <scopecontent>
+                                <p>1 registre.</p>
+                            </scopecontent>
+                            <controlaccess>
+                                <geogname role="nom gÃ©ographique">PARIS</geogname>
+                            </controlaccess>
+                                                   </c>
+                        <c level="recordgrp">
+                            <did>
+                                <unittitle>Rapports. 
+                                </unittitle>
+                                <unitdate label="Dates extrÃªmes" normal="1848/1852">1848-1852</unitdate>
+                                <daogrp>
+                                    <daoloc href="THOTDESC.GED_LNK"/>
+                                </daogrp>
+                            </did>
+                                <c level="recordgrp">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 16 - 17</unitid>
+                                        <unittitle>Rapports quotidiens.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1848/1849">1848-1849</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                        <c level="file">
+                                            <did>
+                                                <unitid countrycode="fr">GR 1 F 16</unitid>
+                                                <unittitle>1re - 9e divisions militaires.
+                                                </unittitle>
+                                                <unitdate label="Dates extrÃªmes" normal="1848/1849">1848-1849</unitdate>
+                                                <daogrp>
+                                                  <daoloc href="THOTDESC.GED_LNK"/>
+                                                </daogrp>
+                                            </did>
+                                                                                   </c>
+                                        <c level="file">
+                                            <did>
+                                                <unitid countrycode="fr">GR 1 F 17</unitid>
+                                                <unittitle>10e - 17e divisions militaires.
+                                                </unittitle>
+                                                <unitdate label="Dates extrÃªmes" normal="1848/1849">1848-1849</unitdate>
+                                                <daogrp>
+                                                  <daoloc href="THOTDESC.GED_LNK"/>
+                                                </daogrp>
+                                            </did>
+                                                                                   </c></c>
+                                <c level="recordgrp">
+                                    <did>
+                                        <unittitle>Rapports des cinq jours.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1851/1852">1851-1852</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                        <c level="file">
+                                            <did>
+                                                <unitid countrycode="fr">GR 1 F 55</unitid>
+                                                <unittitle>1er-15 janvier 1851, 14e à 17e divisions militaires.
+                                                </unittitle>
+                                                <unitdate label="Dates extrÃªmes" normal="1851/1851">1851-1851</unitdate>
+                                                <unitdate label="PÃ©riode ou date">1er-15 janvier 1851</unitdate>
+                                                <daogrp>
+                                                  <daoloc href="THOTDESC.GED_LNK"/>
+                                                </daogrp>
+                                            </did>
+                                                                                   </c>
+                                        <c level="file">
+                                            <did>
+                                                <unitid countrycode="fr">GR 1 F 69</unitid>
+                                                <unittitle>Janvier-août 1852.
+                                                </unittitle>
+                                                <unitdate label="Dates extrÃªmes" normal="1852/1852">1852-1852</unitdate>
+                                                <unitdate label="PÃ©riode ou date">janvier-août 1852</unitdate>
+                                                <daogrp>
+                                                  <daoloc href="THOTDESC.GED_LNK"/>
+                                                </daogrp>
+                                            </did>
+                                                                                   </c>
+                                        <c level="file">
+                                            <did>
+                                                <unitid countrycode="fr">GR 1 F 70</unitid>
+                                                <unittitle>Septembre-décembre 1852.
+                                                </unittitle>
+                                                <unitdate label="Dates extrÃªmes" normal="1852/1852">1852-1852</unitdate>
+                                                <unitdate label="PÃ©riode ou date">septembre-décembre 1852</unitdate>
+                                                <daogrp>
+                                                  <daoloc href="THOTDESC.GED_LNK"/>
+                                                </daogrp>
+                                            </did>
+                                                                                   </c></c></c>
+                        <c level="recordgrp">
+                            <did>
+                                <unitid countrycode="fr">GR 1 F 41 - 71</unitid>
+                                <unittitle>Carnet de voyage du Président, propositions en faveur d’officiers. 
+                                </unittitle>
+                                <unitdate label="Dates extrÃªmes" normal="1850/1852">1850-1852</unitdate>
+                                <daogrp>
+                                    <daoloc href="THOTDESC.GED_LNK"/>
+                                </daogrp>
+                            </did>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 41</unitid>
+                                        <unittitle>1850.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1850/1850">1850-1850</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 71</unitid>
+                                        <unittitle>1852.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1852/1852">1852-1852</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c></c>
+                        <c level="recordgrp">
+                            <did>
+                                <unitid countrycode="fr">GR 1 F 72 - 78</unitid>
+                                <unittitle>Serments. 
+                                </unittitle>
+                                <unitdate label="Dates extrÃªmes" normal="1852/1853">1852-1853</unitdate>
+                                <daogrp>
+                                    <daoloc href="THOTDESC.GED_LNK"/>
+                                </daogrp>
+                            </did>
+                                <c level="recordgrp">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 72 - 77</unitid>
+                                        <unittitle>Serments au Président.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1852/1852">1852-1852</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                        <c level="file">
+                                            <did>
+                                                <unitid countrycode="fr">GR 1 F 72</unitid>
+                                                <unittitle>1re et 2e divisions militaires.
+                                                </unittitle>
+                                                <unitdate label="Dates extrÃªmes" normal="1852/1852">1852-1852</unitdate>
+                                                <daogrp>
+                                                  <daoloc href="THOTDESC.GED_LNK"/>
+                                                </daogrp>
+                                            </did>
+                                                                                   </c>
+                                        <c level="file">
+                                            <did>
+                                                <unitid countrycode="fr">GR 1 F 73</unitid>
+                                                <unittitle>3e, 4e et 5e divisions militaires.
+                                                </unittitle>
+                                                <unitdate label="Dates extrÃªmes" normal="1852/1852">1852-1852</unitdate>
+                                                <daogrp>
+                                                  <daoloc href="THOTDESC.GED_LNK"/>
+                                                </daogrp>
+                                            </did>
+                                                                                   </c>
+                                        <c level="file">
+                                            <did>
+                                                <unitid countrycode="fr">GR 1 F 74</unitid>
+                                                <unittitle>6e, 7e et 8e divisions militaires.
+                                                </unittitle>
+                                                <unitdate label="Dates extrÃªmes" normal="1852/1852">1852-1852</unitdate>
+                                                <daogrp>
+                                                  <daoloc href="THOTDESC.GED_LNK"/>
+                                                </daogrp>
+                                            </did>
+                                                                                   </c>
+                                        <c level="file">
+                                            <did>
+                                                <unitid countrycode="fr">GR 1 F 75</unitid>
+                                                <unittitle>9e à 13e divisions militaires.
+                                                </unittitle>
+                                                <unitdate label="Dates extrÃªmes" normal="1852/1852">1852-1852</unitdate>
+                                                <daogrp>
+                                                  <daoloc href="THOTDESC.GED_LNK"/>
+                                                </daogrp>
+                                            </did>
+                                                                                   </c>
+                                        <c level="file">
+                                            <did>
+                                                <unitid countrycode="fr">GR 1 F 76</unitid>
+                                                <unittitle>14e à 21e divisions militaires.
+                                                </unittitle>
+                                                <unitdate label="Dates extrÃªmes" normal="1852/1852">1852-1852</unitdate>
+                                                <daogrp>
+                                                  <daoloc href="THOTDESC.GED_LNK"/>
+                                                </daogrp>
+                                            </did>
+                                                                                   </c>
+                                        <c level="file">
+                                            <did>
+                                                <unitid countrycode="fr">GR 1 F 77</unitid>
+                                                <unittitle>Armée d’Algérie.
+                                                </unittitle>
+                                                <unitdate label="Dates extrÃªmes" normal="1852/1852">1852-1852</unitdate>
+                                                <daogrp>
+                                                  <daoloc href="THOTDESC.GED_LNK"/>
+                                                </daogrp>
+                                            </did>
+                                            <controlaccess>
+                                                <geogname role="nom gÃ©ographique">ALGERIE</geogname>
+                                            </controlaccess>
+                                                                                   </c></c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 78</unitid>
+                                        <unittitle>Refus de prestation, dispositions relatives au serment, formulaire du décret de prestation de serment, serment de la division d'occupation en Italie.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1852/1853">1852-1853</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c></c>
+                        <c level="file">
+                            <did>
+                                <unitid countrycode="fr">GR 1 F 79</unitid>
+                                <unittitle>Donation Pillias. – Papiers du colonel Charras concernant son action politique et son passage au ministère de la Guerre. 
+                                </unittitle>
+                                <unitdate label="Dates extrÃªmes" normal="1848/1851">1848-1851</unitdate>
+                                <daogrp>
+                                    <daoloc href="THOTDESC.GED_LNK"/>
+                                </daogrp>
+                            </did>
+                                                   </c>
+                        <c level="recordgrp">
+                            <did>
+                                <unitid countrycode="fr">GR 1 F 80 - 81</unitid>
+                                <unittitle>Elections militaires. 
+                                </unittitle>
+                                <unitdate label="Dates extrÃªmes" normal="1848/1851">1848-1851</unitdate>
+                                <daogrp>
+                                    <daoloc href="THOTDESC.GED_LNK"/>
+                                </daogrp>
+                            </did>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 80</unitid>
+                                        <unittitle>1848-1850.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1848/1850">1848-1850</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c>
+                                <c level="file">
+                                    <did>
+                                        <unitid countrycode="fr">GR 1 F 81</unitid>
+                                        <unittitle>1851.
+                                        </unittitle>
+                                        <unitdate label="Dates extrÃªmes" normal="1851/1851">1851-1851</unitdate>
+                                        <daogrp>
+                                            <daoloc href="THOTDESC.GED_LNK"/>
+                                        </daogrp>
+                                    </did>
+                                                                   </c></c>
+                        <c level="recordgrp">
+                            <did>
+                                <unitid countrycode="fr">GR 1 F 82 - 83</unitid>
+                                <unittitle>Emplacements des troupes d’infanterie. 
+                                </unittitle>
+                                <unitdate label="Dates extrÃªmes" normal="1848/1849">1848-1849</unitdate>
+                                <daogrp>
+                                    <daoloc href="THOTDESC.GED_LNK"/>
+                                </daogrp>
+                            </did>
+                                                   </c></dsc>
+            </archdesc>
+    </ead>				</metadata>		</record>
+	</ListRecords>
+</OAI-PMH>
+

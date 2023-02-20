@@ -1,0 +1,299 @@
+<?xml version="1.0"?>
+<!DOCTYPE ead PUBLIC "+//ISBN 1-931666-00-8//DTD ead.dtd (Encoded Archival Description (EAD) Version 2002)//EN" "ead.dtd">
+<ead>
+    <eadheader findaidstatus="unverified-partial-draft">
+        <eadid>archref</eadid>
+        <filedesc>
+            <titlestmt>
+                <titleproper>titleproper: Fonds provenant du service du recrutement</titleproper>
+                <subtitle>subtitle: Répertoire numérique présentant les documents numérisés du fonds du
+                    service du recrutement de la sous-série 1 R.</subtitle>
+            </titlestmt>
+            <publicationstmt>
+                <date>1265</date>
+                <publisher>Siaf</publisher>
+                <p>
+                    <address>
+                        <addressline>Paris</addressline>
+                        <addressline>56 francs bourgeois</addressline>
+                    </address>
+                </p>
+                <date>2009</date>
+            </publicationstmt>
+        </filedesc>
+        <profiledesc>
+            <creation>Instrument de recherche créé et encodé par Marie Fawer, stagiaire de M2
+                Sciences de l'Information et Métiers de la Culture spécialité archivistique, sous la
+                direction de Xavier Laurent, directeur des Archives départementales du Territoire de
+                Belfort.</creation>
+            <langusage>Français</langusage>
+            <descrules>Cet instrument de recherche a été établi selon la norme ISAD/G et encodé en
+                XML/EAD avec le logiciel XMetal.</descrules>
+        </profiledesc>
+    </eadheader>
+    <frontmatter>
+        <div>
+            <p>Cet instrument de recherche a été réalisé à partir du répertoire numérique de la
+                sous-série 1 R (anonyme). </p>
+        </div>
+    </frontmatter>
+    <archdesc level="otherlevel" otherlevel="partie-de-fonds" id="a011341578589h9PgJh">
+        <did>
+            <unitid identifier="1R/109-1R/277">unitid: 1 R 109-277</unitid>
+            <unittitle>unittitle: Fonds provenant du service du recrutement
+            <corpname>archdesc-unittitle-corpname</corpname>
+            </unittitle>
+            <unitdate normal="1867-01-01/1909-12-31" type="inclusive">1867-1909</unitdate>
+            <physdesc><genreform>archdesc-physdesc-genreform</genreform></physdesc>
+            <origination>origination: Le bureau central des archives administratives militaires à
+                Pau</origination>
+            <repository>repository: Archives départementales du Territoire de Belfort</repository>
+        </did>
+        <bioghist>
+            <list>
+                <head>bioghist - Voici la liste des lois, décrets et ordres permettant de clarifier la tenue de
+                    certain registre :</head>
+                <item><emph render="bold">bioghist: Décret du 2 septembre 1914 </emph>: la classe 1915 a été
+                    recensée et incorporée prématurément en raison de la campagne contre l'Allemagne et ses Alliés.</item>
+            </list>
+            <subject>archdesc-bioghist-subject</subject>
+        </bioghist>
+        <arrangement>
+            <p>arrangement. Classement chronologique, par catégorie, par département, par établissement, par pays. </p>
+        </arrangement>
+        <acqinfo>
+            <p>acquinfo: Tenus par l'armée, et non par l'administration préfectorale, les registres matricules
+                établis par les bureaux de recrutement ont été versés aux archives départementales
+                par le bureau central des archives administratives militaires (BCAAM) à Pau. </p>
+        </acqinfo>
+        <scopecontent>
+          <geogname normal="normal-archdesc-scopecontent-geogname">
+            archdesc-scopecontent-geogname
+          </geogname>
+            <p>scopecontent: Les états signalétiques comportent des données très précises sur chaque soldat : état
+                civil, signalement, décision du conseil de révision, détail des services, campagnes,
+                blessures, citations, décorations...</p>
+            <p>Les registres matricules des classes 1867 à 1909 ont été numérisés et sont
+                consultables librement en ligne à partir de cet instrument de recherche.</p>
+        </scopecontent>
+        <accruals><p>accruals: Dépôt, 1983 ; sera complété ultérieurement.</p>
+        </accruals>
+        <appraisal><p>
+            appraisal: évaluation tri, etc. pouet
+        </p></appraisal>
+        <acqinfo>
+            <p>acquinfo: informations aquisitions. zut</p>
+
+        </acqinfo>
+        <custodhist>
+            <p>custodhist: historique conservation</p>
+        </custodhist>
+
+        <accessrestrict>
+            <head>accessrestrict</head>
+            <p>D'après la loi du 15 juillet 2008, les documents sont librement communicables après
+                un délai de 120 ans à compter de l'année de naissance des personnes concernées ou 25
+                ans après le décès, en raison des informations médicales présentes sur les
+                matricules. Papillon</p>
+        </accessrestrict>
+        <userestrict>
+            <head>userestrict</head>
+            <p>Les reproductions peuvent être obtenues par les internautes à partir de leur
+                imprimante personnelle ou en salle de lecture en s'acquittant des frais. En cas de
+                publication, il convient de se rapprocher des Archives départementales. ours brun. </p>
+        </userestrict>
+        <controlaccess>
+          <genreform>archdesc-controlaccess-genreform</genreform>
+          <function normal="normal-archdesc-controlaccess-function">
+            archdesc-controlaccess-function
+        </function>
+        </controlaccess>
+        <otherfindaid>
+            <head>otherfindaid</head>
+            <p><archref href="http://www.enssib.fr/bibliotheque-numerique/documents/62240-faire-un-repertoire-ou-un-inventaire-simple-en-ead-description-archivistique-encodee.pdf" title="" altrender="">Un répertoire numérique de la
+                sous-série 1 R, anonyme, 38 p. Alouette.</archref></p>
+        </otherfindaid>
+        <separatedmaterial>
+            <head>separatedmaterial</head>
+            <p>Pour toute recherche portant sur l'actuel Territoire de Belfort avant 1870, il est
+                indispensable de consulter les fonds conservés aux archives départementales du
+                Haut-Rhin à Colmar. L'arrondissement de Belfort, dont le ressort dépassait largement
+                celui de l'actuel département, faisait en effet partie du Haut-Rhin jusqu'en 1870.
+                La plupart des documents portant sur l'ensemble de l'arrondissement sont restés à
+                Colmar. Géranium</p>
+        </separatedmaterial>
+        <relatedmaterial>
+            <head>Relatedmaterial</head>
+            <p>Voir aussi la série Q pour les Biens nationaux (1Q), les Hypothèque (4Q) et
+                l'Enregistrement (3Q). Carnard laqué.</p>
+        </relatedmaterial>
+        <bibliography encodinganalog="3.5.4">
+            <p>bibliography: Manach (Daniel),<emph render="italic">La descendance de Louis-Philippe I</emph>
+                <emph render="italic">er</emph>
+                <emph render="italic">, roi des Français</emph>, Éditions Christian, Paris, 1988.</p>
+            <p>Poisson (Georges),<emph render="italic">Les Orléans. Une famille en quête d'un trône</emph>, Perrin, Paris, 1999.</p>
+            <p>Paoli (Dominique),<emph render="italic">Fortunes et infortunes des princes d'Orléans</emph>, Éditions Artena, Paris, 2006.</p>
+        </bibliography>
+        <dsc>
+            <c id="a011497973827MCtiYb">
+                <did>
+                    <unitid>a011497973827MCtiYb</unitid>
+                    <unittitle>Notaires et minutes notariales
+                      <famname>cdid-unittitle-famname</famname>>
+                    </unittitle>
+                    <physdesc>
+                      <genreform normal="normal-cdid-physdesc-genreform">
+                        cdid-physdesc-genreform
+                      </genreform>
+                      <function>cdid-physdesc-function</function>
+                    </physdesc>
+                    <unitdate normal="1458-01-01/1992-12-31">1458-1992</unitdate>
+                </did>
+                <scopecontent>
+                    <p>La consultation des minutes notariales, indispensables à la connaissance
+                        de l'histoire des familles et des propriétés, est très importante pour
+                        l'histoire économique, sociale ou juridique.
+                        <subject>cdid-scopecontent-subject-p</subject>
+                    </p>
+                    <subject normal="normal-cdid-scopecontent-subject-bare">
+                      cdid-scopecontent-subject-bare
+                    </subject>
+                </scopecontent>
+                <bioghist>
+                  <corpname>cdid-bioghist-corpname</corpname>
+                  <geogname>cdid-bioghist-geogname</geogname>
+                  <geogname><imprinted>cdid-bioghist-imprinted-geogname</imprinted></geogname>
+                </bioghist>
+                <relatedmaterial>
+                    <head>relatedmaterial</head>
+                    <p>Quelques minutiers, fragments de minutier ou collections d'actes
+                        notariés concernant aussi les départements actuels de l'Ain, de l'Isère
+                        et de la Haute-Savoie, ainsi que le Piémont se trouvent dans les
+                        archives saisies par la Chambre des comptes (série SA) et le Sénat de
+                        Savoie (sous-série 4B) ou receuillis par des familles ou des
+                        particuliers (série F ; sous-série 1J). Poisson rouge. </p>
+                    <p>
+                    </p>
+                    <p>Par ailleurs, les archives notariales, autres que minutes et
+                        répertoires se trouvent en principe parmi les fonds d'origine privée
+                        (sous-série 1J) ; en effet, si les minutes et les répertoires sont des
+                        archives publiques, les livres de comptabilité ou répertoire de clients
+                        sont bien des archives privées appartenant à l'étude notariale.</p>
+                </relatedmaterial>
+                <controlaccess>
+                  <subject>cdid-controlaccess-subject</subject>
+                  <occupation>cdid-controlacess-occupation</occupation>
+                </controlaccess>
+
+            </c>
+            <c id="a011497973827OGivqx">
+                <did>
+                    <unitid>6E 1-15863</unitid>
+                    <unittitle>&gt;&gt;&gt; 6E 1-15863 - Minutes notariales.
+                        (1561-1957)
+                    </unittitle>
+                    <unitdate normal="1561-01-01/1957-12-31">1561-1957</unitdate>
+                    <physdesc>
+                        12418 articles
+                    </physdesc>
+                    <origination>Producteur : Notaires</origination>
+                </did>
+                <otherfindaid>
+                    <head>otherfindaid</head>
+                    <p>Voir l'inventaire xml (6E
+                        1-15863). Mouche dorée. </p>
+                </otherfindaid>
+            </c>
+            <c level="item" id="a0113415785899QTube">
+                <did>
+                    <unitid>1 R 110</unitid>
+                    <unittitle>Classe<unitdate normal="1868"> 1868 </unitdate></unittitle>
+                </did>
+                <scopecontent>
+                    <p>Nos 265-671 (contingent) ; 366-1346 (mobile) (Doubs).</p>
+                    <p>Nos 520-846 (Haute-Saône).</p>
+                    <p>Nos 1-558 (contingent et mobile) ; 559-1014 (Haut-Rhin).</p>
+                </scopecontent>
+                <daogrp>
+                    <daoloc href="medias/r/001_r/1r110_classe-1868/ad09003_anu1101r0110-00001_y.jpg"
+                        role="first_image"/>
+                    <daoloc href="medias/r/001_r/1r110_classe-1868/ad09003_anu1101r0110-00505_y.jpg"
+                        role="last_image"/>
+                </daogrp>
+                <note type="mnesysinternal">
+                    <p/>
+                </note>
+            </c>
+            <c level="item" id="a011341578589DfPjvp">
+                <did>
+                    <unitid>1 R 111</unitid>
+                    <unittitle>Classe <unitdate normal="1869">1869</unitdate>
+                    </unittitle>
+                </did>
+                <scopecontent>
+                    <p>Nos 235-1817 (Doubs).</p>
+                    <p>Nos 459-760 ; 761-1648 (Haute-Saône).</p>
+                    <p>Nos 1-865 avec numéros vacants (Haut-Rhin).</p>
+                    <p>Table lacunaire et en mauvais état.</p>
+                </scopecontent>
+                <daogrp>
+                    <daoloc href="medias/r/001_r/1r111_classe-1869/ad09003_anu1101r0111-00001_y.jpg"
+                        role="first_image" title="Matricules de la classe 1869"/>
+                    <daoloc href="medias/r/001_r/1r111_classe-1869/ad09003_anu1101r0111-00521_y.jpg"
+                        role="last_image"/>
+                </daogrp>
+                <note type="mnesysinternal">
+                    <p/>
+                </note>
+            </c>
+            <c level="item" id="a011341578589WRSVuz">
+                <did>
+                    <unitid>1 R 112</unitid>
+                    <unittitle>Classe <unitdate normal="1870">1870</unitdate>
+                    </unittitle>
+                </did>
+                <scopecontent>
+                    <p>Nos 855-1636 ; 59-944 (Doubs).</p>
+                    <p>Nos 289-359 ; 951-986 ; 341 et numéros vacants, avec table en mauvais état
+                        (Haute-Saône).</p>
+                    <p>Nos 1-995 (Haut-Rhin).</p>
+                </scopecontent>
+                <daogrp>
+                    <daoloc href="medias/r/001_r/1r112_classe-1870/ad09003_anu1101r0112-00001_y.jpg"
+                        role="first_image" title="Matricules de la classe 1870"/>
+                    <daoloc href="medias/r/001_r/1r112_classe-1870/ad09003_anu1101r0112-00594_y.jpg"
+                        role="last_image"/>
+                </daogrp>
+                <note type="mnesysinternal">
+                    <p/>
+                </note>
+            </c>
+            <c level="file" id="a0113415785891BxIHa">
+                <did>
+                    <unitid>1 R 113 - 115</unitid>
+                    <unittitle>Classe <unitdate normal="1871">1871</unitdate></unittitle>
+                </did>
+                <c level="item" id="a011341578589VnT0uU">
+                    <did>
+                        <unitid identifier="1R/113">1 R 113</unitid>
+                        <unittitle>Nos 1-598 avec table</unittitle>
+                    </did>
+                    <scopecontent>
+                        <p>Belfort</p>
+                    </scopecontent>
+                    <daogrp>
+                        <daoloc
+                            href="medias/r/001_r/1r113-115_classe-1871/1r113/ad09003_anu1101r0113-00001_y.jpg"
+                            role="first_image" title="Matricules de la classe 1871 de Belfort"/>
+                        <daoloc
+                            href="medias/r/001_r/1r113-115_classe-1871/1r113/ad09003_anu1101r0113-00156_y.jpg"
+                            role="last_image"/>
+                    </daogrp>
+                    <note type="mnesysinternal">
+                        <p/>
+                    </note>
+                </c>
+            </c>
+        </dsc>
+    </archdesc>
+</ead>

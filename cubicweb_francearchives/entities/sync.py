@@ -38,7 +38,7 @@ instances.
 """
 import requests
 
-from cubicweb.view import EntityAdapter
+from cubicweb.entity import EntityAdapter
 from cubicweb.predicates import relation_possible, is_instance
 from cubicweb.utils import json_dumps
 
@@ -180,28 +180,12 @@ class ISyncCarddAdapter(ISyncUuidAdapter):
 class ISyncSectionAdapter(ISyncUuidAdapter):
     """custom ISync adapter that prevent children sections to recurse"""
 
-    __select__ = ISyncUuidAdapter.__select__ & is_instance("Section", "CommemoCollection")
+    __select__ = ISyncUuidAdapter.__select__ & is_instance("Section")
 
     def build_target_put_body(self, target, done=None):
-        if target.cw_etype in {"Section", "CommemoCollection"}:
+        if target.cw_etype == "Section":
             # don't recurse on children for subsections
             skip_relations = self.skipped_relations | {"children"}
             return target.cw_adapt_to("ISync").build_put_body(done, skip_relations=skip_relations)
         else:
             return super(ISyncSectionAdapter, self).build_target_put_body(target, done)
-
-
-class ISyncCommemorationItemAdapter(ISyncUuidAdapter):
-    """custom ISync adapter that prevent recursion on parent collection
-    through ``collection_top`` relation.
-    """
-
-    __select__ = ISyncUuidAdapter.__select__ & is_instance("CommemorationItem")
-    skipped_relations = ISyncUuidAdapter.skipped_relations | {"collection_top"}
-
-    def build_put_body(self, done=None, skip_relations=None):
-        r = super(ISyncCommemorationItemAdapter, self).build_put_body()
-        r["collection_top"] = [
-            {"uuid": self.entity.collection_top[0].uuid, "cw_etype": "CommemoCollection"}
-        ]
-        return r

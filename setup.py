@@ -33,9 +33,7 @@
 """cubicweb_francearchives setup module using data from
 cubicweb_francearchives/__pkginfo__.py file
 """
-import os
-from os.path import join, dirname, exists
-from setuptools.command.sdist import sdist as orig_sdist
+from os.path import join, dirname
 
 from setuptools import find_packages, setup
 
@@ -71,21 +69,6 @@ for entry in ("__depends__",):  # "__recommends__"):
 install_requires = ["{0} {1}".format(d, v or "").strip() for d, v in requires.items()]
 
 
-class sdist(orig_sdist):
-    def run(self):
-        if not os.environ.get("FRARCHIVES_NO_BUILD_DATA_FILES", False):
-            self.spawn(
-                [
-                    "sass",
-                    "scss/main.scss:cubicweb_francearchives/data/css/francearchives.bundle.css",
-                ]
-            )
-            self.spawn(["npm", "install"])
-            os.environ["NODE_ENV"] = "production"
-            self.spawn(["npm", "run", "build"])
-        orig_sdist.run(self)
-
-
 setup(
     name=distname,
     version=version,
@@ -95,13 +78,14 @@ setup(
     author=author,
     author_email=author_email,
     url=web,
-    cmdclass={"sdist": sdist},
     classifiers=classifiers,
     packages=find_packages(exclude=["test"]),
     install_requires=install_requires,
     include_package_data=True,
     entry_points={
-        "cubicweb.cubes": ["francearchives=cubicweb_francearchives",],
+        "cubicweb.cubes": [
+            "francearchives=cubicweb_francearchives",
+        ],
         "cubicweb.i18ncube": [
             "francearchives=cubicweb_francearchives.i18n:FranceArchivesMessageExtractor",
         ],

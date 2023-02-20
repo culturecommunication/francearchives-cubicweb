@@ -37,16 +37,32 @@ from mock import patch
 from elasticsearch_dsl.search import Search
 from elasticsearch_dsl.response import Response as ESResponse
 
+
 from logilab.common.registry import yes
 
 from pyramid.response import Response
 
+from cubicweb import Binary
 from cubicweb.view import EntityView
 from cubicweb.pyramid.test import PyramidCWTest
+from cubicweb.predicates import is_instance
 
+from cubicweb_francearchives.dataimport.oai_nomina import compute_nomina_stable_id
 from cubicweb_francearchives.utils import merge_dicts
-from cubicweb_francearchives.testutils import PostgresTextMixin
+from cubicweb_francearchives.testutils import (
+    PostgresTextMixin,
+    S3BfssStorageTestMixin,
+    create_authority_record,
+)
 from pgfixtures import setup_module, teardown_module  # noqa
+from cubicweb_francearchives import S3_ACTIVE
+
+
+class FakeResponse(ESResponse):
+    def __init__(self):
+        response = {"hits": {"hits": [], "total": {"value": 0, "relation": ""}}, "facets": {}}
+        super(FakeResponse, self).__init__(Search(), response)
+
 
 BASE_SETTINGS = {
     "cubicweb.bwcompat": "no",
@@ -60,12 +76,18 @@ def mock_maintemplate_call(self, view):
     self.w(view.render())
 
 
-class BWCompatRoutesTests(PostgresTextMixin, PyramidCWTest):
+class BWCompatRoutesTests(S3BfssStorageTestMixin, PostgresTextMixin, PyramidCWTest):
     settings = BASE_SETTINGS
 
     def setUp(self):
         super(BWCompatRoutesTests, self).setUp()
-        self.config.global_set_option("appfiles-dir", self.datapath("appfiles"))
+        if S3_ACTIVE:
+            self.config.global_set_option("appfiles-dir", "appfiles")
+        else:
+            self.config.global_set_option("appfiles-dir", self.datapath("appfiles"))
+        # load appfiles content into storage
+        self.load_directory_folder(self.datapath("appfiles"), self.config.get("appfiles-dir"))
+        self.load_directory_folder(self.datapath("static"), "static")
 
     def test_data_assets_route(self):
         self.webapp.get("/data/cubicweb.js", status=200)
@@ -77,6 +99,7 @@ class BWCompatRoutesTests(PostgresTextMixin, PyramidCWTest):
         resp = self.webapp.get("/static/subdir/static.txt", status=200)
         self.assertEqual(resp.body, b"hello static\n")
 
+    @unittest.skipIf(S3_ACTIVE, "Route is not used in S3")
     def test_redirect_static_route(self):
         self.webapp.get("/static/9001", status=404)
         resp = self.webapp.get("/static/1023", status=302)
@@ -92,14 +115,39 @@ class BWCompatRoutesTests(PostgresTextMixin, PyramidCWTest):
             bc = cnx.create_entity("BaseContent", title="the-article-title")
             cnx.commit()
         resp = self.webapp.get("/basecontent/{}".format(bc.eid), status=200)
-        self.assertIn("<h1>{}</h1>".format(bc.title).encode("utf-8"), resp.body)
+        self.assertIn(
+            """<h1><span class="visually-hidden">BaseContent : </span>{}""".format(bc.title).encode(
+                "utf-8"
+            ),
+            resp.body,
+        )
+        resp = self.webapp.get("/BaseContent/{}".format(bc.eid), status=200)
+        self.assertIn(
+            """<h1><span class="visually-hidden">BaseContent : </span>{}""".format(bc.title).encode(
+                "utf-8"
+            ),
+            resp.body,
+        )
+        resp = self.webapp.get("/article/{}".format(bc.eid), status=200)
+        self.assertIn(
+            """<h1><span class="visually-hidden">BaseContent : </span>{}""".format(bc.title).encode(
+                "utf-8"
+            ),
+            resp.body,
+        )
 
-    @patch("cubicweb_francearchives.views.search.PniaElasticSearchView.customize_search")
-    @patch("elasticsearch_dsl.search.Search.execute")
-    @patch("elasticsearch_dsl.connections.connections.get_connection")
-    def test_restpath_listview_route(self, cnxfactory, _execute, customize_search):
-        self.webapp.get("/NewsContent", status=303)  # redirect to fuzzy search
-        customize_search.assert_called_with("", {"cw_etype": "NewsContent"}, 0, 10)
+    def test_restpath_delete_entity(self):
+        self.webapp.get("/basecontent/1").follow(status=404)
+        with self.admin_access.cnx() as cnx:
+            bc = cnx.create_entity("BaseContent", title="the-article-title")
+            cnx.commit()
+        resp = self.webapp.delete("/basecontent/{}".format(bc.eid), status=302)
+        error = "The resource was found at /basecontent/{}".format(bc.eid).encode("utf-8")
+        self.assertIn(error, resp.body)
+        resp = self.webapp.delete("/BaseContent/{}".format(bc.eid), status=302)
+        error = "The resource was found at /BaseContent/{}".format(bc.eid).encode("utf-8")
+        self.assertIn(error, resp.body)
+        resp = self.webapp.delete("/article/{}/".format(bc.eid), status=404)
 
     def test_lang_prefix(self):
         with self.admin_access.cnx() as cnx:
@@ -127,7 +175,7 @@ def mock_primary_view(entity_call):
     return MockPrimaryView
 
 
-class FARoutesTests(PostgresTextMixin, PyramidCWTest):
+class FARoutesTests(S3BfssStorageTestMixin, PostgresTextMixin, PyramidCWTest):
     settings = BASE_SETTINGS
 
     @patch(
@@ -135,13 +183,11 @@ class FARoutesTests(PostgresTextMixin, PyramidCWTest):
     )
     def test_commemoview(self):
         with self.admin_access.cnx() as cnx:
-            coll = cnx.create_entity("CommemoCollection", title="recueil 2010", year=2010)
             commemo = cnx.create_entity(
                 "CommemorationItem",
                 title="item1",
                 alphatitle="item1",
                 commemoration_year=2010,
-                collection_top=coll,
             )
             cnx.commit()
 
@@ -155,15 +201,15 @@ class FARoutesTests(PostgresTextMixin, PyramidCWTest):
     )
     def test_topsection(self):
         with self.admin_access.cnx() as cnx:
-            cnx.create_entity("Section", name="gerer", title="gerer")
+            cnx.create_entity("Section", name="comprendre", title="comprendre")
             cnx.commit()
 
         mock_view = mock_primary_view(lambda e: "section {}".format(e.name))
 
         with self.temporary_appobjects(mock_view):
-            resp = self.webapp.get("/gerer")
-            self.assertEqual(resp.body, b"section gerer")
-            self.webapp.get("/gererrr").follow(status=404)
+            resp = self.webapp.get("/comprendre")
+            self.assertEqual(resp.body, b"section comprendre")
+            self.webapp.get("/comprendreee").follow(status=404)
 
     @patch(
         "cubicweb_francearchives.views.templates.PniaMainTemplate.call", new=mock_maintemplate_call
@@ -178,24 +224,46 @@ class FARoutesTests(PostgresTextMixin, PyramidCWTest):
             resp = self.webapp.get("/cgu")
             self.assertEqual(resp.body, "card Conditions générales d'utilisation".encode("utf-8"))
 
-    @unittest.skip("Disable this test until pyramid 1.10 is pinned")
+    def test_noresult_yields_404(self):
+        self.webapp.get("/findingaid/abc123/rdf.xml", status=404)
+
+
+def mock_file_download_view(entity_call):
+    class MockFileDownloadView(EntityView):
+        __regid__ = "download"
+        __select__ = is_instance("File")
+
+        def entity_call(self, entity):
+            self.w(entity_call(entity))
+
+    return MockFileDownloadView
+
+
+class FABfssFileRoutesTests(S3BfssStorageTestMixin, PostgresTextMixin, PyramidCWTest):
+    settings = BASE_SETTINGS
+
     @patch(
         "cubicweb_francearchives.views.templates.PniaMainTemplate.call", new=mock_maintemplate_call
     )
-    def test_commemocoll(self):
+    def test_fileview(self):
         with self.admin_access.cnx() as cnx:
-            cnx.create_entity("CommemoCollection", title="recueil 2010", year=2010)
+            fobj = cnx.create_entity(
+                "File",
+                data=Binary(b"File content"),
+                data_name="DGPA_SIAF_2021_001.pdf",
+                data_format="application/pdf",
+                reverse_attachment=cnx.create_entity(
+                    "Circular",
+                    circ_id="DGPA_SIAF_2021_001",
+                    status="in-effect",
+                    title="Circular content",
+                ),
+            )
             cnx.commit()
-        mock_view = mock_primary_view(lambda e: "recueil {}".format(e.year))
+            mock_view = mock_file_download_view(fobj)
         with self.temporary_appobjects(mock_view):
-            resp = self.webapp.get("/commemo/recueil-2010", status=307)
-            self.assertEqual(resp.location, "https://localhost:80/commemo/recueil-2010/")
-            # test with slash
-            resp = self.webapp.get("/commemo/recueil-2010/")
-            self.assertEqual(resp.body, b"recueil 2010")
-
-    def test_noresult_yields_404(self):
-        self.webapp.get("/findingaid/abc123/rdf.xml", status=404)
+            resp = self.webapp.get(f"/file/{fobj.data_hash}/{fobj.data_name}")
+            self.assertEqual(resp.body, b"File content")
 
 
 class SanitizeTweenMixin(object):
@@ -246,22 +314,24 @@ class NoSanitizeParameterTest(SanitizeTweenMixin, PyramidCWTest):
         )
 
 
-def es_autosuggest_response(count):
+def es_subject_autosuggest_response(count):
     def _result(i):
         return {
             "_source": {
                 "description": "test",
                 "cwuri": "http://example.org/{}".format(i),
-                "urlpath": "agent/{}".format(i),
+                "urlpath": "subject/{}".format(i),
                 "eid": i,
-                "cw_etype": "PniaAgent",
-                "type": "persname",
+                "cw_etype": "SubjectAuthority",
+                "type": "subject",
                 "text": "hello",
                 "normalized": "hello",
-                "count": i + 1,
+                "count": i + 4,
                 "additional": "",
+                "siteres": 3,
+                "archives": i + 1,
             },
-            "_type": "PniaAgent",
+            "_type": "SubjectAuthority",
             "_score": 1,
         }
 
@@ -280,35 +350,174 @@ def es_autosuggest_response(count):
     return _search
 
 
-class ESRouteTests(PyramidCWTest):
+def es_agent_autosuggest_response(count):
+    def _result(i):
+        return {
+            "_source": {
+                "description": "test",
+                "cwuri": "http://example.org/{}".format(i),
+                "urlpath": "agent/{}".format(i),
+                "eid": i,
+                "cw_etype": "AgentAuthority",
+                "type": "persname",
+                "text": "hello",
+                "normalized": "hello",
+                "count": i + 4,
+                "additional": "",
+                "siteres": 3,
+                "archives": i + 1,
+            },
+            "_type": "AgentAuthority",
+            "_score": 1,
+        }
+
+    def _search(*args, **kwargs):
+        search = Search(doc_type="_doc", index="text_suggest")
+        return ESResponse(
+            search,
+            {
+                "hits": {
+                    "hits": [_result(i) for i in range(count)],
+                    "total": count,
+                }
+            },
+        )
+
+    return _search
+
+
+class ESCmsRouteTests(S3BfssStorageTestMixin, PyramidCWTest):
     settings = BASE_SETTINGS
 
-    @patch("elasticsearch_dsl.search.Search.execute", new=es_autosuggest_response(2))
+    @classmethod
+    def init_config(cls, config):
+        super(ESCmsRouteTests, cls).init_config(config)
+        config.set_option("instance-type", "cms")
+
+    @patch("elasticsearch_dsl.search.Search.execute", new=es_subject_autosuggest_response(2))
     @patch("elasticsearch_dsl.connections.connections.get_connection")
-    def test_es_suggest_view(self, cnxfactory):
+    def test_es_subject_suggest_view(self, cnxfactory):
         resp = self.webapp.get("/_suggest?q=foo")
         self.assertListEqual(
             json.loads(resp.text),
             [
                 {
-                    "url": "http://testing.fr/cubicweb/agent/0",
-                    "etype": "persname",
+                    "url": "http://testing.fr/cubicweb/subject/0?aug=True&es_escategory="
+                    "archives&es_escategory=siteres",
+                    "etype": "Subject",
                     "text": "hello",
-                    "additional": "",
+                    "countlabel": "4 documents",
+                },
+                {
+                    "url": "http://testing.fr/cubicweb/subject/1?aug=True&es_escategory="
+                    "archives&es_escategory=siteres",
+                    "etype": "Subject",
+                    "text": "hello",
+                    "countlabel": "5 documents",
+                },
+            ]
+            * 3,
+        )
+
+    @patch("elasticsearch_dsl.search.Search.execute", new=es_agent_autosuggest_response(2))
+    @patch("elasticsearch_dsl.connections.connections.get_connection")
+    def test_es_agent_suggest_view(self, cnxfactory):
+        resp = self.webapp.get("/_suggest?q=foo")
+        self.assertListEqual(
+            json.loads(resp.text),
+            [
+                {
+                    "url": "http://testing.fr/cubicweb/agent/0?es_escategory="
+                    "archives&es_escategory=siteres",
+                    "etype": "Persname",
+                    "text": "hello",
+                    "countlabel": "4 documents",
+                },
+                {
+                    "url": "http://testing.fr/cubicweb/agent/1?es_escategory="
+                    "archives&es_escategory=siteres",
+                    "etype": "Persname",
+                    "text": "hello",
+                    "countlabel": "5 documents",
+                },
+            ]
+            * 3,
+        )
+        resp = self.webapp.get("/_suggest?q=foo&escategory=siteres")
+        self.assertListEqual(
+            json.loads(resp.text),
+            [
+                {
+                    "url": "http://testing.fr/cubicweb/agent/0?es_escategory=siteres",
+                    "etype": "Persname",
+                    "text": "hello",
+                    "countlabel": "3 documents",
+                },
+                {
+                    "url": "http://testing.fr/cubicweb/agent/1?es_escategory=siteres",
+                    "etype": "Persname",
+                    "text": "hello",
+                    "countlabel": "3 documents",
+                },
+            ]
+            * 3,
+        )
+        resp = self.webapp.get("/_suggest?q=foo&escategory=archives")
+        self.assertListEqual(
+            json.loads(resp.text),
+            [
+                {
+                    "url": "http://testing.fr/cubicweb/agent/0?es_escategory=archives",
+                    "etype": "Persname",
+                    "text": "hello",
                     "countlabel": "1 document",
                 },
                 {
-                    "url": "http://testing.fr/cubicweb/agent/1",
-                    "etype": "persname",
+                    "url": "http://testing.fr/cubicweb/agent/1?es_escategory=archives",
+                    "etype": "Persname",
                     "text": "hello",
-                    "additional": "",
                     "countlabel": "2 documents",
                 },
-            ],
+            ]
+            * 3,
         )
 
 
-class NewsLetterTests(PyramidCWTest):
+class ESRouteConsultationTests(S3BfssStorageTestMixin, PyramidCWTest):
+    settings = BASE_SETTINGS
+
+    @classmethod
+    def init_config(cls, config):
+        super(ESRouteConsultationTests, cls).init_config(config)
+        config.set_option("instance-type", "consultation")
+
+    @patch("elasticsearch_dsl.search.Search.execute", new=es_agent_autosuggest_response(2))
+    @patch("elasticsearch_dsl.connections.connections.get_connection")
+    def test_cms_es_suggest_view(self, cnxfactory):
+        resp = self.webapp.get("/_suggest?q=foo")
+        self.assertListEqual(
+            json.loads(resp.text),
+            [
+                {
+                    "url": "http://testing.fr/cubicweb/agent/0?es_escategory="
+                    "archives&es_escategory=siteres",
+                    "etype": "Persname",
+                    "text": "hello",
+                    "countlabel": "4 documents",
+                },
+                {
+                    "url": "http://testing.fr/cubicweb/agent/1?es_escategory="
+                    "archives&es_escategory=siteres",
+                    "etype": "Persname",
+                    "text": "hello",
+                    "countlabel": "5 documents",
+                },
+            ]
+            * 3,
+        )
+
+
+class NewsLetterTests(S3BfssStorageTestMixin, PyramidCWTest):
     settings = merge_dicts(
         {},
         BASE_SETTINGS,
@@ -336,7 +545,7 @@ class NewsLetterTests(PyramidCWTest):
             )
 
 
-class CatchAllTC(PostgresTextMixin, PyramidCWTest):
+class CatchAllTC(S3BfssStorageTestMixin, PostgresTextMixin, PyramidCWTest):
     settings = BASE_SETTINGS
 
     def test_with_segment_is_enlarged_etype(self):
@@ -369,7 +578,7 @@ class CatchAllTC(PostgresTextMixin, PyramidCWTest):
         )
 
 
-class CSVExportTests(PostgresTextMixin, PyramidCWTest):
+class CSVExportTests(S3BfssStorageTestMixin, PostgresTextMixin, PyramidCWTest):
     settings = merge_dicts(
         {},
         BASE_SETTINGS,
@@ -426,9 +635,13 @@ class CSVExportTests(PostgresTextMixin, PyramidCWTest):
             savonarole = ce(
                 "AgentAuthority",
                 label="Jérôme Savonarole",
-                reverse_authority=ce(
-                    "Person", name="Savonarole", forenames="Jérôme", publisher="nomina"
-                ),
+            )
+            ce(
+                "NominaRecord",
+                stable_id=compute_nomina_stable_id(service.code, "42"),
+                json_data={"p": [{"f": "Jérôme", "n": "Savonarole"}], "t": "AA"},
+                service=service.eid,
+                same_as=savonarole,
             )
             ce(
                 "AgentName",
@@ -443,7 +656,6 @@ class CSVExportTests(PostgresTextMixin, PyramidCWTest):
                 same_as=ce("ExternalUri", uri="https://fr.wikipedia.org/wiki/Paris"),
             )
             ce("Geogname", label="Paris", authority=paris, index=fa)
-            coll = cnx.create_entity("CommemoCollection", title="recueil 2010", year=2010)
             election = ce("SubjectAuthority", label="Élection")
             ce("Subject", label="Élection", authority=election)
             cnx.create_entity(
@@ -451,7 +663,6 @@ class CSVExportTests(PostgresTextMixin, PyramidCWTest):
                 title="Élection",
                 alphatitle="election",
                 commemoration_year=2010,
-                collection_top=coll,
                 related_authority=election,
             )
             cnx.commit()
@@ -486,8 +697,8 @@ fcdid-title,some hard-to-parse date,fc_service,éaô fc-scoppecontent,fcdid,main
             fa = cnx.find("FindingAid", eid=self.fa_eid).one()
             res = self.webapp.get("/findingaid/%s.csv" % fa.stable_id, status=200)
             expected = """\
-title_label,publisher_label,unitid_label,eadid_label,bioghist_label,acquisition_info_label,description_label,repository_label,geo_indexes_label
-maindid-title,fc_service,maindid,FRAD084_xxx,fc-origination,acquisition_info,fa-descr,fc-repo,Paris
+title_label,publisher_label,unitid_label,bioghist_label,acquisition_info_label,description_label,repository_label,geo_indexes_label,eadid_label
+maindid-title,fc_service,maindid,fc-origination,acquisition_info,fa-descr,fc-repo,Paris,FRAD084_xxx
 """  # noqa
             self.assertEqual(res.body, expected.encode("utf-8"))
 
@@ -499,21 +710,19 @@ maindid-title,fc_service,maindid,FRAD084_xxx,fc-origination,acquisition_info,fa-
             cnx.commit()
             res = self.webapp.get("/findingaid/%s.csv" % fa.stable_id, status=200)
             expected = """\
-title_label,period_label,publisher_label,unitid_label,eadid_label,bioghist_label,acquisition_info_label,description_label,repository_label,geo_indexes_label
-maindid-title,some hard-to-parse date,fc_service,maindid,FRAD084_xxx,fc-origination,acquisition_info,fa-descr,fc-repo,Paris
+title_label,period_label,publisher_label,unitid_label,bioghist_label,acquisition_info_label,description_label,repository_label,geo_indexes_label,eadid_label
+maindid-title,some hard-to-parse date,fc_service,maindid,fc-origination,acquisition_info,fa-descr,fc-repo,Paris,FRAD084_xxx
 """  # noqa
             self.assertEqual(res.body, expected.encode("utf-8"))
 
     def test_alignement_csv_export(self):
         with self.admin_access.cnx() as cnx:
+            agent = cnx.find("AgentAuthority", label="Jérôme Savonarole").one()
             location_eid = cnx.find("LocationAuthority", label="Paris").one().eid
+            nominarecord_id = cnx.find("NominaRecord").one().stable_id
             res = self.webapp.get("/alignment.csv")
-            expected = """\
-index_entry,index_url,aligned_url
-Paris,http://testing.fr/cubicweb/location/{},https://fr.wikipedia.org/wiki/Paris
-""".format(
-                location_eid
-            )
+            agent = cnx.find("AgentAuthority", label="Jérôme Savonarole").one()
+            expected = f"""index_entry,index_url,aligned_url\nJérôme Savonarole,http://testing.fr/cubicweb/agent/{agent.eid},http://testing.fr/cubicweb/basedenoms/{nominarecord_id}\nParis,http://testing.fr/cubicweb/location/{location_eid},https://fr.wikipedia.org/wiki/Paris\n"""  # noqa
             self.assertEqual(res.body, expected.encode("utf-8"))
 
     def test_indices_agent_csv_export(self):
@@ -549,8 +758,17 @@ index_entry,index_type,documents
             )
             self.assertEqual(res.body, expected.encode("utf-8"))
 
+    def test_authorityrecord_csv_export(self):
+        with self.admin_access.cnx() as cnx:
+            with self.admin_access.cnx() as cnx:
+                ar = create_authority_record(cnx)
+                cnx.commit()
+                res = self.webapp.get(f"/authorityrecord/{ar.record_id}.csv", status=200)
+                expected = f"""FranceArchives link,Name,occupation_label,history_label,general_context_label,record_id_label,publisher\n{ar.absolute_url()},Jean Cocotte,éleveur de poules,Il aimait les poules,,FRAN_NP_006883,Service\n"""  # noqa
+            self.assertEqual(res.body.decode("utf8"), expected)
 
-class FaFCDataMixin(object):
+
+class FaFCDataMixin(S3BfssStorageTestMixin):
     def setup_database(self):
         with self.admin_access.cnx() as cnx:
             ce = cnx.create_entity
@@ -591,6 +809,7 @@ class FaFCDataMixin(object):
             cnx.commit()
             self.fa_eid = fa.eid
             self.facomp_eid = facomp.eid
+            self.subject_eid = valjean.eid
 
 
 class ContentNegociationTests(PostgresTextMixin, FaFCDataMixin, PyramidCWTest):
@@ -601,45 +820,38 @@ class ContentNegociationTests(PostgresTextMixin, FaFCDataMixin, PyramidCWTest):
         if accept_header:
             headers = {"Accept": accept_header}
         res = self.webapp.get(tested_url, status=200, headers=headers)
-        self.assertEqual(res.headers["Content-Type"], mimetype)
+        self.assertIn(mimetype, res.headers["Content-Type"])
         if starts:
             self.assertEqual(res.body[: len(starts)], starts.encode("utf-8"))
+        return res
 
     def test_content_html_response(self):
         with self.admin_access.cnx() as cnx:
             facomp = cnx.find("FAComponent", eid=self.facomp_eid).one()
             url = "/facomponent/{}".format(facomp.stable_id)
             accept = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
-            self.assertCorrectNegociation(
-                accept, url, "text/html;charset=UTF-8", starts="<!doctype html"
-            )
+            self.assertCorrectNegociation(accept, url, "text/html", starts="<!doctype html")
 
     def test_content_rdf_xml_response(self):
         with self.admin_access.cnx() as cnx:
             facomp = cnx.find("FAComponent", eid=self.facomp_eid).one()
             url = "/facomponent/{}".format(facomp.stable_id)
             accept = "application/rdf+xml"
-            self.assertCorrectNegociation(
-                accept, url, "{}; charset=UTF-8".format(accept), starts="<?xml"
-            )
+            self.assertCorrectNegociation(accept, url, accept, starts="<?xml")
 
     def test_content_rdf_n3_response(self):
         with self.admin_access.cnx() as cnx:
             facomp = cnx.find("FAComponent", eid=self.facomp_eid).one()
             url = "/facomponent/{}".format(facomp.stable_id)
             accept = "text/rdf+n3"
-            self.assertCorrectNegociation(
-                accept, url, "{}; charset=UTF-8".format(accept), starts="@prefix"
-            )
+            self.assertCorrectNegociation(accept, url, accept, starts="@prefix")
 
     def test_content_rdf_nt_response(self):
         with self.admin_access.cnx() as cnx:
             fa = cnx.find("FindingAid", eid=self.fa_eid).one()
             url = "/findingaid/{}".format(fa.stable_id)
             accept = "text/plain"
-            self.assertCorrectNegociation(
-                accept, url, "{}; charset=UTF-8".format(accept), starts="<http:"
-            )
+            self.assertCorrectNegociation(accept, url, accept, starts="<http:")
 
     def test_content_rdf_ttl_response(self):
         with self.admin_access.cnx() as cnx:
@@ -653,7 +865,126 @@ class ContentNegociationTests(PostgresTextMixin, FaFCDataMixin, PyramidCWTest):
             fa = cnx.find("FindingAid", eid=self.fa_eid).one()
             url = "/findingaid/{}".format(fa.stable_id)
             accept = "application/ld+json"
-            self.assertCorrectNegociation(accept, url, accept, starts="{")
+            self.assertCorrectNegociation(accept, url, accept, starts="[")
+
+    def test_content_rdf_xml_response_authority(self):
+        with self.admin_access.cnx() as cnx:
+            subj = cnx.find("SubjectAuthority", eid=self.subject_eid).one()
+            url = "/subject/{}".format(subj.eid)
+            accept = "application/rdf+xml"
+            self.assertCorrectNegociation(accept, url, accept, starts="<?xml")
+
+    def test_content_rdf_xml_response_service(self):
+        with self.admin_access.cnx() as cnx:
+            service = cnx.create_entity("Service", code="TEST01", category="L")
+            cnx.commit()
+            service = cnx.find("Service", eid=service.eid).one()
+            url = "/service/{}".format(service.eid)
+            accept = "application/rdf+xml"
+            self.assertCorrectNegociation(accept, url, accept, starts="<?xml")
+
+    def test_content_rdf_xml_response_authorityrecord(self):
+        with self.admin_access.cnx() as cnx:
+            kind_eid = cnx.find("AgentKind", name="authority")[0][0]
+            record = cnx.create_entity(
+                "AuthorityRecord",
+                record_id="FRAN_NP_00644",
+                agent_kind=kind_eid,
+                xml_support="foo",
+                reverse_name_entry_for=cnx.create_entity(
+                    "NameEntry", parts="hi", form_variant="authorized"
+                ),
+            )
+            cnx.commit()
+            record = cnx.find("AuthorityRecord", eid=record.eid).one()
+            url = "/authorityrecord/{}".format(record.record_id)
+            accept = "application/rdf+xml"
+            self.assertCorrectNegociation(accept, url, accept, starts="<?xml")
+
+
+class RDFRoutesTests(PostgresTextMixin, FaFCDataMixin, PyramidCWTest):
+    settings = BASE_SETTINGS
+
+    FORMAT_CONTENTTYPE = {
+        "xml": "application/rdf+xml",
+        "ttl": "text/turtle",
+        "nt": "application/n-triples",
+        "n3": "text/n3",
+        "jsonld": "application/ld+json",
+    }
+
+    def test_facomponent_rdfformat_response(self):
+        with self.admin_access.cnx() as cnx:
+            facomp = cnx.find("FAComponent", eid=self.facomp_eid).one()
+            for rdfformat, content_type in self.FORMAT_CONTENTTYPE.items():
+                url = "/facomponent/{}/rdf.{}".format(facomp.stable_id, rdfformat)
+                res = self.webapp.get(url)
+                self.assertIn(content_type, res.headers["Content-Type"])
+
+    def test_findingaid_rdfformat_response(self):
+        with self.admin_access.cnx() as cnx:
+            fa = cnx.find("FindingAid", eid=self.fa_eid).one()
+            for rdfformat, content_type in self.FORMAT_CONTENTTYPE.items():
+                url = "/findingaid/{}/rdf.{}".format(fa.stable_id, rdfformat)
+                res = self.webapp.get(url)
+                self.assertIn(content_type, res.headers["Content-Type"])
+
+    def test_subject_rdfformat_response(self):
+        with self.admin_access.cnx() as cnx:
+            subject = cnx.find("SubjectAuthority", eid=self.subject_eid).one()
+            for rdfformat, content_type in self.FORMAT_CONTENTTYPE.items():
+                url = "/subject/{}/rdf.{}".format(subject.eid, rdfformat)
+                res = self.webapp.get(url)
+                self.assertIn(content_type, res.headers["Content-Type"])
+
+    def test_agent_rdfformat_response(self):
+        with self.admin_access.cnx() as cnx:
+            agent = cnx.create_entity("AgentAuthority", label="Jean")
+            cnx.commit()
+            agent = cnx.find("AgentAuthority", eid=agent.eid).one()
+            for rdfformat, content_type in self.FORMAT_CONTENTTYPE.items():
+                url = "/agent/{}/rdf.{}".format(agent.eid, rdfformat)
+                res = self.webapp.get(url)
+                self.assertIn(content_type, res.headers["Content-Type"])
+
+    def test_location_rdfformat_response(self):
+        with self.admin_access.cnx() as cnx:
+            location = cnx.create_entity("LocationAuthority", label="Paris")
+            cnx.commit()
+            location = cnx.find("LocationAuthority", eid=location.eid).one()
+            for rdfformat, content_type in self.FORMAT_CONTENTTYPE.items():
+                url = "/location/{}/rdf.{}".format(location.eid, rdfformat)
+                res = self.webapp.get(url)
+                self.assertIn(content_type, res.headers["Content-Type"])
+
+    def test_service_rdfformat_response(self):
+        with self.admin_access.cnx() as cnx:
+            service = cnx.create_entity("Service", code="TEST01", category="L")
+            cnx.commit()
+            service = cnx.find("Service", eid=service.eid).one()
+            for rdfformat, content_type in self.FORMAT_CONTENTTYPE.items():
+                url = "/service/{}/rdf.{}".format(service.eid, rdfformat)
+                res = self.webapp.get(url)
+                self.assertIn(content_type, res.headers["Content-Type"])
+
+    def test_rdfformat_authorityrecord(self):
+        with self.admin_access.cnx() as cnx:
+            kind_eid = cnx.find("AgentKind", name="authority")[0][0]
+            record = cnx.create_entity(
+                "AuthorityRecord",
+                record_id="FRAN_NP_00644",
+                agent_kind=kind_eid,
+                xml_support="foo",
+                reverse_name_entry_for=cnx.create_entity(
+                    "NameEntry", parts="hi", form_variant="authorized"
+                ),
+            )
+            cnx.commit()
+            record = cnx.find("AuthorityRecord", eid=record.eid).one()
+            for rdfformat, content_type in self.FORMAT_CONTENTTYPE.items():
+                url = "/authorityrecord/{}/rdf.{}".format(record.record_id, rdfformat)
+                res = self.webapp.get(url)
+                self.assertIn(content_type, res.headers["Content-Type"])
 
 
 if __name__ == "__main__":

@@ -123,7 +123,7 @@ class OaiEadImportTC(EADImportMixin, PostgresTextMixin, OaiSickleMixin, CubicWeb
             else:
                 filename = prefix + ".xml"
             file_path = os.path.join(self.path, filename)
-            self.assertTrue(os.path.exists(file_path))
+            self.assertTrue(self.fileExists(file_path))
 
     def test_import_no_header(self):
         """Test OAI EAD standard importing.
@@ -155,6 +155,24 @@ class OaiEadImportTC(EADImportMixin, PostgresTextMixin, OaiSickleMixin, CubicWeb
             self.assertCountEqual(eadids, result_set)
             self.assertEqual(2, len(result_set))
 
+    def test_import_https(self):
+        """Test OAI EAD standard importing.
+
+        Trying: import a file with a OAI namespace starting with https.
+        Expecting: 1 FindingAid is created
+        """
+        with self.admin_access.cnx() as cnx:
+            self.filename = "oai_namespace_with_https.xml"
+            url = "file://{}?verb=ListRecords&metadataPrefix=ead".format(self.filepath())
+            oai.import_oai(cnx, url, self.service_infos)
+            with open(self.filepath()) as fp:
+                element_tree = etree.parse(fp)
+            eadids = [eadid.text for eadid in element_tree.findall(".//{*}eadid")]
+            rql = "Any E WHERE X is FindingAid, X eadid E"
+            result_set = [result[0] for result in cnx.execute(rql)]
+            self.assertCountEqual(eadids, result_set)
+            self.assertEqual(1, len(result_set))
+
     def test_import_no_eadid(self):
         """Test OAI EAD standard importing.
 
@@ -172,6 +190,22 @@ class OaiEadImportTC(EADImportMixin, PostgresTextMixin, OaiSickleMixin, CubicWeb
             result_set = [result[0] for result in cnx.execute(rql)]
             self.assertCountEqual(eadids, result_set)
             self.assertEqual(2, cnx.find("FindingAid").rowcount)
+
+    def test_import_duplicate_c_id(self):
+        """Test OAI EAD standard importing.
+
+        Trying: import 2 records one of which has a duplicate c@id
+        Expecting: 1 FindingAid is created
+        """
+        with self.admin_access.cnx() as cnx:
+            self.filename = "duplicate_c_id.xml"
+            url = "file://{}?verb=ListRecords&metadataPrefix=ead".format(self.filepath())
+            oai.import_oai(cnx, url, self.service_infos)
+            with open(self.filepath()) as fp:
+                element_tree = etree.parse(fp)
+            self.assertEqual(2, len(element_tree.findall(".//{*}c[@id='the-id']")))
+            fi = cnx.find("FindingAid").one()
+            self.assertEqual("FRAD051_204M", fi.eadid)
 
     def test_import_no_archdesc(self):
         """Test OAI EAD standard importing.
@@ -351,11 +385,38 @@ class OaiEadImportTC(EADImportMixin, PostgresTextMixin, OaiSickleMixin, CubicWeb
             self.filename = "oai_ead_sample.xml"
             url = "file://{}?verb=ListRecords&metadataPrefix=ead".format(self.filepath())
             oai.import_oai(cnx, url, self.service_infos)
-            filenames = [f.encode("utf-8") for f in glob.glob(os.path.join(self.path, "*.xml"))]
-            rql = "Any FSPATH(D) WHERE X findingaid_support F, F data D"
-            result_set = [result[0].read() for result in cnx.execute(rql)]
-            self.assertCountEqual(filenames, result_set)
             self.assertEqual(2, cnx.find("FindingAid").rowcount)
+            if self.s3_bucket_name:
+                expected_fpaths = [
+                    b"tmp/FRAD051/oaipmh/ead/FRAD051_000000028_203M.xml",
+                    b"tmp/FRAD051/oaipmh/ead/FRAD051_204M.xml",
+                ]
+            else:
+                expected_fpaths = [
+                    f.encode("utf-8") for f in glob.glob(os.path.join(self.path, "*.xml"))
+                ]
+            fpaths = [
+                row[0].getvalue()
+                for row in cnx.execute("Any FSPATH(D) WHERE X findingaid_support F, F data D")
+            ]
+            self.assertCountEqual(expected_fpaths, fpaths)
+            for fpath in fpaths:
+                self.assertTrue(self.fileExists(fpath))
+
+    def test_findingaid_support_hash_import_oai(self):
+        """
+        Trying: OAI EAD standard import
+        Expecting: findingaid_support data_hash is correctly set
+        """
+        with self.admin_access.cnx() as cnx:
+            self.filename = "oai_ead_sample.xml"
+            url = "file://{}?verb=ListRecords&metadataPrefix=ead".format(self.filepath())
+            oai.import_oai(cnx, url, self.service_infos)
+            fa_supports = list(cnx.execute("Any X WHERE F findingaid_support X").entities())
+            self.assertEqual(2, len(fa_supports))
+            for fa_support in fa_supports:
+                self.assertEqual(fa_support.data_hash, fa_support.compute_hash())
+                self.assertTrue(fa_support.check_hash())
 
     def test_reimport_findingaid_support(self):
         """Test EAD re-import based on XML files.
@@ -367,18 +428,19 @@ class OaiEadImportTC(EADImportMixin, PostgresTextMixin, OaiSickleMixin, CubicWeb
             self.filename = "oai_ead_sample.xml"
             url = "file://{}?verb=ListRecords&metadataPrefix=ead".format(self.filepath())
             oai.import_oai(cnx, url, self.service_infos)
-            rql = "Any E, FSPATH(D) WHERE X findingaid_support F, F data D," " X eadid E"
+            rql = "Any E, FSPATH(D) WHERE X findingaid_support F, F data D, X eadid E"
             result_set = [(result[0], result[1].read()) for result in cnx.execute(rql)]
-            filenames = [result[1] for result in result_set]
+            filepaths = [result[1] for result in result_set]
             eadids = [result[0] for result in result_set]
-            for filename in filenames:
-                sqlutil.delete_from_filename(cnx, filename, interactive=False, esonly=False)
+            for filepath in filepaths:
+                sqlutil.delete_from_filename(cnx, filepath, interactive=False, esonly=False)
             cnx.commit()
-            rql = "Any X WHERE X is FindingAid"
-            assert not cnx.execute(rql), "at least one FindingAid in database"
+            assert not cnx.find("FindingAid"), "at least one FindingAid in database"
+            assert not cnx.find("File"), "at least one CWFile in database"
             rql = "Any E WHERE X is FindingAid, X eadid E"
-            for filename in filenames:
-                self.import_filepath(cnx, filename)
+            for filepath in filepaths:
+                self.assertTrue(self.fileExists(filepath))
+                self.import_filepath(cnx, filepath.decode("utf-8"))
             actual = [row[0] for row in cnx.execute(rql)]
             self.assertEqual(actual, eadids)
 
@@ -386,13 +448,14 @@ class OaiEadImportTC(EADImportMixin, PostgresTextMixin, OaiSickleMixin, CubicWeb
         """Test EAD re-import based on XML files.
 
         Trying: import a stored OAI EAD file from `FR_920509801` service
-        Expecting: the createed FindingAid is related to right `FR_920509801` service
+        Expecting: the created FindingAid is related to right `FR_920509801` service
         """
         with self.admin_access.cnx() as cnx:
             service = cnx.create_entity("Service", code="FR_920509801", category="foo")
             cnx.commit()
             self.filename = "FR_920509801_3000_3.xml"
-            self.import_filepath(cnx, self.filepath())
+            fpath = self.get_filepath_by_storage(os.path.join("oai_ead", self.filename))
+            self.import_filepath(cnx, fpath)
             fa = cnx.find("FindingAid").one()
             self.assertEqual(fa.related_service, service)
             self.assertEqual(fa.reverse_entity[0].doc["publisher"], service.code)
@@ -405,7 +468,8 @@ class OaiEadImportTC(EADImportMixin, PostgresTextMixin, OaiSickleMixin, CubicWeb
             self.filename = "oai_ead_sample.xml"
             url = "file://{}?verb=ListRecords&metadataPrefix=ead".format(self.filepath())
             oai.import_oai(cnx, url, self.service_infos)
-            rql = "Any E, FSPATH(D) WHERE X findingaid_support F, F data D," " X eadid E"
+            rql = """Any E, FSPATH(D) WHERE X findingaid_support F,
+                     F data D, X eadid E"""
             for fi in cnx.find("FindingAid").entities():
                 self.assertEqual(fi.stable_id, usha1(fi.name))
             rset = cnx.execute(rql).rows
@@ -416,7 +480,7 @@ class OaiEadImportTC(EADImportMixin, PostgresTextMixin, OaiSickleMixin, CubicWeb
                 sqlutil.delete_from_filename(cnx, fs_path, interactive=False, esonly=False)
             cnx.commit()
             for fs_path in fs_paths:
-                self.import_filepath(cnx, fs_path)
+                self.import_filepath(cnx, fs_path.decode("utf-8"))
             actual = [row[0] for row in cnx.execute("Any E WHERE X is FindingAid, X eadid E")]
             self.assertEqual(actual, eadids)
 
@@ -431,41 +495,6 @@ class OaiEadImportTC(EADImportMixin, PostgresTextMixin, OaiSickleMixin, CubicWeb
             fi2 = cnx.find("FindingAid", eadid="FRAD051_204M").one()
             self.assertEqual(fi2.name, "FRAD051_204M.xml")
             self.assertEqual(fi2.stable_id, usha1(fi2.name))
-
-    def test_legacy_name_stable_id_ead(self):
-        """Import a FindingAid with old fashion stable_id
-        And reimport the same files with new stable_id
-        """
-        with self.admin_access.cnx() as cnx:
-            self.filename = "oai_ead_sample.xml"
-            url = "file://{}?verb=ListRecords&metadataPrefix=ead".format(self.filepath())
-            oai.import_oai(cnx, url, self.service_infos)
-            self.assertEqual(2, cnx.find("FindingAid").rowcount)
-            fa1 = cnx.find("FindingAid", eadid="FRAD051_000000028_203M").one()
-            old_values1 = {
-                "eadid": "FRAD051_000000028_203M",
-                "stable_id": "1361d0b0f4a422024c6be0dbbd13d09edeeb110e",
-                "name": "FRAD051_000000028_203M",
-            }
-            fa1.cw_set(**old_values1)
-            fa2 = cnx.find("FindingAid", eadid="FRAD051_204M").one()
-            old_values2 = {
-                "eadid": "FRAD051_204M",
-                "stable_id": "5d980152d66d1819e89c2cc2cf28701765b71681",
-                "name": "FRAD051_204M",
-            }
-            fa2.cw_set(**old_values2)
-            cnx.commit()
-            oai.import_oai(cnx, url, self.service_infos)
-            self.assertEqual(2, cnx.find("FindingAid").rowcount)
-            fa1 = cnx.find("FindingAid", eadid="FRAD051_000000028_203M").one()
-            self.assertEqual(fa1.name, "FRAD051_000000028_203M.xml")
-            self.assertEqual(fa1.eadid, "FRAD051_000000028_203M")
-            self.assertEqual(fa1.stable_id, usha1(fa1.name))
-            fa2 = cnx.find("FindingAid", eadid="FRAD051_204M").one()
-            self.assertEqual(fa2.name, "FRAD051_204M.xml")
-            self.assertEqual(fa2.eadid, "FRAD051_204M")
-            self.assertEqual(fa2.stable_id, usha1(fa2.name))
 
     def test_oai_ead_reimport(self):
         """Test OAI EAD re-import
@@ -496,7 +525,7 @@ class OaiEadImportTC(EADImportMixin, PostgresTextMixin, OaiSickleMixin, CubicWeb
             oai.import_oai(cnx, url, self.service_infos)
             fa_stable_id = "060b7c36d487ba217d46f8fdfe3e7e40084f90d2"
             fa_old = cnx.execute("Any X WHERE X stable_id %(s)s", {"s": fa_stable_id}).one()
-            comp_stable_id = "3d4aaccbe957e7e1134096cccd5610019572968c"
+            comp_stable_id = "2696ef61cfafde6fab2e8ca4df9da094015fa444"
             comp_old = cnx.execute("Any X WHERE X stable_id %(s)s", {"s": comp_stable_id}).one()
             # FindingAid
             adapter = fa_old.cw_adapt_to("IFullTextIndexSerializable")
@@ -584,7 +613,7 @@ class OaiEadImportTC(EADImportMixin, PostgresTextMixin, OaiSickleMixin, CubicWeb
             )
             fa = cnx.find("FindingAid", eadid="FRAD051_204M").one()
             self.assertCountEqual(
-                {"GUERRE 1939-1945", "Recherche détaillée"},
+                {"GUERRE 1939-1945", "Recherche détaillée", "Document d'archives"},
                 {subject.label for subject in fa.subject_indexes().entities()},
             )
             self.assertIn("BAUDIN", fa.bibliography)
@@ -616,7 +645,12 @@ class OaiEadImportTC(EADImportMixin, PostgresTextMixin, OaiSickleMixin, CubicWeb
             self.assertEqual(fa.bibliography, None)
             self.assertCountEqual(
                 {subject.label for subject in fa.subject_indexes().entities()},
-                {"GUERRE 1939-1945", "La guerre de 39", "Recherche détaillée"},
+                {
+                    "GUERRE 1939-1945",
+                    "La guerre de 39",
+                    "Recherche détaillée",
+                    "Document d'archives",
+                },
             )
 
     def test_create_ape_ead_file(self):
@@ -743,6 +777,8 @@ class OaiEadImportTC(EADImportMixin, PostgresTextMixin, OaiSickleMixin, CubicWeb
                 cnx,
                 url,
                 index_policy=None,
+                records_limit=None,
+                dry_run=False,
                 log=logging.getLogger("rq.task"),
                 service_infos=self.service_infos,
             )
@@ -755,23 +791,20 @@ class OaiEadImportTC(EADImportMixin, PostgresTextMixin, OaiSickleMixin, CubicWeb
     def test_from_parameter_last_succcessful_import(self, import_oai):
         """check _from parameter is inserted when re-harvesting"""
         with self.admin_access.cnx() as cnx:
+            # the last successful import date is set in the frarchives-edition
+            # oai import scripts
             repo = self.create_repo(
                 cnx, url="http://oai.frad051.fr/?verb=ListRecords&metadataPrefix=ape_ead"
             )
-            # create a successful import task in the past and make sure _from
-            # is set accordingly on next harvesting
-            task = cnx.create_entity("OAIImportTask", oai_repository=repo)
+            repo.cw_set(last_successful_import=datetime(2001, 2, 3))
             cnx.commit()
-            twf = task.cw_adapt_to("IWorkflowable")
-            twf.fire_transition("wft_faimport_complete")
-            task.cw_clear_all_caches()
-            trinfo = twf.latest_trinfo()
-            trinfo.cw_set(creation_date=datetime(2001, 2, 3))
             oai.import_delta(cnx, repo.eid)
             import_oai.assert_called_with(
                 cnx,
                 "http://oai.frad051.fr/?verb=ListRecords&metadataPrefix=ape_ead&from=2001-02-03",
                 index_policy=None,
+                records_limit=None,
+                dry_run=False,
                 log=logging.getLogger("rq.task"),
                 service_infos=self.service_infos,
             )
@@ -808,7 +841,7 @@ class OaiEadImportTC(EADImportMixin, PostgresTextMixin, OaiSickleMixin, CubicWeb
             adapted = fa.cw_adapt_to("IFullTextIndexSerializable")
             comp = cnx.execute("Any X LIMIT 1 WHERE X is FAComponent").one()
             comp_adapted = comp.cw_adapt_to("IFullTextIndexSerializable")
-            for attr in ("dates", "sortdate", "stopyear", "startyear"):
+            for attr in ("sortdate", "stopyear", "startyear"):
                 self.assertIn(attr, adapted.serialize())
                 self.assertIn(attr, comp_adapted.serialize())
 

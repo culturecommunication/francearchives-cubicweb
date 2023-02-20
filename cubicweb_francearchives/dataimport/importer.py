@@ -43,7 +43,6 @@ from cubicweb.dataimport.stores import RQLObjectStore
 from cubicweb_francearchives import admincnx, init_bfss
 from cubicweb_francearchives.dataimport import (
     capture_exception,
-    create_ead_index_table,
     es_bulk_index,
     FakeQueue,
     init_sentry_client,
@@ -150,7 +149,6 @@ def import_filepaths(cnx, filepaths, config, store=None):
     if not config["esonly"]:
         store = store or create_massive_store(cnx, nodrop=config["nodrop"])
         store.master_init()
-        create_ead_index_table(cnx)
         if config["nodrop"]:
             with sqlutil.sudocnx(cnx, interactive=False) as su_cnx:
                 sqlutil.disable_triggers(su_cnx, foreign_key_tables)

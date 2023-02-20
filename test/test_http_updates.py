@@ -38,7 +38,7 @@ from cubicweb.devtools import PostgresApptestConfiguration
 from cubicweb.pyramid.test import PyramidCWTest
 
 from cubicweb_francearchives.pviews.edit import load_json_value
-from cubicweb_francearchives.testutils import HashMixIn, PostgresTextMixin
+from cubicweb_francearchives.testutils import S3BfssStorageTestMixin, PostgresTextMixin
 from pgfixtures import setup_module, teardown_module  # noqa
 
 
@@ -68,7 +68,7 @@ class EditRoutesMixin(object):
         config.include("cubicweb_francearchives.pviews.edit")
 
 
-class NewsTests(PostgresTextMixin, HashMixIn, EditRoutesMixin, PyramidCWTest):
+class NewsTests(PostgresTextMixin, S3BfssStorageTestMixin, EditRoutesMixin, PyramidCWTest):
     configcls = PostgresApptestConfiguration
 
     def test_newscontent_creation(self):
@@ -674,7 +674,7 @@ class MoveTests(EditRoutesMixin, PyramidCWTest):
             self.assertEqual(article.reverse_children[0].name, "sect-1")
 
 
-class DeleteTests(PostgresTextMixin, HashMixIn, EditRoutesMixin, PyramidCWTest):
+class DeleteTests(PostgresTextMixin, S3BfssStorageTestMixin, EditRoutesMixin, PyramidCWTest):
     configcls = PostgresApptestConfiguration
 
     def test_delete_newscontent(self):

@@ -1,2 +1,7 @@
+<div class="document-view">
 <h1>{{ title }}</h1>
+{% if a11y_alert %}
+     <p class="visually-hidden d-print-none">{{ a11y_alert }}</p>
+{% endif %}
 <div id="fa-map" data-markerurl="{{ markerurl }}" data-icon-url="{{ iconurl }}"></div>
+</div>

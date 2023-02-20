@@ -45,16 +45,15 @@ class NewsLetterView(StartupView):
         card = find_card(self._cw, self.__regid__)
         if card is not None:
             self.wview("primary", entity=card)
-        with T.div(self.w, Class="row"):
-            with T.div(self.w, Class="col-md-9"):
-                self.w(
-                    T.iframe(
-                        id="newsletter-frame",
-                        width="100%",
-                        frameborder="0",
-                        scrolling="no",
-                        marginheight="0",
-                        marginwidth="0",
-                        src="https://app.mailjet.com/widget/iframe/5Wl9/FtC",
-                    )
+        with T.div(self.w, Class="document-view"):
+            self.w(
+                T.iframe(
+                    id="newsletter-frame",
+                    width="100%",
+                    frameborder="0",
+                    scrolling="no",
+                    marginheight="0",
+                    marginwidth="0",
+                    src="https://app.mailjet.com/widget/iframe/5Wl9/FtC",
                 )
+            )

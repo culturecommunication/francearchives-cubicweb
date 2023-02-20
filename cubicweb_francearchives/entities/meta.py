@@ -31,7 +31,7 @@
 
 from logilab.common.decorators import cachedproperty
 
-from cubicweb.view import EntityAdapter, Adapter
+from cubicweb.entity import EntityAdapter, Adapter
 from cubicweb.predicates import match_kwargs
 
 from cubicweb_francearchives.views import twitter_account_name

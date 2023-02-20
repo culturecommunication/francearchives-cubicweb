@@ -1,0 +1,10 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rico: <https://www.ica.org/standards/RiC/ontology#> .
+
+<http://testing.fr/cubicweb/location/{{nhatran}}> a rico:Place ;
+    owl:sameAs <http://www.geonames.org/1572151> ;
+    rico:isOrWasContainedBy <http://testing.fr/cubicweb/location/{{vietnam}}> ;
+    rico:name "Nha Tran (Vietnam)" .
+
+<http://testing.fr/cubicweb/location/{{vietnam}}> rico:containsOrContained <http://testing.fr/cubicweb/location/{{nhatran}}> .
+

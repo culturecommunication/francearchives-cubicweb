@@ -20,11 +20,15 @@ h2.no-style a.glossary-term {
 
 .glossary-alphabet-sticky {
   margin-top: 1em;
+  position: sticky;
+  flex:1;
+  height: 100%;
+  top: 0;
 }
 
 .glossary-alphabet {
   text-align: center;
-  min-height: calc(30vh);
+  padding-top: 2rem;
 
   a {
     display: inline-block;
@@ -32,8 +36,9 @@ h2.no-style a.glossary-term {
     padding: 2px;
     color: #353535;
     text-transform: uppercase;
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     border: none;
+    font-weight: 600;
    }
 
 
@@ -50,11 +55,11 @@ h2.no-style a.glossary-term {
 }
 
 .glossary-letter {
-  color:  $dark-dodger-blue;
+  color: $royal-blue;
   text-transform: uppercase;
   text-align: center;
   font-size: 2rem;
-  margin: 0em 0;
+  margin: 0em;
   padding: 0.5em;
 }
 
@@ -83,5 +88,5 @@ a.edit-link {
 .dead-link {
   pointer-events: none;
   border-bottom: none;
-  color: #333;
+  color: $dark-grey;
 }

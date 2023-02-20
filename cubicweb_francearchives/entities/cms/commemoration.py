@@ -28,53 +28,55 @@
 # The fact that you are presently reading this means that you have had
 # knowledge of the CeCILL-C license and that you accept its terms.
 #
-from logilab.common.decorators import cachedproperty
-
 from cubicweb.entities import fetch_config
 
 from cubicweb_francearchives.entities.cms import CmsObject, TranslatableCmsObject, TranslationMixin
 from cubicweb_francearchives.entities.cms import RelatedAutorityIndexableMixin
 
 
-class CommemoCollection(CmsObject):
-    __regid__ = "CommemoCollection"
-    fetch_attrs, cw_fetch_order = fetch_config(
-        ["order", "title", "subtitle", "content", "short_description", "year"], order="DESC"
-    )
-    image_rel_name = "section_image"
-
-    def rest_path(self, use_ext_eid=False):
-        return "commemo/recueil-{}/".format(self.year)
-
-    def breadcrumbs_title(self):
-        return self.dc_title()
-
-
 class CommemorationItem(RelatedAutorityIndexableMixin, TranslatableCmsObject):
     __regid__ = "CommemorationItem"
     image_rel_name = "commemoration_image"
     i18nfields = ("title", "subtitle", "content")
+    fetch_attrs, cw_fetch_order = fetch_config(
+        ["title", "subtitle", "content", "commemoration_year", "start_year", "stop_year", "summary"]
+    )
+    rest_attr = "eid"
 
     def dc_title(self):
         if self._cw.lang == "fr":
             return self.title
         return self.cw_adapt_to("ITemplatable").entity_param().title
 
-    @cachedproperty
-    def collection(self):
-        return self.collection_top[0]
-
     def rest_path(self, use_ext_eid=False):
-        return "commemo/recueil-{}/{}".format(self.commemoration_year, self.eid)
+        return "pages_histoire/{}".format(self.eid)
 
     def author_indexes(self):
-
         return self._cw.execute(
             "DISTINCT Any X, XL WHERE E eid %(e)s, "
             "E related_authority X, X label XL, X is AgentAuthority",
             {"e": self.eid},
         )
 
+    @property
+    def dates(self):
+        dates = [self.start_year, self.stop_year]
+        return " - ".join(str(e) for e in dates if e is not None)
+
+    @property
+    def printable_content(self):
+        content = self.printable_value("content") or ""
+        if self.commemoration_year:
+            content += f"""
+            <p class="commemorationitem-source">
+            {self._cw._("Source: Commemorations Collection")} { self.commemoration_year }
+            </p>"""  # noqa
+        return content
+
 
 class CommemorationItemTranslation(TranslationMixin, CmsObject):
     __regid__ = "CommemorationItemTranslation"
+
+    @property
+    def summary_policy(self):
+        return self.original_entity.summary_policy

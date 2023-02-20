@@ -35,12 +35,16 @@ from lxml import etree
 import unittest
 
 from cubicweb import Binary
-from cubicweb import __pkginfo__
 from cubicweb.pyramid.test import PyramidCWTest
 
 
 from cubicweb_francearchives.dataimport import usha1
-from cubicweb_francearchives.testutils import PostgresTextMixin, XMLCompMixin, HashMixIn
+from cubicweb_francearchives.testutils import (
+    PostgresTextMixin,
+    XMLCompMixin,
+    S3BfssStorageTestMixin,
+)
+
 from pgfixtures import setup_module, teardown_module  # noqa
 
 
@@ -48,9 +52,6 @@ class OAITestMixin(object):
     def oai_component(self, cnx):
         """Return the "oai" component"""
         return self.vreg["components"].select("oai", cnx)
-
-
-CW_324 = __pkginfo__.numversion < (3, 25)
 
 
 def no_validate_xml(method):
@@ -80,14 +81,6 @@ class OAIPMHViewsTC(PostgresTextMixin, PyramidCWTest, OAITestMixin):
         "cubicweb.auth.authtkt.session.secret": "x",
         "cubicweb.auth.authtkt.persistent.secret": "x",
     }
-
-    if CW_324:
-        # webapp is initialized with https as url scheme, which trigger usage of https-url instead
-        # of base-url in 3.24, but tests below rely in base-url being used.
-        @classmethod
-        def init_config(cls, config):
-            super(PyramidCWTest, cls).init_config(config)
-            config.global_set_option("https-url", config["base-url"])
 
     def assertXmlValid(self, xml_data, xsd_filename, debug=False):
         """Validate an XML file (.xml) according to an XML schema (.xsd)."""
@@ -214,7 +207,7 @@ class OAIPMHViewsTC(PostgresTextMixin, PyramidCWTest, OAITestMixin):
             self.facomp_eid = facomp.eid
 
 
-class OAIEADViewsTC(HashMixIn, XMLCompMixin, OAIPMHViewsTC):
+class OAIEADViewsTC(S3BfssStorageTestMixin, XMLCompMixin, OAIPMHViewsTC):
     def setup_database(self):
         super(OAIEADViewsTC, self).setup_database()
         with self.admin_access.cnx() as cnx:
@@ -330,7 +323,7 @@ class OAIEADViewsTC(HashMixIn, XMLCompMixin, OAIPMHViewsTC):
                 ape_ead_file=ce(
                     "File",
                     data_format="application/xml",
-                    data_name=filepath,
+                    data_name=f"{filepath}",
                     data=Binary(fa_content),
                 ),
                 fa_header=fa_header,

@@ -30,6 +30,8 @@
 # knowledge of the CeCILL-C license and that you accept its terms.
 #
 
+from os import path
+
 
 def includeme(config):
     config.include(".renderer")
@@ -37,4 +39,17 @@ def includeme(config):
     config.include(".esroutes")
     config.include(".faroutes")
     config.include(".cwroutes")
+    config.include(".tour_routes")
+    config.include(".maproutes")
+    config.include(".nominaroutes")
     config.include("cubicweb_oaipmh.views")
+    config.include("cubicweb_prometheus.views")
+    # Add 'appstatic' served directory with a version-hash-cache-buster path:
+    # - with 1 week expiry when in non debug mode
+    # - without any cache header in debug mode
+    cwconfig = config.registry["cubicweb.config"]
+    static_url = "/appstatic/" + cwconfig.instance_md5_version()
+    max_age = 7 * 24 * 60 * 60 if not cwconfig.debugmode else None
+    config.add_static_view(
+        name=static_url, path=path.join(cwconfig.apphome, "appstatic"), cache_max_age=max_age
+    )

@@ -28,13 +28,19 @@
 # The fact that you are presently reading this means that you have had
 # knowledge of the CeCILL-C license and that you accept its terms.
 #
-import os.path as osp
-from itertools import chain
-from glob import glob
-import re
+from babel.messages.frontend import extract_messages
 import csv
+from itertools import chain
+import json
+from glob import glob
 import logging
+import os
+import os.path as osp
+import re
 
+
+from cubicweb import cwctl
+from cubicweb.cwconfig import CubicWebConfiguration as cwcfg
 from cubicweb.devtools import devctl
 
 import cubicweb_francearchives as cwfa
@@ -220,16 +226,101 @@ def update_i18n_catalogs(po_files, csv_filename, autosave=True, skip_msgctxt=Tru
     return po_dicts
 
 
-class FranceArchivesMessageExtractor(devctl.I18nCubeMessageExtractor):
+HERE = osp.abspath(osp.dirname(__file__))
 
-    formats = devctl.I18nCubeMessageExtractor.formats + ["jinja2"]
+
+def add_context_to(context, path):
+    po = polib.pofile(path)
+    for entry in po:
+        if not entry.msgctxt:
+            entry.msgctxt = context
+    po.save()
+    return path
+
+
+class FranceArchivesMessageExtractor(devctl.I18nCubeMessageExtractor):
+    formats = devctl.I18nCubeMessageExtractor.formats + ["jinja2", "appjs"]
 
     def collect_jinja2(self):
         return self.find(".jinja2")
 
+    def collect_appjs(self):
+        return (osp.join(HERE, "..", "appjs"),)
+
     def extract_jinja2(self, files):
         return self._xgettext(files, output="jinja.pot", extraopts="-L python --from-code=utf-8")
 
+    def extract_appjs(self, paths):
+        print("*" * 100)
+        print(paths)
+        potfile = self._run_babel_cmd(
+            "appjs.pot", input_paths=paths, keywords={"t": None, "_": None, "translate": None}
+        )
+        return add_context_to("appjs", potfile)
+
+    def _run_babel_cmd(self, pot_fname, **options):
+        options["output_file"] = osp.join(self.workdir, pot_fname)
+        options.setdefault("no_location", True)
+        options.setdefault("directory_filter", None)
+        options.setdefault("add_comments", ())
+        options.setdefault("no_default_keywords", True)
+        options.setdefault("mapping_file", osp.join(HERE, "babel.cfg"))
+        cmd = extract_messages()
+        for attr, value in options.items():
+            setattr(cmd, attr, value)
+        cmd.run()
+        return options["output_file"]
+
+
+class RecompileInstanceCatalogsCommand(cwctl.InstanceCommand):
+    """Recompile i18n catalogs for instances.
+
+    <instance>...
+      identifiers of the instances to consider. If no instance is
+      given, recompile for all registered instances.
+    """
+
+    name = "i18ninstance"
+
+    @staticmethod
+    def i18ninstance_instance(appid):
+        """recompile instance's messages catalogs"""
+        config = cwcfg.config_for(appid)
+        config.quick_start = True  # notify this is not a regular start
+        repo = config.repository()
+        if config._cubes is None:
+            # web only config
+            config.init_cubes(repo.get_cubes())
+        errors = config.i18ncompile()
+        if errors:
+            print("\n".join(errors))
+        else:
+            RecompileInstanceCatalogsCommand._generate_js_translations(config)
+
+    @staticmethod
+    def _generate_js_translations(config):
+        js_content_template = "window.TRANSLATIONS = %s;\n"
+
+        static_i18n = osp.join(config.apphome, "appstatic", "i18n")
+        if not osp.exists(static_i18n):
+            os.makedirs(static_i18n)
+        print("-> compiling message js-specific catalogs to %s" % static_i18n)
+
+        for lang in config.available_languages():
+            mo = osp.join(config.apphome, "i18n", lang, "LC_MESSAGES", "cubicweb.mo")
+
+            js = osp.join(static_i18n, lang + ".js")
+            with open(js, "w") as f:
+                f.write(
+                    js_content_template
+                    % json.dumps(
+                        {e.msgid: e.msgstr for e in polib.mofile(mo) if e.msgctxt == "appjs"},
+                        indent=4,
+                    )
+                )
+
+
+cwctl.CWCTL.register(RecompileInstanceCatalogsCommand)
 
 try:
     import polib
@@ -237,7 +328,6 @@ except ImportError:  # polib is only required in dev mode
 
     def register_cwctl_commands():
         pass
-
 
 else:
     from cubicweb.cwctl import CWCTL

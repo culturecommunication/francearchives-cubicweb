@@ -30,7 +30,6 @@
 #
 from collections import defaultdict
 
-from lxml import etree
 
 from os import path as osp
 
@@ -38,63 +37,14 @@ from logilab.common.decorators import cachedproperty, cached
 
 from cubicweb.predicates import is_instance
 
-from cubicweb_francearchives.views import exturl_link
 from cubicweb_francearchives.dataimport import remove_extension
 from cubicweb_francearchives.utils import cut_words
 
 from cubicweb_francearchives.entities.adapters import EntityMainPropsAdapter
 
 
-from cubicweb_francearchives.utils import remove_html_tags, reveal_glossary
-from cubicweb_francearchives.xmlutils import process_html_as_xml, fix_fa_external_links
-
-from cubicweb_francearchives.views import load_portal_config
-from cubicweb_francearchives.views.xiti import pagename_from_chapters
-
-
-@process_html_as_xml
-def fix_links(root, cnx, labels=None):
-    """take html as first argument `root`. This argument is then transformed
-    in etree root by process_html_as_xml
-
-    """
-    fix_fa_external_links(root, cnx)
-    if labels:
-        insert_labels(cnx, root, labels)
-    else:
-        translate_labels(cnx, root)
-
-
-def insert_labels(cnx, root, labels):
-    for label in labels:
-        _class = "ead-section ead-%s" % label
-        for parent in root.xpath("//div[@class='%s']" % _class):
-            # test the empty parent
-            if not any(r.strip() for r in parent.xpath(".//child::*/text()")):
-                continue
-            if not parent.xpath(".//div[@class='ead-label']"):
-                div = '<div class="ead-label">%s</div>' % cnx._("%s_label" % label)
-                parent.insert(0, etree.XML(div))
-
-
-def translate_labels(cnx, root):
-    for node in root.xpath("//div[@class='ead-label']"):
-        node.text = cnx._(node.text)
-
-
-def format_html(html, text_format="text/html"):
-    if html and remove_html_tags(html).strip():
-        if text_format != "text/html":
-            # XXX use mtc_transform
-            return remove_html_tags(html).strip()
-        return html
-    return None
-
-
-def process_html(cnx, html, text_format="text/html", labels=None):
-    processed = fix_links(html, cnx, labels)
-    if processed:
-        return format_html(processed, text_format)
+from cubicweb_francearchives.utils import reveal_glossary
+from cubicweb_francearchives.xmlutils import process_html
 
 
 def process_title(title):
@@ -108,19 +58,11 @@ class AbstractFAEntityMainPropsAdapter(EntityMainPropsAdapter):
     __regid__ = "entity.main_props"
     __abstract__ = True
 
-    @cachedproperty
-    def portal_config(self):
-        return load_portal_config(self._cw.vreg.config)
-
     def __init__(self, _cw, **kwargs):
         fmt = kwargs.get("fmt", {"text": "text/html", "vid": "incontext"})
         self.text_format = fmt["text"]
         self.vid = fmt["vid"]
         super(AbstractFAEntityMainPropsAdapter, self).__init__(_cw, **kwargs)
-
-    def clean_value(self, entity, attr):
-        """skip data containing html tags without actual value"""
-        return process_html(self._cw, entity.printable_value(attr), text_format=self.text_format)
 
     @cached
     def shortened_title(self, max_length=130):
@@ -169,14 +111,15 @@ class AbstractFAEntityMainPropsAdapter(EntityMainPropsAdapter):
 
     @cachedproperty
     def dates(self):
+        if self.no_xml_attachment:
+            return self.did.unitdate or self.did.period
         if self.did.period:
             return self.did.period
         return self.did.unitdate
 
     def languages(self, did):
-        desc = did.lang_description
-        if desc and did.lang_code not in ("fre", "fr", "français"):
-            return desc
+        if did.lang_description and did.lang_code not in ("fre", "fr", "français"):
+            return self.clean_value(did, "lang_description")
 
     @cachedproperty
     def formatted_dates(self):
@@ -211,17 +154,23 @@ class AbstractFAEntityMainPropsAdapter(EntityMainPropsAdapter):
         return did
 
     @cachedproperty
-    def attachment(self):
-        return None
-
-    def downloadable_attachements(self):
+    def no_xml_attachment(self):
+        rset = self._cw.execute(
+            "Any A, D, FT, N LIMIT 1 WHERE "
+            "FA finding_aid F, FA eid %(e)s, "
+            'NOT A data_format "application/xml", '
+            "F findingaid_support A, A data D, "
+            "A data_format FT, A data_name N",
+            {"e": self.entity.eid},
+        )
+        if rset:
+            return rset.one()
         return None
 
     def properties(self, export=False, vid="incontext", text_format="text/html"):
         self.text_format = text_format
         self.vid = vid
         _ = self._cw._
-        entity = self.entity
         did = self.did
         formatted_title = self.formatted_title
         properties = []
@@ -241,6 +190,28 @@ class AbstractFAEntityMainPropsAdapter(EntityMainPropsAdapter):
         properties.extend(self.pre_additional_props())
         properties.extend(self.common_props())
         properties.extend(self.post_additional_props())
+        if export:
+            indexes = self.indexes(vid=vid)
+            if indexes:
+                properties.extend(indexes)
+        properties.extend(self.final_props())
+        if export:
+            attachment = self.no_xml_attachment
+            if attachment:
+                properties.append(
+                    (_("file_label"), attachment.cw_adapt_to("IDownloadable").download_url())
+                )
+        properties_list = []
+        for idx, entry in enumerate(properties):
+            entry = list(entry)
+            entry[0] = reveal_glossary(self._cw, entry[0], cached=bool(idx))
+            properties_list.append(entry)
+        return [entry for entry in properties_list if entry[-1]]
+
+    def indexes(self, vid="incontext"):
+        _ = self._cw._
+        entity = self.entity
+        properties = []
         agent_types = defaultdict(list)
         for index in entity.agent_indexes().entities():
             agent_types[index.type].append(index)
@@ -269,26 +240,25 @@ class AbstractFAEntityMainPropsAdapter(EntityMainPropsAdapter):
             properties.append(
                 (_(label), ", ".join(e.view(self.vid) for e in subject_types.get(itype, [])))
             )
-        if export:
-            attachment = self.attachment
-            if attachment:
-                properties.append(
-                    (_("file_label"), attachment.cw_adapt_to("IDownloadable").download_url())
-                )
-        properties_list = []
-        for entry in properties:
-            entry = list(entry)
-            entry[0] = reveal_glossary(self._cw, entry[0])
-            properties_list.append(entry)
-        return [entry for entry in properties_list if entry[-1]]
+        return [entry for entry in properties if entry[-1]]
+
+    def digitized_urls(self):
+        entity = self.entity
+        urls = entity.digitized_urls
+        if len(urls) > 2:
+            return (urls[0], urls[-1])
+        return urls
 
     def csv_export_props(self):
         title = self._cw._("Download shelfmark")
         return {
             "url": self._cw.build_url("%s.csv" % self.entity.rest_path()),
-            "title": "{} - CSV".format(title),
+            "title": title,
             "link": title,
         }
+
+    def inventory_source(self):
+        return None
 
     def common_props(self):
         _ = self._cw._
@@ -319,6 +289,9 @@ class AbstractFAEntityMainPropsAdapter(EntityMainPropsAdapter):
             (_("note_label"), self.clean_value(self.did, "note")),
         ]
 
+    def final_props(self):
+        return []
+
 
 class FAComponentEntityMainPropsAdapter(AbstractFAEntityMainPropsAdapter):
     __select__ = is_instance("FAComponent")
@@ -326,45 +299,16 @@ class FAComponentEntityMainPropsAdapter(AbstractFAEntityMainPropsAdapter):
     def pre_additional_props(self):
         _ = self._cw._
         entity = self.entity
-        kwargs = {}
-        service = entity.related_service
-        if service:
-            ixiti = service.cw_adapt_to("IXiti")
-            xiti_config = self.portal_config.get("xiti")
-            if xiti_config and ixiti is not None:
-                chapters = ixiti.chapters + [
-                    "digitized_version",
-                ]
-                kwargs = {
-                    "data-xiti-level": "C",
-                    "data-xiti-type": "S",
-                    "data-xiti-n2": xiti_config.get("n2", ""),
-                    "data-xiti-name": pagename_from_chapters(chapters),
-                }
         return [
-            (
-                _("digitized_versions_label"),
-                ", ".join(
-                    str(
-                        exturl_link(
-                            self._cw, url, label=_("consult the digitized version"), **kwargs
-                        )
-                    )
-                    for url in entity.digitized_urls
-                ),
-            ),
             (_("related_finding_aid_label"), entity.finding_aid[0].view(self.vid)),
         ]
-
-    def downloadable_attachements(self):
-        return [self.csv_export_props()]
 
 
 class FindingEntityMainPropsAdapter(AbstractFAEntityMainPropsAdapter):
     __select__ = is_instance("FindingAid")
 
     @cachedproperty
-    def attachment(self):
+    def no_xml_attachment(self):
         rset = self._cw.execute(
             "Any A, D, FT, N LIMIT 1 WHERE "
             "F is FindingAid, F eid %(e)s, "
@@ -392,7 +336,6 @@ class FindingEntityMainPropsAdapter(AbstractFAEntityMainPropsAdapter):
         entity = self.entity
         faheader = entity.fa_header[0]
         return [
-            (_("eadid_label"), remove_extension(entity.eadid)),
             (_("publicationstmt_label"), self.clean_value(faheader, "publicationstmt")),
         ]
 
@@ -407,31 +350,28 @@ class FindingEntityMainPropsAdapter(AbstractFAEntityMainPropsAdapter):
             (_("changes_label"), self.clean_value(faheader, "changes")),
         ]
 
-    def downloadable_attachements(self):
-        links = []
+    def final_props(self):
         _ = self._cw._
-        for text, attachment in (
-            # NOTE: don't display (yet) the download APE link
-            # (self._cw._('Download the APE'), self.ape)
-            (_("Download the inventory"), self.attachment),
-        ):
-            if attachment is None:
-                continue
-            if not attachment.data:
-                # file contents could not be loaded
-                continue
-            adapted = attachment.cw_adapt_to("IDownloadable")
-            filename, extension = osp.splitext(adapted.download_file_name())
-            file_infos = None
-            if extension:
-                file_infos = " ({}, {})".format(extension[1:].upper(), attachment.formatted_size())
-            links.append(
-                {
-                    "url": adapted.download_url(),
-                    "target_blank": True,
-                    "title": "{}{}{}".format(filename, file_infos, _("- New window")),
-                    "link": text,
-                }
-            )
-        links.append(self.csv_export_props())
-        return links
+        return [(_("eadid_label"), remove_extension(self.entity.eadid))]
+
+    def inventory_source(self):
+        _ = self._cw._
+        attachment = self.no_xml_attachment
+        if attachment is None:
+            return
+        if not attachment.data:
+            return
+
+        adapted = attachment.cw_adapt_to("IDownloadable")
+        filename, extension = osp.splitext(adapted.download_file_name())
+        attachment_format = extension[1:].upper()
+        file_infos = None
+        if extension:
+            file_infos = " ({}, {})".format(attachment_format, attachment.formatted_size())
+        return {
+            "url": adapted.download_url(),
+            "target_blank": True,
+            "title": "{}{}{}".format(filename, file_infos, _("- New window")),
+            "link": _("Download the inventory"),
+            "info": file_infos,
+        }

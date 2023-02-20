@@ -30,7 +30,6 @@
 #
 from collections import defaultdict
 
-
 from logilab.mtconverter import xml_escape
 
 from cwtags import tag as T
@@ -43,7 +42,16 @@ from cubicweb.schema import display_name
 from cubicweb_francearchives.views import get_template, format_date, blank_link_title
 from cubicweb_francearchives.entities import ETYPE_CATEGORIES
 from cubicweb_francearchives.utils import title_for_link, remove_html_tags
-from cubicweb_francearchives.views import html_link
+
+
+def clean_properties(properties, entity, req):
+    cleaned = []
+    for label, value in properties:
+        if label is None:
+            cleaned.append((label, value))
+        else:
+            cleaned.append((display_name(req, label, context=entity.cw_etype), value))
+    return cleaned
 
 
 class PniaTextSearchResultView(EntityView):
@@ -51,9 +59,13 @@ class PniaTextSearchResultView(EntityView):
     template = get_template("searchitem.jinja2")
 
     def img_src(self, entity):
-        image_url = getattr(entity, "illustration_url", None)
-        if image_url:
-            return image_url
+        return getattr(entity, "illustration_url", None)
+
+    def img_alt(self, entity):
+        return getattr(entity, "illustration_alt", None)
+
+    def get_service(self, entity):
+        return None
 
     def default_picto_src(self, entity):
         return None
@@ -70,26 +82,56 @@ class PniaTextSearchResultView(EntityView):
         return default_srcs
 
     def template_context(self, entity, es_response, max_highlights=3):
-        highlights = []
+        highlights = defaultdict(list)
+        highlights_label = None
         if "highlight" in es_response.meta:
             for key, values in list(es_response.meta.highlight.to_dict().items()):
-                highlights.extend(values)
-                if len(highlights) > max_highlights:
+                if key not in ("index_entries.label", "text"):
+                    if len(highlights["notice"]) > max_highlights:
+                        continue
+                    highlights["notice"].extend(values)
+                else:
+                    # there is no point to show the same index string several times
+                    if len(highlights[key]) > 1:
+                        continue
+                    highlights[key].extend(values)
+                if len(highlights["notice"]) > max_highlights:
                     break
-            highlights = highlights[:max_highlights]
-        properties = []
-        for label, value in self.properties(entity):
-            if label is None:
-                properties.append((label, value))
-            else:
-                properties.append((display_name(self._cw, label, context=entity.cw_etype), value))
+        highlights_values = []
+        if highlights["notice"]:
+            # only display index or text if no excerpts from other fields are found
+            highlights_values = highlights["notice"][:max_highlights]
+            highlights_label = self._cw._("Notice excerpt:")
+        elif "index_entries.label" in highlights:
+            highlights_values = highlights["index_entries.label"][:max_highlights]
+            highlights_label = self._cw._("Indexed authorities:")
+        elif "text" in highlights:
+            highlights_values = highlights["text"][:max_highlights]
+            highlights_label = self._cw._("Excerpt from attachment:")
+        properties = self.properties(entity)
         doc_image = self._cw.uiprops["DOCUMENT_IMG"]
-        illustration = self.img_src(entity)
-        default_srcs = ""
-        if not illustration:
-            illustration = doc_image
-        else:
-            default_srcs = self.get_default_picto_srcs(entity, illustration, doc_image)
+        illustration_url = self.img_src(entity)
+        illustration = None
+        if illustration_url:
+            illustration_srcs = self.get_default_picto_srcs(entity, illustration_url, doc_image)
+            alt = self.img_alt(entity) or remove_html_tags(entity.dc_title())
+            illustration = {
+                "src": illustration_url,
+                "srcs": illustration_srcs,
+                "alt": alt,
+            }
+        logo = None
+        service = self.get_service(entity)
+        if service:
+            logo_src = service.illustration_url
+            if logo_src:
+                logo = {
+                    "src": logo_src,
+                    "srcs": self.get_default_picto_srcs(entity, logo_src, doc_image)
+                    if logo_src
+                    else "",
+                    "alt": service.dc_title(),
+                }
         return {
             "_": self._cw._,
             "document_category": ETYPE_CATEGORIES.get(entity.cw_etype, "default"),
@@ -99,11 +141,11 @@ class PniaTextSearchResultView(EntityView):
                 "alink": entity.view("incontext"),
             },
             "illustration": illustration,
-            "illustration_alt": remove_html_tags(entity.dc_title()),
+            "logo": logo,
             "response": es_response,
-            "highlights": highlights,
+            "highlights": highlights_values,
+            "highlights_label": highlights_label,
             "item_properties": properties,
-            "default_picto_src": default_srcs,
         }
 
     def cell_call(self, row, col, es_response=None):
@@ -112,14 +154,26 @@ class PniaTextSearchResultView(EntityView):
         self.w(self.template.render(self.template_context(entity, es_response)))
 
     def properties(self, entity):
+        return {
+            "top": clean_properties(self.properties_top(entity), entity, self._cw),
+            "bottom": clean_properties(self.properties_bottom(entity), entity, self._cw),
+        }
+
+    def properties_top(self, entity):
+        yield (None, None)
+
+    def properties_bottom(self, entity):
         meta = entity.cw_adapt_to("IMeta")
         if meta:
-            yield (_("Author"), meta.author())
+            authors = meta.author()
+            label = _("Author") if len(authors) < 2 else _("Authors")
+            yield (label, self._cw._("###list_separator###").join(meta.author()))
+        else:
+            yield (None, None)
 
 
 class CircularSearchResultView(PniaTextSearchResultView):
     __select__ = PniaTextSearchResultView.__select__ & is_instance("Circular")
-    template = get_template("circular-searchitem.jinja2")
 
     def template_context(self, entity, es_response):
         ctx = super(CircularSearchResultView, self).template_context(entity, es_response)
@@ -127,7 +181,7 @@ class CircularSearchResultView(PniaTextSearchResultView):
         ctx["circular_status"] = self._cw._(entity.status)
         return ctx
 
-    def properties(self, entity):
+    def properties_top(self, entity):
         return [
             (_("code"), entity.nor or entity.siaf_daf_code or entity.code),
             (_("siaf_daf_kind"), entity.siaf_daf_kind),
@@ -163,10 +217,10 @@ class ServiceSearchResultView(PniaTextSearchResultView):
         template_context = super().template_context(
             entity, es_response, max_highlights=max_highlights
         )
-        template_context["entity"]["url"] = xml_escape(entity.url_anchor)
+        template_context["entity"]["url"] = xml_escape(entity.absolute_url())
         return template_context
 
-    def properties(self, entity):
+    def properties_top(self, entity):
         website_link, email_link = None, None
         website_url = entity.printable_value("website_url")
         if website_url:
@@ -184,140 +238,162 @@ class ServiceSearchResultView(PniaTextSearchResultView):
             email_link = str(T.a(email, href="mailto:%s" % email))
         website_url = entity.website_url
         return [
-            (_("name"), entity.name or entity.name2),
-            (_("phone_number"), entity.phone_number),
-            (_("address"), entity.physical_address()),
-            (_("write to us"), entity.mailing_address),
-            (_("email"), email_link),
-            (_("website_url"), website_link),
+            (_("Name"), entity.name or entity.name2),
+            (_("Phone number"), entity.phone_number),
+            (_("Address"), entity.physical_address()),
+            (_("Write to us"), entity.mailing_address),
+            (_("Email"), email_link),
+            (_("Website"), website_link),
         ]
-
-
-class PersonSearchResultView(PniaTextSearchResultView):
-    __select__ = PniaTextSearchResultView.__select__ & is_instance("Person")
-
-    def img_src(self, entity):
-        if entity.service and entity.service[0].illustration_url:
-            return entity.service[0].illustration_url
-        return super(PersonSearchResultView, self).img_src(entity)
-
-    def properties(self, entity):
-        props = [
-            (_("name"), entity.name),
-            (_("forenames"), entity.forenames),
-            (_("death_year"), entity.death_year),
-            (_("dates"), entity.dates_description),
-            (_("locations"), entity.locations_description),
-        ]
-        if entity.document_uri:
-            self._cw.add_css("css/font-awesome.css")
-            url = entity.document_uri
-            link = (
-                '<a href="{url}" rel="nofollow noopener noreferrer" '
-                'target="_blank" title="{title}">'
-                "{label} "
-                '<i class="fa fa-external-link-square" aria-hidden="true"> </i>'
-                "</a>".format(
-                    url=xml_escape(url),
-                    label=self._cw._("oai-origin-website"),
-                    title=blank_link_title(self._cw, url),
-                )
-            )
-            props.insert(0, (None, link))
-        return props
 
 
 class FAComponentSearchResultView(PniaTextSearchResultView):
     __select__ = PniaTextSearchResultView.__select__ & is_instance("FindingAid", "FAComponent")
-    template = get_template("ir-searchitem.jinja2")
 
-    def img_src(self, entity):
-        url = getattr(entity, "illustration_url", None)
-        if url:
-            return url
-        if entity.related_service and entity.related_service.illustration_url:
-            return entity.related_service.illustration_url
-        return super(FAComponentSearchResultView, self).img_src(entity)
+    def template_context(self, entity, es_response, max_highlights=3):
+        template_context = super().template_context(
+            entity, es_response, max_highlights=max_highlights
+        )
+        if entity.iiif_manifest:
+            iiif_logo = {
+                "alt": self._cw._("IIIF Icon"),
+                "src": xml_escape(self._cw.uiprops["IIIF_LOGO"]),
+            }
+            template_context["iiif_logo"] = iiif_logo
+        return template_context
 
-    def default_picto_src(self, entity):
-        url = entity.related_service and entity.related_service.illustration_url
-        if url:
-            return url
-        return super(FAComponentSearchResultView, self).default_picto_src(entity)
+    def get_service(self, entity):
+        return entity.related_service
 
-    def properties(self, entity):
+    def properties_top(self, entity):
         _ = self._cw._
         props = [
             (_("Cote"), entity.did[0].unitid),
             (_("Period"), entity.did[0].period),
-            (_("Fonds"), entity.finding_aid[0].view("incontext")),
         ]
-        itypes = defaultdict(list)
-        for agent in entity.agent_indexes().entities():
-            itypes[agent.type or "name"].append(agent)
-        for geo in entity.geo_indexes().entities():
-            itypes["geogname"].append(geo)
-        for idx_type in ("name", "persname", "corpname", "famname", "geogname"):
-            if idx_type in itypes:
-                index_list = sorted(itypes[idx_type], key=lambda idx: idx.label)
-                props.append((_(idx_type), " | ".join(idx.view("incontext") for idx in index_list)))
+        if entity.cw_etype == "FAComponent":
+            props.append(
+                (_("Fonds"), entity.finding_aid[0].view("incontext")),
+            )
         return props
 
 
 class CommemorationItemSearchResultView(PniaTextSearchResultView):
     __select__ = PniaTextSearchResultView.__select__ & is_instance("CommemorationItem")
 
-    def properties(self, entity):
-        section_rset = self._cw.find("Section", title=str(entity.commemoration_year))
-        if section_rset:
-            value = section_rset.one().view("incontext")
+    def properties_top(self, entity):
+        dates = entity.dates
+        if dates:
+            yield (_("Period"), dates)
         else:
-            value = entity.commemoration_year
-        yield (None, entity.subtitle)
-        yield (_("commemoration_year"), value)
+            yield (
+                _("Modification date"),
+                format_date(entity.modification_date, self._cw, fmt="d MMMM y"),
+            )
 
 
 class NewsSearchResultView(PniaTextSearchResultView):
     __select__ = PniaTextSearchResultView.__select__ & is_instance("NewsContent")
 
-    def properties(self, entity):
-        yield (None, entity.header)
+    def properties_top(self, entity):
+        dates = entity.dates
+        if dates:
+            yield (_("Dates"), dates)
+        else:
+            yield (
+                _("Modification date"),
+                format_date(entity.modification_date, self._cw, fmt="d MMMM y"),
+            )
 
 
 class ExternRefSearchResultView(PniaTextSearchResultView):
     __select__ = PniaTextSearchResultView.__select__ & is_instance("ExternRef")
 
-    def img_src(self, entity):
-        url = entity.illustration_url
-        if url:
-            return url
-        if entity.exref_service and entity.exref_service[0].illustration_url:
-            return entity.exref_service[0].illustration_url
-        return super(ExternRefSearchResultView, self).img_src(entity)
+    def get_service(self, entity):
+        return entity.service
 
-    def properties(self, entity):
+    def properties_top(self, entity):
+        dates = entity.dates
+        if dates:
+            yield (_("Period"), dates)
+        else:
+            yield (
+                _("Modification date"),
+                format_date(entity.modification_date, self._cw, fmt="d MMMM y"),
+            )
+
+    def properties_bottom(self, entity):
         _ = self._cw._
-        data = [(_("period"), entity.years)]
-        if entity.url:
-            url = entity.url
-            label = _("consult the virtual exhibits")
-            link = str(html_link(self._cw, url, label=label))
-            data.append((None, link))
-        return data
+        services = entity.exref_service
+        publisher_label = _("publisher") if len(services) < 2 else _("publishers")
+        yield (publisher_label, " ; ".join([s.dc_title() for s in services]))
 
 
 class BaseContentResultView(PniaTextSearchResultView):
     __select__ = PniaTextSearchResultView.__select__ & is_instance("BaseContent")
 
-    def properties(self, entity):
+    def get_service(self, entity):
+        return entity.service
+
+    def properties_top(self, entity):
+        yield (_("Modification date"), entity.fmt_modification_date)
+
+    def properties_bottom(self, entity):
         _ = self._cw._
-        desc = entity.printable_value("description")
-        if not desc and entity.metadata:
-            desc = entity.metadata[0].description
         services = entity.basecontent_service
         publisher_label = _("publisher") if len(services) < 2 else _("publishers")
+        yield (publisher_label, " ; ".join([s.dc_title() for s in services]))
+
+
+class CardResultView(PniaTextSearchResultView):
+    __select__ = PniaTextSearchResultView.__select__ & is_instance("Card")
+
+    def properties_top(self, entity):
+        yield (_("Modification date"), entity.fmt_modification_date)
+
+
+class AuthoritiesResultView(PniaTextSearchResultView):
+    __select__ = PniaTextSearchResultView.__select__ & is_instance(
+        "SubjectAuthority", "AgentAuthority", "LocationAuthority"
+    )
+    template = get_template("searchitem-authorities.jinja2")
+
+
+class AuthorityRecordResultView(PniaTextSearchResultView):
+    __select__ = PniaTextSearchResultView.__select__ & is_instance("AuthorityRecord")
+
+    def get_service(self, entity):
+        return entity.related_service
+
+    def properties_top(self, entity):
+        dates = entity.dates
+        _ = self._cw._
+        if dates:
+            yield (_("Dates"), dates)
+        if entity.abstract_text:
+            yield (_("Description"), entity.abstract_text)
+
+
+class NominaRecordSearchResultView(PniaTextSearchResultView):
+    __select__ = PniaTextSearchResultView.__select__ & is_instance("NominaRecord")
+    template = get_template("searchitem-nominarecord.jinja2")
+
+    def template_context(self, entity, es_response, max_highlights=0):
+        template_context = super().template_context(
+            entity, es_response, max_highlights=max_highlights
+        )
+        template_context["entity"].update(
+            {"source_url": entity.source_url, "title": entity.dc_title()}
+        )
+        template_context["publisher"] = entity.cw_adapt_to("IPublisherInfo").serialize()
+        return template_context
+
+    def get_service(self, entity):
+        return entity.related_service
+
+    def properties_top(self, entity):
+        _ = self._cw._
         return [
-            (_("Creation date"), entity.fmt_creation_date),
-            (_("description"), desc),
-            (publisher_label, " ; ".join([s.dc_title() for s in services])),
+            (_("Doctype_label"), _(entity.doctype_type)),
+            (_("Document date label"), entity.acte_year),
         ]

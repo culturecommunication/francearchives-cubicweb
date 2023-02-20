@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ead xmlns:xlink="http://www.w3.org/1999/xlink"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns="urn:isbn:1-931666-22-9"
+ xsi:schemaLocation="urn:isbn:1-931666-22-9
+ http://www.archivesportaleurope.net/Portal/profiles/apeEAD.xsd http://www.w3.org/1999/xlink
+ http://www.loc.gov/standards/xlink/xlink.xsd"
+ audience="external">
+<eadheader countryencoding="iso3166-1" dateencoding="iso8601" langencoding="iso639-2b" relatedencoding="MARC21" repositoryencoding="iso15511" scriptencoding="iso15924">
+<eadid countrycode="FR" identifier="FRAD054_0000000405" mainagencycode="FR-FRAD054">FRAD054_0000000407</eadid>
+<filedesc>
+<titlestmt>
+<titleproper type="fre" encodinganalog="245">Fonds Claude Renson <lb/>31 Fi</titleproper>
+<subtitle>Reportage photographique sur les travaux de la place Stanislas de Nancy, 2004-2005</subtitle>
+<author encodinganalog="245$c">par Amandine Villars ; sous la direction de Christel Jajoux</author>
+</titlestmt>
+<publicationstmt>
+<publisher encodinganalog="260$b">Archives départementales de la Meurthe-et-Moselle</publisher>
+<address>
+<addressline>Nancy</addressline>
+</address>
+<date calendar="gregorian" era="ce" normal="2012" encodinganalog="260$c">2012</date>
+</publicationstmt>
+</filedesc>
+<profiledesc>
+<creation>Instrument de recherche produit au moyen du logiciel Arkhéïa Aide au classement de la société Anaphore sarl, version 8-4.3 du <date calendar="gregorian" era="ce" normal="2017-02-03">vendredi 3 février 2017</date>. 
+Date de l'export : <date calendar="gregorian" era="ce" normal="2017-05-31">mercredi 31 mai 2017</date> (12:01 h)</creation>
+<langusage>Instrument de recherche rédigé en <language langcode="fre" scriptcode="Latn" encodinganalog="041">français</language>
+</langusage>
+</profiledesc>
+</eadheader>
+<archdesc encodinganalog="3.1.4" relatedencoding= "ISAD(G)v2" level="fonds">
+<did>
+<unitid encodinganalog="3.1.1">31 Fi 1-186</unitid>
+<unittitle encodinganalog="3.1.2">Reportage photographique : Claude Renson.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="1968/2008">fin XXe s.-2008</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="nombre elements">Environ 6000 tirages photographiques regroupés en 13 boîtes pour le reportage photographique sur les travaux de la place Stanislas à Nancy, 138 diapositives de reproductions d'affiches, 1 dossier documentaire sur les travaux de maquettiste.</extent>
+<extent unit="ml">2,00</extent>
+<dimensions>21 x 29,7 cm; 5 x 5 cm</dimensions>
+<physfacet type="noir et blanc ou couleur">Tirages photographiques en couleur (en majorité) et noir et blanc, diapositives en couleur</physfacet>
+</physdesc>
+<repository>Archives départementales de Meurthe-et-Moselle.</repository>
+<langmaterial encodinganalog="3.4.3">Français</langmaterial>
+<origination encodinganalog="3.2.1">
+<persname>Claude Renson.</persname>
+</origination>
+</did>
+<bioghist encodinganalog="3.2.2">
+<head>Biographie ou histoire</head>
+<p>Claude Renson, maquettiste en architecture, retraité, s'est pris de passion pour les travaux de la place Stanislas. De juillet 2004 à mai 2005, il suit l'évolution du chantier de restauration de la place Stanislas avec l'accord du maitre d'oeuvre et de l'entreprise générale Eurovia.</p>
+</bioghist>
+<acqinfo encodinganalog="3.2.1">
+<head>Informations sur les modalités d'entrée</head>
+<p>Don d'archives privées.</p>
+</acqinfo>
+<scopecontent encodinganalog="summary">
+<head>Présentation du contenu</head>
+<p>Le fonds est constitué d'une part d'un reportage photographique sur les travaux de rénovation de la place Stanislas à Nancy qui ont eu lieu en 2004 et 2005, reportage réalisé par Claude Renson dans un cadre privé, d'autre part, sur des reproductions d'affiches de la fin du XIXe et début XXe siècles conservées aux archives municipales de la Ville de Nancy.</p>
+</scopecontent>
+<appraisal encodinganalog="3,3,2">
+<head>Informations sur l'évaluation</head>
+<p>Aucune élimination</p>
+</appraisal>
+<accruals encodinganalog="3.3.3">
+<head>Accroissements</head>
+<p>Aucun</p>
+</accruals>
+<arrangement encodinganalog="3.3.4">
+<head>Mode de classement</head>
+<p>Chronologique. Les photographies ont été regroupées par dossiers et par périodes chronologiques successives. De juillet 2004 à mai 2005, l'auteur a fait des dizaines de clichés par jour, détaillant les travaux exécutés sur la place Stanislas. Les reproductions d'affiches ont été classées également par ordre chronologique.</p>
+</arrangement>
+<prefercite>
+<head>Mention conseillée</head>
+<p>Archives départementales de Meurthe-et-Moselle.</p>
+</prefercite>
+<accessrestrict encodinganalog="3.4.1">
+<p>
+<emph render="bold">Statut juridique</emph>
+</p>
+<p>Archives privées</p>
+</accessrestrict>
+<originalsloc encodinganalog="3.5.1">
+<head>Localisation des originaux</head>
+<p>Certains clichés de la collection ont été prétés au restaurant l'Arrosoir avant la remise du fonds aux archives départementales et n'ont pas été restitués</p>
+</originalsloc>
+<relatedmaterial encodinganalog="3.5.3">
+<head>Sources complémentaires</head>
+<p>
+<emph render="bold">Sources internes</emph>
+</p>
+<p>Voir les articles de L'Est Républicain concernant la place Stanislas (10 octobre 2005, 27 novembre 2005, 4 décembre 2005) et le numéro 346 de l'Est magazine du 27 novembre 2005.</p>
+</relatedmaterial>
+<processinfo encodinganalog="3.7.1">
+<head>Rédacteur de la description</head>
+<p>Amandine Villars (stagiaire) et Christel Jajoux</p>
+</processinfo>
+<processinfo encodinganalog="3.7.1">
+<head>Date de création de la description</head>
+<p>2017-05-31</p>
+</processinfo>
+<processinfo encodinganalog="3.7.1">
+<head>Date de dernière modification de la description</head>
+<p>2017-05-31</p>
+</processinfo>
+<dsc type="othertype">
+<c id="FRAD054_0000000405_tt1-1" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1">31 Fi 1-46</unitid>
+<unittitle encodinganalog="3.1.2">Nancy, place Stanislas, travaux : reportage photographique</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2004/2008">2004-2008</unitdate>
+<physdesc encodinganalog="3.1.5">
+</physdesc>
+</did>
+<controlaccess>
+<head>Descripteurs</head>
+<subject>arm��e</subject>
+<subject>armée de terre</subject>
+<geogname>Nancy (Meurthe-et-Moselle, France) -- Place Stanislas</geogname>
+<name>Renson, Claude</name>
+</controlaccess>
+<c id="FRAD054_0000000405_de-1" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 1</unitid>
+<unittitle encodinganalog="3.1.2">Juillet.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2004">23 juillet-6 août 2004</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">216 impressions numériques en 216 feuilles (180 sur papier glacé, 36 sur papier cartonné)</extent>
+</physdesc>
+</did>
+<odd encodinganalog="3.6.1">
+<head>Notes ISBD</head>
+<p>Certains clichés de la collection ont été prétés au Restaurant l'Arrosoir et n'ont pas été restitués.</p>
+</odd>
+</c>
+<c id="FRAD054_0000000405_de-2" level="file" encodinganalog="3.1.4">
+<did>
+<unitid encodinganalog="3.1.1" type="call number">31 Fi 2</unitid>
+<unittitle encodinganalog="3.1.2">Août.</unittitle>
+<unitdate calendar="gregorian" era="ce" encodinganalog="3.1.3" normal="2004">6-31 août 2004</unitdate>
+<physdesc encodinganalog="3.1.5">
+<extent unit="collation">187 impressions numériques en 187 feuilles (186 sur papier glacé, 1 sur papier cartonné)</extent>
+</physdesc>
+</did>
+</c>
+</c>
+</dsc>
+</archdesc>
+</ead>

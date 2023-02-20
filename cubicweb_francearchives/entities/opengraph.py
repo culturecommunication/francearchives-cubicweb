@@ -34,7 +34,7 @@ from logilab.common.decorators import cachedproperty
 from logilab.mtconverter import xml_escape
 
 from cubicweb.predicates import is_instance, match_kwargs
-from cubicweb.view import EntityAdapter, Adapter
+from cubicweb.entity import EntityAdapter, Adapter
 
 from cubicweb_francearchives import SUPPORTED_LANGS
 

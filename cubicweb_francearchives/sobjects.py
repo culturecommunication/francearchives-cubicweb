@@ -29,18 +29,19 @@
 # knowledge of the CeCILL-C license and that you accept its terms.
 #
 import logging
-import os.path as osp
 
 from cubicweb_eac import sobjects as eac
 from cubicweb_eac import dataimport
 
-from cubicweb_francearchives.dataimport import OptimizedExtEntitiesImporter, first, decode_filepath
+from cubicweb_francearchives.dataimport import OptimizedExtEntitiesImporter, first
+
+from cubicweb_francearchives.storage import S3BfssStorageMixIn
 
 LOGGER = logging.getLogger()
 
 
 class EACOptimizedExtEntitiesImporter(OptimizedExtEntitiesImporter):
-    """  """
+    """ """
 
     def __init__(
         self,
@@ -66,9 +67,10 @@ class EACOptimizedExtEntitiesImporter(OptimizedExtEntitiesImporter):
             import_log,
             raise_on_error,
         )
+        self.storage = S3BfssStorageMixIn()
 
     def add_xml_support(self, ext_entity):
-        ext_entity.values["xml_support"] = {osp.abspath(decode_filepath(self.fpath))}
+        ext_entity.values["xml_support"] = {self.storage.storage_ufilepath(self.fpath)}
 
     def create_maintainer(self, ext_entity):
         record_id = first(ext_entity.values["record_id"])
@@ -156,6 +158,7 @@ class EACImportService(eac.EACImportService):
         if generator.record is not None:
             record_id = generator.record.values["record_id"]
             store._cnx.execute("DELETE AuthorityRecord X WHERE X record_id %(r)s", {"r": record_id})
+            # ES delete operation will be triggerd by cw hook
             extid = generator.record.extid
             record_eid = importer.extid2eid[extid]
         else:

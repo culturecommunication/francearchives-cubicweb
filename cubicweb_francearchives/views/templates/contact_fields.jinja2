@@ -1,3 +1,7 @@
+<h2>{{ _("Your message") }}</h2>
+
+<p>{{ _("Fields with <span class=\"required\">*</span> are required.") }}</p>
+
 {% if message_error %}
 <div class="alert alert-danger">
    <div class="form-message-content-error">{{ message_error }}</div>
@@ -5,50 +9,69 @@
 
 {% endif %}
 
-   <div class="form-group{% if contact_name_error %} has-error{% endif %}">
-       <label class="control-label" for="name">{{ contact_name_label }}
-              <span class="required" title="{{ required_info }}"></span>
+   <div class="mb-4">
+       <label class="form-label" for="name">
+           <span class="required" title="{{ required_info }}">*</span>
+           {{ contact_name_label }}
        </label>
-        {% if contact_name_error %}
-          <span class="error text-danger">{{ contact_name_error }}</span>
-        {% endif %}
-        <input name="name" id="name" class="form-control" type="text" tabindex="1" aria-required="true" value="{{ name_value }}">
+       {% if contact_name_error %}
+         <span id="cel_name" class="error text-danger"> {{ contact_name_error }}</span>
+       {% endif %}
+        <input name="name" id="name" class="form-control" type="text" autocomplete="family-name"
+               {% if contact_name_error %}aria-describedby="cel_name" aria-invalid="true"{% endif %}
+               aria-required="true" required="required" value="{{ name_value }}">
     </div>
-    <div class="form-group{% if contact_email_error %} has-error{% endif %}">
-        <label class="control-label" for="email">{{ contact_email_label }}
-               <span class="required" title="{{ required_info }}"></span>
+    <div class="mb-4">
+        <label class="form-label" for="email">
+               <span class="required" title="{{ required_info }}">*</span>
+               {{ contact_email_label }}
         </label>
         {% if contact_email_error %}
-          <span class="error text-danger">{{ contact_email_error }}</span>
+          <span id="cel_email" class="error text-danger">{{ contact_email_error }}</span>
         {% endif %}
-        <input name="email" id="email" class="form-control" type="text" tabindex="2" aria-required="true" value="{{ email_value }}">
+        <input name="email" id="email" class="form-control" type="text" autocomplete="email"
+               {% if contact_email_error %}aria-describedby="cel_email" aria-invalid="true"{% endif %}
+               pattern="^[_A-Za-z0-9-\+-]+(\.[_A-Za-z0-9-\+-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9-\+-]+)*(\.[A-Za-z]{2,})$"
+               oninvalid="setCustomValidity('{{ email_error }}')"
+               oninput="setCustomValidity('')"
+               aria-required="true" required="required" value="{{ email_value }}">
     </div>
-    <div class="form-group{% if contact_option_error %} has-error{% endif %}">
-        <label class="control-label" for="contact-object">{{ contact_object_label }}
-               <span class="required" title="{{ required_info }}"></span>
+    <div class="mb-4">
+        <label class="form-label" for="contact-object">
+               <span class="required" title="{{ required_info }}">*</span>
+               {{ contact_object_label }}
         </label>
         {% if contact_select_error %}
-          <span class="error text-danger">{{ contact_select_error }}</span>
+          <span  id="cel_select" class="error text-danger">{{ contact_select_error }}</span>
         {% endif %}
-        <select name="object" id="contact-object" class="form-control" aria-required="true" tabindex="3">
+        <select name="object" id="contact-object" class="form-select"
+                {% if contact_select_error %}aria-describedby="cel_select" aria-invalid="true"{% endif %}          oninvalid="setCustomValidity('{{ object_select_message }}')"
+                oninput="setCustomValidity('')"
+                aria-required="true" required="required">
+           <option value="" disabled selected>{{ object_select_message }}</option>
            {% for option in contact_objects %}
            {% set option_val = ["contact_object", loop.index]|join('_') %}
            <option value="{{ option_val}}" {% if option_val == object_value|string()%} selected="selected" {% endif %}>{{option}}</option>
            {% endfor %}
         </select>
       </div>
-      <div class="form-group{% if contact_message_error %} has-error{% endif %}">
-        <label class="control-label" for="message">{{ contact_message_label }}
-               <span class="required" title="{{ required_info }}"></span>
+      <div class="mb-4">
+        <label class="form-label" for="message">
+               <span class="required" title="{{ required_info }}">*</span>
+               {{ contact_message_label }}
         </label>
-       {% if contact_message_error %}
-          <span class="error text-danger">{{ contact_message_error }}</span>
+        {% if contact_message_error %}
+          <span  id="cel_message" class="error text-danger">{{ contact_message_error }}</span>
         {% endif %}
-        <textarea cols="29" rows="10" id="message" class="form-control" name="message" aria-required="true" tabindex="4">{{ message_value }}</textarea>
+        <textarea cols="29" rows="10" id="message" class="form-control" name="message"
+                  {% if contact_message_error %}aria-describedby="cel_message" aria-invalid="true"{% endif %}
+                  aria-required="true" required="required">{{ message_value }}
+        </textarea>
       </div>
-      <div class="form-group captcha">
-         <label class="control-label" for="captcha">{{ contact_captcha_label }}
+      <div class="captcha visually-hidden">
+         <label class="form-label" for="captcha">{{ contact_captcha_label }}
                 <span class="required" title="{{ required_info }}"></span>
          </label>
-          <input class="form-control" id="captcha" name="captcha" tabindex="5" value="" type="text">      </div>
-      <button class="btn btn-primary" name="submit" type="submit" tabindex="5">{{ submit_value }}</button>
+          <input class="form-control" id="captcha" name="captcha" value="" type="text" tabindex="-1">
+          </div>
+      <button class="btn btn-primary" name="submit" type="submit">{{ submit_value }}</button>

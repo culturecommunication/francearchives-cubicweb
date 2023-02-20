@@ -235,10 +235,7 @@ def move_object(request):
     cnx = request.cw_cnx
     entity = get_by_uuid(cnx, request.matchdict["etype"], uuid=request.matchdict["uuid"])
     try:
-        try:
-            newsection = get_by_uuid(cnx, "Section", uuid=request.json["to-section"])
-        except HTTPBadRequest:
-            newsection = get_by_uuid(cnx, "CommemoCollection", uuid=request.json["to-section"])
+        newsection = get_by_uuid(cnx, "Section", uuid=request.json["to-section"])
     except KeyError as err:
         raise HTTPBadRequest("property %s is missing in request body" % err.args[0])
     if entity.reverse_children and entity.reverse_children[0].eid == newsection.eid:

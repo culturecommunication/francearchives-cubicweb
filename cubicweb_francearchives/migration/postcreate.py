@@ -38,6 +38,17 @@ import os.path as osp
 
 from cubicweb_francearchives import SUPPORTED_LANGS
 from cubicweb_francearchives import workflows, create_homepage_metadata
+from cubicweb_francearchives.dataimport.sqlutil import (
+    ead_foreign_key_tables,
+    nomina_foreign_key_tables,
+)
+from cubicweb_francearchives.dataimport.eac import eac_foreign_key_tables
+
+from cubicweb_francearchives.migration.utils import set_foreign_constraints_defferrable
+
+from cubicweb_card.hooks import CardAddedView
+
+cnx.vreg.unregister(CardAddedView)
 
 HERE = osp.join(osp.abspath(osp.dirname(__file__)))
 
@@ -60,7 +71,7 @@ cnx.system_sql(
     # name of executed command
     "name varchar(50),"
     # datetime when command started
-    "start TIMESTAMP WITH TIME ZONE DEFAULT current_timestamp,"
+    "start TIMESTAMP WITH TIME ZONE DEFAULT current_timestamp PRIMARY KEY,"
     # datetime when command ended
     "stop TIMESTAMP WITH TIME ZONE,"
     # RAM used by process at the end of command
@@ -210,6 +221,33 @@ $$ LANGUAGE plpgsql;"""
     """
     )
 
+    cnx.system_sql(
+        r"""
+CREATE OR REPLACE FUNCTION translate_entity(eid int, attr varchar, lang varchar)
+RETURNS varchar AS $$
+DECLARE
+    etype varchar;
+    label varchar;
+    label_lang varchar;
+BEGIN
+    EXECUTE format('SELECT _E.cw_name FROM cw_CWEType AS _E, is_relation AS rel_is0
+                    WHERE rel_is0.eid_from=%s and rel_is0.eid_to=_E.cw_eid ', eid) INTO etype ;
+    EXECUTE format('SELECT cw_%s FROM cw_%s WHERE cw_eid=%s', attr, etype, eid) INTO label ;
+    IF lang = 'fr' THEN
+        RETURN label;
+    END IF;
+    IF etype  = ANY ('{Section, BaseContent, CommemorationItem, FaqItem}'::varchar[]) THEN
+        EXECUTE format('SELECT cw_%s FROM cw_%sTranslation WHERE cw_translation_of=%s AND cw_language=''%s''', attr, etype, eid, lang) INTO label_lang ;
+        IF label_lang is NOT NULL THEN
+           RETURN label_lang;
+        END IF;
+    END IF;
+ RETURN label;
+END;
+$$ LANGUAGE plpgsql;
+    """
+    )
+
 
 for wikiid, title in (
     ("faq", "Foire aux questions"),
@@ -282,7 +320,7 @@ commit()
 cnx.system_sql(
     """
     CREATE TABLE geonames (
-    geonameid integer not null,
+    geonameid integer PRIMARY KEY NOT NULL,
     name varchar(200),
     asciiname varchar(200),
     alternatenames varchar(10000),
@@ -306,6 +344,24 @@ cnx.system_sql(
 )
 commit()
 
+# create tables for location hierarchy
+
+cnx.system_sql(
+    "CREATE TABLE adm4_geonames AS SELECT * FROM geonames WHERE fcode='ADM4' AND country_code='FR';"
+)
+cnx.system_sql(
+    "CREATE TABLE adm3_geonames AS SELECT * FROM geonames WHERE fcode='ADM3' AND country_code='FR';"
+)
+cnx.system_sql(
+    "CREATE TABLE adm2_geonames AS SELECT * FROM geonames WHERE fcode='ADM2' AND country_code='FR';"
+)
+cnx.system_sql(
+    "CREATE TABLE adm1_geonames AS SELECT * FROM geonames WHERE fcode='ADM1' AND country_code='FR';"
+)
+cnx.system_sql("CREATE TABLE country_geonames AS SELECT * FROM geonames WHERE fcode='PCLI';")
+
+cnx.commit()
+
 # create a cache for geomap
 cnx.create_entity("Caches", name="geomap", values=[], instance_type="cms")
 cnx.create_entity("Caches", name="geomap", values=[], instance_type="consultation")
@@ -313,13 +369,14 @@ cnx.create_entity("Caches", name="geomap", values=[], instance_type="consultatio
 # create fa_redirects table to store findingaid and facomponent redirections
 # issued from oai, csv and pdf doubles.
 #
+#
 # later "from_stable_id" and "to_stable_id" columns data must be moved to nginx
 # config.
 
 cnx.system_sql(
     """
     CREATE TABLE fa_redirects (
-    old_ir_name character varying(512),
+    eadid character varying(512),
     from_stable_id character varying(64) PRIMARY KEY NOT NULL,
     to_stable_id character varying(64) not null,
     date date,
@@ -328,3 +385,27 @@ cnx.system_sql(
     """
 )
 commit()
+
+# create a table for blacklisted authorities
+cnx.system_sql(
+    """
+    CREATE TABLE blacklisted_authorities (
+    label varchar(2048) PRIMARY KEY NOT NULL
+    );
+    """
+)
+commit()
+
+# mark foreign constraint as DEFERRABLE to allow EAC/EAD import without superuser connection
+# only for postgres
+
+if cnx.vreg.config.system_source_config["db-driver"].lower() == "postgres":
+    foreign_key_tables = ead_foreign_key_tables(cnx.vreg.schema)
+    foreign_key_tables |= set(("cw_trinfo", "in_state_relation"))
+    set_foreign_constraints_defferrable(cnx, foreign_key_tables, "public")
+
+    foreign_key_tables = eac_foreign_key_tables(cnx.vreg.schema)
+    set_foreign_constraints_defferrable(cnx, foreign_key_tables, "public")
+
+    foreign_key_tables = nomina_foreign_key_tables(cnx.vreg.schema)
+    set_foreign_constraints_defferrable(cnx, foreign_key_tables, "public")

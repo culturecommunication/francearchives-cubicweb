@@ -29,7 +29,6 @@
 # knowledge of the CeCILL-C license and that you accept its terms.
 #
 
-from cubicweb.schema import RQLConstraint
 from yams.buildobjs import (
     EntityType,
     RelationDefinition,
@@ -39,7 +38,11 @@ from yams.buildobjs import (
     String,
     RichString,
     Float,
+    Boolean,
 )
+
+from cubicweb.schema import RQLConstraint
+
 from cubicweb_francearchives.schema.ead import Json
 
 
@@ -48,6 +51,7 @@ class LocationAuthority(EntityType):
     longitude = Float()
     latitude = Float()
     same_as = SubjectRelation(("AuthorityRecord", "ExternalUri", "ExternalId"))
+    quality = Boolean(default=False)
 
 
 class Geogname(EntityType):
@@ -63,7 +67,8 @@ class AgentAuthority(EntityType):
     birthyear = Date()
     deathyear = Date()
     label = String()
-    same_as = SubjectRelation(("AuthorityRecord", "ExternalUri", "ExternalId"))
+    same_as = SubjectRelation(("AuthorityRecord", "ExternalUri", "ExternalId", "NominaRecord"))
+    quality = Boolean(default=False)
 
 
 class AgentName(EntityType):
@@ -105,6 +110,7 @@ class AgentInfo(EntityType):
 class SubjectAuthority(EntityType):
     label = String()
     same_as = SubjectRelation(("Concept", "ExternalUri", "ExternalId", "AuthorityRecord"))
+    quality = Boolean(default=False)
 
 
 class Subject(EntityType):

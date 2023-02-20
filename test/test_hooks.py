@@ -33,9 +33,10 @@ import unittest
 
 from cubicweb import Unauthorized, Binary
 from cubicweb.devtools import testlib
+from cubicweb_francearchives.testutils import S3BfssStorageTestMixin
 
 
-class HookTests(testlib.CubicWebTC):
+class HookTests(S3BfssStorageTestMixin, testlib.CubicWebTC):
     def test_delete_card(self):
         with self.admin_access.cnx() as cnx:
             card = cnx.create_entity("Card", title="Test", wikiid="test")

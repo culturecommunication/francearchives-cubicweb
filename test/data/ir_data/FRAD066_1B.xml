@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ead PUBLIC "+//ISBN 1-931666-00-8//DTD ead.dtd (Encoded Archival Description (EAD) Version 2002)//EN" "/gaia/normes/ead.dtd">
+<ead>
+	<eadheader encodinganalog="dc" findaidstatus="validé" dateencoding="iso8601"
+		langencoding="iso639-2b" scriptencoding="iso15924" countryencoding="iso3166-1"
+		repositoryencoding="iso15511">
+		<eadid> FRAD066_1B</eadid>
+		<filedesc>
+			<titlestmt>
+				<titleproper>PROCURATION ROYALE DE ROUSSILLON ET CERDAGNE puis CHAMBRE DU
+					DOMAINE</titleproper>
+			</titlestmt>
+			<publicationstmt>
+				<publisher>Archives départementales des Pyrénées-Orientales</publisher>
+			</publicationstmt>
+		</filedesc>
+	</eadheader>
+	<archdesc level="fonds">
+		<did id="id302553">
+			<unittitle type="TITRE PROPRE">PROCURATION ROYALE DE ROUSSILLON ET CERDAGNE puis CHAMBRE
+				DU DOMAINE</unittitle>
+			<unitdate normal="8450/1781">845, copie - 1781</unitdate>
+			<langmaterial>latin, catalan, français et castillan</langmaterial>
+			<physdesc>838 articles<lb/>60.5 ml</physdesc>
+		</did>
+		<arrangement>
+			<p>Semi-provisoire :<lb/>Inventaire sommaire 1 B 1-446 (ordre le plus souvent
+				chronologique)<lb/>Inventaire provisoire 1 Bp 447-838</p>
+		</arrangement>
+		<processinfo>
+			<p>Etat de classement : Classement provisoire à reprendre</p>
+		</processinfo>
+		<daogrp>
+			<daoloc href="https://archive.org/details/inventairesommai13arch/page/n6/mode/2up"/>
+		</daogrp>
+		<custodhist>
+			<p>Tous les fonds des juridictions d'Ancien Régime ont souffert après la Révolution :
+				une partie des archives a été détruite, soit volontairement (c'est le cas des
+				parchemins réemployés pour fabriquer des gargousses) soit involontairement du fait
+				des conditions de conservation. Il semble que ces archives aient été conservées au
+				Palais de Justice de Perpignan, dans des combles ; certaines d'entre elles furent
+				ponctuellement déposées à la Préfecture ou à l'Université de Perpignan. Ces
+				déménagements sont certainement la cause de la perte de certaines pièces.<lb/>Voir
+				également l'introduction de l'instrument de recherche.</p>
+		</custodhist>
+		<scopecontent>
+			<p>1 B 1-95 : Procuration royale de Majorque<lb/>1 B 96-404 : Procuration royale des
+				comtés de Roussillon et Cerdagne<lb/>1 B 405-446 : Chambre du Domaine de Roussillon
+				et Cerdagne<lb/>1 Bp 447-459 : Gestion du Domaine royal<lb/>1 Bp 460-587 :
+				Justice<lb/>1 Bp 588-592 : Greffe<lb/>1 Bp 593-838 : Divers non classés</p>
+		</scopecontent>
+		<acqinfo>
+			<p> Modalités d'entrée : Versement fin XIXe début XXe <lb/>Lors d'un versement en 1862
+				de 8 000 registres de notaires, 131 furent classés dans la série 1 B par
+				l'archiviste Alart alors que les autres furent cotés en série E.</p>
+		</acqinfo>
+		<dsc type="in-depth"/>
+	</archdesc>
+</ead>

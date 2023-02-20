@@ -1,21 +1,32 @@
-<section id="document" class="circular-view">
+{% from "./mixins.jinja2" import modalfaq -%}
+<section id="document" class="circular-view document-view">
   {% block head %}
-    <h1><span class="sr-only">{{ _(entity.__regid__) }} : </span>{{ entity.title }}</h1>
+    <h1><span class="visually-hidden">{{ _(entity.__regid__) }} : </span>{{ entity.title }}</h1>
   {% endblock %}
-  {% if date %}
-    <div class="content-metadata">
-        <div class="content-metadata-item">
-          <i class="fa fa-calendar-o", aria-hidden="true"></i>
-          <span> {{date}}</span>
-      </div>
+  {% if metadata -%}
+   <div class="content-metadata">
+    {% for label, value in metadata -%}
+        <p class="content-metadata-item">
+            {% if label -%}{{ _(label) }}{{ _(":")}}{% endif -%}{{ value }}
+        </p>
+    {% endfor -%}
     </div>
-  {% else %}
-  <div class="empty-content-metadata"></div>
+  {% else -%}
+   <div class="empty-content-metadata"></div>
+  {% endif -%}
+  {% if main_props -%}
+     <div class="main-properties">
+     {% for propname, value in main_props -%}
+        <div class="row indexes-values align-items-center">
+          <div class="col-sm-5 index-value-title"><h2 class="no-style">{{ propname }}</h2></div>
+          {% if value %}
+          <p class="col-sm-7 index-value-text">{{ value }}</p>
+          {% endif %}
+        </div>
+     {% endfor -%}
+     </div>
+  {% endif-%}
+  {% if faqs %}
+    {{  modalfaq(faqs, _) }}
   {% endif %}
-  {% for propname, value in main_props %}
-      <div class="row indexes-values">
-      <div class="col-md-3"><h2 class="no-style">{{ propname }}</h2></div>
-      <div class="col-md-9">{{ value }}</div>
-      </div>
-  {% endfor %}
 </section>

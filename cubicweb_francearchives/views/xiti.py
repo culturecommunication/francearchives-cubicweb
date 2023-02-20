@@ -29,7 +29,7 @@
 # knowledge of the CeCILL-C license and that you accept its terms.
 #
 from cubicweb.predicates import is_instance
-from cubicweb.view import EntityAdapter
+from cubicweb.entity import EntityAdapter
 
 from cubicweb_francearchives.utils import merge_dicts
 from cubicweb_francearchives.dataimport import TRANSMAP
@@ -120,16 +120,12 @@ class ServiceXitiAdapter(XitiEntityAdapter):
         return chapters
 
 
-class CommemoCollectionXitiAdapter(XitiEntityAdapter):
-    __select__ = is_instance("CommemoCollection")
-
-    @property
-    def chapters(self):
-        return ["CommemoCollection", str(self.entity.year)]
-
-
 class CommemorationItemXitiAdapter(XitiEntityAdapter):
     __select__ = is_instance("CommemorationItem")
+
+    @property
+    def get_xiti_attrname(self):
+        return "uuid"
 
     @property
     def chapters(self):
@@ -151,12 +147,56 @@ class CircularXitiAdapter(XitiEntityAdapter):
         return "circ_id"
 
 
+BASE_CONTENT_XITI_MAP = {
+    "Article": "BaseContent",
+    "Publication": "Publication",
+    "SearchHelp": "SearchHelp",
+}
+
+
 class BaseContentXitiAdapter(XitiEntityAdapter):
     __select__ = is_instance("BaseContent")
 
     @property
+    def get_xiti_attrname(self):
+        return "uuid"
+
+    @property
     def chapters(self):
         chapters = super(BaseContentXitiAdapter, self).chapters
-        if self.entity.is_a_publication:
-            chapters[0] = "Publication"
+        chapters[0] = BASE_CONTENT_XITI_MAP.get(self.entity.content_type, "BaseContent")
+        return chapters
+
+
+class NewsContentXitiAdapter(XitiEntityAdapter):
+    __select__ = is_instance("NewsContent")
+
+    @property
+    def get_xiti_attrname(self):
+        return "uuid"
+
+
+class ExternRefXitiAdapter(XitiEntityAdapter):
+    __select__ = is_instance("ExternRef")
+
+    @property
+    def get_xiti_attrname(self):
+        return "uuid"
+
+
+class NominaRecordAdapater(XitiEntityAdapter):
+    """generate 3 chapters (etype, service_code, stable_id)"""
+
+    __select__ = is_instance("NominaRecord")
+
+    @property
+    def chapters(self):
+        entity = self.entity
+        chapters = [entity.cw_etype]
+        service = entity.related_service
+        if service is None:
+            chapters.append("unknown-service")
+        else:
+            chapters.append(service.code or service.zip_code or service.dc_title())
+        chapters.append(entity.stable_id)
         return chapters

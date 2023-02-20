@@ -35,29 +35,44 @@ FranceArchives
 import os
 import os.path as osp
 import stat
-
+from sched import scheduler
 
 import psycopg2
 
 from pyramid.settings import asbool
 
 from logilab.common.decorators import monkeypatch
+from logilab.common.registry import objectify_predicate
 
 from cubicweb.__pkginfo__ import numversion as cwversion
 from cubicweb.cwctl import init_cmdline_log_threshold
 from cubicweb.cwconfig import CubicWebConfiguration
 from cubicweb.entity import Entity, TransformData, ENGINE
 from cubicweb.server.repository import Repository
-from cubicweb.server.utils import scheduler
 from cubicweb.server.sources import storages
 from cubicweb import repoapi
+
+# MONKEYPATCH for db-create
+from cubicweb.server.serverctl import CreateInstanceDBCommand
+from cubicweb.server.serverctl import (
+    check_options_consistency,
+    ServerConfiguration,
+    get_db_helper,
+    ASK,
+    underline_title,
+    _db_sys_cnx,
+    CWCTL,
+    createdb,
+    source_cnx,
+)
 
 from cubicweb_francearchives.__pkginfo__ import numversion as faversion
 
 from cubicweb_elasticsearch import es
 
-from cubicweb_francearchives.cssimages import static_css_dir
 from cubicweb_francearchives.htmlutils import soup2xhtml
+
+from cubicweb_s3storage.storages import S3Storage, S3DeleteFileOp
 
 # make sure psycopg2 always return unicode strings,
 # cf. http://initd.org/psycopg/docs/faq.html#faq-unicode
@@ -65,6 +80,22 @@ psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
 psycopg2.extensions.register_type(psycopg2.extensions.UNICODEARRAY)
 
 GLOSSARY_CACHE = []
+SECTIONS = {"gerer": None}
+
+STATIC_CSS_DIRECTORY = "css"
+
+S3_ACTIVE = bool(os.getenv("AWS_S3_BUCKET_NAME"))
+
+POSTGRESQL_SUPERUSER = bool(int(os.getenv("CW_POSTGRESQL_SUPERUSER", 0)))
+
+FEATURE_IIIF = bool(int(os.getenv("FEATURE_IIIF", 0)))
+FEATURE_ADVANCED_SEARCH = bool(int(os.getenv("FEATURE_ADVANCED_SEARCH", 0)))
+FEATURE_SPARQL = bool(int(os.getenv("FEATURE_SPARQL", 0)))
+
+
+@objectify_predicate
+def display_advanced_search_predicate(cls, req, rset, row=0, col=0, **kwargs):
+    return FEATURE_ADVANCED_SEARCH
 
 
 def get_user_agent():
@@ -90,17 +121,18 @@ es.INDEXABLE_TYPES = [
     "NewsContent",
     "Circular",
     "Service",
-    "CommemoCollection",
     "Map",
     "ExternRef",
-    "Person",
     "FindingAid",
     "FAComponent",
     "File",
     "BaseContentTranslation",
     "SectionTranslation",
     "CommemorationItemTranslation",
+    "AuthorityRecord",
 ]
+
+NOMINA_INDEXABLE_ETYPES = ("NominaRecord",)
 
 
 SUPPORTED_LANGS = ("fr", "en", "de", "es")
@@ -128,7 +160,6 @@ CMS_OBJECTS = (
     "NewsContent",
     "Circular",
     "CommemorationItem",
-    "CommemoCollection",
     "ExternRef",
     "Map",
 )
@@ -141,7 +172,14 @@ ES_CMS_I18N_OBJECTS = (
 
 CMS_I18N_OBJECTS = ES_CMS_I18N_OBJECTS + ("FaqItemTranslation",)
 
-FIRST_LEVEL_SECTIONS = {"decouvrir", "comprendre", "gerer"}
+FIRST_LEVEL_SECTIONS = {"rechercher", "decouvrir", "comprendre", "gerer"}
+
+
+INDEX_ETYPE_2_URLSEGMENT = {
+    "LocationAuthority": "location",
+    "SubjectAuthority": "subject",
+    "AgentAuthority": "agent",
+}
 
 
 class Authkey(object):
@@ -221,9 +259,127 @@ class FABfssStorage(storages.BytesFileSystemStorage):
                 storages.DeleteFileOp.get_instance(entity._cw).add_data(fpath)
 
 
+class FranceArchivesS3Storage(S3Storage):
+    def __init__(self, bucket, suffix=".tmp", import_prefix=""):
+        # TODO S3 add `import_prefix="import/"` to handle failed imports
+        # If an import fails:
+        #     all `import_prefixed` files must be removed.
+        # If an import succeeds:
+        #     all `import_prefixed` files must be renamed into
+        #     files without the prefix
+        # Note: with FABfssStorage those cases are not handled
+        super(FranceArchivesS3Storage, self).__init__(bucket, suffix=suffix)
+        self.import_prefix = import_prefix
+
+    def ensure_key(self, s3key):
+        """
+        Ensure s3key only contains authorized characters and does not starts with "/"
+        """
+        # TODO
+        s3key = s3key.lstrip("/")
+        return s3key
+
+    def new_s3_key(self, entity, attr):
+        return self.ensure_key(self.compute_new_s3_key(entity, attr))
+
+    def compute_new_s3_key(self, entity, attr):
+        if entity.title:
+            # TODO replace this quick and dirty fix
+            if entity.title.startswith("static/css"):
+                return entity.title
+        return f"{entity.data_hash}_{entity.data_name}"
+
+    def get_upload_extra_args(self, _entity, _attr, _key):
+        """This code is a copy from cubiweb_s3storage
+        and must be removed after
+        - https://forge.extranet.logilab.fr/cubicweb/cubes/s3storage/-/issues/5
+        is resolved (1.0.3)
+        """
+
+        if _entity.data_format:
+            return {"ContentType": _entity.data_format}
+
+    def entity_deleted(self, entity, attr):
+        """an entity using this storage for attr has been deleted.
+        Francearchives customization:
+          while deleting a CWFile, only delete the referenced file from FS
+          if there is no other CWFile referencing the same fkey (e.g same cw_data)
+        """
+        key = self.get_s3_key(entity, attr)
+        if key is not None:
+            sys_source = entity._cw.repo.system_source
+            sql_query = """
+            SELECT count(f.cw_eid) FROM cw_file f
+            JOIN cw_file f1 ON f.cw_{attr}=f1.cw_{attr}
+            WHERE f1.cw_eid =%(eid)s
+                  AND f.cw_eid!=%(eid)s;
+            """.format(
+                attr=attr
+            )
+            attrs = {"eid": entity.eid}
+            cu = sys_source.doexec(entity._cw, sql_query, attrs)
+            res = cu.fetchone()[0]
+            # only delete the file if there is no more cw_files referencing the same
+            # fspath
+            if not res:
+                S3DeleteFileOp.get_instance(entity._cw).add_data((self, key, entity.eid, attr))
+
+    def file_exists(self, key):
+        """
+        Check if file exists using HEAD s3 command
+        """
+        from botocore.exceptions import ClientError
+
+        if isinstance(key, bytes):
+            key = key.decode("utf-8")
+        try:
+            head = self.s3cnx.head_object(Key=key, Bucket=self.bucket)
+            return head["ResponseMetadata"].get("HTTPStatusCode") == 200
+        except ClientError:
+            # print(f"[file_exists]: no {key} key found in bucket: {err}")
+            return False
+
+    def rename_object(self, old_s3_key, new_s3_key):
+        """
+        Rename an object
+
+        :old_s3_key: the key to rename from
+        :new_s3_key: the key to rename to
+        """
+        self.s3cnx.copy_object(
+            Bucket=self.bucket,
+            CopySource={"Bucket": self.bucket, "Key": old_s3_key},
+            Key=new_s3_key,
+        )
+        self.s3cnx.delete_object(Bucket=self.bucket, Key=old_s3_key)
+        self.info(f"Renamed {old_s3_key} into {new_s3_key}")
+
+    def import_prefixed_key(self, key):
+        return self.import_prefix + key
+
+    def temporary_import_upload(self, binary, key, **extra_args):
+        """
+        Create temporary files during import
+        """
+        prefixed_key = self.import_prefixed_key(key)
+        self.s3cnx.upload_fileobj(binary, self.bucket, prefixed_key, ExtraArgs=extra_args)
+
+    def temporary_import_copy(self, from_key, to_key):
+        """
+        Copy temporary files during import
+        """
+        to_prefixed_key = self.import_prefixed_key(to_key)
+        from_prefixed_key = self.import_prefixed_key(from_key)
+        self.s3cnx.copy_object(
+            Bucket=self.bucket,
+            CopySource={"Bucket": self.bucket, "Key": from_prefixed_key},
+            Key=to_prefixed_key,
+        )
+
+
 def admincnx(appid, loglevel=None):
     config = CubicWebConfiguration.config_for(appid)
-    config["connections-pool-size"] = 2
+    config["connections-pool-min-size"] = 2
 
     login = config.default_admin_config["login"]
     password = config.default_admin_config["password"]
@@ -237,29 +393,43 @@ def admincnx(appid, loglevel=None):
 
 
 def init_bfss(repo):
-    bfssdir = repo.config["appfiles-dir"]
-    if not osp.exists(bfssdir):
-        os.makedirs(bfssdir)
-        print("created {}".format(bfssdir))
-    storage = FABfssStorage(bfssdir)
+    # TODO - remove this bottlekneck code call everywhere else
+    if S3_ACTIVE:
+        storage = FranceArchivesS3Storage(os.getenv("AWS_S3_BUCKET_NAME"))
+    else:
+        bfssdir = repo.config["appfiles-dir"]
+        if not osp.exists(bfssdir):
+            os.makedirs(bfssdir)
+            print("created {}".format(bfssdir))
+        storage = FABfssStorage(bfssdir)
     storages.set_attribute_storage(repo, "File", "data", storage)
+
+
+def static_css_dir(static_directory):
+    if S3_ACTIVE:
+        return "/".join((osp.basename(static_directory), STATIC_CSS_DIRECTORY))
+    else:
+        return osp.join(static_directory, STATIC_CSS_DIRECTORY)
 
 
 def check_static_css_dir(repo):
     if repo.config.name != "all-in-one":
         return
     directory = static_css_dir(repo.config.static_directory)
-    if not osp.isdir(directory):
-        repo.critical(
-            "static css files directory {} does not exist. Trying to create it".format(directory)
-        )
-        try:
-            os.makedirs(directory)
-        except Exception:
-            repo.critical("could not create static css files directory {}".format(directory))
-            raise
-    if not os.access(directory, os.W_OK):
-        raise ValueError('static css directory "{}" is not writable'.format(directory))
+    if not S3_ACTIVE:
+        if not osp.isdir(directory):
+            repo.critical(
+                "static css files directory {} does not exist. Trying to create it".format(
+                    directory
+                )
+            )
+            try:
+                os.makedirs(directory)
+            except Exception:
+                repo.critical("could not create static css files directory {}".format(directory))
+                raise
+        if not os.access(directory, os.W_OK):
+            raise ValueError('static css directory "{}" is not writable'.format(directory))
 
 
 def includeme(config):
@@ -277,6 +447,106 @@ def _cw_mtc_transform(self, data, format, target_format, encoding, _engine=ENGIN
     return data
 
 
+# patch from https://forge.extranet.logilab.fr/cubicweb/cubicweb/-/merge_requests/196/commits
+# TODO remove when migrating to 3.31.x
+# related issue : https://forge.extranet.logilab.fr/cubicweb/cubicweb/-/issues/296
+@monkeypatch(CreateInstanceDBCommand)
+def run(self, args):
+    """run the command with its specific arguments"""
+    check_options_consistency(self.config)
+    automatic = self.get("automatic")
+    drop_db = self.get("drop")
+    appid = args.pop()
+    config = ServerConfiguration.config_for(appid)
+    source = config.system_source_config
+    dbname = source["db-name"]
+    driver = source["db-driver"]
+    helper = get_db_helper(driver)
+
+    def should_drop_db():
+        """Return True if the database should be dropped.
+
+        The logic is following:
+            - if drop_db is set then respect the user choice (either True or False)
+            - if drop_db is not set then drop only in non automatic mode and
+                the user confirm the deletion
+        """
+        if drop_db is not None:
+            return drop_db
+        if automatic:
+            return False
+        drop_db_question = "Database %s already exists. Drop it?" % dbname
+        return ASK.confirm(drop_db_question)
+
+    if driver == "sqlite":
+        if os.path.exists(dbname) and should_drop_db():
+            os.unlink(dbname)
+    elif self.config.create_db:
+        print("\n" + underline_title("Creating the system database"))
+        # connect on the dbms system base to create our base
+        dbcnx = _db_sys_cnx(source, "CREATE/DROP DATABASE and / or USER", interactive=not automatic)
+        cursor = dbcnx.cursor()
+        try:
+            if helper.users_support:
+                user = source["db-user"]
+                if not helper.user_exists(cursor, user) and (
+                    automatic or ASK.confirm("Create db user %s ?" % user, default_is_yes=False)
+                ):
+                    helper.create_user(source["db-user"], source.get("db-password"))
+                    print("-> user %s created." % user)
+            if dbname in helper.list_databases(cursor):
+                if should_drop_db():
+                    cursor.execute('DROP DATABASE "%s"' % dbname)
+                else:
+                    print(
+                        "The database %s already exists, but automatically dropping it "
+                        "is currently forbidden. You may want to run "
+                        '"cubicweb-ctl db-create --drop=y %s" to continue or '
+                        '"cubicweb-ctl db-create --help" to get help.' % (dbname, config.appid)
+                    )
+                    raise Exception("Not allowed to drop existing database.")
+            createdb(helper, source, dbcnx, cursor)
+            dbcnx.commit()
+            print("-> database %s created." % dbname)
+        except BaseException:
+            dbcnx.rollback()
+            raise
+    cnx = source_cnx(source, special_privs="CREATE LANGUAGE/SCHEMA", interactive=not automatic)
+    cursor = cnx.cursor()
+    helper.init_fti_extensions(cursor)
+    namespace = source.get("db-namespace")
+    if namespace and (
+        automatic or ASK.confirm("Create schema %s in database %s ?" % (namespace, dbname))
+    ):
+        helper.create_schema(cursor, namespace)
+    cnx.commit()
+    # postgres specific stuff
+    if driver == "postgres":
+        # install plpgsql language
+        langs = ("plpgsql",)
+        for extlang in langs:
+            if automatic or ASK.confirm("Create language %s ?" % extlang):
+                try:
+                    helper.create_language(cursor, extlang)
+                except Exception as exc:
+                    print("-> ERROR:", exc)
+                    print(
+                        "-> could not create language %s, "
+                        "some stored procedures might be unusable" % extlang
+                    )
+                    cnx.rollback()
+                else:
+                    cnx.commit()
+    print("-> database for instance %s created and necessary extensions installed." % appid)
+    print()
+    if automatic:
+        CWCTL.run(["db-init", "--automatic", "--config-level", "0", config.appid])
+    elif ASK.confirm("Run db-init to initialize the system database ?"):
+        CWCTL.run(["db-init", "--config-level", str(self.config.config_level), config.appid])
+    else:
+        print("-> nevermind, you can do it later with " '"cubicweb-ctl db-init %s".' % config.appid)
+
+
 def create_homepage_metadata(cnx):
     cnx.create_entity(
         "Metadata",
@@ -285,3 +555,15 @@ def create_homepage_metadata(cnx):
         description="Portail National des Archives de France",
         type="website",
     )
+
+
+class ColoredLogsMixIn:
+    failed_mark = "\033[91m" + "x" + "\033[0m"
+    passed_mark = "\033[32m" + "\u2713" + "\33[0m"
+
+    def log(self, cnx, message, status=None):
+        if status is not None:
+            print(f" {self.passed_mark if status else self.failed_mark} {message}")
+        else:
+            print(message)
+        cnx.info(message)

@@ -1,11 +1,8 @@
 {% extends "./searchlist.jinja2" %}
 
-
-{% block result_title %}
-  {{ super() }}
-  <h3 class="sr-title sr-title--circular">
-    <a href="{{ req.build_url('card/tableau-circulaires-fr') }}">
-    {{ _('all circular in a table') }}
-    </a>
-  </h3>
+{% block context_abstract %}
+  <h1>{{ header.title }}</h1>
+   <a href="{{ req.build_url('card/tableau-circulaires-fr') }}">
+     {{ _('all circular in a table') }}<i class="fa fa-table"></i>
+   </a>
 {% endblock %}

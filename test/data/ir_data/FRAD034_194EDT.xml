@@ -1,0 +1,847 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<ead xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="urn:isbn:1-931666-22-9">
+  <eadheader countryencoding="iso3166-1" dateencoding="iso8601" repositoryencoding="iso15511">
+    <eadid countrycode="FR" identifier="FRAD034_194EDT" mainagencycode="FRAD034" url="https://francearchives.fr/findingaid/d16643a704946f953acc3f81c3008862023e0da0">FRAD034_194EDT</eadid>
+    <filedesc>
+      <titlestmt>
+        <titleproper>Archives communales déposées de Paulhan (1610 - 1799) </titleproper>
+        <subtitle>Répertoire numérique détaillé de la sous-série 194 EDT</subtitle>
+        <author>par Françoise Mazars, archiviste. Complété par Hélène Martin, attachée de conservation du patrimoine</author>
+      </titlestmt>
+      <publicationstmt>
+        <publisher>Archives Départementales de l'Hérault</publisher>
+        <address>
+          <addressline>Montpellier</addressline>
+        </address>
+        <date normal="2010-03-31">2016</date>
+      </publicationstmt>
+    </filedesc>
+    <profiledesc>
+      <creation>Instrument de recherche encodé suivant la DTD/EAD par le logiciel Avenio Version 803-ev10 - 14/07/2009 de la société Di'X </creation>
+      <langusage>Instrument de recherche rédigé en <language>Français</language></langusage>
+      <descrules>Instrument de recherche rédigé conformément aux normes de description en vigueur.</descrules>
+    </profiledesc>
+  </eadheader>
+  <archdesc level="fonds">
+    <did>
+      <unitid>194 EDT 1-25<extptr xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vtabd2380d8c2e5a651" xlink:type="simple"/></unitid>
+      <unittitle>Archives communales de Paulhan (194 EDT) </unittitle>
+      <physdesc>1 ml </physdesc>
+      <origination label="">Communauté de Paulhan, paroisse de Notre-Dame des vertus, commune de Paulhan. <corpname>Communauté de Paulhan, paroisse de Notre-Dame des vertus, commune de Paulhan. </corpname></origination>
+      <unitdate normal="1610-01-01/1799-12-31">1610-1799</unitdate>
+      <note type="mnesysinternal">
+        <p/>
+      </note>
+    </did>
+    <acqinfo>
+      <p>Dépôt commune de Paulhan, complété par un nouveau dépôt effectué en février 2016 (n° 6133).</p>
+    </acqinfo>
+    <arrangement>
+      <p>Selon le cadre de classement des archives communales de 1926. </p>
+      <head/>
+    </arrangement>
+    <accessrestrict>
+      <p>Selon les lois et règlements en vigueur.</p>
+    </accessrestrict>
+    <userestrict>
+      <p>Se référer au règlement intérieur de la salle de lecture. </p>
+      <head/>
+    </userestrict>
+    <separatedmaterial>
+      <p>Sous-série 30 J. Archives concernant les communes de l'Hérault : 30 J 194/1</p>
+    </separatedmaterial>
+    <bibliography>
+      <p>PORTEFAIX-VEZIAN Christine. <emph render="italic">Paulhan : répertoire des tènements et des lieux-dits, leur étymologie et leur histoire suivi du répertoire des noms de rues et leur histoire</emph>. - [S.l.] : L.U., 2006.- 347 p. (Archives départementales de l'Hérault, coté BIB 1712)<lb/> <lb/> DELOUVRIER Alphonse. <emph render="italic">Histoire de Paulhan (diocèse de Béziers) et de ses environs, sous l'Ancien Régime ; L'histoire de N.-D.-des-Vertus</emph>. - Alphonse Delouvrier.- Reproduction en fac-similé.- Nîmes : Lacour-Ollé, 1993.- 1 vol. (334-55 p.) (Rediviva, ISSN 0989-4616). (Archives départementales de l'Hérault, coté BIB 6491)<lb/> <lb/> AUDEMAR J.C, DAVIT Bernard. <emph render="italic">Les statues de Paulhan</emph>. - Paulhan : Riffoul, impr. 1988.- 77 p. (Archives départementales de l'Hérault, coté BRA 5730)<lb/> <lb/> AMIS DE PAULHAN. <emph render="italic">Mémoires d'eau</emph>. - [S.l. : s.n.], [1991].- 1 vol. (non paginé) (Cahier des amis de Paulhan ; 1) (Archives départementales de l'Hérault, coté BRA 3035)<lb/> <lb/> SECONDY Louis, VEZIAN-PORTEFAIX Christine. <emph render="italic">A visage découvert : les pénitents blancs de Paulhan : 1645-1935</emph>. - Pézenas : Domens, 1998.- 1 vol., 236 p. (Archives départementales de l'Hérault, coté BIB 6971)<lb/> <lb/> LACOMBE Fernand. <emph render="italic">Journal du Club des Sans-Culottes de Paulhan (1793-1795)</emph>. - Paulhan : Les Amis de Paulhan, 1993.- 135 p. (Archives départementales de l'Hérault, coté BIB 6901)<lb/> <lb/> <emph render="italic">Observations sur le tracé du chemin de fer de Montpellier à Paulhan / présentées par MM. les maires des communes de Saint-George, Murviel, Pignan, Saussan, Cournonterral et Cournonsec</emph>.- Montpellier : Boehm et fils, [ca 1861].- 1 vol., 6 p. (Archives départementales de l'Hérault, coté BRA 9404)<lb/> <lb/> CAROZZA Laurent, GEORJON Cathy, VIGNAUD Alain. <emph render="italic">La fin du néolithique et les débuts de la métallurgie en Languedoc central : les habitats de la colline du Puech-Haut à Paulhan, Hérault</emph>. - Toulouse (EHESS) : Archives d'écologie préhistorique, 666 p., 2005 (Recherches en archéologie préventive ; 3, ISSN 1950-2052). (Archives départementales de l'Hérault, coté BIB 5796)<lb/> <lb/> SOUTOU André. <emph render="italic">Précisions sur le Moulin fortifié et sur la Meuse des Lores à Paulhan (Hérault)</emph>. In : Bulletin du GREC, Groupe de recherches et d'études du Clermontais 1994, n° 70-71-72, 1er sem. ; p. 28 (Archives départementales de l'Hérault, coté PAR 150)<lb/> <lb/> CAROZZA Laurent, VIGNAUD Alain. <emph render="italic">Les enceintes du Néolithique final et du Chalcolithique du Puech Haut (Paulhan, Hérault) : résultats préliminaires</emph>. In : Temps et espaces culturels du 6 au 2 millénaire en France du sud 2003 article de congrès p. 311-318 (Réseau des médiathèques Montpellier Méditerranée Métropole)<lb/> <lb/> CAROZZA Laurent, GEORJON Cathy, VIGNAUD Alain. <emph render="italic">La fin du néolithique et les débuts de la métallurgie en Languedoc central : les habitats de la colline du Puech Haut à Paulhan, Hérault</emph>. Toulouse : Institut de recherches archéologiques préventives, 2005, 675 p. (Collection : Recherches en archéologie préventive , 3) (Réseau des médiathèques Montpellier Méditerranée Métropole, coté LE9492)<lb/> <lb/> MAUNE Stéphane. <emph render="italic">Destins croisés, histoires séparées. Les villae vinicoles antiques de Vareilles (Paulhan) et de Saint-Bézard (Aspiran, Hérault)</emph>. In : Archéologie des rivages méditerranéens, 50 ans de recherche (Réseau des médiathèques Montpellier Méditerranée Métropole)<lb/> <lb/> BONNET André. <emph render="italic">L'Intérêt local dans notre région [ligne Agde-Lodève, via Vias, Pézenas, Paulhan et Clermont-l'Hérault]</emph>. In : Bulletin du GREC, Groupe de recherches et d'études du Clermontais 1984, n° 34 octobre-novembre, pp. 18-21 (Archives départementales de l'Hérault, coté PAR 150)<lb/> <lb/> MAUNE Stéphane, PAILLET Jean-Louis, SEKHARI Zinedine. <emph render="italic">Les aqueducs de la villa de Vareilles à Paulhan (Hérault) : 1er s. av. J.-C.-IIIe s. apr. J.-C.</emph>. In : Gallia (Paris) 2005, n° 62 ; pp. 131-145 (Réseau des médiathèques Montpellier Méditerranée Métropole)<lb/> <lb/> BLANC Georges. <emph render="italic">Paulhan : Le village d'antan</emph>. In : Bulletin du GREC, Groupe de recherches et d'études du Clermontais 2006, n° 136-137-138 ; pp. 19-21 (Archives départementales de l'Hérault, coté PAR 150)<lb/> <lb/> BONNET Renée. <emph render="italic">Paulhan : Ermitage de Saint-Jean de Vareilhes</emph>. In : Bulletin du GREC, Groupe de recherches et d'études du Clermontais 1998, n° 83-84-85 ; pp. 59-61 (Archives départementales de l'Hérault, coté PAR 150)<lb/> <lb/> DELOUVRIER Alphonse. <emph render="italic">Histoire de Notre-Dame-des-Vertus de Paulhan</emph>. Montpellier : éd. Grollier, 1892. 20 p. (Réseau des médiathèques Montpellier Méditerranée Métropole, coté 30143)<lb/> <lb/> BERTRAND-BONNET Renée. <emph render="italic">Paulhan : restauration de Notre-Dame des vertus</emph>. In : Article de la revue : Bulletin du GREC, Groupe de recherches et d'études du Clermontais 1986, janvier-avril ; pp. 57-59 (Archives départementales de l'Hérault, coté PAR 150)<lb/> <lb/> BERTRAND-BONNET Renée. <emph render="italic">Dans le vignoble languedocien : Paulhan</emph>. - Nice : Ed. la lambrusque, 1978.- 103 p., [7] f. de pl. (Archives départementales de l'Hérault, coté BRA 6636)<lb/> <lb/> DELOUVRIER Alphonse. <emph render="italic">Histoire de la Vicomté d'Aumelas et de la Baronnie du Pouget</emph>. - Réédition de l'ouvrage à l'identique. - Gignac : Bibliothèque 42, impr. 1990.- XI, 350 p. (Archives départementales de l'Hérault, coté BIB 2600)</p>
+    </bibliography>
+    <processinfo>
+      <p/>
+      <persname>Julien Duvaux </persname>
+    </processinfo>
+    <scopecontent>
+      <p>Le fonds déposé comprend principalement des registres de délibérations consulaires (1694-1711, 1750-1780), une collection de compoix depuis le XVIème siècle, et des registres d'actes paroissiaux depuis 1610. Il contient également quelques pièces datant de 1799.</p>
+    </scopecontent>
+    <accruals>
+      <p>Fonds ouvert</p>
+    </accruals>
+    <relatedmaterial>
+      <p>
+        <emph render="bold">Séries d'archives concernant l'Ancien Régime (Avant 1789)</emph>
+      </p>
+      <p>L'Ancien Régime n'ignore pas les documents statistiques et l'on peut consulter, dans la série C (Administration de la Province de Languedoc) les enquêtes qui présentent souvent un aspect descriptif. La série C réunit les archives des administrations provinciales (intendance, subdélégations, etc.) qui ont régulièrement donné ordre de dresser des tableaux économiques, sociaux et administratifs de la province de Languedoc.</p>
+      <p>La série G (archives du clergé séculier) peut apporter d'utiles renseignements sur la vie de la paroisse notamment par le biais des visites pastorales (les procès-verbaux de l'inspection d'une paroisse par l'évêque ou un archiprêtre renseignent sur l'état des lieux et les objets du culte, mais aussi sur le nombre d'habitants des communautés et la situation générale).</p>
+      <p>Il est aussi possible d'obtenir une estimation de la population d'un village ou d'une ville à partir des registres paroissiaux (collection du greffe conservée en sous-série 3 E). Ceux-ci permettent d'étudier de nombreux aspects de la vie : noms de famille, choix des prénoms, domiciles, professions, instruction, choix des parrains et marraines...</p>
+      <p>Enfin, la justice locale et seigneuriale peut être abordée par la série B qui conserve, entre autres documents, les archives des justices ordinaires (sous-série 10 BP).</p>
+      <p>&amp;#160;</p>
+      <p>
+        <emph render="bold">Séries d'archives concernant la période révolutionnaire (1790-1800)</emph>
+      </p>
+      <p>Une étude portant sur la période révolutionnaire implique la consultation de la série L notamment celles des municipalités de canton, des comités de surveillance et des sociétés populaires.</p>
+      <p>En sous-série 1 Q (Domaines nationaux), on pourra identifier les acquéreurs des biens nationaux et on trouvera des listes d'émigrés, de prêtres déportés, de condamnés et de détenus.</p>
+      <p>&amp;#160;</p>
+      <p>
+        <emph render="bold">Séries d'archives concernant la période moderne (1800-1940)</emph>
+      </p>
+      <p>Pour cette période, il est essentiel de dépouiller les dossiers issus des bureaux exerçant la tutelle préfectorale sur les communes, classés en série O (Administration et comptabilité communale, 1800-1940).</p>
+      <p>La sous-série 1 O rassemble la comptabilité communale, la sous-série 2 O les travaux de construction et d'entretien sur les équipements communaux (mairie, école, église et presbytère, halles, etc.) et les acquisitions/aliénations des biens communaux, le bornage ; ces dossiers sont pourvus de pièces techniques et de nombreux plans ; ils peuvent compléter les éventuelles lacunes des fonds communaux.</p>
+      <p>En 3 O on trouvera des renseignements sur les chemins vicinaux et la voirie urbaine.</p>
+      <p>En 4 O, on peut retrouver l'origine de certains biens donnés ou légués à la commune, à la paroisse, aux établissements hospitaliers et de bienfaisance, aux établissements culturels (musées).</p>
+      <p>Pour la délimitation géographique, l'érection, la fusion de communes, il faut se reporter à la sous-série 1 M (administration générale) que l'on complétera avec la sous-série 3 P (cadastre) pour l'évolution de la propriété foncière communale (notamment sa répartition, la nature des cultures, les moulins, les maisons).</p>
+      <p>Pour l'étude de la population, les sous-séries 3 E (Etat civil) et 6 M (Recensement de population) sont incontournables. La sous-série 6 M est essentielle pour le chercheur en histoire locale puisqu'elle regroupe les recensements de population, les statistiques démographiques, les mouvements de population, les archives relatives à l'émigration, l'immigration et aux naturalisations.</p>
+      <p>La sous-série 1 R (Recrutement de l'armée) contient des listes d'appel des classes et les registres matricules militaires.</p>
+      <p>L'histoire politique d'une commune peut être abordée par la sous-série 3 M : on trouvera notamment les dossiers des élections municipales.</p>
+      <p>La série S Travaux publics constitue également une source essentielle en ce qui concerne les ponts, la navigation intérieure, les travaux hydrauliques ou bien les carrières et mines.</p>
+      <p>Les archives relatives aux établissements scolaires sont quant à elle conservées en série T. On trouvera aussi dans cette série les inspections et les récolements des archives communales ainsi que les monuments historiques et les affaires culturelles.</p>
+      <p>Enfin, les séries V (Cultes) et X (Assistance et prévoyance sociale) regroupent les fonds des conseils de fabrique et des bureaux de bienfaisance.</p>
+      <p>&amp;#160;</p>
+      <p>
+        <emph render="bold">Série W concernant l'époque contemporaine (depuis 1940)</emph>
+      </p>
+      <p>Les fonds d'archives des administrations qui ont versé leurs documents postérieurs à 1940 peuvent éclairer l'histoire de la commune au regard de leurs domaines d'activités respectifs.</p>
+      <p>&amp;#160;</p>
+      <p>
+        <emph render="bold">Iconographie</emph>
+      </p>
+      <p>Les documents figurés comprennent tout aussi bien des cartes et plans, des gravures et dessins anciens, des reproductions photographiques, des collections de cartes postales.</p>
+      <p>&amp;#160;</p>
+      <p>
+        <emph render="bold">Archives privées</emph>
+      </p>
+      <p>Les archives personnelles, familiales et seigneuriales sont regroupées dans les séries J et E. Les archives d'érudits locaux qui permettent d'éclairer l'histoire de la commune, sont regroupées dans la série F. A noter en particulier :<lb/> 11 F 95 "Le Club des Sans-Culottes de Paulhan, contribution à l'histoire de la Révolution Française", par Fernand Lacombe. (1989)</p>
+      <p>&amp;#160;</p>
+      <p>
+        <emph render="bold">Archives notariales</emph>
+      </p>
+      <p>Les Archives départementales conservent également les archives des études notariales. Conservés en sous-série 2 E, ces documents fournissent de précieuses informations sur la vie des habitants. On retrouve également parfois dans ces fonds des archives communales telles que des compoix ou des délibérations consulaires.</p>
+      <p>&amp;#160;</p>
+      <p>
+        <emph render="bold">Bibliothèque des archives</emph>
+      </p>
+      <p>Les Archives départementales peuvent également conserver des bulletins paroissiaux et des bulletins municipaux de la commune.</p>
+    </relatedmaterial>
+    <dsc>
+      <c>
+        <did>
+          <unittitle>ARCHIVES COMMUNALES ANTÉRIEURES A 1790</unittitle>
+        </did>
+        <c>
+          <did>
+            <unittitle>BB ADMINISTRATION COMMUNALE</unittitle>
+          </did>
+          <c id="ark--37279-vtae0897032ffb2bd0b">
+            <did>
+              <unittitle>Délibérations consulaires.</unittitle>
+              <unitid>194 EDT 4<extptr xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vtae0897032ffb2bd0b" xlink:type="simple"/></unitid>
+              <unitid>59 PUB 13</unitid>
+              <unitid>BB2</unitid>
+              <unitdate normal="1694-01-01/1711-12-31">1694-1711</unitdate>
+              <physdesc>Registre</physdesc>
+              <note type="mnesysinternal">
+                <p/>
+              </note>
+              <dao xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vtae0897032ffb2bd0b/daogrp/0" xlink:type="simple" xlink:title=""/>
+              <dao xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vtae0897032ffb2bd0b/daogrp/0/vignette" xlink:type="simple" xlink:role="thumbnail"/>
+            </did>
+            <altformavail>
+              <p>Document numérisé consultable en ligne. Numérisé en août 2011 par la société Arkhénum sur un Digibook Scanner i2s, Suprascan A1 7600 RGB. 300 dpi. Couleur. 152 vues.</p>
+            </altformavail>
+            <controlaccess>
+              <geogname>Paulhan (Hérault, France)</geogname>
+              <genreform>Délibération</genreform>
+            </controlaccess>
+            <scopecontent>
+              <p>Contient les actes du 11 juillet 1694 au 4 mars 1711.</p>
+            </scopecontent>
+            <accessrestrict>
+              <p>Communicable</p>
+            </accessrestrict>
+          </c>
+          <c id="ark--37279-vtaa56ce0d3650fec49">
+            <did>
+              <unittitle>Délibérations consulaires.</unittitle>
+              <unitid>194 EDT 5<extptr xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vtaa56ce0d3650fec49" xlink:type="simple"/></unitid>
+              <unitid>59 PUB 14</unitid>
+              <unitid>BB4</unitid>
+              <unitdate normal="1750-01-01/1760-12-31">1750-1760</unitdate>
+              <physdesc>Registre</physdesc>
+              <note type="mnesysinternal">
+                <p/>
+              </note>
+              <dao xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vtaa56ce0d3650fec49/daogrp/0" xlink:type="simple" xlink:title=""/>
+              <dao xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vtaa56ce0d3650fec49/daogrp/0/vignette" xlink:type="simple" xlink:role="thumbnail"/>
+            </did>
+            <altformavail>
+              <p>Document numérisé consultable en ligne. Numérisé en août 2011 par la société Arkhénum sur un Digibook Scanner i2s, Suprascan A1 7600 RGB. 300 dpi. Couleur. 107 vues.</p>
+            </altformavail>
+            <controlaccess>
+              <geogname>Paulhan (Hérault, France)</geogname>
+              <genreform>Délibération</genreform>
+            </controlaccess>
+            <scopecontent>
+              <p>Contient les actes du 4 octobre 1750 au 4 mai 1760</p>
+            </scopecontent>
+            <accessrestrict>
+              <p>Communicable</p>
+            </accessrestrict>
+          </c>
+          <c id="ark--37279-vta418414d1ae14b003">
+            <did>
+              <unittitle>Délibérations consulaires.</unittitle>
+              <unitid>194 EDT 6<extptr xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vta418414d1ae14b003" xlink:type="simple"/></unitid>
+              <unitid>59 PUB 15</unitid>
+              <unitid>BB5</unitid>
+              <unitdate normal="1760-01-01/1769-12-31">1760-1769</unitdate>
+              <physdesc>Registre</physdesc>
+              <note type="mnesysinternal">
+                <p/>
+              </note>
+              <dao xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vta418414d1ae14b003/daogrp/0" xlink:type="simple" xlink:title=""/>
+              <dao xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vta418414d1ae14b003/daogrp/0/vignette" xlink:type="simple" xlink:role="thumbnail"/>
+            </did>
+            <altformavail>
+              <p>Document numérisé consultable en ligne. Numérisé en août 2011 par la société Arkhénum sur un Digibook Scanner i2s, Suprascan A1 7600 RGB. 300 dpi. Couleur. 102 vues.</p>
+            </altformavail>
+            <controlaccess>
+              <geogname>Paulhan (Hérault, France)</geogname>
+              <genreform>Délibération</genreform>
+            </controlaccess>
+            <scopecontent>
+              <p>Contient les actes du 18 mai 1760 au 26 août 1769.</p>
+            </scopecontent>
+            <accessrestrict>
+              <p>Communicable</p>
+            </accessrestrict>
+          </c>
+          <c id="ark--37279-vta88375db6e68e0a47">
+            <did>
+              <unittitle>Délibérations consulaires.</unittitle>
+              <unitid>194 EDT 7<extptr xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vta88375db6e68e0a47" xlink:type="simple"/></unitid>
+              <unitid>59 PUB 16</unitid>
+              <unitid>BB6</unitid>
+              <unitdate normal="1770-01-01/1780-12-31">1770-1780</unitdate>
+              <physdesc>Registre</physdesc>
+              <note type="mnesysinternal">
+                <p/>
+              </note>
+              <dao xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vta88375db6e68e0a47/daogrp/0" xlink:type="simple" xlink:title=""/>
+              <dao xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vta88375db6e68e0a47/daogrp/0/vignette" xlink:type="simple" xlink:role="thumbnail"/>
+            </did>
+            <altformavail>
+              <p>Document numérisé consultable en ligne. Numérisé en août 2011 par la société Arkhénum sur un Digibook Scanner i2s, Suprascan A1 7600 RGB. 300 dpi. Couleur. 181 vues.</p>
+            </altformavail>
+            <controlaccess>
+              <geogname>Paulhan (Hérault, France)</geogname>
+              <genreform>Délibération</genreform>
+            </controlaccess>
+            <scopecontent>
+              <p>Contient les actes du 7 octobre 1770 au 4 janvier 1780.</p>
+            </scopecontent>
+            <accessrestrict>
+              <p>Communicable</p>
+            </accessrestrict>
+          </c>
+        </c>
+        <c>
+          <did>
+            <unittitle>CC FINANCES, IMPOTS ET COMPTABILITE</unittitle>
+          </did>
+          <c>
+            <did>
+              <unittitle>Impositions</unittitle>
+            </did>
+            <c id="ark--37279-vtafdaa272402b05d6c">
+              <did>
+                <unittitle>Usuel du compoix [XVIe s.].</unittitle>
+                <unitid>194 EDT 8<extptr xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vtafdaa272402b05d6c" xlink:type="simple"/></unitid>
+                <unitid>59 PUB 25</unitid>
+                <unitid>CC1</unitid>
+                <unitdate normal="1501-01-01/1649-12-31">[XVIe]-1649</unitdate>
+                <physdesc>Registre [29 X 45cm ; 670 folios] </physdesc>
+                <note type="mnesysinternal">
+                  <p/>
+                </note>
+                <dao xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vtafdaa272402b05d6c/daogrp/0" xlink:type="simple" xlink:title=""/>
+                <dao xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vtafdaa272402b05d6c/daogrp/0/vignette" xlink:type="simple" xlink:role="thumbnail"/>
+              </did>
+              <controlaccess>
+                <geogname>Paulhan (Hérault, France)</geogname>
+                <genreform>Compoix</genreform>
+              </controlaccess>
+              <altformavail>
+                <p>Document numérisé consultable en ligne. Numérisé par les archives départementales de l'Hérault sur un copybook i2s en juillet 2011. 300 dpi. Couleur. 442 vues.</p>
+              </altformavail>
+              <scopecontent>
+                <p>Compoix commençant au folio 25 et comprenant des mutations de propriétés de 1604 à 1649.</p>
+              </scopecontent>
+              <accessrestrict>
+                <p>Communicable</p>
+              </accessrestrict>
+            </c>
+            <c id="ark--37279-vta19b1548ac10ced00">
+              <did>
+                <unittitle>Usuel du compoix de [1650], tome 1.</unittitle>
+                <unitid>194 EDT 9<extptr xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vta19b1548ac10ced00" xlink:type="simple"/></unitid>
+                <unitid>59 PUB 26</unitid>
+                <unitid>CC2</unitid>
+                <unitdate normal="1651-01-01/1743-12-31">1651-1743</unitdate>
+                <physdesc>Registre [30 X 45cm ; 303 folios] </physdesc>
+                <note type="mnesysinternal">
+                  <p/>
+                </note>
+                <dao xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vta19b1548ac10ced00/daogrp/0" xlink:type="simple" xlink:title=""/>
+                <dao xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vta19b1548ac10ced00/daogrp/0/vignette" xlink:type="simple" xlink:role="thumbnail"/>
+              </did>
+              <controlaccess>
+                <geogname>Paulhan (Hérault, France)</geogname>
+                <genreform>Compoix</genreform>
+              </controlaccess>
+              <altformavail>
+                <p>Document numérisé consultable en ligne. Numérisé par les archives départementales de l'Hérault sur un copybook i2s en juillet 2011. 300 dpi. Couleur. 306 vues.</p>
+              </altformavail>
+              <scopecontent>
+                <p>"Livre de l'ancien compoix, premier volime, de folio 3 à folio 303" commençant au folio 3 et comprenant des mutations de propriétés de 1651 à 1743.</p>
+              </scopecontent>
+              <accessrestrict>
+                <p>Communicable</p>
+              </accessrestrict>
+            </c>
+            <c id="ark--37279-vta10be0a2b4cf8524a">
+              <did>
+                <unittitle>Usuel du compoix de [1650], tome 2.</unittitle>
+                <unitid>194 EDT 10<extptr xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vta10be0a2b4cf8524a" xlink:type="simple"/></unitid>
+                <unitid>59 PUB 27</unitid>
+                <unitid>CC3</unitid>
+                <unitdate normal="1651-01-01/1743-12-31">1651-1743</unitdate>
+                <physdesc>Registre [31 X 44,5cm ; 340 folios] </physdesc>
+                <note type="mnesysinternal">
+                  <p/>
+                </note>
+                <dao xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vta10be0a2b4cf8524a/daogrp/0" xlink:type="simple" xlink:title=""/>
+                <dao xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vta10be0a2b4cf8524a/daogrp/0/vignette" xlink:type="simple" xlink:role="thumbnail"/>
+              </did>
+              <controlaccess>
+                <geogname>Paulhan (Hérault, France)</geogname>
+                <genreform>Compoix</genreform>
+              </controlaccess>
+              <altformavail>
+                <p>Document numérisé consultable en ligne. Numérisé par les archives départementales de l'Hérault sur un copybook i2s en juillet 2011. 300 dpi. Couleur. 344 vues.</p>
+              </altformavail>
+              <scopecontent>
+                <p>"Livre de l'ancien compoix, deuxième volime, de folio 304 à folio 644" comprenant des mutations de propriétés de 1651 à 1743.</p>
+              </scopecontent>
+              <accessrestrict>
+                <p>Communicable</p>
+              </accessrestrict>
+            </c>
+            <c id="ark--37279-vtacfdd66f9781cdb53">
+              <did>
+                <unittitle>Usuel du compoix de [1744], tome 1.</unittitle>
+                <unitid>194 EDT 11<extptr xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vtacfdd66f9781cdb53" xlink:type="simple"/></unitid>
+                <unitid>59 PUB 28</unitid>
+                <unitid>CC4</unitid>
+                <unitdate normal="1744-01-01/1793-12-31">[1744]-1793</unitdate>
+                <physdesc>Registre [30 X 43,5cm ; 266 folios] </physdesc>
+                <note type="mnesysinternal">
+                  <p/>
+                </note>
+                <dao xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vtacfdd66f9781cdb53/daogrp/0" xlink:type="simple" xlink:title=""/>
+                <dao xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vtacfdd66f9781cdb53/daogrp/0/vignette" xlink:type="simple" xlink:role="thumbnail"/>
+              </did>
+              <controlaccess>
+                <geogname>Paulhan (Hérault, France)</geogname>
+                <genreform>Compoix</genreform>
+              </controlaccess>
+              <altformavail>
+                <p>Document numérisé consultable en ligne. Numérisé par les archives départementales de l'Hérault sur un copybook i2s en juillet 2011. 300 dpi. Couleur. 274 vues.</p>
+              </altformavail>
+              <scopecontent>
+                <p>Compoix comprenant une rubrique alphabétique en début de volume et des mutations de propriétés de 1753 à 1793.</p>
+              </scopecontent>
+              <accessrestrict>
+                <p>Communicable</p>
+              </accessrestrict>
+            </c>
+            <c id="ark--37279-vta85bc1167198941ea">
+              <did>
+                <unittitle>Usuel du compoix [de 1744], tome 2.</unittitle>
+                <unitid>194 EDT 12<extptr xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vta85bc1167198941ea" xlink:type="simple"/></unitid>
+                <unitid>59 PUB 29</unitid>
+                <unitid>CC5</unitid>
+                <unitdate normal="1744-01-01/1793-12-31">[1744]-1793</unitdate>
+                <physdesc>Registre [30 X 44 cm ; 237 folios] </physdesc>
+                <note type="mnesysinternal">
+                  <p/>
+                </note>
+                <dao xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vta85bc1167198941ea/daogrp/0" xlink:type="simple" xlink:title=""/>
+                <dao xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vta85bc1167198941ea/daogrp/0/vignette" xlink:type="simple" xlink:role="thumbnail"/>
+              </did>
+              <controlaccess>
+                <geogname>Paulhan (Hérault, France)</geogname>
+                <genreform>Compoix</genreform>
+              </controlaccess>
+              <altformavail>
+                <p>Document numérisé consultable en ligne. Numérisé par les archives départementales de l'Hérault sur un copybook i2s en juillet 2011. 300 dpi. Couleur. 243 vues.</p>
+              </altformavail>
+              <scopecontent>
+                <p>Compoix comprenant une rubrique alphabétique en début de volume et des mutations de propriétés de 1751 à l'an VI.</p>
+              </scopecontent>
+              <accessrestrict>
+                <p>Communicable</p>
+              </accessrestrict>
+            </c>
+            <c id="ark--37279-vta35da23325a69bb1f">
+              <did>
+                <unittitle>Usuel du compoix [de 1744], tome 3.</unittitle>
+                <unitid>194 EDT 13<extptr xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vta35da23325a69bb1f" xlink:type="simple"/></unitid>
+                <unitid>59 PUB 30</unitid>
+                <unitid>CC6</unitid>
+                <unitdate normal="1744-01-01/1798-09-21">[1744]-an VI</unitdate>
+                <physdesc>Registre [29,5 X 44 cm ; 173 folios] </physdesc>
+                <note type="mnesysinternal">
+                  <p/>
+                </note>
+                <dao xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vta35da23325a69bb1f/daogrp/0" xlink:type="simple" xlink:title=""/>
+                <dao xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vta35da23325a69bb1f/daogrp/0/vignette" xlink:type="simple" xlink:role="thumbnail"/>
+              </did>
+              <controlaccess>
+                <geogname>Paulhan (Hérault, France)</geogname>
+                <genreform>Compoix</genreform>
+              </controlaccess>
+              <altformavail>
+                <p>Document numérisé consultable en ligne. Numérisé par les archives départementales de l'Hérault sur un copybook i2s en juillet 2011. 300 dpi. Couleur. 170 vues.</p>
+              </altformavail>
+              <scopecontent>
+                <p>Compoix comprenant une rubrique alphabétique en début de volume et des mutations de propriétés de 1751 à l'an VI.</p>
+              </scopecontent>
+              <accessrestrict>
+                <p>Compoix</p>
+              </accessrestrict>
+            </c>
+          </c>
+        </c>
+        <c>
+          <did>
+            <unittitle>GG CULTES - INSTRUCTION PUBLIQUE - ASSISTANCE PUBLIQUE</unittitle>
+          </did>
+          <c>
+            <did>
+              <unittitle>Actes provenant des paroisses</unittitle>
+            </did>
+            <c id="ark--37279-vta78bb60968d86358d">
+              <did>
+                <unittitle>Paroisse Notre-Dame des Vertus : registre des actes de baptême (4 mars 1610 - 16 juin 1612) et de sépulture (12 mars 1610 - 1er juin 1612).</unittitle>
+                <unitid>194 EDT 14<extptr xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vta78bb60968d86358d" xlink:type="simple"/></unitid>
+                <unitid>59 PUB 1</unitid>
+                <unitid>GG1</unitid>
+                <unitdate normal="1610-01-01/1622-12-31">1610-1622</unitdate>
+                <physdesc>Registre [20 X 29,5 cm] </physdesc>
+                <note type="mnesysinternal">
+                  <p/>
+                </note>
+                <dao xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vta78bb60968d86358d/daogrp/0" xlink:type="simple" xlink:title=""/>
+                <dao xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vta78bb60968d86358d/daogrp/0/vignette" xlink:type="simple" xlink:role="thumbnail"/>
+              </did>
+              <controlaccess>
+                <geogname>Paulhan (Hérault, France)</geogname>
+                <genreform>Baptême</genreform>
+                <genreform>Sépulture</genreform>
+              </controlaccess>
+              <altformavail>
+                <p>Document numérisé consultable en ligne. Numérisé par les archives départementales de l'Hérault sur un copybook i2s en juillet 2011. 300 dpi. Couleur. 65 vues.</p>
+              </altformavail>
+              <accessrestrict>
+                <p>Communicable</p>
+              </accessrestrict>
+            </c>
+            <c id="ark--37279-vta9579c11629267c43">
+              <did>
+                <unittitle>Paroisse Notre-Dame des Vertus : registre des actes de baptême (14 mai 1623 - 15 mai 1644), de mariage (26 avril 1623 - 31 janvier 1644) et de sépulture (28 mars 1623 - 25 juillet 1644).</unittitle>
+                <unitid>194 EDT 15<extptr xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vta9579c11629267c43" xlink:type="simple"/></unitid>
+                <unitid>59 PUB 2</unitid>
+                <unitid>GG2</unitid>
+                <unitdate normal="1623-01-01/1644-12-31">1623-1644</unitdate>
+                <physdesc>Registre [16,5 X 43 cm] </physdesc>
+                <langmaterial>En latin et en français.</langmaterial>
+                <note type="mnesysinternal">
+                  <p/>
+                </note>
+                <dao xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vta9579c11629267c43/daogrp/0" xlink:type="simple" xlink:title=""/>
+                <dao xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vta9579c11629267c43/daogrp/0/vignette" xlink:type="simple" xlink:role="thumbnail"/>
+              </did>
+              <controlaccess>
+                <geogname>Paulhan (Hérault, France)</geogname>
+                <genreform>Baptême</genreform>
+                <genreform>Sépulture</genreform>
+                <genreform>Mariage</genreform>
+              </controlaccess>
+              <altformavail>
+                <p>Document numérisé consultable en ligne. Numérisé par les archives départementales de l'Hérault sur un copybook i2s en juillet 2011. 300 dpi. Couleur. 103 vues.</p>
+              </altformavail>
+              <scopecontent>
+                <p>"Liber in quo descripta sunt nomina tam baptisatorum, matrimoniorum quam defunctorum, parrochiae loci de Paulhiano, Bitterensis dioecesis".</p>
+              </scopecontent>
+              <accessrestrict>
+                <p>Communicable</p>
+              </accessrestrict>
+            </c>
+            <c id="ark--37279-vtab63cea2775d06187">
+              <did>
+                <unittitle>Paroisse Notre-Dame des Vertus : registre des actes de baptême (15 mai 1644 - 5 septembre 1658), de mariage ( 23 novembre 1656 - 21 février 1668) et de sépulture(31 avril - 17 mars 1654).</unittitle>
+                <unitid>194 EDT 16<extptr xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vtab63cea2775d06187" xlink:type="simple"/></unitid>
+                <unitid>59 PUB 3</unitid>
+                <unitid>GG3</unitid>
+                <unitdate normal="1644-01-01/1668-12-31">1644-1668</unitdate>
+                <physdesc>Registre [20,5 X 28,5 cm] </physdesc>
+                <note type="mnesysinternal">
+                  <p/>
+                </note>
+                <dao xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vtab63cea2775d06187/daogrp/0" xlink:type="simple" xlink:title=""/>
+                <dao xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vtab63cea2775d06187/daogrp/0/vignette" xlink:type="simple" xlink:role="thumbnail"/>
+              </did>
+              <controlaccess>
+                <geogname>Paulhan (Hérault, France)</geogname>
+                <genreform>Baptême</genreform>
+                <genreform>Sépulture</genreform>
+                <genreform>Mariage</genreform>
+              </controlaccess>
+              <altformavail>
+                <p>Document numérisé consultable en ligne. Numérisé par les archives départementales de l'Hérault sur un copybook i2s en juillet 2011. 300 dpi. Couleur. 98 vues.</p>
+              </altformavail>
+              <accessrestrict>
+                <p>Communicable</p>
+              </accessrestrict>
+            </c>
+            <c id="ark--37279-vtad4a9b221c8b557a7">
+              <did>
+                <unittitle>Paroisse Notre-Dame des Vertus : registre des actes de baptême (21 octobre 1658 - 29 septembre 1671), de mariage (29 avril 1668 - 1er mars 1672) et de sépulture (28 février 1668 - 4 mars 1672).</unittitle>
+                <unitid>194 EDT 17<extptr xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vtad4a9b221c8b557a7" xlink:type="simple"/></unitid>
+                <unitid>59 PUB 4</unitid>
+                <unitid>GG4</unitid>
+                <unitdate normal="1658-01-01/1792-12-31">1658-1792</unitdate>
+                <physdesc>Registre [20,5 X 28,5 cm] </physdesc>
+                <note type="mnesysinternal">
+                  <p/>
+                </note>
+                <dao xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vtad4a9b221c8b557a7/daogrp/0" xlink:type="simple" xlink:title=""/>
+                <dao xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vtad4a9b221c8b557a7/daogrp/0/vignette" xlink:type="simple" xlink:role="thumbnail"/>
+              </did>
+              <controlaccess>
+                <geogname>Paulhan (Hérault, France)</geogname>
+                <genreform>Baptême</genreform>
+                <genreform>Sépulture</genreform>
+                <genreform>Mariage</genreform>
+              </controlaccess>
+              <altformavail>
+                <p>Document numérisé consultable en ligne. Numérisé par les archives départementales de l'Hérault sur un copybook i2s en juillet 2011. 300 dpi. Couleur. 118 vues.</p>
+              </altformavail>
+              <scopecontent>
+                <p>Le registre comprend également des procès-verbaux d'élection des prévôts et conseillers de la confrérie du saint sacrement (1664-1695, 1788), la liste des indulgences concédées aux frères de la confrérie, les " Règles et statuts de la confrérie du très sainct sacrement de l'autel", des listes de membres de la confrérie, les ventes de feuilles de murier appartenant à la confrérie (1671, 1781-1792) (vues 16-24, 91-117).</p>
+              </scopecontent>
+              <accessrestrict>
+                <p>Communicable</p>
+              </accessrestrict>
+            </c>
+            <c id="ark--37279-vtaadb54252949c5be5">
+              <did>
+                <unittitle>Paroisse Notre-Dame des Vertus : registre des actes de baptême (1er janvier 1674 - 4 octobre 1691), de mariage (15 janvier 1674 - 7 juin 1691) et de sépulture (28 janvier 1674- 4 octobre 1691).</unittitle>
+                <unitid>194 EDT 18<extptr xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vtaadb54252949c5be5" xlink:type="simple"/></unitid>
+                <unitid>59 PUB 5</unitid>
+                <unitid>GG5</unitid>
+                <unitdate normal="1674-01-01/1691-12-31">1674-1691</unitdate>
+                <physdesc>Registre [20,5 X 28,5 cm] </physdesc>
+                <note type="mnesysinternal">
+                  <p/>
+                </note>
+                <dao xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vtaadb54252949c5be5/daogrp/0" xlink:type="simple" xlink:title=""/>
+                <dao xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vtaadb54252949c5be5/daogrp/0/vignette" xlink:type="simple" xlink:role="thumbnail"/>
+              </did>
+              <controlaccess>
+                <geogname>Paulhan (Hérault, France)</geogname>
+                <genreform>Baptême</genreform>
+                <genreform>Sépulture</genreform>
+                <genreform>Mariage</genreform>
+              </controlaccess>
+              <altformavail>
+                <p>Document numérisé consultable en ligne. Numérisé par les archives départementales de l'Hérault sur un copybook i2s en juillet 2011. 300 dpi. Couleur. 134 vues.</p>
+              </altformavail>
+              <accessrestrict>
+                <p>Communicable</p>
+              </accessrestrict>
+            </c>
+            <c id="ark--37279-vtaa3c2ab68d052dda2">
+              <did>
+                <unittitle>Paroisse Notre-Dame des Vertus : registre des actes de baptême (14 octobre 1691 - 15 août 1705), de mariage (22 novembre 1691 - 23 juillet 1705) et de sépulture (20 janvier 1692 - 9 août 1705).</unittitle>
+                <unitid>194 EDT 19<extptr xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vtaa3c2ab68d052dda2" xlink:type="simple"/></unitid>
+                <unitid>59 PUB 6</unitid>
+                <unitid>GG6</unitid>
+                <unitdate normal="1691-01-01/1774-12-31">1691-1774</unitdate>
+                <physdesc>Registre [23 X 34,5 cm] </physdesc>
+                <note type="mnesysinternal">
+                  <p/>
+                </note>
+                <dao xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vtaa3c2ab68d052dda2/daogrp/0" xlink:type="simple" xlink:title=""/>
+                <dao xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vtaa3c2ab68d052dda2/daogrp/0/vignette" xlink:type="simple" xlink:role="thumbnail"/>
+              </did>
+              <controlaccess>
+                <geogname>Paulhan (Hérault, France)</geogname>
+                <genreform>Baptême</genreform>
+                <genreform>Mariage</genreform>
+                <genreform>Sépulture</genreform>
+              </controlaccess>
+              <altformavail>
+                <p>Document numérisé consultable en ligne. Numérisé par les archives départementales de l'Hérault sur un copybook i2s en juillet 2011. 300 dpi. Couleur. 174 vues.</p>
+              </altformavail>
+              <scopecontent>
+                <p>Le registre comprend également des procès-verbaux d'élection des prévôts et conseillers de la confrérie du saint sacrement, des listes de membres de la confrérie, (1702-1774) ( vues 120-151).</p>
+              </scopecontent>
+              <accessrestrict>
+                <p>Communicable</p>
+              </accessrestrict>
+            </c>
+            <c id="ark--37279-vta99844ee9f638748c">
+              <did>
+                <unittitle>Paroisse Notre-Dame des Vertus : registre des actes de baptême (28 novembre 1705 - 1er janvier 1722), de mariage (février 1706 - 8 novembre 1721)et de sépulture (23 janvier 1706 - 31 décembre 1721).</unittitle>
+                <unitid>194 EDT 20<extptr xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vta99844ee9f638748c" xlink:type="simple"/></unitid>
+                <unitid>59 PUB 7</unitid>
+                <unitid>GG7</unitid>
+                <unitdate normal="1705-01-01/1721-12-31">1705-1721</unitdate>
+                <physdesc>Registre [20 X 26 cm] </physdesc>
+                <note type="mnesysinternal">
+                  <p/>
+                </note>
+                <dao xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vta99844ee9f638748c/daogrp/0" xlink:type="simple" xlink:title=""/>
+                <dao xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vta99844ee9f638748c/daogrp/0/vignette" xlink:type="simple" xlink:role="thumbnail"/>
+              </did>
+              <controlaccess>
+                <geogname>Paulhan (Hérault, France)</geogname>
+                <genreform>Baptême</genreform>
+                <genreform>Mariage</genreform>
+                <genreform>Sépulture</genreform>
+              </controlaccess>
+              <altformavail>
+                <p>Document numérisé consultable en ligne. Numérisé par les archives départementales de l'Hérault sur un copybook i2s en juillet 2011. 300 dpi. Couleur. 100 vues.</p>
+              </altformavail>
+              <accessrestrict>
+                <p>Communicable</p>
+              </accessrestrict>
+            </c>
+            <c id="ark--37279-vta5a1fbd052285b883">
+              <did>
+                <unittitle>Paroisse Notre-Dame des Vertus : registre des actes de baptême (27 janvier 1722 - 27 décembre 1736), de mariage (10 janvier 1722 - 22 novembre 1736) et de sépulture (13 janvier 1722 - 26 décembre 1736).</unittitle>
+                <unitid>194 EDT 21<extptr xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vta5a1fbd052285b883" xlink:type="simple"/></unitid>
+                <unitid>59 PUB 8</unitid>
+                <unitid>GG8</unitid>
+                <unitdate normal="1722-01-01/1736-12-31">1722-1736</unitdate>
+                <physdesc>Registre [20 X 26,5 cm] </physdesc>
+                <note type="mnesysinternal">
+                  <p/>
+                </note>
+                <dao xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vta5a1fbd052285b883/daogrp/0" xlink:type="simple" xlink:title=""/>
+                <dao xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vta5a1fbd052285b883/daogrp/0/vignette" xlink:type="simple" xlink:role="thumbnail"/>
+              </did>
+              <controlaccess>
+                <geogname>Paulhan (Hérault, France)</geogname>
+                <genreform>Baptême</genreform>
+                <genreform>Mariage</genreform>
+                <genreform>Sépulture</genreform>
+              </controlaccess>
+              <altformavail>
+                <p>Document numérisé consultable en ligne. Numérisé par les archives départementales de l'Hérault sur un copybook i2s en juillet 2011. 300 dpi. Couleur. 126 vues.</p>
+              </altformavail>
+              <accessrestrict>
+                <p>Communicable</p>
+              </accessrestrict>
+            </c>
+            <c id="ark--37279-vta66d42e9f183a75a4">
+              <did>
+                <unittitle>Paroisse Notre-Dame des Vertus : registre des actes de baptême (9 janvier 1737 - 14 décembre 1750), de mariage (26 février 1737 - 17 septembre 1750) et de sépulture (20 mars 1737 - 30 novembre 1750).</unittitle>
+                <unitid>194 EDT 22<extptr xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vta66d42e9f183a75a4" xlink:type="simple"/></unitid>
+                <unitid>59 PUB 9</unitid>
+                <unitid>GG9</unitid>
+                <unitdate normal="1737-01-01/1750-12-31">1737-1750</unitdate>
+                <physdesc>Registre [20 X 27 cm] </physdesc>
+                <note type="mnesysinternal">
+                  <p/>
+                </note>
+                <dao xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vta66d42e9f183a75a4/daogrp/0" xlink:type="simple" xlink:title=""/>
+                <dao xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vta66d42e9f183a75a4/daogrp/0/vignette" xlink:type="simple" xlink:role="thumbnail"/>
+              </did>
+              <controlaccess>
+                <geogname>Paulhan (Hérault, France)</geogname>
+                <genreform>Baptême</genreform>
+                <genreform>Mariage</genreform>
+                <genreform>Sépulture</genreform>
+              </controlaccess>
+              <altformavail>
+                <p>Document numérisé consultable en ligne. Numérisé par les archives départementales de l'Hérault sur un copybook i2s en juillet 2011. 300 dpi. Couleur. 157 vues.</p>
+              </altformavail>
+              <accessrestrict>
+                <p>Communicable</p>
+              </accessrestrict>
+            </c>
+            <c id="ark--37279-vtab2d00adcaee5beaa">
+              <did>
+                <unittitle>Paroisse Notre-Dame des Vertus : registre des actes de baptême (15 janvier 1751 - 20 novembre 1763), de mariage (20 février 1751 - 15 novembre 1763) et de sépulture (23 janvier 1751 - 6 novembre 1763.</unittitle>
+                <unitid>194 EDT 23<extptr xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vtab2d00adcaee5beaa" xlink:type="simple"/></unitid>
+                <unitid>59 PUB 10</unitid>
+                <unitid>GG10</unitid>
+                <unitdate normal="1751-01-01/1763-12-31">1751-1763</unitdate>
+                <physdesc>Registre [20 X 26,5 cm] </physdesc>
+                <note type="mnesysinternal">
+                  <p/>
+                </note>
+                <dao xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vtab2d00adcaee5beaa/daogrp/0" xlink:type="simple" xlink:title=""/>
+                <dao xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vtab2d00adcaee5beaa/daogrp/0/vignette" xlink:type="simple" xlink:role="thumbnail"/>
+              </did>
+              <controlaccess>
+                <geogname>Paulhan (Hérault, France)</geogname>
+                <genreform>Baptême</genreform>
+                <genreform>Mariage</genreform>
+                <genreform>Sépulture</genreform>
+              </controlaccess>
+              <altformavail>
+                <p>Document numérisé consultable en ligne. Numérisé par les archives départementales de l'Hérault sur un copybook i2s en juillet 2011. 300 dpi. Couleur. 134 vues.</p>
+              </altformavail>
+              <accessrestrict>
+                <p>Communicable</p>
+              </accessrestrict>
+            </c>
+            <c id="ark--37279-vtaf7182d877bc3e078">
+              <did>
+                <unittitle>Paroisse Notre-Dame des Vertus : registre des actes de baptême (9 janvier 1764 - 19 janvier 1779), de mariage (16 février 1764 - 23 janvier 1779) et de sépulture (2 janvier 1764 - 7 janvier 1779).</unittitle>
+                <unitid>194 EDT 24<extptr xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vtaf7182d877bc3e078" xlink:type="simple"/></unitid>
+                <unitid>59 PUB 11</unitid>
+                <unitid>GG11</unitid>
+                <unitdate normal="1764-01-01/1779-12-31">1764-1779</unitdate>
+                <physdesc>Registre [20 X 26,5 cm] </physdesc>
+                <note type="mnesysinternal">
+                  <p/>
+                </note>
+                <dao xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vtaf7182d877bc3e078/daogrp/0" xlink:type="simple" xlink:title=""/>
+                <dao xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vtaf7182d877bc3e078/daogrp/0/vignette" xlink:type="simple" xlink:role="thumbnail"/>
+              </did>
+              <controlaccess>
+                <geogname>Paulhan (Hérault, France)</geogname>
+                <genreform>Baptême</genreform>
+                <genreform>Mariage</genreform>
+                <genreform>Sépulture</genreform>
+              </controlaccess>
+              <altformavail>
+                <p>Document numérisé consultable en ligne. Numérisé par les archives départementales de l'Hérault sur un copybook i2s en juillet 2011. 300 dpi. Couleur. 105 vues.</p>
+              </altformavail>
+              <accessrestrict>
+                <p>Communicable</p>
+              </accessrestrict>
+            </c>
+            <c id="ark--37279-vtacd9a36865ad5e5d3">
+              <did>
+                <unittitle>Paroisse Notre-Dame des Vertus : registre des actes de baptême 3 (janvier 1779- 16 décembre 1792), de mariage (4 février 1779 - 31 octobre 1792) et de sépulture (7 mars 1779 - 28 novembre 1792).</unittitle>
+                <unitid>194 EDT 25<extptr xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vtacd9a36865ad5e5d3" xlink:type="simple"/></unitid>
+                <unitid>59 PUB 12</unitid>
+                <unitid>GG12</unitid>
+                <unitdate normal="1779-01-01/1792-12-31">1779-1792</unitdate>
+                <physdesc>Registre [21 X 26,5 cm] </physdesc>
+                <note type="mnesysinternal">
+                  <p/>
+                </note>
+                <dao xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vtacd9a36865ad5e5d3/daogrp/0" xlink:type="simple" xlink:title=""/>
+                <dao xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vtacd9a36865ad5e5d3/daogrp/0/vignette" xlink:type="simple" xlink:role="thumbnail"/>
+              </did>
+              <controlaccess>
+                <geogname>Paulhan (Hérault, France)</geogname>
+                <genreform>Baptême</genreform>
+                <genreform>Mariage</genreform>
+                <genreform>Sépulture</genreform>
+              </controlaccess>
+              <altformavail>
+                <p>Document numérisé consultable en ligne. Numérisé par les archives départementales de l'Hérault sur un copybook i2s en juillet 2011. 300 dpi. Couleur. 124 vues.</p>
+              </altformavail>
+              <accessrestrict>
+                <p>Communicable</p>
+              </accessrestrict>
+            </c>
+          </c>
+        </c>
+      </c>
+      <c>
+        <did>
+          <unittitle>ARCHIVES COMMUNALES POSTERIEURES A 1790 </unittitle>
+        </did>
+        <c>
+          <did>
+            <unittitle>H AFFAIRES MILITAIRES </unittitle>
+          </did>
+          <c>
+            <did>
+              <unittitle>1 H Recrutement </unittitle>
+            </did>
+            <c id="ark--37279-vta271be65e49a3e069">
+              <did>
+                <unitid>194 EDT 1<extptr xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vta271be65e49a3e069" xlink:type="simple"/></unitid>
+                <unittitle>Contrôle des militaires réformés pour raison de santé : liste nominative (an VII). </unittitle>
+                <unitdate normal="1799-01-01/1799-12-31">1799</unitdate>
+                <note type="mnesysinternal">
+                  <p/>
+                </note>
+              </did>
+              <accessrestrict>
+                <p>Communicable</p>
+              </accessrestrict>
+              <controlaccess>
+                <geogname>Paulhan (Hérault, France)</geogname>
+                <subject>SERVICE NATIONAL</subject>
+              </controlaccess>
+            </c>
+          </c>
+        </c>
+        <c>
+          <did>
+            <unittitle>I POLICE - HYGIENE PUBLIQUE - JUSTICE </unittitle>
+          </did>
+          <c>
+            <did>
+              <unittitle>2 I Police générale </unittitle>
+            </did>
+            <c id="ark--37279-vta2001ea4039f228ba">
+              <did>
+                <unitid>194 EDT 2<extptr xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vta2001ea4039f228ba" xlink:type="simple"/></unitid>
+                <unittitle>Police politique, contrôle des individus dangereux : correspondance (an VII). </unittitle>
+                <unitdate normal="1799-01-01/1799-12-31">1799</unitdate>
+              </did>
+              <accessrestrict>
+                <p>Communicable</p>
+              </accessrestrict>
+              <controlaccess>
+                <geogname>Paulhan (Hérault, France)</geogname>
+                <subject>POLICE</subject>
+              </controlaccess>
+            </c>
+          </c>
+        </c>
+        <c>
+          <did>
+            <unittitle>K ELECTIONS ET PERSONNEL </unittitle>
+          </did>
+          <c>
+            <did>
+              <unittitle>1 K Elections </unittitle>
+            </did>
+            <c id="ark--37279-vta87ef415b69ff7467">
+              <did>
+                <unitid>194 EDT 3<extptr xlink:href="https://archives-pierresvives.herault.fr/ark:/37279/vta87ef415b69ff7467" xlink:type="simple"/></unitid>
+                <unittitle>Nomination municipale : procès-verbal de nomination (an VII). </unittitle>
+                <unitdate normal="1799-01-01/1799-12-31">1799</unitdate>
+              </did>
+              <accessrestrict>
+                <p>Communicable</p>
+              </accessrestrict>
+              <controlaccess>
+                <geogname>Paulhan (Hérault, France)</geogname>
+                <subject>ELECTION MUNICIPALE</subject>
+              </controlaccess>
+            </c>
+          </c>
+        </c>
+      </c>
+    </dsc>
+  </archdesc>
+</ead>

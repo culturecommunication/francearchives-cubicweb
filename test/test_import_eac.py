@@ -41,7 +41,7 @@ from cubicweb_eac.dataimport import EACCPFImporter
 
 from cubicweb_francearchives.dataimport import eac
 from cubicweb_francearchives.dataimport.stores import create_massive_store
-from cubicweb_francearchives.testutils import PostgresTextMixin
+from cubicweb_francearchives.testutils import PostgresTextMixin, S3BfssStorageTestMixin
 
 from pgfixtures import setup_module, teardown_module  # noqa
 
@@ -79,7 +79,7 @@ class EACXMLParserTC(unittest.TestCase):
         self.assertFalse(expected.difference(etypes))
 
 
-class EACImportTC(PostgresTextMixin, CubicWebTC):
+class EACImportTC(S3BfssStorageTestMixin, PostgresTextMixin, CubicWebTC):
     def setup_database(self):
         # create services
         super(EACImportTC, self).setup_database()
@@ -93,10 +93,9 @@ class EACImportTC(PostgresTextMixin, CubicWebTC):
             )
             cnx.commit()
 
-    @classmethod
-    def datapath(cls, *fname):
+    def eac_filepath(self, fname):
         """joins the object's datadir and `fname`"""
-        return join(dirname(__file__), "data", "eac", *fname)
+        return self.get_or_create_imported_filepath(f"eac/{fname}")
 
     def massif_import_files(self, cnx, fspaths):
         store = create_massive_store(cnx, nodrop=True)
@@ -109,7 +108,10 @@ class EACImportTC(PostgresTextMixin, CubicWebTC):
         Expecting: 2 AuthorityRecords are created
         """
         with self.admin_access.cnx() as cnx:
-            fspaths = [self.datapath("FRAN_NP_010232.xml"), self.datapath("FRAN_NP_010931.xml")]
+            fspaths = [
+                self.eac_filepath("FRAN_NP_010232.xml"),
+                self.eac_filepath("FRAN_NP_010931.xml"),
+            ]
             self.massif_import_files(cnx, fspaths)
             record_ids = [
                 r[0]
@@ -131,7 +133,7 @@ class EACImportTC(PostgresTextMixin, CubicWebTC):
         Expecting: no AuthorityRecord created
         """
         with self.admin_access.cnx() as cnx:
-            fspaths = [self.datapath("FRAN_NP_150159.xml")]
+            fspaths = [self.eac_filepath("FRAN_NP_150159.xml")]
             self.massif_import_files(cnx, fspaths)
             self.assertFalse(cnx.execute("Any X WHERE X is AuthorityRecord"))
 
@@ -154,8 +156,8 @@ class EACImportTC(PostgresTextMixin, CubicWebTC):
             )
             cnx.commit()
             fspaths = [
-                self.datapath("FRAN_NP_010232.xml"),
-                self.datapath("FRAN_NP_010931.xml"),
+                self.eac_filepath("FRAN_NP_010232.xml"),
+                self.eac_filepath("FRAN_NP_010931.xml"),
             ]
             self.massif_import_files(cnx, fspaths)
             cnx.find("AuthorityRecord", record_id="FRAN_NP_010232").one()
@@ -202,7 +204,7 @@ class EACImportTC(PostgresTextMixin, CubicWebTC):
                 authority=agent2,
             )
             cnx.commit()
-            fspaths = [self.datapath("FRAN_NP_010232.xml")]
+            fspaths = [self.eac_filepath("FRAN_NP_010232.xml")]
             self.massif_import_files(cnx, fspaths)
             authrec = cnx.find("AuthorityRecord", record_id="FRAN_NP_010232").one()
             agent = cnx.find("AgentAuthority", eid=agent.eid).one()
@@ -210,13 +212,11 @@ class EACImportTC(PostgresTextMixin, CubicWebTC):
             self.assertEqual(
                 dict(authrec.authorities)["indexes_label"], [agent.view("outofcontext")]
             )
-            commemo_col = cnx.create_entity("CommemoCollection", title="kdghldjhg", year=21)
             cnx.create_entity(
                 "CommemorationItem",
                 alphatitle="TITLE",
                 title="sdkljfghkljsd",
                 commemoration_year=42,
-                collection_top=commemo_col,
                 related_authority=agent2,
             )
             cnx.commit()
@@ -239,7 +239,7 @@ class EACImportTC(PostgresTextMixin, CubicWebTC):
         One authorized is detected
         """
         with self.admin_access.cnx() as cnx:
-            fspath = self.datapath("FRAF_notice_type_EAC.xml")
+            fspath = self.eac_filepath("FRAF_notice_type_EAC.xml")
             self.massif_import_files(cnx, [fspath])
             record = cnx.execute("Any X WHERE X is AuthorityRecord").one()
             self.assertEqual(record.record_id, "FRAN_0001")
@@ -271,7 +271,7 @@ class EACImportTC(PostgresTextMixin, CubicWebTC):
                 ),
             )
             cnx.commit()
-            fspath = self.datapath("FRAF_notice_type_EAC.xml")
+            fspath = self.eac_filepath("FRAF_notice_type_EAC.xml")
             self.massif_import_files(cnx, [fspath])
             record = cnx.execute("Any X WHERE X is AuthorityRecord").one()
             self.assertEqual(record.record_id, "FRAN_0001")
@@ -289,7 +289,7 @@ class EACImportTC(PostgresTextMixin, CubicWebTC):
         Expecting: Date ranges are correctly processed
         """
         with self.admin_access.cnx() as cnx:
-            fspath = self.datapath("FRAF_notice_type_EAC.xml")
+            fspath = self.eac_filepath("FRAF_notice_type_EAC.xml")
             self.massif_import_files(cnx, [fspath])
             record = cnx.execute("Any X WHERE X is AuthorityRecord").one()
             self.assertEqual(record.record_id, "FRAN_0001")
@@ -311,12 +311,12 @@ class EACImportTC(PostgresTextMixin, CubicWebTC):
 
         """
         with self.admin_access.cnx() as cnx:
-            eac.eac_import_files(cnx, [self.datapath("FRAN_NP_010232.xml")])
+            eac.eac_import_files(cnx, [self.eac_filepath("FRAN_NP_010232.xml")])
             cnx.commit()
             exturi = cnx.execute('Any X WHERE X is ExternalUri, X cwuri "FRAN_NP_010931"').one()
             association_rel = exturi.reverse_association_to[0]
             # import the notice with FRAN_NP_010931 record_id
-            self.massif_import_files(cnx, [self.datapath("FRAN_NP_010931.xml")])
+            self.massif_import_files(cnx, [self.eac_filepath("FRAN_NP_010931.xml")])
             authrec_010931 = cnx.find("AuthorityRecord", record_id="FRAN_NP_010931").one()
             association_rel.cw_clear_all_caches()
             # ensure the external uri has been replaced by the authorirty record and deleted
@@ -324,14 +324,14 @@ class EACImportTC(PostgresTextMixin, CubicWebTC):
             self.assertEqual(association_rel.association_to[0].eid, authrec_010931.eid)
             self.assertFalse(cnx.execute('Any X WHERE X is ExternalUri, X cwuri "FRAN_NP_010931"'))
 
-    def test_import_xml_support(self):
+    def test_import_support(self):
         """Test AuthorityRecord support file exists
 
         Trying: Create an AuthorityRecord
         Expecting: xml_support is not Null
         """
         with self.admin_access.cnx() as cnx:
-            filepath = self.datapath("FRAN_NP_010232.xml")
+            filepath = self.eac_filepath("FRAN_NP_010232.xml")
             eac.eac_import_files(cnx, [filepath])
             cnx.commit()
             ar = cnx.find("AuthorityRecord").one()
@@ -344,7 +344,7 @@ class EACImportTC(PostgresTextMixin, CubicWebTC):
         Expecting: <cpfDescription><places> tag is imported
         """
         with self.admin_access.cnx() as cnx:
-            filepath = self.datapath("FRAN_NP_004652.xml")
+            filepath = self.eac_filepath("FRAN_NP_004652.xml")
             eac.eac_import_files(cnx, [filepath])
             cnx.commit()
             ar = cnx.find("AuthorityRecord").one()

@@ -1,10 +1,10 @@
 #toTopBtn {
-  display: none;
   position: fixed;
-  bottom: 50%;
+  display: none;
+  bottom: 43px;
   right: 30px;
   @extend %sticky-btn;
-  padding: 0.7em;
+  font-weight: 700;
 }
 
 #toTopBtn:hover {

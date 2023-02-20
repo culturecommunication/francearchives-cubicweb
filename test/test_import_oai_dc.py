@@ -36,15 +36,20 @@ import glob
 import unittest
 from lxml import etree
 
-from sickle import Sickle
 
 from cubicweb.devtools.testlib import CubicWebTC
 
-from cubicweb_francearchives.testutils import PostgresTextMixin, OaiSickleMixin, format_date
+from cubicweb_francearchives.testutils import (
+    S3BfssStorageTestMixin,
+    PostgresTextMixin,
+    OaiSickleMixin,
+    format_date,
+)
 
 from cubicweb_francearchives.dataimport import (
     oai,
     oai_dc,
+    oai_utils,
     usha1,
     sqlutil,
     load_services_map,
@@ -58,7 +63,7 @@ from cubicweb_francearchives.dataimport.importer import import_filepaths
 from pgfixtures import setup_module, teardown_module  # noqa
 
 
-class OaiDcImportTC(PostgresTextMixin, OaiSickleMixin, CubicWebTC):
+class OaiDcImportTC(S3BfssStorageTestMixin, PostgresTextMixin, OaiSickleMixin, CubicWebTC):
     @classmethod
     def init_config(cls, config):
         """Initialize configuration."""
@@ -100,6 +105,19 @@ class OaiDcImportTC(PostgresTextMixin, OaiSickleMixin, CubicWebTC):
             services_map = load_services_map(cnx)
             self.service_infos = service_infos_from_service_code(self.service.code, services_map)
 
+    def test_no_service_eid(self):
+        """Test import OAI-PMH with a service without eid .
+
+        Trying: importing records
+        Expecting: import aborted
+        """
+        with self.admin_access.cnx() as cnx:
+            self.filename = "oai_dc_sample.xml"
+            url = "file://{}?verb=ListRecords&metadataPrefix=oai_dc".format(self.filepath())
+            service_infos = {"code": "FRAD055", "eid": None}
+            oai.import_oai(cnx, url, service_infos)
+            self.assertEqual(cnx.find("FindingAid").rowcount, 0)
+
     def test_write(self):
         """Test writing OAI-PMH records to backup file.
 
@@ -109,12 +127,12 @@ class OaiDcImportTC(PostgresTextMixin, OaiSickleMixin, CubicWebTC):
         with self.admin_access.cnx() as cnx:
             self.filename = "oai_dc_sample.xml"
             url = "file://{}?verb=ListRecords&metadataPrefix=oai_dc".format(self.filepath())
-            service_infos = {"code": "FRAD055"}
-            oai.import_oai(cnx, url, service_infos)
+            oai.import_oai(cnx, url, self.service_infos)
             path = self.path.format(
-                ead_services_dir=self.config["ead-services-dir"], **service_infos
+                ead_services_dir=self.config["ead-services-dir"], **self.service_infos
             )
-            self.assertTrue(osp.exists(path))
+            fpath = self.get_filepath_by_storage(osp.join(path, "FRAD055_REC.xml"))
+            self.assertTrue(self.fileExists(fpath))
 
     def test_reimport_findingaid_support(self):
         """Test re-import of OAI-PMH records from backup file.
@@ -239,7 +257,7 @@ class OaiDcImportTC(PostgresTextMixin, OaiSickleMixin, CubicWebTC):
     def test_metadata(self):
         self.filename = "oai_dc_sample.xml"
         path = "file://{path}".format(path=osp.join(self.filepath()))
-        client = Sickle(path)
+        client = oai_utils.PniaSickle(path)
         records = client.ListRecords(metadataPrefix="oai_dc")
         record = next(records)
         header = oai_dc.build_header(record.header)
@@ -442,6 +460,10 @@ class OaiDcImportTC(PostgresTextMixin, OaiSickleMixin, CubicWebTC):
             cnx.commit()
             generate_ape_ead_other_sources_from_eids(cnx, [str(fa.eid)])
             fa = cnx.entity_from_eid(fa.eid)
+            ape_filepath = cnx.execute(
+                "Any FSPATH(D) WHERE X ape_ead_file F, F data D, X eid %(x)s", {"x": fa.eid}
+            )[0][0].getvalue()
+            self.assertTrue(self.fileExists(ape_filepath))
             content = fa.ape_ead_file[0].data.read()
             tree = etree.fromstring(content)
             eadid = tree.xpath("//e:eadid", namespaces={"e": tree.nsmap[None]})[0]
@@ -471,6 +493,22 @@ class OaiDcImportTC(PostgresTextMixin, OaiSickleMixin, CubicWebTC):
             self.assertEqual(len(fac_rset), 20)
             self.assertEqual(len(set(f.dc_title() for f in fac_rset.entities())), 18)
 
+    def test_findingaid_support_hash_import_oai_dc(self):
+        """
+        Trying: OAI DC standard import
+        Expecting: findingaid_support data_hash is correctly set
+        """
+        with self.admin_access.cnx() as cnx:
+            self.filename = "oai_dc_sample.xml"
+            url = "file://{path}?verb=ListRecords&metadataPrefix=oai_dc".format(
+                path=self.filepath()
+            )
+            oai.import_oai(cnx, url, self.service_infos)
+            fa_support = cnx.execute("Any X WHERE F findingaid_support X").one()
+            self.assertTrue(fa_support.data_hash)
+            self.assertEqual(fa_support.data_hash, fa_support.compute_hash())
+            self.assertTrue(fa_support.check_hash())
+
     def test_oai_dc_reimport_from_file(self):
         """Test OAI DC re-import from file.
 
@@ -492,13 +530,18 @@ class OaiDcImportTC(PostgresTextMixin, OaiSickleMixin, CubicWebTC):
             oai.import_oai(cnx, url, self.service_infos)
             rql = "Any E,FSPATH(D) WHERE X findingaid_support F, F data D, X eadid E"
             rset = [(row[0], row[1].read()) for row in cnx.execute(rql)]
-            filenames = [row[1] for row in rset]
+            filepaths = [row[1] for row in rset]
+            self.assertEqual(len(filepaths), 1)
             eadids = [row[0] for row in rset]
             for filename in [row[1] for row in rset]:
                 sqlutil.delete_from_filename(cnx, filename, interactive=False, esonly=False)
             cnx.commit()
+            assert not cnx.find("FindingAid"), "at least one FindingAid in database"
+            assert not cnx.find("File"), "at least one CWFile in database"
             self.assertFalse(cnx.execute(rql).rows)
-            import_filepaths(cnx, filenames, readerconfig)
+            for filepath in filepaths:
+                self.assertTrue(self.fileExists(filepath))
+            import_filepaths(cnx, filepaths, readerconfig)
             actual = [row[0] for row in cnx.execute("Any E WHERE X is FindingAid, X eadid E")]
             self.assertCountEqual(actual, eadids)
 
@@ -598,13 +641,13 @@ class OaiDcImportTC(PostgresTextMixin, OaiSickleMixin, CubicWebTC):
             self.assertEqual(rset.rowcount, 2)
             for eid, fpath in rset:
                 fpath = fpath.getvalue()
-                self.assertEqual(
-                    fpath,
-                    "{}/FRAD055/oaipmh/dc/{}.xml".format(
-                        self.config["ead-services-dir"], eid
-                    ).encode("utf-8"),
+                expected = "{}/FRAD055/oaipmh/dc/{}.xml".format(
+                    self.config["ead-services-dir"], eid
                 )
-                self.assertTrue(osp.exists(fpath))
+                if self.s3_bucket_name:
+                    expected = expected.lstrip("/")
+                self.assertEqual(expected.encode("utf-8"), fpath)
+                self.assertTrue(self.fileExists(fpath))
 
     def test_ape_ead_path(self):
         with self.admin_access.cnx() as cnx:
@@ -620,7 +663,10 @@ class OaiDcImportTC(PostgresTextMixin, OaiSickleMixin, CubicWebTC):
             ape_filepath = cnx.execute(
                 "Any FSPATH(D) WHERE X ape_ead_file F, F data D, X eid %(x)s", {"x": fa.eid}
             )[0][0].getvalue()
-            self.assertEqual(ape_filepath, b"/tmp/ape-ead/FRAD055/ape-FRAD055_REC.xml")
+            expected_filepath = self.get_filepath_by_storage(
+                f"{self.config['appfiles-dir']}/ape-ead/FRAD055/ape-FRAD055_REC.xml"
+            )
+            self.assertEqual(ape_filepath.decode("utf-8"), expected_filepath)
 
     def test_oai_dc_deleted(self):
         """Test OAI DC reimport with a deleted record
@@ -664,7 +710,7 @@ class OaiDcImportTC(PostgresTextMixin, OaiSickleMixin, CubicWebTC):
             adapted = fa.cw_adapt_to("IFullTextIndexSerializable")
             comp = cnx.execute("Any X LIMIT 1 WHERE X is FAComponent").one()
             comp_adapted = comp.cw_adapt_to("IFullTextIndexSerializable")
-            for attr in ("dates", "sortdate", "stopyear", "startyear"):
+            for attr in ("sortdate", "stopyear", "startyear"):
                 self.assertIn(attr, adapted.serialize())
                 self.assertIn(attr, comp_adapted.serialize())
 
@@ -692,31 +738,6 @@ class OaiDcImportTC(PostgresTextMixin, OaiSickleMixin, CubicWebTC):
             comp = cnx.execute("Any X LIMIT 1 WHERE X is FAComponent").one()
             adapted = comp.cw_adapt_to("IFullTextIndexSerializable")
             self.assertEqual(expected, adapted.serialize()["service"])
-
-    def test_digitized_versions_in_es_docs(self):
-        with self.admin_access.cnx() as cnx:
-            cnx.commit()
-            self.filename = "oai_dc_sample.xml"
-            path = "file://{path}?verb=ListRecords&metadataPrefix=oai_dc".format(
-                path=self.filepath()
-            )
-            with cnx.allow_all_hooks_but("es"):
-                oai.import_oai(cnx, path, self.service_infos)
-                facs = list(cnx.execute("Any F WHERE F is FAComponent").entities())
-                facs.sort(key=lambda fac: fac.did[0].unitid)
-                fc1, fc2 = facs
-                self.assertEqual(len(fc1.digitized_versions), 3)
-                adapter = fc1.cw_adapt_to("IFullTextIndexSerializable")
-                self.assertEqual(
-                    [
-                        {
-                            "url": "https://recherche-archives.doubs.fr/ark:/25993/a011369750208WU2TRM"  # noqa
-                        },
-                        {"illustration_url": "vignette 1"},
-                        {"illustration_url": "vignette 2"},
-                    ],
-                    adapter.serialize()["digitized_versions"],
-                )
 
 
 if __name__ == "__main__":

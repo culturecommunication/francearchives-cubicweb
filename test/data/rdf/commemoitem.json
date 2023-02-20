@@ -1,0 +1,26 @@
+{
+  "@context": {
+    "schema": "http://schema.org/"
+  },
+
+  "@id": "http://testing.fr/cubicweb/pages_histoire/{{eid}}",
+  "@type": "schema:Article",
+  "schema:author": {
+    "@type": "schema:Person",
+    "schema:name": "toto"
+  },
+  "schema:dateCreated": "1970-01-01",
+  "schema:dateModified": "2000-01-01",
+  "schema:datePublished": "1970-01-01",
+  "schema:headline": "the-title",
+  "schema:inLanguage": "FR",
+  "schema:isAccessibleForFree": "True",
+  "schema:mainEntityOfPage": "http://testing.fr/cubicweb/pages_histoire/{{eid}}",
+  "schema:name": "the-title",
+  "schema:publisher": {
+    "@type": "schema:Organization",
+    "schema:name": "FranceArchives",
+    "schema:logo": "http://testing.fr/cubicweb/data/images/logo_francearchives_amp.png"
+  },
+  "schema:url": "http://testing.fr/cubicweb/pages_histoire/{{eid}}"
+}

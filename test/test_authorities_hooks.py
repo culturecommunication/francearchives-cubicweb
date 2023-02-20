@@ -31,8 +31,13 @@
 import unittest
 
 from cubicweb.devtools.testlib import CubicWebTC
-from cubicweb_francearchives.testutils import PostgresTextMixin, EADImportMixin, create_findingaid
+from cubicweb_francearchives.testutils import (
+    PostgresTextMixin,
+    EADImportMixin,
+    create_findingaid,
+)
 from cubicweb_francearchives.hooks import AuthorityIntegrityError
+from cubicweb_francearchives.dataimport.oai_nomina import compute_nomina_stable_id
 
 from pgfixtures import setup_module, teardown_module  # noqa
 
@@ -46,11 +51,17 @@ class AuthoritiesHookTests(PostgresTextMixin, EADImportMixin, CubicWebTC):
             self.location_label = "Nancy (Meurthe-et-Moselle, France)"
 
     def test_delete_index_target(self):
-        """Remove the Index taget """
+        """Remove the Index taget"""
         with self.admin_access.repo_cnx() as cnx:
             ce = cnx.create_entity
             agent = ce("AgentAuthority", label="Jean Jean")
-            ce("Person", name="Jean", forenames="Jean", publisher="nomina", authority=agent)
+            ce(
+                "NominaRecord",
+                stable_id=compute_nomina_stable_id(self.service.code, "42"),
+                json_data={"p": [{"kn": "Valjean"}], "t": "RM"},
+                service=self.service.eid,
+                same_as=agent,
+            )
             externref = ce(
                 "ExternRef",
                 reftype="Virtual_exhibit",
@@ -73,7 +84,13 @@ class AuthoritiesHookTests(PostgresTextMixin, EADImportMixin, CubicWebTC):
         with self.admin_access.repo_cnx() as cnx:
             ce = cnx.create_entity
             agent = ce("AgentAuthority", label="Jean Jean")
-            ce("Person", name="Jean", forenames="Jean", publisher="nomina", authority=agent)
+            ce(
+                "NominaRecord",
+                stable_id=compute_nomina_stable_id(self.service.code, "42"),
+                json_data={"p": [{"n": "Valjean"}], "t": "RM"},
+                service=self.service.eid,
+                same_as=agent,
+            )
             externref = ce(
                 "ExternRef",
                 reftype="Virtual_exhibit",
@@ -194,7 +211,7 @@ class AuthoritiesHookTests(PostgresTextMixin, EADImportMixin, CubicWebTC):
         with self.admin_access.cnx() as cnx:
             self.import_filepath(
                 cnx,
-                self.datapath("ir_data/FRAD054_0000000407.xml"),
+                "ir_data/FRAD054_0000000407.xml",
                 autodedupe_authorities="service/strict",
             )
             for count, etype in (
@@ -281,6 +298,7 @@ class AuthoritiesHookTests(PostgresTextMixin, EADImportMixin, CubicWebTC):
                 (subject, "SubjectAuthority"),
                 (agent, "AgentAuthority"),
             ):
+                cnx.transaction_data["blacklist"] = True
                 cnx.execute(
                     "DELETE {etype} X WHERE X eid {eid}".format(etype=etype, eid=authority.eid)
                 )

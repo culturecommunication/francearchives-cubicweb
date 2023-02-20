@@ -1,0 +1,18 @@
+export default {
+    dc: 'http://purl.org/dc/elements/1.1/',
+    dcmitype: 'http://purl.org/dc/dcmitype/',
+    dcterms: 'http://purl.org/dc/terms/',
+    foaf: 'http://xmlns.com/foaf/0.1/',
+    francearchives: 'https://francearchives.fr/',
+    geo: 'http://www.w3.org/2003/01/geo/wgs84_pos#',
+    geonames: 'http://www.geonames.org/ontology#',
+    owl: 'http://www.w3.org/2002/07/owl#',
+    rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
+    rico: 'https://www.ica.org/standards/RiC/ontology#',
+    rdfs: 'http://www.w3.org/2000/01/rdf-schema#',
+    schemaorg: 'http://schema.org/',
+    skos: 'http://www.w3.org/2004/02/skos/core#',
+    wd: 'http://www.wikidata.org/entity/',
+    xml: 'http://www.w3.org/XML/1998/namespace',
+    xsd: 'http://www.w3.org/2001/XMLSchema#',
+}

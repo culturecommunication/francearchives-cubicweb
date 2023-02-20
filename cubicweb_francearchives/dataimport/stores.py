@@ -31,7 +31,9 @@
 from collections import defaultdict
 
 from cubicweb.dataimport.stores import MetadataGenerator
-from cubicweb.dataimport.massive_store import MassiveObjectStore, PGHelper
+from cubicweb.dataimport.massive_store import MassiveObjectStore, PGHelper, eschema_sql_def
+
+from cubicweb_francearchives.dataimport.sqlutil import deffer_foreign_key_constraints
 
 
 def clean_massive_store(store):
@@ -74,9 +76,94 @@ class NoDropPGHelper(PGHelper):
         pass
 
 
+class DeferredMassiveObjectStore(MassiveObjectStore):
+    def master_init(self, commit=True):
+        super().master_init(commit=commit)
+        if not self._dbh.table_exists("cwmassive_initialized"):
+            return
+        # ADD REPLICA IDENTITY
+        self.sql('ALTER TABLE IF EXISTS "cwmassive_initialized" REPLICA IDENTITY FULL;')
+        if commit:
+            self.commit()
+
+    def prepare_insert_relation(self, eid_from, rtype, eid_to, **kwargs):
+        """Insert into the database a  relation ``rtype`` between entities with eids ``eid_from``
+        and ``eid_to``.
+
+        Relation must not be inlined.
+        """
+        if rtype not in self._initialized:
+            if not self.slave_mode:
+                self.master_init(commit=False)
+            assert not self._cnx.vreg.schema.rschema(rtype).inlined
+            self._initialized[rtype] = None
+            tablename = "%s_relation" % rtype.lower()
+            tmp_tablename = "%s_%s" % (tablename, self.uuid)
+            self.sql(
+                "INSERT INTO cwmassive_initialized VALUES (%(r)s, 'rtype', %(uuid)s)",
+                {"r": rtype, "uuid": self.uuid},
+            )
+            self.sql("CREATE TABLE %s(eid_from integer, eid_to integer)" % tmp_tablename)
+            # start FA
+            self.sql("ALTER TABLE %s ADD PRIMARY KEY (eid_from, eid_to);" % tmp_tablename)
+            # stop FA
+        self._data_relations[rtype].append({"eid_from": eid_from, "eid_to": eid_to})
+
+    def prepare_insert_entity(self, etype, **data):
+        """Given an entity type, attributes and inlined relations, returns the inserted entity's
+        eid.
+        """
+        if etype not in self._initialized:
+            if not self.slave_mode:
+                self.master_init(commit=False)
+            tablename = "cw_%s" % etype.lower()
+            tmp_tablename = "%s_%s" % (tablename, self.uuid)
+            self.sql(
+                "INSERT INTO cwmassive_initialized VALUES (%(e)s, 'etype', %(uuid)s)",
+                {"e": etype, "uuid": self.uuid},
+            )
+            attr_defs = eschema_sql_def(self._source_dbhelper, self.schema[etype])
+            self.sql(
+                "CREATE TABLE %s(%s);"
+                % (
+                    tmp_tablename,
+                    ", ".join("cw_%s %s" % (column, sqltype) for column, sqltype in attr_defs),
+                )
+            )
+            # start FA
+            self.sql("ALTER TABLE %s ADD PRIMARY KEY (cw_eid);" % tmp_tablename)
+            # stop FA
+            self._initialized[etype] = [attr for attr, _ in attr_defs]
+
+        if "eid" not in data:
+            # If eid is not given and the eids sequence is set, use the value from the sequence
+            eid = self.get_next_eid()
+            data["eid"] = eid
+        self._data_entities[etype].append(data)
+        return data["eid"]
+
+    def finish(self):
+        """differ all differable constraints (foreign keys) to allow delete/insert/update
+        in any order in the massive import with no superuser"""
+        deffer_foreign_key_constraints(self._cnx)
+        super().finish()
+
+    def flush_relations(self):
+        """Flush the relations data from in-memory structures to a temporary table."""
+        for rtype, data in self._data_relations.items():
+            if not data:
+                # There is no data for these etype for this flush round.
+                continue
+            # remove duplicated values
+            self._data_relations[rtype] = [
+                dict(x) for x in set(tuple(y.items()) for y in self._data_relations[rtype])
+            ]
+        super().flush_relations()
+
+
 def create_massive_store(cnx, nodrop=False, **kwargs):
     metagen = MetadataGenerator(cnx, meta_skipped=("owned_by", "created_by"))
-    store = MassiveObjectStore(cnx, metagen=metagen, **kwargs)
+    store = DeferredMassiveObjectStore(cnx, metagen=metagen, **kwargs)
     if nodrop:
         store._dbh = NoDropPGHelper(cnx)
     return store

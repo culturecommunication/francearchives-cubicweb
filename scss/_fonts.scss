@@ -2,7 +2,7 @@
 
 @font-face {
   font-family: 'Lovelo';
-  src: url('../fonts/lovelo/Lovelo-Black.otf') format('truetype');
+  src: url('../fonts/lovelo/Lovelo-Black.otf') format('opentype');
   font-weight: normal;
   font-style: normal;
 }
@@ -10,3 +10,4 @@
 .lovelo {
   font-family: $lovelo;
 }
+ 

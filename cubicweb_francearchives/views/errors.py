@@ -46,7 +46,7 @@ class NotFoundView(JinjaViewMixin, StartupView):
 
     def call(self):
         section_descs = []
-        for title, label, name, cssclass, desc in top_sections_desc(self._cw):
+        for title, label, name, cssclass, desc, subsections in top_sections_desc(self._cw):
             section_descs.append(
                 {
                     "url": self._cw.build_url(name),

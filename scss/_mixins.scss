@@ -19,6 +19,12 @@
   }
 }
 
+@mixin if-narrower-than($breakpoint) {
+  @media (max-width: #{map-get($screen-widths, $breakpoint)}) {
+    @content;
+  }
+}
+
 @mixin compute-base-font-size($fs-map) {
   @each $breakpoint, $fs-font-size in $fs-map {
     @media (min-width: #{map-get($screen-widths, $breakpoint)}) {
@@ -44,7 +50,28 @@
   font-size: 1em;
 }
 
+@mixin outline-blue-button-focus {
+  background-color: #fff;
+  border-color: $royal-blue;
+  color: $royal-blue;;
+}
+
 @mixin outline-button-focus {
   outline: thin dotted;
   outline-offset: -2px;
+}
+
+@mixin outline-checkbox-focus {
+  outline: thin dotted;
+  outline-offset: 2px;
+}
+
+@mixin outline-input-focus {
+  border-color: #414856;
+  box-shadow: 0 0 0 .25rem rgba(65, 72, 86,.25);
+}
+
+@mixin outline-links-focus {
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -3px;
 }

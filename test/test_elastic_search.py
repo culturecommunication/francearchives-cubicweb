@@ -44,12 +44,12 @@ from cubicweb import Binary
 from cubicweb.devtools.testlib import CubicWebTC
 
 from cubicweb_francearchives import ccplugin
-from cubicweb_francearchives.testutils import EsSerializableMixIn, HashMixIn
+from cubicweb_francearchives.testutils import EsSerializableMixIn, S3BfssStorageTestMixin
 
 from esfixtures import teardown_module  # noqa
 
 
-class ElasticSearchTC(HashMixIn, EsSerializableMixIn, CubicWebTC):
+class ElasticSearchTC(S3BfssStorageTestMixin, EsSerializableMixIn, CubicWebTC):
     def setup_database(self):
         super().setup_database()
         with self.admin_access.cnx() as cnx:
@@ -166,72 +166,14 @@ class ElasticSearchTC(HashMixIn, EsSerializableMixIn, CubicWebTC):
     @patch("elasticsearch.client.indices.IndicesClient.create")
     @patch("elasticsearch.client.indices.IndicesClient.exists")
     @patch("elasticsearch.client.Elasticsearch.index")
-    def test_index_commemo_manif_prog(self, index, exists, create):
-        with self.admin_access.cnx() as cnx:
-            ce = cnx.create_entity
-            collection = ce("CommemoCollection", title="Moyen Age", year=1500)
-            basecontent = ce("BaseContent", title="program", content="31 juin")
-            cnx.commit()
-            indexer = cnx.vreg["es"].select("indexer", cnx)
-            indexer.get_connection()
-            self.assertTrue(index.called)
-            index.reset_mock()
-            commemo_item = ce(
-                "CommemorationItem",
-                title="Commemoration",
-                alphatitle="commemoration",
-                content="content<br />commemoration",
-                commemoration_year=1500,
-                manif_prog=basecontent,
-                collection_top=collection,
-            )
-            cnx.commit()
-            for args, kwargs in index.call_args_list:
-                if kwargs["doc_type"] == "_doc":
-                    break
-            else:
-                self.fail("index not called on CommemorationItem")
-            self.assertEqual(kwargs["doc_type"], "_doc")
-            self.assertEqual(kwargs["body"]["cw_etype"], "CommemorationItem")
-            for arg_name, expected_value in (
-                ("cw_etype", "CommemorationItem"),
-                ("title", commemo_item.title),
-                ("manif_prog", basecontent.content),
-                ("content", "content commemoration"),
-                ("year", None),
-                ("commemoration_year", commemo_item.commemoration_year),
-                ("cwuri", commemo_item.cwuri),
-            ):
-                self.assertEqual(kwargs["body"][arg_name], expected_value)
-            index.reset_mock()
-            new_content = "28 juin<br>2018"
-            basecontent.cw_set(content=new_content)
-            cnx.commit()
-            indexer = cnx.vreg["es"].select("indexer", cnx)
-            indexer.get_connection()
-            self.assertTrue(index.called)
-            args, kwargs = index.call_args
-            for arg_name, expected_value in (
-                ("title", commemo_item.title),
-                ("manif_prog", "28 juin 2018"),
-                ("year", None),
-                ("commemoration_year", commemo_item.commemoration_year),
-                ("cwuri", commemo_item.cwuri),
-            ):
-                self.assertEqual(kwargs["body"][arg_name], expected_value)
-
-    @patch("elasticsearch.client.indices.IndicesClient.create")
-    @patch("elasticsearch.client.indices.IndicesClient.exists")
-    @patch("elasticsearch.client.Elasticsearch.index")
     def test_index_commemo_with_authority(self, index, exists, create):
         with self.admin_access.cnx() as cnx:
             ce = cnx.create_entity
             subject = ce("SubjectAuthority", label="Moyen Age")
-            collection = ce("CommemoCollection", title="Moyen Age", year=1500)
             cnx.commit()
             indexer = cnx.vreg["es"].select("indexer", cnx)
             indexer.get_connection()
-            self.assertTrue(index.called)
+            self.assertFalse(index.called)
             index.reset_mock()
             commemo_item = ce(
                 "CommemorationItem",
@@ -240,7 +182,6 @@ class ElasticSearchTC(HashMixIn, EsSerializableMixIn, CubicWebTC):
                 content="content<br />commemoration",
                 commemoration_year=1500,
                 related_authority=subject,
-                collection_top=collection,
             )
             cnx.commit()
             for args, kwargs in index.call_args_list:
@@ -277,7 +218,7 @@ class ElasticSearchTC(HashMixIn, EsSerializableMixIn, CubicWebTC):
             self.assertTrue(index.called)
             args, kwargs = index.call_args
             self.assertEqual(kwargs["doc_type"], "_doc")
-            self.assertEqual(kwargs["body"]["cw_etype"], "BaseContent")
+            self.assertEqual(kwargs["body"]["cw_etype"], "Article")
             self.assertEqual(kwargs["body"]["content"], "31 juin")
             index.reset_mock()
             # modify basecontent
@@ -288,7 +229,7 @@ class ElasticSearchTC(HashMixIn, EsSerializableMixIn, CubicWebTC):
             self.assertTrue(index.called)
             args, kwargs = index.call_args
             self.assertEqual(kwargs["doc_type"], "_doc")
-            self.assertEqual(kwargs["body"]["cw_etype"], "BaseContent")
+            self.assertEqual(kwargs["body"]["cw_etype"], "Article")
             self.assertEqual(kwargs["body"]["content"], "28 juin")
 
     @patch("elasticsearch.client.indices.IndicesClient.create")
@@ -326,37 +267,44 @@ class ElasticSearchTC(HashMixIn, EsSerializableMixIn, CubicWebTC):
     def test_index_circular_file(self, index, exists, create):
         with self.admin_access.cnx() as cnx:
             signing_date = dt.date(2001, 6, 6)
-            with open(osp.join(self.datadir, "pdf.pdf"), "rb") as pdf:
-                ce = cnx.create_entity
-                concept = cnx.execute("Any X WHERE X is Concept").one()
-                cnx.execute("Any X WHERE X is Subject").one()
-                subject_authority = cnx.execute("Any X WHERE X is SubjectAuthority").one()
-                circular = ce(
-                    "Circular",
-                    circ_id="circ01",
-                    title="Circular",
-                    signing_date=signing_date,
-                    status="in-effect",
-                    business_field=concept,
-                )
-                attachement = ce(
-                    "File",
-                    data_name="pdf",
-                    data_format="application/pdf",
-                    data=Binary(pdf.read()),
-                    reverse_attachment=circular,
-                )
-                cnx.commit()
+            pdffile = self.get_or_create_imported_filepath("pdf.pdf")
+            pdf_content = self.getFileContent(pdffile)
+            ce = cnx.create_entity
+            concept = cnx.execute("Any X WHERE X is Concept").one()
+            cnx.execute("Any X WHERE X is Subject").one()
+            subject_authority = cnx.execute("Any X WHERE X is SubjectAuthority").one()
+            circular = ce(
+                "Circular",
+                circ_id="circ01",
+                title="Circular",
+                signing_date=signing_date,
+                status="in-effect",
+                business_field=concept,
+            )
+            attachment = ce(
+                "File",
+                data_name="pdf",
+                data_format="application/pdf",
+                data=Binary(pdf_content),
+                reverse_attachment=circular,
+            )
+            cnx.commit()
+            for f in cnx.execute("Any FSPATH(D) WHERE X attachment F, F data D"):
+                fpath = f[0].getvalue()
+                self.assertTrue(self.fileExists(fpath))
             indexer = cnx.vreg["es"].select("indexer", cnx)
             indexer.get_connection()
             self.assertTrue(index.called)
             args, kwargs = index.call_args
             self.assertEqual(kwargs["doc_type"], "_doc")
             pdf_text = "Test\nCirculaire chat\n\n\x0c"
+            pdf_key = cnx.execute(f"""Any FSPATH(D) WHERE X eid {attachment.eid}, F data D""")[0][
+                0
+            ].getvalue()
             for arg_name, expected_value in (
                 ("cw_etype", "Circular"),
                 ("title", "Circular"),
-                ("sort_date", signing_date),
+                ("sortdate", signing_date.strftime("%Y-%m-%d")),
                 ("attachment", pdf_text),
                 ("cwuri", circular.cwuri),
             ):
@@ -378,19 +326,57 @@ class ElasticSearchTC(HashMixIn, EsSerializableMixIn, CubicWebTC):
             self.assertEqual(kwargs["body"]["title"], new_title)
             index.reset_mock()
             # update pdf
-            new_pdf_content = "Circulaire sérieux\n\n\x0c"
             with open(osp.join(self.datadir, "pdf1.pdf"), "rb") as pdf:
-                attachement.cw_set(data=Binary(pdf.read()))
-                cnx.commit()
+                pdf_content = pdf.read()
+                attachment.cw_set(data=Binary(pdf_content))
+            cnx.commit()
+            new_pdf_content = "Circulaire sérieux\n\n\x0c"
+            new_pdf_key = cnx.execute(f"""Any FSPATH(D) WHERE X eid {attachment.eid}, F data D""")[
+                0
+            ][0].getvalue()
+            self.assertNotEqual(new_pdf_key, pdf_key)
             self.assertTrue(index.called)
             args, kwargs = index.call_args
             for arg_name, expected_value in (
                 ("title", new_title),
-                ("sort_date", signing_date),
+                ("sortdate", signing_date.strftime("%Y-%m-%d")),
                 ("attachment", new_pdf_content),
                 ("cwuri", circular.cwuri),
             ):
                 self.assertEqual(kwargs["body"][arg_name], expected_value)
+
+    @patch("elasticsearch.client.indices.IndicesClient.create")
+    @patch("elasticsearch.client.indices.IndicesClient.exists")
+    @patch("elasticsearch.client.Elasticsearch.index")
+    def test_index_authorityrecord(self, index, exists, create):
+        with self.admin_access.cnx() as cnx:
+            service = cnx.create_entity(
+                "Service", code="FRAD092", short_name="AD 92", level="level-D", category="foo"
+            )
+            kind_eid = cnx.find("AgentKind", name="person")[0][0]
+            record = cnx.create_entity(
+                "AuthorityRecord",
+                record_id="FRAN_NP_006883",
+                agent_kind=kind_eid,
+                maintainer=service.eid,
+                reverse_name_entry_for=cnx.create_entity(
+                    "NameEntry", parts="Jean Cocotte", form_variant="authorized"
+                ),
+                xml_support="foo",
+            )
+            cnx.commit()
+            indexer = cnx.vreg["es"].select("indexer", cnx)
+            indexer.get_connection()
+            self.assertTrue(index.called)
+            calls = index.call_args_list
+
+            self.assertEqual(len(calls), 2)  # one for AuthorityRecord, one for Service
+
+            for args, kwargs in calls:
+                if kwargs["body"]["cw_etype"] == "AuthorityRecord":
+                    self.assertEqual(kwargs["id"], "FRAN_NP_006883")
+                    self.assertEqual(kwargs["doc_type"], "_doc")
+                    self.assertEqual(kwargs["body"]["eid"], record.eid)
 
 
 if __name__ == "__main__":

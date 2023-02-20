@@ -1,0 +1,21 @@
+{% extends "searchitem.jinja2" %}
+{% block extra %}
+{% if entity["source_url"] %}
+<div class="document-properties row mt-3">
+  <div class="col-sm-12 col-md-7">
+  <a class="blue-button" href="{{ entity["source_url"] | e }}"
+     title="{{ _("Consult the digitized version of")  }} {{ entity["title"] }} {{ _('in a new window') }}"
+     {% if publisher.xiti %}
+     data-xiti-level="C"
+     data-xiti-type="{{ publisher.xiti.type }}"
+     data-xiti-name="{{ publisher.xiti.access_site}}"
+     data-xiti-n2="{{ publisher.xiti.n2}}"
+     {% endif %}
+     target="_blank" rel="noopener noreferrer nofollow" >
+           {{_("Consult the digitized version") }}
+     <i class="fa fa-external-link" aria-hidden="true"></i>
+  </a>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

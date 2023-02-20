@@ -33,34 +33,44 @@ from datetime import datetime
 import unittest
 from lxml import etree
 
+import os
 from os import path as osp
 
 from cubicweb.devtools import testlib
 
 from cubicweb.dataimport.stores import RQLObjectStore
 
-from cubicweb_francearchives.testutils import PostgresTextMixin, format_date
+from cubicweb_francearchives.testutils import PostgresTextMixin, format_date, S3BfssStorageTestMixin
 from cubicweb_francearchives.utils import pick
 from cubicweb_francearchives.dataimport import dc, usha1, CSVIntegrityError, load_services_map
 
 from pgfixtures import setup_module, teardown_module  # noqa
 
 
-class CSVImportMixIn(object):
-    def csv_filepath(self, filepath):
-        return osp.join(self.datapath("csv", filepath))
+class CSVImportMixIn(S3BfssStorageTestMixin):
+    def setUp(self):
+        super(CSVImportMixIn, self).setUp()
+        import_dir = self.datapath("tmp")
+        self.config.set_option("appfiles-dir", import_dir)
+        if not osp.isdir(import_dir):
+            os.mkdir(import_dir)
 
-    def _test_medatadata_csv(self, cnx, service, fa=None):
+    def csv_filepath(self, filepath):
+        return self.get_or_create_imported_filepath(f"csv/{filepath}")
+
+    def _test_medatadata_csv(self, cnx, service=None, fa=None):
+        if not service:
+            service = self.service
         if fa is None:
-            fa_rset = cnx.execute("Any FA WHERE FA is FindingAid")
-            self.assertEqual(len(fa_rset), 1)
-            fa = fa_rset.one()
+            fa = cnx.execute("Any FA WHERE FA is FindingAid").one()
+            fac_count = cnx.execute("Any COUNT(FA) WHERE FA is FAComponent")[0][0]
+            self.assertEqual(10, fac_count)
         self.assertEqual(fa.name, "FRAD092_9FI_cartes-postales.csv")
         self.assertEqual(fa.eadid, "FRAD092_9FI_cartes-postales")
-        self.assertEqual(fa.fatype, "photographie")
+        self.assertEqual(fa.fatype, None)
         self.assertEqual(fa.did[0].unitid, None)
         self.assertEqual(fa.did[0].unittitle, "Cartes postales anciennes")
-        self.assertEqual(fa.did[0].unitdate, None)  # XXX ?
+        self.assertEqual(fa.did[0].unitdate, "1900 - 1944-05-31")
         self.assertEqual(fa.did[0].startyear, 1900)
         self.assertEqual(fa.did[0].stopyear, 1944)
         self.assertEqual(fa.did[0].origination, "Archives des Hauts-de-Seine")
@@ -83,6 +93,34 @@ class CSVImportMixIn(object):
         self.assertEqual(fa.service[0].eid, service.eid)
         self.assertEqual(fa.findingaid_support[0].data_name, "FRAD092_9FI_cartes-postales.csv")
         self.assertEqual(fa.findingaid_support[0].data_format, "text/csv")
+        index_entries = sorted(
+            [(ie.authority[0].cw_etype, ie.authority[0].label) for ie in fa.reverse_index]
+        )
+        self.assertCountEqual(
+            index_entries,
+            [
+                ("AgentAuthority", "Alphonse Germain"),
+                ("AgentAuthority", "Jules Ferry"),
+                ("AgentAuthority", "Service des postes"),
+                ("LocationAuthority", "Antony (Hauts-de-Seine)"),
+                ("LocationAuthority", "Corse (France ; département)"),
+                (
+                    "LocationAuthority",
+                    "Digne-les-Bains (Alpes-de-Haute-Provence, France ; arrondissement )",
+                ),
+                ("LocationAuthority", "Digne-les-Bains (Alpes-de-Haute-Provence, France)"),
+                ("LocationAuthority", "Hauts-de-Seine"),
+                ("LocationAuthority", "Paris"),
+                (
+                    "LocationAuthority",
+                    "Sisteron (Alpes-de-Haute-Provence, France ; arrondissement)",
+                ),
+                ("LocationAuthority", "méditerranée (mer)"),
+                ("SubjectAuthority", "Cartes postales"),
+                ("SubjectAuthority", "photographie"),
+                ("SubjectAuthority", "urbanisation"),
+            ],
+        )
         facs_rset = cnx.execute("Any FA WHERE FA finding_aid F, F eid %(e)s", {"e": fa.eid})
         self.assertEqual(facs_rset.rowcount, 10)
         facs = sorted(facs_rset.entities(), key=lambda fac: fac.did[0].unitid)
@@ -117,6 +155,7 @@ class CSVImportMixIn(object):
                 ("SubjectAuthority", "Bâtiment public > Gare"),
                 ("AgentAuthority", "Charles Baudelaire"),
                 ("LocationAuthority", "Bagneux"),
+                ("SubjectAuthority", "photographie"),
             ],
         )
         fac5 = facs[5]
@@ -150,6 +189,7 @@ class CSVImportMixIn(object):
                 ("AgentAuthority", "Claudette Levy"),
                 ("AgentAuthority", "Société Beguin-Say"),
                 ("LocationAuthority", "Bagneux"),
+                ("SubjectAuthority", "photographie"),
             ],
         )
 
@@ -163,6 +203,14 @@ class CSVDCImportTC(CSVImportMixIn, PostgresTextMixin, testlib.CubicWebTC):
         "dc_no_cache": True,
         "index-name": "dummy",
     }
+
+    def setUp(self):
+        super(CSVDCImportTC, self).setUp()
+        with self.admin_access.cnx() as cnx:
+            self.service = cnx.create_entity(
+                "Service", code="FRAD092", short_name="AD 92", level="level-D", category="foo"
+            )
+            cnx.commit()
 
     def test_import_findingaid_esonly(self):
         with self.admin_access.cnx() as cnx:
@@ -199,7 +247,6 @@ class CSVDCImportTC(CSVImportMixIn, PostgresTextMixin, testlib.CubicWebTC):
                     "sortdate",
                     "startyear",
                     "stopyear",
-                    "dates",
                 },
             )
 
@@ -231,7 +278,6 @@ class CSVDCImportTC(CSVImportMixIn, PostgresTextMixin, testlib.CubicWebTC):
                     "eadid",
                     "scopecontent",
                     "digitized",
-                    "digitized_versions",
                     "creation_date",
                     "sortdate",
                     "startyear",
@@ -242,12 +288,12 @@ class CSVDCImportTC(CSVImportMixIn, PostgresTextMixin, testlib.CubicWebTC):
             )
             es_index_entries = es_doc["index_entries"]
             self.assertTrue(all("type" in i and "label" in i for i in es_index_entries))
-            self.assertEqual(len(es_index_entries), 4)
+            self.assertEqual(len(es_index_entries), 5)
             es_doc = pick(es_doc, *(set(es_doc) - {"extid", "stable_id"}))
             # ensure `index_entries` list is alway in same order
             es_doc["index_entries"] = sorted(es_doc["index_entries"], key=lambda k: k["normalized"])
             self.assertTrue(es_doc.pop("creation_date"))
-            self.assertEqual(
+            self.assertCountEqual(
                 es_doc,
                 {
                     "cw_etype": "FAComponent",
@@ -258,10 +304,6 @@ class CSVDCImportTC(CSVImportMixIn, PostgresTextMixin, testlib.CubicWebTC):
                         "eid": None,
                     },
                     "digitized": True,
-                    "digitized_versions": {
-                        "illustration_url": "img1",
-                        "url": "http://www.diplomatie.gouv.fr/traites/affichetraite.do?accord=TRA13680001",  # noqa
-                    },
                     "eadid": None,
                     "eid": None,
                     "escategory": "archives",
@@ -299,6 +341,14 @@ class CSVDCImportTC(CSVImportMixIn, PostgresTextMixin, testlib.CubicWebTC):
                             "authority": None,
                             "authfilenumber": None,
                         },
+                        {
+                            "authfilenumber": None,
+                            "authority": None,
+                            "label": "type1",
+                            "normalized": "type1",
+                            "role": "index",
+                            "type": "genreform",
+                        },
                     ],
                     "name": "frmaee_findingaid",
                     "publisher": "FRMAEE",
@@ -317,9 +367,7 @@ class CSVDCImportTC(CSVImportMixIn, PostgresTextMixin, testlib.CubicWebTC):
                 fpath = self.csv_filepath("frmaee_findingaid.csv")
                 config = self.readerconfig.copy()
                 dc.import_filepath(cnx, config, fpath)
-                fa_rset = cnx.execute("Any FA WHERE FA is FindingAid")
-                self.assertEqual(len(fa_rset), 1)
-                fa = fa_rset.one()
+                fa = cnx.execute("Any FA WHERE FA is FindingAid").one()
                 did = fa.did[0]
                 self.assertEqual(fa.name, "frmaee_findingaid")
                 self.assertEqual(fa.eadid, "frmaee_findingaid")
@@ -331,7 +379,7 @@ class CSVDCImportTC(CSVImportMixIn, PostgresTextMixin, testlib.CubicWebTC):
                 self.assertEqual(fa.userestrict, None)
                 self.assertEqual(did.unitid, None)
                 self.assertEqual(did.unittitle, "frmaee_findingaid")
-                self.assertEqual(did.unitdate, None)  # XXX ?
+                self.assertEqual(did.unitdate, None)
                 self.assertEqual(did.startyear, None)
                 self.assertEqual(did.stopyear, None)
                 self.assertEqual(did.origination, "frmaee")
@@ -342,7 +390,7 @@ class CSVDCImportTC(CSVImportMixIn, PostgresTextMixin, testlib.CubicWebTC):
                 dids_rset = cnx.execute("Any D WHERE D is Did")
                 self.assertEqual(len(dids_rset), 4)
                 ies_rset = cnx.execute("Any X WHERE X is IN (AgentName, Geogname, Subject)")
-                self.assertEqual(len(ies_rset), 8)
+                self.assertEqual(len(ies_rset), 10)
                 dvs_rset = cnx.execute("Any D WHERE D is DigitizedVersion")
                 self.assertEqual(len(dvs_rset), 3)
                 facs_rset = cnx.execute("Any F WHERE F is FAComponent")
@@ -369,13 +417,13 @@ class CSVDCImportTC(CSVImportMixIn, PostgresTextMixin, testlib.CubicWebTC):
                     "http://www.diplomatie.gouv.fr/traites/affichetraite.do?accord=TRA13680001",
                 )
                 self.assertEqual(fac1.digitized_versions[0].illustration_url, "img1")
-                self.assertEqual(len(fac1.reverse_index), 4)
                 index_entries = [
                     (ie.authority[0].cw_etype, ie.authority[0].label) for ie in fac1.reverse_index
                 ]
                 self.assertCountEqual(
                     index_entries,
                     [
+                        ("SubjectAuthority", "type1"),
                         ("SubjectAuthority", "subject"),
                         ("AgentAuthority", "corporname"),
                         ("AgentAuthority", "Henri VII"),
@@ -406,13 +454,23 @@ class CSVDCImportTC(CSVImportMixIn, PostgresTextMixin, testlib.CubicWebTC):
                     "http://www.diplomatie.gouv.fr/traites/affichetraite.do?accord=TRA13690001",
                 )
                 self.assertEqual(fac2.digitized_versions[0].illustration_url, "img2")
-                self.assertEqual(len(fac2.reverse_index), 4)
+                self.assertEqual(len(fac2.reverse_index), 5)
                 index_entries = [
                     (a.cw_etype, a.label)
                     for a in cnx.execute(
                         "Any A WHERE X eid %(e)s, I index X, I authority A", {"e": fac2.eid}
                     ).entities()
                 ]
+                self.assertCountEqual(
+                    index_entries,
+                    [
+                        ("SubjectAuthority", "type2"),
+                        ("SubjectAuthority", "subject2"),
+                        ("AgentAuthority", "corporname2"),
+                        ("AgentAuthority", "Charles V"),
+                        ("LocationAuthority", "Paris"),
+                    ],
+                )
                 fac3_did = fac3.did[0]
                 self.assertEqual(fac2.component_order, 1)
                 self.assertEqual(fac3_did.physdesc, None)
@@ -420,102 +478,156 @@ class CSVDCImportTC(CSVImportMixIn, PostgresTextMixin, testlib.CubicWebTC):
                 self.assertEqual(fac3.additional_resources, None)
                 self.assertEqual(fac3_did.origination, None)
                 self.assertEqual(fac3_did.unitid, "TRA13690003")
-                self.assertCountEqual(
-                    index_entries,
-                    [
-                        ("SubjectAuthority", "subject2"),
-                        ("AgentAuthority", "corporname2"),
-                        ("AgentAuthority", "Charles V"),
-                        ("LocationAuthority", "Paris"),
-                    ],
-                )
                 self.assertEqual(
                     fac3.digitized_versions[0].url,
                     "http://www.diplomatie.gouv.fr/traites/affichetraite.do?accord=TRA15590001",
                 )
                 self.assertEqual(fac3.digitized_versions[0].illustration_url, None)
                 self.assertEqual(fac3.component_order, 2)
+                self.assertEqual(len(fac3.reverse_index), 0)
 
-    def test_import_csv_without_metadatafile(self):
+    def test_findingaid_support_hash_csv_without_metadatafile(self):
+        """
+        Trying: import csv file without metadata
+        Expecting: findingaid_support data_hash is correctly set
+        """
         with self.admin_access.cnx() as cnx:
-            service = cnx.create_entity(
-                "Service", code="FRAD092", short_name="AD 92", level="level-D", category="foo"
-            )
-            cnx.commit()
             with cnx.allow_all_hooks_but("es"):
                 fpath = self.csv_filepath("FRAD092_9FI_cartes-postales.csv")
                 config = self.readerconfig.copy()
                 dc.import_filepath(cnx, config, fpath)
-                self._test_medatadata_csv(cnx, service)
+                fa_support = cnx.execute("Any X WHERE F findingaid_support X").one()
+                self.assertEqual(fa_support.data_hash, fa_support.compute_hash())
+                self.assertTrue(fa_support.check_hash())
+
+    def test_import_csv_without_metadatafile(self):
+        with self.admin_access.cnx() as cnx:
+            with cnx.allow_all_hooks_but("es"):
+                config = self.readerconfig.copy()
+                fpath = self.csv_filepath("FRAD092_9FI_cartes-postales.csv")
+                dc.import_filepath(cnx, config, fpath)
+                self._test_medatadata_csv(cnx)
+
+    def test_import_csv_with_metadatafile_symlink(self):
+        """
+        Trying: import csv file with metadata
+        Expecting: a symlink to the appfiles-dir is set for the csv file
+        """
+        with self.admin_access.cnx() as cnx:
+            with cnx.allow_all_hooks_but("es"):
+                fpath = self.csv_filepath("FRAD092_9FI_cartes-postales.csv")
+                meta_fpath = self.csv_filepath("metadata.csv")
+                config = self.readerconfig.copy()
+                config["dc_no_cache"] = False
+                config["appfiles-dir"] = self.config["appfiles-dir"]
+                dc.import_filepath(cnx, config, fpath, meta_fpath)
+                csvfile = cnx.execute("Any F WHERE X findingaid_support F").one()
+                self.assertEqual(csvfile.data_hash, csvfile.compute_hash())
+                self.assertTrue(csvfile.check_hash())
+                destpath = f"{csvfile.data_hash}_{osp.basename(fpath)}"
+                if not self.s3_bucket_name:
+                    destpath = osp.join(self.config["appfiles-dir"], destpath)
+                self.assertNotEqual(destpath, fpath)
+                self.assertTrue(self.fileExists(destpath))
+                if not self.s3_bucket_name:
+                    self.assertTrue(osp.islink(destpath))
+
+    def test_findingaid_support_hash_csv_with_metadatafile(self):
+        """
+        Trying: import csv file with metadata
+        Expecting: findingaid_support data_hash is correctly set
+        """
+        with self.admin_access.cnx() as cnx:
+            with cnx.allow_all_hooks_but("es"):
+                fpath = self.csv_filepath("FRAD092_9FI_cartes-postales.csv")
+                meta_fpath = self.csv_filepath("metadata.csv")
+                config = self.readerconfig.copy()
+                config["dc_no_cache"] = False
+                dc.import_filepath(cnx, config, fpath, meta_fpath)
+                fa_support = cnx.execute("Any X WHERE F findingaid_support X").one()
+                self.assertEqual(fa_support.data_hash, fa_support.compute_hash())
+                self.assertTrue(fa_support.check_hash())
 
     def test_import_csv_with_metadatafile(self):
         with self.admin_access.cnx() as cnx:
-            service = cnx.create_entity(
-                "Service", code="FRAD092", short_name="AD 92", level="level-D", category="foo"
-            )
-            cnx.commit()
             with cnx.allow_all_hooks_but("es"):
                 fpath = self.csv_filepath("FRAD092_9FI_cartes-postales.csv")
                 meta_fpath = self.csv_filepath("metadata.csv")
                 config = self.readerconfig.copy()
                 config["dc_no_cache"] = False
                 dc.import_filepath(cnx, config, fpath, meta_fpath)
-                self._test_medatadata_csv(cnx, service)
+                self._test_medatadata_csv(cnx)
 
     def test_metadata_csv_failed(self):
         with self.admin_access.cnx() as cnx:
-            service = cnx.create_entity(
-                "Service", code="FRAD092", short_name="AD 92", level="level-D", category="foo"
-            )
-            cnx.commit()
             with cnx.allow_all_hooks_but("es"):
-                fpath = self.csv_filepath("FRAD092_9FI_cartes-postales.csv")
-                meta_fpath = self.csv_filepath("metadata.csv")
                 config = self.readerconfig.copy()
                 config["dc_no_cache"] = False
+                fpath = self.csv_filepath("FRAD092_9FI_cartes-postales.csv")
+                meta_fpath = self.csv_filepath("metadata.csv")
                 dc.import_filepath(cnx, config, fpath, meta_fpath)
                 # reimport a similar but same file
                 fpath = self.csv_filepath("FRAD092_9FI_cartes-postales-ko.csv")
-                meta_fpath = self.csv_filepath("metadata.csv")
                 dc.import_filepath(cnx, config, fpath, meta_fpath)
                 fa_rset = cnx.execute("Any COUNT(FA) WHERE FA is FindingAid")
                 self.assertEqual(fa_rset[0][0], 2)
                 facs_rset = cnx.execute("Any COUNT(FA) WHERE FA is FAComponent")
                 self.assertEqual(facs_rset[0][0], 18)
                 fa = cnx.find("FindingAid", eadid="FRAD092_9FI_cartes-postales").one()
-                self._test_medatadata_csv(cnx, service, fa=fa)
+                self._test_medatadata_csv(cnx, fa=fa)
+
+    def test_metadata_reimport_csv_tab_dialect(self):
+        with self.admin_access.cnx() as cnx:
+            with cnx.allow_all_hooks_but("es"):
+                config = self.readerconfig.copy()
+                config["dc_no_cache"] = False
+                fpath = self.csv_filepath("FRAD092_9FI_cartes-postales.csv")
+                meta_fpath = self.csv_filepath("metadata.csv")
+                dc.import_filepath(cnx, config, fpath, meta_fpath)
+                fa_rset = cnx.execute("Any COUNT(FA) WHERE FA is FindingAid")
+                self.assertEqual(fa_rset[0][0], 1)
+                facs_rset = cnx.execute("Any COUNT(FA) WHERE FA is FAComponent")
+                self.assertEqual(facs_rset[0][0], 10)
+                # reimport a file with data separated by a tabulation
+                fpath = self.csv_filepath("FRAD092_9FI_cartes-postales-tab.csv")
+                meta_fpath = self.csv_filepath("metadata.csv")
+                dc.import_filepath(cnx, config, fpath, meta_fpath)
+                fa_rset = cnx.execute("Any COUNT(FA) WHERE FA is FindingAid")
+                self.assertEqual(fa_rset[0][0], 1)
+                facs_rset = cnx.execute("Any COUNT(FA) WHERE FA is FAComponent")
+                self.assertEqual(facs_rset[0][0], 10)
 
     def test_metadata_csv_wrong_identifier(self):
         """
         Trying: process a fname which not exists in "identifiant_fichier" column of metadata.csv
         Expecting: CSVIntegrityError is raised
         """
-        fname = "FRAD092_9F2_cartes-postales.csv"
         metadata_filepath = self.csv_filepath("metadata.csv")
         with self.assertRaises(CSVIntegrityError):
+            fname = "FRAD092_9F2_cartes-postales.csv"
             dc.csv_metadata_without_cache(fname, metadata_filepath)
 
     def test_metadata_csv_reimport(self):
         with self.admin_access.cnx() as cnx:
-            service = cnx.create_entity(
-                "Service", code="FRAD092", short_name="AD 92", level="level-D", category="foo"
-            )
-            cnx.commit()
             with cnx.allow_all_hooks_but("es"):
-                # create a finding_aid
                 fpath = self.csv_filepath("FRAD092_9FI_cartes-postales.csv")
                 meta_fpath = self.csv_filepath("metadata.csv")
                 config = self.readerconfig.copy()
                 dc.import_filepath(cnx, config, fpath, meta_fpath)
-                self._test_medatadata_csv(cnx, service)
+                self._test_medatadata_csv(cnx)
                 fa = cnx.execute("Any FA WHERE FA is FindingAid").one()
+                self.assertEqual(2, cnx.execute("Any COUNT(X) WHERE X is File")[0][0])
                 fa.cw_set(name="toto", publisher="titi", fatype=None)
                 cnx.commit()
                 self.assertEqual(fa.name, "toto")
                 # reimport the same file
                 config.update({"dc_no_cache": False, "reimport": True, "force_delete": True})
                 dc.import_filepath(cnx, config, fpath, meta_fpath)
-                self._test_medatadata_csv(cnx, service)
+                self._test_medatadata_csv(cnx)
+                self.assertEqual(2, cnx.execute("Any COUNT(X) WHERE X is File")[0][0])
+                for row in cnx.execute(f"Any {self.fkeyfunc}(D) WHERE X data D, X is File"):
+                    fkey = row[0].getvalue()
+                    self.assertTrue(self.fileExists(fkey))
 
     def test_create_ape_ead_file(self):
         with self.admin_access.cnx() as cnx:
@@ -532,10 +644,11 @@ class CSVDCImportTC(CSVImportMixIn, PostgresTextMixin, testlib.CubicWebTC):
                 filepath = cnx.execute(
                     "Any FSPATH(D) WHERE X eid %(e)s, X data D", {"e": ape_ead_file.eid}
                 )[0][0].getvalue()
-                self.assertEqual(
-                    filepath.decode("utf-8"),
-                    "/tmp/ape-ead/FRAD092/ape-FRAD092_9FI_cartes-postales.xml",
-                )  # noqa
+                expected_filepath = self.get_filepath_by_storage(
+                    f"{self.config['appfiles-dir']}/ape-ead/FRAD092/ape-FRAD092_9FI_cartes-postales.xml"  # noqa
+                )
+                self.assertEqual(filepath.decode("utf-8"), expected_filepath)
+                self.assertTrue(self.fileExists(filepath))
                 content = ape_ead_file.data.read()
                 tree = etree.fromstring(content)
                 eadid = tree.xpath("//e:eadid", namespaces={"e": tree.nsmap[None]})[0]
@@ -560,7 +673,7 @@ class CSVDCImportTC(CSVImportMixIn, PostgresTextMixin, testlib.CubicWebTC):
                 self.assertEqual(fa.stable_id, usha1(fa.name))
 
     def test_name_stable_id_dc_without_metadata(self):
-        """ stable id is based on filename without extension"""
+        """stable id is based on filename without extension"""
         with self.admin_access.cnx() as cnx:
             with cnx.allow_all_hooks_but("es"):
                 fpath = self.csv_filepath("FRAD092_9FI_cartes-postales.csv")
@@ -571,6 +684,55 @@ class CSVDCImportTC(CSVImportMixIn, PostgresTextMixin, testlib.CubicWebTC):
                 self.assertEqual("FRAD092_9FI_cartes-postales", fa.eadid)
                 self.assertEqual("FRAD092_9FI_cartes-postales", fa.name)
                 self.assertEqual(fa.stable_id, usha1(fa.name))
+
+    def test_import_csv_with_metadatafile_faprops(self):
+        """
+        Trying: import a FindingAid with dates
+        Expecting: displayed FindingAid dates are the same as FindingAid unitdate
+        """
+        with self.admin_access.cnx() as cnx:
+            with cnx.allow_all_hooks_but("es"):
+                fpath = self.csv_filepath("FRAD092_9FI_cartes-postales.csv")
+                meta_fpath = self.csv_filepath("metadata.csv")
+                config = self.readerconfig.copy()
+                config["dc_no_cache"] = False
+                dc.import_filepath(cnx, config, fpath, meta_fpath)
+                fa = cnx.execute("Any FA WHERE FA is FindingAid").one()
+                self.assertEqual(fa.did[0].unitdate, "1900 - 1944-05-31")
+                self.assertEqual(fa.did[0].period, "1900 - 1944")
+                adapter = fa.cw_adapt_to("entity.main_props")
+                self.assertEqual(adapter.formatted_dates, "Date : 1900 - 1944-05-31")
+
+    def test_import_csv_authorities_facomponent(self):
+        """
+        Trying: import a FindingComponent with authorities with ";" in labels
+        Expecting: Authorities are correctly parsed
+        """
+        with self.admin_access.cnx() as cnx:
+            with cnx.allow_all_hooks_but("es"):
+                config = self.readerconfig.copy()
+                fpath = self.csv_filepath("FRAM059017_data_archives_anciennes.csv")
+                meta_fpath = self.csv_filepath("metadata.csv")
+                dc.import_filepath(cnx, config, fpath, meta_fpath)
+                fc = cnx.execute("Any FA WHERE FA is FAComponent").one()
+                index_entries = sorted(
+                    [(ie.authority[0].cw_etype, ie.authority[0].label) for ie in fc.reverse_index]
+                )
+                from pprint import pprint
+
+                pprint(index_entries)
+                expected = [
+                    ("AgentAuthority", "Egmont (famille d’)"),
+                    ("AgentAuthority", "Jacques III de Luxembourg-Fiennes (12..-1530)"),
+                    ("AgentAuthority", "Jean Ier de Bourgogne (1371-1419\xa0; dit Jean Sans Peur)"),
+                    ("LocationAuthority", "Armentières (Nord, France)"),
+                    ("LocationAuthority", "Bois-Grenier (Nord, France)"),
+                    ("LocationAuthority", "Fleurbaix (Pas-de-Calais, France)"),
+                    ("LocationAuthority", "Frelinghien\xa0(Nord, France)"),
+                    ("LocationAuthority", "Houplines (Nord, France)"),
+                    ("LocationAuthority", "La Chapelle-d’Armentières (Nord, France)"),
+                ]
+                self.assertCountEqual(expected, index_entries)
 
 
 class CSVDCReImportTC(CSVImportMixIn, PostgresTextMixin, testlib.CubicWebTC):
@@ -585,12 +747,16 @@ class CSVDCReImportTC(CSVImportMixIn, PostgresTextMixin, testlib.CubicWebTC):
         "index-name": "dummy",
     }
 
-    def test_index_reimport(self):
+    def setUp(self):
+        super(CSVDCReImportTC, self).setUp()
         with self.admin_access.cnx() as cnx:
-            cnx.create_entity(
+            self.service = cnx.create_entity(
                 "Service", code="FRAD092", short_name="AD 92", level="level-D", category="foo"
             )
             cnx.commit()
+
+    def test_index_reimport(self):
+        with self.admin_access.cnx() as cnx:
             with cnx.allow_all_hooks_but("es"):
                 fpath = self.csv_filepath("FRAD092_9FI_cartes-postales.csv")
                 config = self.readerconfig.copy()
@@ -609,10 +775,6 @@ class CSVDCReImportTC(CSVImportMixIn, PostgresTextMixin, testlib.CubicWebTC):
 
     def test_reimport_csv_with_files(self):
         with self.admin_access.cnx() as cnx:
-            cnx.create_entity(
-                "Service", code="FRAD092", short_name="AD 92", level="level-D", category="foo"
-            )
-            cnx.commit()
             with cnx.allow_all_hooks_but("es"):
                 fpaths = [
                     self.csv_filepath("FRAD092_9FI_cartes-postales.csv"),
@@ -626,24 +788,16 @@ class CSVDCReImportTC(CSVImportMixIn, PostgresTextMixin, testlib.CubicWebTC):
 
     def test_reimport_csv_without_metadatafile(self):
         with self.admin_access.cnx() as cnx:
-            service = cnx.create_entity(
-                "Service", code="FRAD092", short_name="AD 92", level="level-D", category="foo"
-            )
-            cnx.commit()
             with cnx.allow_all_hooks_but("es"):
                 fpath = self.csv_filepath("FRAD092_9FI_cartes-postales.csv")
                 config = self.readerconfig.copy()
                 dc.import_filepath(cnx, config, fpath)
                 # reimport the same file
                 dc.import_filepath(cnx, config, fpath)
-                self._test_medatadata_csv(cnx, service)
+                self._test_medatadata_csv(cnx)
 
     def test_reimport_csv_with_metadatafile(self):
         with self.admin_access.cnx() as cnx:
-            service = cnx.create_entity(
-                "Service", code="FRAD092", short_name="AD 92", level="level-D", category="foo"
-            )
-            cnx.commit()
             with cnx.allow_all_hooks_but("es"):
                 fpath = self.csv_filepath("FRAD092_9FI_cartes-postales.csv")
                 meta_fpath = self.csv_filepath("metadata.csv")
@@ -651,7 +805,7 @@ class CSVDCReImportTC(CSVImportMixIn, PostgresTextMixin, testlib.CubicWebTC):
                 dc.import_filepath(cnx, config, fpath, meta_fpath)
                 # reimport the same file
                 dc.import_filepath(cnx, config, fpath, meta_fpath)
-                self._test_medatadata_csv(cnx, service)
+                self._test_medatadata_csv(cnx)
 
     def test_creation_date_dc_import(self):
         """Test FindingAid, FAComponent creation date is keept between reimports

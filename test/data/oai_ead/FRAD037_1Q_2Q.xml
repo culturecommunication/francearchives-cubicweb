@@ -722,7 +722,7 @@
 							<did>
 								<unittitle>Affaires générales (Biens de 1ère et 2e origines)</unittitle>
 							</did>
-							<c id="c1Q1" level="file">
+							<c id="c1Q1-2" level="file">
 								<did>
 									<unitid id="c1Q1">1 Q 1</unitid>
 									<unittitle>Correspondance (1791-an II). - Soumission d'Etienne Lorin pour la métairie des Fougerets à Limeray (1791). Registre des soumissions effectuées en vertu de la loi du 12 prairial an III (21 prairial an III). Tableau des forges et usines situées dans l'étendue du district (1793). Administration générale des biens : baux à ferme, ventes de récoltes (1792-an III). Domaines engagés : estimation et prise de possession de la terre de Chenonceaux et de moulins (an III).</unittitle>
@@ -842,7 +842,7 @@
 										<geogname>DIERRE</geogname>
 									</controlaccess>
 								</c>
-								<c id="c1Q6" level="item">
+								<c id="c1Q6-2" level="item">
 									<did>
 										<unitid id="c1Q7">1 Q 7</unitid>
 										<unittitle>Epeigné-les-Bois, Fleuray, Francueil, Limeray, Lussault, Luzillé, Montreuil, Mosnes, Nazelles, Négron, Noizay, Pocé, Saint-Denis-hors, Saint-Martin-le-Beau, Saint-Ouen, Saint-Règle, Souvigny, Sublaines.</unittitle>
@@ -1185,7 +1185,7 @@
 							<did>
 								<unittitle>Affaires générales (Biens de 1ère et 2e origines)</unittitle>
 							</did>
-							<c id="c1Q33" level="file">
+							<c id="c1Q33-2" level="file">
 								<did>
 									<unitid id="c1Q33">1 Q 33</unitid>
 									<unittitle>Biens de 1ère et 2e origines. - Administration générale des biens : baux à ferme de biens devenus nationaux (1782-1790), ventes de coupes de bois, vente d'un boeuf (an II). Domaines engagés : registre des déclarations souscrites par les détenteurs (30 pluviôse-4 germinal an II). Biens de 1ère origine : inventaire des baux et titres de propriété de l'abbaye de Gastines, remis aux acquéreurs des biens (1792-an IV), inventaire des meubles, effets et titres de l'abbaye de Fontaines-les-Blanches (1790), état de l'argenterie trouvée dans l'église Saint-André de Château-Renault (an II), 3 affiches de vente imprimées (1790-1791), minutes des affiches de vente des biens provenant des fabriques (an II), procès-verbaux d'estimation des biens des fabriques (an II), procès-verbaux d'estimation des biens appartenant à la commanderie d'Artins, commune du Boulay, et des biens dépendant du vicariat de Villebourg (an II).</unittitle>
@@ -5767,7 +5767,7 @@
 								<did>
 									<unittitle>Administration, inventaires et ventes de mobilier</unittitle>
 								</did>
-								<c id="c1Q480" level="file">
+								<c id="c1Q480-2" level="file">
 									<did>
 										<unitid id="c1Q480">1 Q 480</unitid>
 										<unittitle>Administration des biens réservés pour la dotation de la Légion d'honneur et de la Sénatorerie d'Orléans : correspondance, baux à ferme (an X-1817). <lb/> Echange du séminaire de Tours appartenant à un particulier contre le couvent de l'Union chrétienne de Tours appartenant au département (an VII-an XIII).<lb/> Inventaires des meubles et effets du château de Chezelles (an VI-an VII) ; états des matelas, couvertures et autres effets propres au service des hôpitaux militaires trouvés au domicile des émigrés et déportés (an II-an IV) ; état des ventes de meubles de 2e origine dont le prix reste à recouvrer (an III) ; état du produit des ventes de mobilier de 1ère et 2e origines (an IV).</unittitle>
@@ -6933,7 +6933,7 @@
 								<unitid id="c1Q567-569">1 Q 567-569</unitid>
 								<unittitle>Administration et vente des domaines nationaux :</unittitle>
 							</did>
-							<c id="c1Q567-569" level="file">
+							<c id="c1Q567-569-2" level="file">
 								<did>
 									<unitid id="c1Q567-569">1 Q 567-569</unitid>
 									<unittitle>Dossiers de réclamation et contentieux (classement au nom des pétitionnaires ou de l'émigré représenté par la Nation) :</unittitle>
@@ -8544,7 +8544,7 @@
 						<did>
 							<unittitle>BUREAU D'AZAY-LE-RIDEAU</unittitle>
 						</did>
-						<c id="c1Q696-1Q708" level="subseries">
+						<c id="c1Q696-1Q708-2" level="subseries">
 							<did>
 								<unittitle>Comptabilité des revenus des biens nationaux</unittitle>
 							</did>
@@ -8689,7 +8689,7 @@
 						<did>
 							<unittitle>BUREAU DE BLÉRÉ</unittitle>
 						</did>
-						<c id="c1Q709-1Q713" level="subseries">
+						<c id="c1Q709-1Q713-2" level="subseries">
 							<did>
 								<unittitle>Comptabilité des revenus des biens nationaux</unittitle>
 							</did>
@@ -8754,7 +8754,7 @@
 						<did>
 							<unittitle>BUREAU DE BOURGUEIL</unittitle>
 						</did>
-						<c id="c1Q714-1Q715" level="subseries">
+						<c id="c1Q714-1Q715-2" level="subseries">
 							<did>
 								<unittitle>Comptabilité des revenus des biens nationaux</unittitle>
 							</did>
@@ -8950,7 +8950,7 @@
 							<did>
 								<unittitle>Pièces diverses</unittitle>
 							</did>
-							<c id="c1Q731" level="file">
+							<c id="c1Q731-2" level="file">
 								<did>
 									<unitid id="c1Q731">1 Q 731</unitid>
 									<unittitle>Etat des biens de 2e origine situés dans le ressort du bureau de Château-la-Vallière qui ont été aliénés par le ci-devant district de Langeais (an X). Etats des rentes nationales dues au bureau de Château-la-Vallière (an IX et an XI). Etat du produit de différents domaines provenant du ci-devant chapitre Saint-Gatien de Tours et détenus illégalement par différents habitants de Braye-sur-Maulne (1816).</unittitle>
@@ -9320,7 +9320,7 @@
 							<did>
 								<unittitle>Pièces diverses</unittitle>
 							</did>
-							<c id="c1Q762" level="file">
+							<c id="c1Q762-2" level="file">
 								<did>
 									<unitid id="c1Q762">1 Q 762</unitid>
 									<unittitle>Compte rendu par le receveur du district des recettes et des dépenses qu'il a faites sur les revenus et capitaux des domaines nationaux (25 octobre 1790-31 décembre 1791). Relevé des ventes de récoltes et de mobilier de toute origine faites à Château-Renault (1791-an XIII). Relevé des titres de rentes nationales de 1ère et 2e origines enregistrées au bureau du contrôle des actes de Château-Renault de 1760 à 1789 [s.d.]. Correspondance et pièces diverses (an III-1820).</unittitle>
@@ -9348,7 +9348,7 @@
 									<did>
 										<unittitle>De 1ère origine :</unittitle>
 									</did>
-									<c id="c1Q763" level="item">
+									<c id="c1Q763-2" level="item">
 										<did>
 											<unitid id="c1Q763">1 Q 763</unitid>
 											<unittitle>Ventes n° 1 à 1327.</unittitle>
@@ -9700,7 +9700,7 @@
 							<did>
 								<unittitle>Pièces diverses</unittitle>
 							</did>
-							<c id="c1Q794" level="file">
+							<c id="c1Q794-2" level="file">
 								<did>
 									<unitid id="c1Q794">1 Q 794</unitid>
 									<unittitle>Correspondance et pièces diverses. A noter : correspondance relative à un projet de mise en vente du château de Chinon (an IX).</unittitle>
@@ -9772,7 +9772,7 @@
 							<did>
 								<unittitle>Pièces diverses</unittitle>
 							</did>
-							<c id="c1Q799" level="file">
+							<c id="c1Q799-2" level="file">
 								<did>
 									<unitid id="c1Q799">1 Q 799</unitid>
 									<unittitle>Correspondance et pièces diverses.</unittitle>
@@ -9913,7 +9913,7 @@
 							<did>
 								<unittitle>Pièces diverses</unittitle>
 							</did>
-							<c id="c1Q811" level="file">
+							<c id="c1Q811-2" level="file">
 								<did>
 									<unitid id="c1Q811">1 Q 811</unitid>
 									<unittitle>Relevés des domaines nationaux situés dans le ressort du bureau de l'Ile-Bouchard depuis la loi du 3 floréal an III jusqu'à l'an X (s.d.). Registre provisoire des recettes des revenus des biens de toute origine tenu pour remplacer les registres 1 Q 808 et 810 ci-dessus déposés au greffe du tribunal criminel (30 ventôse-15 thermidor an II) [Les registres 1 Q 808 et 810 ont servi de pièces à conviction dans la procédure criminelle suivie contre Jacques Pierre Tirand, receveur du bureau de l'Enregistrement de l'Ile-Bouchard, accusé de détournement de fonds publics, jugé et acquitté par le tribunal criminel d'Indre-et-Loire le 22 floréal an II (voir 2 L 23)]</unittitle>
@@ -9941,7 +9941,7 @@
 									<did>
 										<unittitle>De 1ère origine : </unittitle>
 									</did>
-									<c id="c1Q812" level="item">
+									<c id="c1Q812-2" level="item">
 										<did>
 											<unitid id="c1Q812">1 Q 812</unitid>
 											<unittitle>Ventes n° 799 à 1029.</unittitle>
@@ -11190,7 +11190,7 @@
 							<did>
 								<unittitle>Pièces diverses</unittitle>
 							</did>
-							<c id="c1Q922" level="file">
+							<c id="c1Q922-2" level="file">
 								<did>
 									<unitid id="c1Q922">1 Q 922</unitid>
 									<unittitle>Etat des rentes et créances dues à la ci-devant communauté des Viantaises de Beaulieu (1792). Bail à ferme des maison, bâtiments, jardin et enclos de la ci-devant communauté des Viantaises de Beaulieu (an IV).</unittitle>
@@ -11207,7 +11207,7 @@
 						<did>
 							<unittitle>BUREAU DE LUYNES</unittitle>
 						</did>
-						<c id="c1Q923-1Q930" level="subseries">
+						<c id="c1Q923-1Q930-2" level="subseries">
 							<did>
 								<unittitle>Comptabilité des revenus des biens nationaux</unittitle>
 							</did>
@@ -11443,7 +11443,7 @@
 							<did>
 								<unittitle>Pièces diverses</unittitle>
 							</did>
-							<c id="c1Q943" level="file">
+							<c id="c1Q943-2" level="file">
 								<did>
 									<unitid id="c1Q943">1 Q 943</unitid>
 									<unittitle>Relevé des biens nationaux vendus dans le ressort du bureau de Manthelan en application de la loi du 16 brumaire an V (s.d.). Etat des rentes nationales découvertes par le sieur Foucqué agissant pour le compte de la Caisse d'amortissement (1813).</unittitle>
@@ -11505,7 +11505,7 @@
 							<did>
 								<unittitle>Pièces diverses</unittitle>
 							</did>
-							<c id="c1Q948" level="file">
+							<c id="c1Q948-2" level="file">
 								<did>
 									<unitid id="c1Q948">1 Q 948</unitid>
 									<unittitle>Correspondance et pièces diverses.</unittitle>
@@ -11557,7 +11557,7 @@
 							<did>
 								<unittitle>Pièces diverses</unittitle>
 							</did>
-							<c id="c1Q952" level="file">
+							<c id="c1Q952-2" level="file">
 								<did>
 									<unitid id="c1Q952">1 Q 952</unitid>
 									<unittitle>Etat des rentes nationales découvertes par le sieur Foucqué agissant pour le compte de la Caisse d'amortissement.</unittitle>
@@ -11574,7 +11574,7 @@
 							<did>
 								<unittitle>Comptabilité des ventes de biens nationaux antérieures à la loi du 28 ventôse an IV</unittitle>
 							</did>
-							<c id="c1Q953" level="file">
+							<c id="c1Q953-2" level="file">
 								<did>
 									<unitid id="c1Q953">1 Q 953</unitid>
 									<unittitle>Sommier des comptes ouverts avec les acquéreurs d'immeubles de 1ère et 2e origines qui n'ont pas acquitté la totalité du prix de leur acquisition.</unittitle>
@@ -11589,7 +11589,7 @@
 							<did>
 								<unittitle>Comptabilité des revenus des biens nationaux</unittitle>
 							</did>
-							<c id="c1Q954" level="file">
+							<c id="c1Q954-2" level="file">
 								<did>
 									<unitid id="c1Q954">1 Q 954</unitid>
 									<unittitle>Sommier des revenus provenant des biens nationaux de 1ère et 2e origines.</unittitle>
@@ -14783,7 +14783,7 @@
 						<did>
 							<unittitle>Affaires particulières</unittitle>
 						</did>
-						<c id="c2Q84" level="file">
+						<c id="c2Q84-2" level="file">
 							<did>
 								<unitid id="c2Q84">2 Q 84</unitid>
 								<unittitle>Domaine privé du roi : actes d'acquisition de maisons à Amboise par Louis-Philippe (doubles des actes notariés passés devant Me Boureau).</unittitle>
@@ -14830,7 +14830,7 @@
 						<did>
 							<unittitle>BUREAU DE CHATEAU-LA-VALLIERE</unittitle>
 						</did>
-						<c id="c2Q88" level="file">
+						<c id="c2Q88-2" level="file">
 							<did>
 								<unitid id="c2Q88">2 Q 88</unitid>
 								<unittitle>Registre journal de recette et dépense des biens communaux cédés à la Caisse d'amortissement.</unittitle>
@@ -14845,7 +14845,7 @@
 						<did>
 							<unittitle>BUREAU DE LA HAYE</unittitle>
 						</did>
-						<c id="c2Q89" level="file">
+						<c id="c2Q89-2" level="file">
 							<did>
 								<unitid id="c2Q89">2 Q 89</unitid>
 								<unittitle>Registre de recette des droits de pêche dans les cours d'eau domaniaux.</unittitle>
@@ -14860,7 +14860,7 @@
 						<did>
 							<unittitle>BUREAU DE LANGEAIS</unittitle>
 						</did>
-						<c id="c2Q90" level="file">
+						<c id="c2Q90-2" level="file">
 							<did>
 								<unitid id="c2Q90">2 Q 90</unitid>
 								<unittitle>Registre de compte ouvert avec l'hospice de Tours au sujet des sommes attribuées à celui-ci sur les amendes (an VII-1809). Etats des amendes prononcées par les tribunaux de paix et de police situés dans le ressort du bureau (1792-1807). Inventaires et ventes de meubles provenant d'épaves ou de successions en déshérence (an XII). Tableau présentant le résultat de ce qui s'est passé à raison des divers biens possédés par les communes, en application de la loi du 20 mars 1813 (1er juillet 1813). Modèles des états à fournir par mois et par trimestre (s.d.).</unittitle>
@@ -14952,7 +14952,7 @@
 						<did>
 							<unittitle>BUREAU DE MONTRÉSOR</unittitle>
 						</did>
-						<c id="c2Q97" level="file">
+						<c id="c2Q97-2" level="file">
 							<did>
 								<unitid id="c2Q97">2 Q 97</unitid>
 								<unittitle>Registre d'inscription des patentes (1er jour complémentaire an III-12 vendémiaire an IV). Table alphabétique des citoyens qui se sont pourvus de patentes (s.d.).</unittitle>
@@ -14967,7 +14967,7 @@
 						<did>
 							<unittitle>BUREAU DE NEUVY-LE-ROI</unittitle>
 						</did>
-						<c id="c2Q98" level="file">
+						<c id="c2Q98-2" level="file">
 							<did>
 								<unitid id="c2Q98">2 Q 98</unitid>
 								<unittitle>Registre de recette du revenu des biens séquestrés sur les condamnés contumax.</unittitle>
@@ -14982,7 +14982,7 @@
 						<did>
 							<unittitle>BUREAU DE PREUILLY</unittitle>
 						</did>
-						<c id="c2Q99" level="file">
+						<c id="c2Q99-2" level="file">
 							<did>
 								<unitid id="c2Q99">2 Q 99</unitid>
 								<unittitle>Correspondance (1793-1813). Contentieux des droits de succession : affaire Delaniboire (1808-1810). Patentes : état des patentes restant dues pour l'an VII ; patentes de l'an VIII : pétitions des assujettis, arrêtés de l'administration centrale du département rendus sur leurs réclamations, certificats d'indigence délivrés par les maires, correspondance (an VIII-an IX). Recouvrement des amendes contre les déserteurs : états, correspondance (an XIII-1806). Etat nominatif des notaires domiciliés dans le ressort du bureau (s.d.).</unittitle>
@@ -15102,7 +15102,7 @@
 							<did>
 								<unittitle>Domaines de l'Etat</unittitle>
 							</did>
-							<c id="c2Q109" level="file">
+							<c id="c2Q109-2" level="file">
 								<did>
 									<unitid id="c2Q109">2 Q 109</unitid>
 									<unittitle>Sommier des baux à ferme, des concessions de terrains domaniaux et des ventes de récoltes.</unittitle>
@@ -15117,7 +15117,7 @@
 							<did>
 								<unittitle>Affaires particulières</unittitle>
 							</did>
-							<c id="c2Q110" level="file">
+							<c id="c2Q110-2" level="file">
 								<did>
 									<unitid id="c2Q110">2 Q 110</unitid>
 									<unittitle>Sommier des successions vacantes.</unittitle>
@@ -15133,7 +15133,7 @@
 						<did>
 							<unittitle>BUREAU DE VOUVRAY</unittitle>
 						</did>
-						<c id="c2Q111" level="file">
+						<c id="c2Q111-2" level="file">
 							<did>
 								<unitid id="c2Q111">2 Q 111</unitid>
 								<unittitle>Sommier des recettes provenant des droits de pêche dans les cours d'eau domaniaux.</unittitle>

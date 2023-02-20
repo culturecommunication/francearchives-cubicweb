@@ -83,7 +83,8 @@
         </arrangement>
         <accessrestrict>
             <head>Statut juridique</head>
-            <legalstatus> Archives privées </legalstatus>
+            <legalstatus id="A" type="arch_privee" altrender="Archives privées">Les documents produits avant 1946 sont considérés comme des archives privées. C'est à cette date seulement que l'entreprise est nationalisée.
+            </legalstatus>
         </accessrestrict>
         <accessrestrict>
             <head>Communicabilité</head>

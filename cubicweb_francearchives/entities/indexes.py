@@ -30,18 +30,18 @@
 #
 
 import datetime
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict
 
 from logilab.common.decorators import cachedproperty
 
 from cubicweb import _
 from cubicweb.predicates import is_instance
 from cubicweb.entities import AnyEntity, fetch_config
-
 from cubicweb_francearchives.dataimport import es_bulk_index
-from cubicweb_francearchives.views import format_agent_date, STRING_SEP
+from cubicweb_francearchives.views import format_agent_date, STRING_SEP, internurl_link
 from cubicweb_francearchives.entities.adapters import EntityMainPropsAdapter
-from cubicweb_francearchives.utils import cut_words, remove_html_tags
+from cubicweb_francearchives.utils import es_start_letter
+from cubicweb_francearchives.views import format_date
 
 
 def iter_entities(cnx, eid, rql, nb_entities, chunksize=100000):
@@ -138,6 +138,10 @@ WHERE
             {"indexeid": self.eid, "oldauth": oldauth, "newauth": newauth},
         )
         # then update elasticsearch db
+        self.index_related_irdocs()
+
+    def index_related_irdocs(self):
+        """reindex all related FindingAid and FAComponents in ES"""
         indexer = self._cw.vreg["es"].select("indexer", self._cw)
         index_name = indexer.index_name
         es = indexer.get_connection()
@@ -190,6 +194,40 @@ WHERE
         # number of documents, mainly FAComponents and FindingAids
         self._cw.commit()
 
+    def remove_from_es_docs(self, autheid):
+        # remove authority and index data from  esdocument related to FAComponent,FindingAid
+        # linked to current index
+        # first update postgres db
+        self._cw.system_sql(
+            """
+UPDATE
+  cw_esdocument es
+SET
+  cw_doc = jsonb_set(es.cw_doc::jsonb, '{"index_entries"}',
+                   jsonb_path_query_array(es.cw_doc::jsonb->'index_entries',
+                                          '$[*] ? (@."authority" <> %(auth)s)'))
+FROM
+  ((
+     SELECT fac.cw_eid
+     FROM
+       cw_facomponent fac
+       JOIN index_relation ir ON ir.eid_to = fac.cw_eid
+     WHERE ir.eid_from = %(indexeid)s
+  ) UNION (
+     SELECT fa.cw_eid
+     FROM
+       cw_findingaid fa
+       JOIN index_relation ir ON ir.eid_to = fa.cw_eid
+       WHERE ir.eid_from = %(indexeid)s
+  )) fa
+WHERE
+  fa.cw_eid = es.cw_entity
+        """,
+            {"indexeid": self.eid, "auth": autheid},
+        )
+        # then update elasticsearch db
+        self.index_related_irdocs()
+
 
 class AgentName(AbstractIndex):
     __regid__ = "AgentName"
@@ -212,6 +250,17 @@ class Subject(AbstractIndex):
 
 class AbstractAuthority(AnyEntity):
     __abstract__ = True
+    fetch_attrs, cw_fetch_order = fetch_config(["label", "quality"])
+    _same_as_links = None
+
+    @property
+    def same_as_links(self):
+        if self._same_as_links:
+            return self._same_as_links
+        self._same_as_links = defaultdict(list)
+        for e in self.same_as:
+            self._same_as_links[e.cw_etype].append(e)
+        return self._same_as_links
 
     @classmethod
     def orphan_query(cls):
@@ -221,6 +270,7 @@ class AbstractAuthority(AnyEntity):
         """
         return """Any X WHERE
                   X is {etype},
+                  X quality False,
                   NOT EXISTS(I authority X),
                   NOT EXISTS(E related_authority X),
                   NOT EXISTS(X grouped_with X1),
@@ -234,6 +284,18 @@ class AbstractAuthority(AnyEntity):
     def rest_path(self):
         type = self.cw_etype[:-9].lower()  # remove `Authority`
         return "{}/{}".format(type, self.eid)
+
+    @cachedproperty
+    def fmt_creation_date(self):
+        return format_date(self.creation_date, self._cw, fmt="d MMMM y")
+
+    @property
+    def fmt_modification_date(self):
+        return format_date(self.modification_date, self._cw, fmt="d MMMM y")
+
+    @property
+    def es_start_letter(self):
+        return es_start_letter(self.label)
 
     @property
     def itypes(self):
@@ -302,33 +364,23 @@ class AbstractAuthority(AnyEntity):
                 "SET I authority NEW WHERE NEW eid %(new)s, I authority OLD, OLD eid %(old)s",
                 kwargs,
             )
-            # redirect related ExternRefs and CommemorationItems from old authority to new authority
+            # redirect related ExternRefs, BaseContentand CommemorationItems
+            # from old authority to new authority
             req.execute(
                 """SET E related_authority NEW WHERE NEW eid %(new)s,
                    E related_authority OLD, OLD eid %(old)s, NOT EXISTS(E related_authority NEW)""",
                 kwargs,
             )
-            # delete related ExternRefs and CommemorationItems from old authority
+            # delete related ExternRefs, BaseContent and CommemorationItems from old authority
             req.execute("""DELETE E related_authority OLD WHERE OLD eid %(old)s""", kwargs)
-            # set the grouped_with relation from the old authority to new
-            # reidrect related same_as from old authority to new authority
-            req.execute(
-                """SET NEW same_as S WHERE NEW eid %(new)s,
-                   OLD same_as S, OLD eid %(old)s,
-                   NOT EXISTS(NEW same_as S), NOT EXISTS(S same_as NEW)""",
-                kwargs,
-            )
-            req.execute(
-                """SET S same_as NEW WHERE NEW eid %(new)s,
-                   S same_as OLD, OLD eid %(old)s,
-                   NOT EXISTS(S same_as NEW), NOT EXISTS(NEW same_as S)""",
-                kwargs,
-            )
-            # delete delated same_as from the old authority
+            # set the grouped_with relation from the old authority to the new
+            # delete same_as from the old authority
             req.execute("""DELETE S same_as OLD WHERE OLD eid %(old)s""", kwargs)
             req.execute("""DELETE OLD same_as S WHERE OLD eid %(old)s""", kwargs)
             # authority
             req.execute("SET OLD grouped_with NEW WHERE OLD eid %(old)s, NEW eid %(new)s", kwargs)
+            # unqualify the grouped authority
+            req.execute("SET OLD quality FALSE WHERE OLD eid %(old)s", kwargs)
             # remove the possible grouped_with relation from the new authority
             # to the old
             req.execute(
@@ -345,12 +397,58 @@ class AbstractAuthority(AnyEntity):
             auth.cw_clear_all_caches()
         return grouped_auths
 
+    def unindex(self):
+        """Make the entity orphan"""
+        # remove all indexes from es and postgres
+        for index in self.iter_indexes():
+            index.remove_from_es_docs(self.eid)
+        # DELETE all indexes
+        req = self._cw
+        req.execute(
+            "DELETE {index_type} I WHERE I authority E, E eid %(eid)s".format(
+                index_type=self.index_etype
+            ),
+            {"eid": self.eid},
+        )
+
+    def delete_blacklisted(self):
+        """Delete an authority to be blacklisted and all its relations.
+        Do not use this method in other context than blacklisting.
+        """
+        self.unindex()
+        # Delete `related_authority` relations
+        req = self._cw
+        req.execute(
+            "DELETE A related_authority E WHERE E eid %(eid)s",
+            {"eid": self.eid},
+        )
+        # Delete all `same_as` relations
+        req.execute("""DELETE S same_as E WHERE E eid %(eid)s""", {"eid": self.eid})
+        req.execute("""DELETE E same_as S WHERE E eid %(eid)s""", {"eid": self.eid})
+        # Delete all `grouped_in` authorities and their relations
+        # XXX SHOULD WE LET THEM BE?
+        all_grouped = self.reverse_grouped_with
+        req.execute("DELETE G grouped_with E WHERE E eid %(eid)s", {"eid": self.eid})
+        for grouped in all_grouped:
+            grouped.delete_blacklisted()
+        # Delete all possible entries from authority_history
+        self.remove_from_auth_history()
+        # Delete the authority itself
+        req.transaction_data["blacklist"] = True
+        self.cw_delete()
+        req.commit()
+        self.cw_clear_all_caches()
+        # clean as much as possible to avoid memory exhaustion
+        req.drop_entity_cache()
+
     @cachedproperty
     def same_as_refs(self):
         urls = []
         for ref in self.same_as:
             if ref.cw_etype == "ExternalUri":
                 urls.append(ref.uri)
+            elif ref.cw_etype == "Concept":
+                urls.append(ref.cwuri)
             else:
                 urls.append(ref.absolute_url())
         return urls
@@ -398,6 +496,14 @@ class AbstractAuthority(AnyEntity):
             )
         )
 
+    def remove_from_auth_history(self):
+        """
+        remove all lines for a given Authority
+        """
+        self._cw.system_sql(
+            "DELETE FROM authority_history WHERE autheid=%(autheid)s", {"autheid": self.eid}
+        )
+
     @property
     def is_orphan(self):
         query = self.orphan_query() + """, X eid %(eid)s"""
@@ -406,6 +512,7 @@ class AbstractAuthority(AnyEntity):
 
 class LocationAuthority(AbstractAuthority):
     __regid__ = "LocationAuthority"
+    index_etype = "Geogname"
 
     @property
     def itypes(self):
@@ -414,13 +521,35 @@ class LocationAuthority(AbstractAuthority):
 
 class AgentAuthority(AbstractAuthority):
     __regid__ = "AgentAuthority"
+    index_etype = "AgentName"
     _index_type = None
+
+    @classmethod
+    def orphan_query(cls):
+        return (
+            super(AgentAuthority, cls).orphan_query()
+            + """,
+            NOT EXISTS(X same_as S1, S1 is IN (AuthorityRecord, NominaRecord)),
+            NOT EXISTS(S2 same_as X, S2 is IN (AuthorityRecord, NominaRecord))
+            """
+        )
 
     @property
     def index_type(self):
         if not self._index_type:
             self._index_type = "persname" if "persname" in self.itypes else "other"
         return self._index_type
+
+    @cachedproperty
+    def index_types(self):
+        return [
+            t
+            for t in self._cw.execute(
+                """DISTINCT Any TYPE WHERE X eid %(e)s,
+               I is AgentName, I authority X, I type TYPE""",
+                {"e": self.eid},
+            ).rows
+        ]
 
 
 class AgentAuthorityMainPropsAdapter(EntityMainPropsAdapter):
@@ -439,7 +568,20 @@ class AgentAuthorityMainPropsAdapter(EntityMainPropsAdapter):
         agent_info = self.agent_info(vid=vid, text_format=text_format)
         if agent_info:
             return list(agent_info["properties"].items())
+        # look for nomina links
+        nomina_link = self.nomina_uri_as_property
+        if nomina_link:
+            return ((self._cw._("see_also_label"), nomina_link),)
         return []
+
+    @property
+    def nomina_uri_as_property(self):
+        nomina = self.entity.same_as_links.get("NominaRecord")
+        if nomina:
+            url = self._cw.build_url(f"{self.entity.rest_path()}/nomina")
+            base_label = self._cw._("Names database")
+            label = self._cw._("See all nomina records for {}").format(self.entity.dc_title())
+            return f"{base_label} : {internurl_link(self._cw, url, label=label)}"
 
     def eac_info(self, vid="incontext", text_format="text/html"):
         """EAC notice to be displayed."""
@@ -449,7 +591,7 @@ class AgentAuthorityMainPropsAdapter(EntityMainPropsAdapter):
                 """Any X, H, AF, OC, HA, HT, AFN, OCT, SD, ED ORDERBY SD LIMIT 1
                 WHERE X is AuthorityRecord,
                 X start_date SD, X end_date ED,
-                H history_agent X,
+                H? history_agent X,
                 H abstract HA, H text HT,
                 AF? function_agent X, AF name AFN,
                 OC? occupation_agent X, OC term OCT,
@@ -474,10 +616,7 @@ class AgentAuthorityMainPropsAdapter(EntityMainPropsAdapter):
                     label = self.date_labels[dtype][self.entity.index_type]
                     properties[_(label)] = format_agent_date(self._cw, dateobj)
                 self._eac_info["dates"] = dates
-                self._eac_info["description"] = "\n".join(
-                    remove_html_tags(f.text or f.abstract or "") for f in eac.reverse_history_agent
-                )
-                properties[_("eac_biogist_label")] = cut_words(self._eac_info["description"], 280)
+                properties[_("eac_biogist_label")] = eac.abstract_text
                 properties[_("eac_occupation_label")] = " ; ".join(
                     f.dc_title() for f in eac.reverse_occupation_agent
                 )
@@ -490,11 +629,18 @@ class AgentAuthorityMainPropsAdapter(EntityMainPropsAdapter):
                 # 2nd Wikidata
                 # 3rd data.bnf.fr
                 see_also = sorted(
-                    [e for e in self.entity.same_as if e.eid != eac.eid],
-                    key=lambda x: getattr(x, "source", "z"),
+                    [
+                        e.view(vid)
+                        for e in self.entity.same_as
+                        if e.eid != eac.eid and e.cw_etype != "NominaRecord"
+                    ],
+                    key=lambda x: getattr(x, "source", "z") or "z",
                     reverse=True,
                 )
-                properties[_("see_also_label")] = "<br>".join(e.view(vid) for e in see_also)
+                nomina_link = self.nomina_uri_as_property
+                if nomina_link:
+                    see_also.append(nomina_link)
+                properties[_("see_also_label")] = see_also
                 self._eac_info["properties"] = properties
         return self._eac_info
 
@@ -517,6 +663,7 @@ class AgentAuthorityMainPropsAdapter(EntityMainPropsAdapter):
                 properties = OrderedDict()
                 exturi_eid, source, uri, agent, dates, description = rset.rows[0]
                 dates = dates if dates else {}
+                # why add self._agent_info["dates"]: it is only used in RDF
                 self._agent_info["dates"] = dates
                 for dtype in ("birthdate", "deathdate"):
                     if not dates.get(dtype):
@@ -536,21 +683,31 @@ class AgentAuthorityMainPropsAdapter(EntityMainPropsAdapter):
                     else:
                         datestr = dates[dtype]["timestamp"]
                     properties[_(label)] = datestr
+                # why add self._agent_info["description"] it is only used in RDF
                 self._agent_info["description"] = description if description else ""
                 properties[_("eac_biogist_label")] = "<br>".join(
                     self._agent_info["description"].split(STRING_SEP)
                 )
                 exturi = self._cw.entity_from_eid(exturi_eid)
                 properties[_("same_as_label")] = exturi.view(vid)
-                properties[_("see_also_label")] = "<br>".join(
-                    e.view(vid) for e in self.entity.same_as if e.eid != exturi.eid
+                see_also = sorted(
+                    [
+                        e.view(vid)
+                        for e in self.entity.same_as
+                        if (e.eid != exturi.eid and e.cw_etype != "NominaRecord")
+                    ]
                 )
+                nomina_link = self.nomina_uri_as_property
+                if nomina_link:
+                    see_also.append(nomina_link)
+                properties[_("see_also_label")] = see_also
                 self._agent_info["properties"] = properties
         return self._agent_info
 
 
 class SubjectAuthority(AbstractAuthority):
     __regid__ = "SubjectAuthority"
+    index_etype = "Subject"
 
     @classmethod
     def orphan_query(cls):
@@ -566,3 +723,14 @@ class SubjectAuthority(AbstractAuthority):
     @property
     def itypes(self):
         return ()
+
+    @cachedproperty
+    def index_types(self):
+        return [
+            t
+            for t in self._cw.execute(
+                """DISTINCT Any TYPE WHERE X eid %(e)s,
+               I is Subject, I authority X, I type TYPE""",
+                {"e": self.eid},
+            ).rows
+        ]

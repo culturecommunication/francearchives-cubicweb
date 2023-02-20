@@ -34,13 +34,15 @@ from pyramid.response import Response
 
 from cubicweb.pyramid.resources import ETypeResource, EntityResource
 from cubicweb import MultipleResultsError
+from cubicweb.rdf import RDF_MIMETYPE_TO_FORMAT
+from rdflib.graph import ConjunctiveGraph
 
 from cubicweb_francearchives.pviews.helpers import update_headers
 from cubicweb_francearchives.pviews.predicates import (
     MultiAcceptPredicate,
     SegmentIsEnlargedETypePredicate,
 )
-from cubicweb_francearchives.xy import conjunctive_graph, add_statements_to_graph, namespaces
+from cubicweb_francearchives.xy import add_statements_to_graph
 
 
 class ApplicationSchema(object):
@@ -59,6 +61,8 @@ class ApplicationSchema(object):
         "location": "LocationAuthority",
         "subject": "SubjectAuthority",
         "subjectname": "Subject",
+        "pages_histoire": "CommemorationItem",
+        "basedenoms": "NominaRecord",
     }
 
     def __init__(self, request):
@@ -79,10 +83,12 @@ class ApplicationSchema(object):
 RDF_MAPPING = {
     "application/ld+json": "json-ld",
     "text/rdf+n3": "n3",
+    "text/n3": "n3",
     "text/plain": "nt",
     "application/n-triples": "nt",
     "application/x-turtle": "turtle",
     "application/rdf+xml": "pretty-xml",
+    **RDF_MIMETYPE_TO_FORMAT,
 }
 
 
@@ -96,12 +102,15 @@ def rdf_view(context, request):
     content_type = request.accept.best_match(list(RDF_MAPPING.keys()))
     fmt = RDF_MAPPING[content_type]
     entity = context.rset.one()
-    rdf_adapter = entity.cw_adapt_to("rdf.edm")
+    rdf_adapter = entity.cw_adapt_to("rdf")
     if rdf_adapter is None:
         raise HTTPNotFound()
-    graph = conjunctive_graph()
+    graph = ConjunctiveGraph()
     add_statements_to_graph(graph, rdf_adapter)
-    return Response(graph.serialize(format=fmt, context=namespaces), content_type=content_type)
+    context = {prefix: str(ns) for prefix, ns in rdf_adapter.used_namespaces.items()}
+    return Response(
+        graph.serialize(format=fmt, context=context), content_type=content_type, charset="UTF8"
+    )
 
 
 @view_config(route_name="restpath", request_method=("GET", "HEAD"), context=EntityResource)
@@ -136,7 +145,7 @@ def list_view(context, request):
         {
             "vid": "esearch",
             "search": "",
-            "es_cw_etype": context.etype,
+            "es_cw_etype": "Article" if context.etype == "BaseContent" else context.etype,
             "restrict_to_single_etype": True,
         }
     )
@@ -145,15 +154,6 @@ def list_view(context, request):
         cwreq,
         Response(viewsreg.main_template(cwreq, "main-template", rset=context.rset, view=view)),
     )
-
-
-@view_config(
-    route_name="children-relation", renderer="json", http_cache=600, request_method=("GET", "HEAD")
-)
-def children_relation(request):
-    cwreq = request.cw_request
-    rset = cwreq.execute("Any X, JSON_AGG(Y) GROUPBY X WHERE X children Y", build_descr=False)
-    return dict(rset.rows)
 
 
 @view_config(
@@ -170,7 +170,6 @@ def glossary_terms(request):
 def includeme(config):
     config.add_view_predicate("multi_accept", MultiAcceptPredicate)
     config.add_route_predicate("segment_is_enlarged_etype", SegmentIsEnlargedETypePredicate)
-    config.add_route("children-relation", "/_children")
     config.add_route("glossary-terms", "/_glossaryterms")
     config.add_route(
         "restpath",

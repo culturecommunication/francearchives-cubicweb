@@ -36,13 +36,11 @@ from sickle.models import Record
 import traceback
 
 from cubicweb_francearchives.dataimport import (
-    es_bulk_index,
     oai_utils,
     usha1,
     OAIPMH_EAD_PATH,
     InvalidFindingAid,
 )
-from sickle import Sickle
 
 from cubicweb_francearchives.dataimport.ead import Reader
 from cubicweb_francearchives.dataimport.eadreader import cleanup_ns
@@ -88,11 +86,12 @@ class OAIEADImporter(object):
     :ivar es: Elasticsearch connection
     """
 
-    def __init__(self, store, config, log):
+    def __init__(self, store, config, service_infos, log):
         """Initialize OAI DC schema reader.
 
         :param RQLObject store: store
         :param dict config: server-side configuration
+        :param dict service_infos: service information
         :param Logger log: logger
         """
         self.log = log
@@ -103,13 +102,20 @@ class OAIEADImporter(object):
         self.es = indexer.get_connection()
         self.complete_list_size = None
         self.downloaded = 0
+        cwconfig = self.cnx.vreg.config
+        self.service_infos = service_infos
+        self.oaipmh_writer = OAIEADWriter(
+            cwconfig["ead-services-dir"],
+            self.service_infos,
+            subdirectories=OAIPMH_EAD_PATH.split("/"),
+        )
 
-    def download_records(self, records, oaipmh_writer, service_code):
+    def download_records(self, records):
         """Harvest data and check them containing the needed information
 
         :param function records: read-in records (generator)
-        :param OAIEADWriter oaipmh_writer: write harvester content in fs files
         """
+        service_code = self.service_infos["code"]
         for record in records:
             if record is None:
                 # PniaOAIItemIterator raised an error before creating a record
@@ -122,6 +128,10 @@ class OAIEADImporter(object):
             if self.complete_list_size is None:
                 try:
                     self.complete_list_size = int(record.complete_list_size)
+                    self.log.info(
+                        "Repository contains %s documents (completeListSize).",
+                        self.complete_list_size,
+                    )
                 except TypeError:
                     pass
             urlinfo = "<div>{url}<div><div>(record {cur} out of {lsz}).</div>".format(
@@ -134,12 +144,12 @@ class OAIEADImporter(object):
                     self.log.warning("%s Skip the record: %r", urlinfo, record.error)
                 continue
             if record.deleted:
-                self.log.info(
+                self.log.warning(
                     "%s The record with identifier: %r is to be deleted",
                     urlinfo,
                     record.header.identifier,
                 )
-                oaipmh_writer.add_record(record)
+                self.oaipmh_writer.add_record(record)
                 continue
             if record.ead is None:
                 self.log.warning("%s Skip the record: no metadata found", urlinfo)
@@ -169,27 +179,20 @@ class OAIEADImporter(object):
                 self.log.error(msg, urlinfo, identifier, eadid)
                 continue
             self.log.info("%s Oai identifier: %s, eadid: %s", urlinfo, identifier, eadid)
-            oaipmh_writer.add_record(record)
+            self.oaipmh_writer.add_record(record)
 
-    def harvest_records(self, service_infos, headers=None, **params):
+    def harvest_records(self, headers=None, **params):
         """Import records.
 
-        :param dict service_infos: service information
         :param dict headers: headers for harvest
         :param dict params: harvest parameters
         """
-        store = self.reader.store
-        cnx = store._cnx
-        cwconfig = cnx.vreg.config
-        oaipmh_writer = OAIEADWriter(
-            cwconfig["ead-services-dir"], service_infos, subdirectories=OAIPMH_EAD_PATH.split("/")
-        )
         oai_ead_mapping = {
             "ListRecords": OAIEADRecord,
             "GetRecord": OAIEADRecord,
         }
-        client = Sickle(
-            service_infos["oai_url"],
+        client = oai_utils.PniaSickle(
+            self.service_infos["oai_url"],
             iterator=oai_utils.PniaOAIItemIterator,
             class_mapping=oai_ead_mapping,
             headers=headers,
@@ -199,7 +202,7 @@ class OAIEADImporter(object):
         records = client.ListRecords(**params)
         # harvest records
         try:
-            self.download_records(records, oaipmh_writer, service_infos["code"])
+            self.download_records(records)
         except oai_utils.OAIXMLError as error:
             self.log.error(error)
         except Exception:
@@ -207,31 +210,33 @@ class OAIEADImporter(object):
             self.log.error("Could not import record %s. Harvesting aborted.", formatted_exc)
         if self.complete_list_size is None:
             self.log.warning(
-                """Downloaded %s records.
-                No information about records list size (completeListSize) could be found""",
+                """Processed %s records.
+                No information about records list size (completeListSize) could be found.""",
                 self.downloaded,
             )
         else:
             if self.downloaded < self.complete_list_size:
                 self.log.error(
-                    "only {} out of {} records have been downloaded".format(
+                    "only {} out of {} records have been processed.".format(
                         self.downloaded, self.complete_list_size
                     )
                 )
             else:
                 self.log.info("downloaded all {} record(s)".format(self.complete_list_size))
-        if not oaipmh_writer.oai_records:
+
+    def import_records(self):
+        """import records in the database"""
+        if not self.oaipmh_writer.oai_records:
+            self.log.info("No records found")
             return
-        # import records in the database
-        self.reader.update_authorities_cache(service_infos.get("eid"))
-        es_docs = self.import_records(store, oaipmh_writer, service_infos)
+        self.reader.update_authorities_cache(self.service_infos.get("eid"))
+        store = self.reader.store
+        es_docs = self._import_records(store)
         if not self.reader.config["esonly"]:
             store.finish()
-            store.commit()
-        if es_docs:
-            es_bulk_index(self.es, es_docs)
+        return es_docs
 
-    def import_records(self, store, oaipmh_writer, service_infos):
+    def _import_records(self, store):
         """Import records in the database
 
         :param RQLObjectStore store: store
@@ -243,9 +248,9 @@ class OAIEADImporter(object):
         """
         filepaths = []
         es_docs = []
-        for i, record in enumerate(oaipmh_writer.oai_records):
+        for i, record in enumerate(self.oaipmh_writer.oai_records):
             identifier = record.header.identifier
-            oai_id = oai_utils.compute_oai_id(service_infos["oai_url"], identifier)
+            oai_id = oai_utils.compute_oai_id(self.service_infos["oai_url"], identifier)
             if record.deleted:
                 # delete the FindingAid if exists
                 res = store._cnx.execute(
@@ -272,9 +277,9 @@ class OAIEADImporter(object):
                 continue
             eadid = record.eadid
             self.log.info("importing %r, eadid %r", identifier, eadid)
-            file_path = usha1(oaipmh_writer.get_file_path(eadid))
+            file_usha1 = usha1(self.oaipmh_writer.get_file_path(eadid))
             # stable_id are computed from file_path, not from eadid
-            if file_path in filepaths:
+            if file_usha1 in filepaths:
                 msg = (
                     "record %r, eadid %r ignored: "
                     "a record with the same eadid "
@@ -282,16 +287,16 @@ class OAIEADImporter(object):
                 )
                 self.log.error(msg, identifier, eadid)
                 continue
-            filepaths.append(file_path)
-            file_contents = oaipmh_writer.get_file_contents(record.ead)
-            file_path = oaipmh_writer.dump(eadid, file_contents)
+            filepaths.append(file_usha1)
+            file_contents = self.oaipmh_writer.get_file_contents(record.ead)
+            file_path = self.oaipmh_writer.dump(eadid, file_contents)
             fa_support = self.reader.create_file(file_path)
             if fa_support is None:
                 # the file exists and will not be reimported
                 continue
             try:
                 esdoc = self.reader.import_ead_xmltree(
-                    record.ead, service_infos, fa_support, oai_id=oai_id
+                    record.ead, self.service_infos, fa_support, oai_id=oai_id
                 )
             except InvalidFindingAid as exception:
                 self.log.exception(

@@ -1,7 +1,14 @@
-<div class="facet hidden-print" id="facet-{{ facetid }}">
-    <h3 class="no-style facet__title cwjs-facet-title"><a href="#">{{ facet_label }}</a></h3>
-    <div class="facet__body">
-        <ul class="facet__values /">
+<div class="facet d-print-none" id="facet-{{ facetid }}">
+    <h3 class="no-style facet__title">
+      <a href="#" class="cwjs-facet-title{% if facet_unfolded %} unfolded{% endif %}"
+         aria-expanded="{% if facet_unfolded %}true{% else %}false{% endif %}"
+         aria-controls="facet-{{ facetid }}-content" role="button"
+       >
+        <span class="arrow">{{ facet_label }}</span>
+     </a>
+    </h3>
+    <div id="facet-{{ facetid }}-content" class="facet__body" {%if facet_unfolded %} style="display: block;"{% endif %}>
+        <ul class="facet__values">
         {% for item in facet_items %}
         {{ item }}
         {% endfor %}

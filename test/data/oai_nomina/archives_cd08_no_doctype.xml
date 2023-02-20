@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
+  <responseDate>2021-12-06T09:32:59Z</responseDate>
+  <request verb="ListRecords" metadataPrefix="nomina" set="ad08_registres_matricules">http://archives.cd08.fr/arkotheque/oai-pmh-2/oai2.php</request>
+  <ListRecords>
+    <record>
+      <header>
+        <identifier>5121</identifier>
+        <datestamp>2020-09-23T22:27:47Z</datestamp>
+        <setSpec>ad08_registres_matricules</setSpec>
+      </header>
+      <metadata>
+        <nomina:document xmlns:nomina="http://www.france-genealogie.fr/ns/nomina/1.0"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.france-genealogie.fr/ns/nomina/1.0 genealogie1.4.xsd"
+id="5121" uri="">
+          <nomina:personne>
+            <nomina:nom>MARGUERITAT</nomina:nom>
+            <nomina:prenoms>Jean</nomina:prenoms>
+          </nomina:personne>
+          <nomina:localisation code="RM">
+            <nomina:precision/>
+          </nomina:localisation>
+          <nomina:date annee="1868" code="D">1868</nomina:date>
+          <nomina:date annee="1880/12/11" code="M"/>
+          <nomina:date>18?4</nomina:date>
+          <nomina:date annee="1882">1882</nomina:date>
+        </nomina:document>
+      </metadata>
+    </record>
+  </ListRecords>
+</OAI-PMH>

@@ -4,10 +4,10 @@
   {% endblock %}
   {% if years %}
     <div class="content-metadata">
-        <div class="content-metadata-item">
+        <p class="content-metadata-item">
           <i class="fa fa-calendar-o" aria-hidden="true"></i>
           <span> {{years}}</span>
-      </div>
+        </p>
     </div>
   {% else %}
   <div class="empty-content-metadata"></div>
@@ -15,8 +15,8 @@
   <div>{{ entity.printable_value('content') }}</div>
   {% for propname, value in main_props %}
   <div class="row indexes-values">
-     <div class="col-md-3"><h2 class="no-style">{{ propname }}</h2></div>
-     <div class="col-md-9">{{ value }}</div>
+     <div class="col-lg-3"><h2 class="no-style">{{ propname }}</h2></div>
+     <p class="col-lg-9 index-value-text">{{ value }}</p>
   </div>
   {% endfor %}
 </section>

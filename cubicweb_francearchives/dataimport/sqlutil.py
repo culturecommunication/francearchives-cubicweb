@@ -35,16 +35,17 @@ import os.path as osp
 
 from cubicweb.server.serverctl import system_source_cnx
 
+from cubicweb_francearchives import S3_ACTIVE, POSTGRESQL_SUPERUSER
 from cubicweb_francearchives.dataimport import es_bulk_index
-
 
 LOGGER = logging.getLogger()
 
 
 @contextmanager
 def sudocnx(cnx, interactive=True):
+    """superuser connection is used to disable all triggers: users and system"""
     source = cnx.vreg.config.system_source_config
-    if not interactive:
+    if POSTGRESQL_SUPERUSER and not interactive:
         source = source.copy()
         if source.get("superuser-login"):
             source["db-user"] = source["superuser-login"]
@@ -60,17 +61,72 @@ def sudocnx(cnx, interactive=True):
 
 
 def disable_triggers(su_cnx, tables):
+    if POSTGRESQL_SUPERUSER:
+        disable_all_triggers(su_cnx, tables)
+    else:
+        disable_users_triggers(su_cnx, tables)
+
+
+def enable_triggers(su_cnx, tables):
+    if POSTGRESQL_SUPERUSER:
+        enable_all_triggers(su_cnx, tables)
+    else:
+        enable_users_triggers(su_cnx, tables)
+
+
+def disable_all_triggers(su_cnx, tables):
+    """disable all triggers: users and system. Can be performed only with a superuser"""
     cursor = su_cnx.cursor()
     for table in tables:
         cursor.execute("alter table %s disable trigger all" % table)
     su_cnx.commit()
 
 
-def enable_triggers(su_cnx, tables):
+def enable_all_triggers(su_cnx, tables):
+    """enable all triggers: users and system. Can be performed only with a superuser"""
     cursor = su_cnx.cursor()
     for table in tables:
         cursor.execute("alter table %s enable trigger all" % table)
     su_cnx.commit()
+
+
+def get_tiggers_names(cursor, tablename):
+    res = cursor.execute(
+        """
+         SELECT trigger_schema, trigger_name
+         FROM information_schema.triggers
+         WHERE event_object_table= %(t)s""",
+        {"t": tablename},
+    )
+    res = cursor.fetchall()
+    if res:
+        return [name for schema, name in res]
+    return []
+
+
+def disable_users_triggers(cnx, tables):
+    """disable only users triggers. Can be performed with an owner"""
+    cursor = cnx.cursor()
+    for table in tables:
+        for name in get_tiggers_names(cursor, table):
+            cursor.execute("alter table %s disable trigger %s" % (table, name))
+    cnx.commit()
+
+
+def enable_users_triggers(cnx, tables):
+    """enable only users triggers. Can be performed with an owner"""
+    cursor = cnx.cursor()
+    for table in tables:
+        for name in get_tiggers_names(cursor, table):
+            cursor.execute("alter table %s enable trigger %s" % (table, name))
+    cnx.commit()
+
+
+def deffer_foreign_key_constraints(cnx):
+    """deffer all foreign key constraints for import which allows to check those constraints
+    juste before the commit. There is no reason to it with a superuser connection"""
+    if not POSTGRESQL_SUPERUSER:
+        cnx.cnxset.cu.execute("SET CONSTRAINTS ALL DEFERRED;")
 
 
 def foreign_key_tables(schema, etypes):
@@ -95,15 +151,15 @@ def no_trigger(cnx, tables=None, interactive=True):
     if tables is None:
         tables = ("entities",)
     if not tables:
-        # do not open superuser connection if tables is empty
+        # do not disable triggers if tables is empty
         yield
     else:
         with sudocnx(cnx, interactive=interactive) as su_cnx:
             disable_triggers(su_cnx, tables)
             try:
                 yield
-            except Exception:
-                cnx.exception("fail in body of no_trigger")
+            except Exception as exception:
+                cnx.exception(f"fail in body of no_trigger {exception}")
                 cnx.rollback()
                 raise
             finally:
@@ -213,14 +269,14 @@ def finding_aid_eids(cnx, filename, eids=None, stable_ids=None, is_filename=True
         if esdoc:
             eids["cw_esdocument"].add(esdoc)
         stable_ids["FAComponent"].add(stable_id)
-    rset = cnx.execute(
-        "DISTINCT Any DV WHERE FAC digitized_versions DV, "
-        "FAC is FAComponent, FAC finding_aid FA, "
-        "FA eid %(fa)s",
-        {"fa": fa},
-    )
-    if rset:
-        eids["cw_digitizedversion"] |= {eid for eid, in rset}
+    for request in (
+        """DISTINCT Any DV WHERE FA digitized_versions DV, FA eid %(fa)s""",
+        """DISTINCT Any DV WHERE FAC digitized_versions DV,
+               FAC is FAComponent, FAC finding_aid FA, FA eid %(fa)s""",
+    ):
+        rset = cnx.execute(request, {"fa": fa})
+        if rset:
+            eids["cw_digitizedversion"] |= {eid for eid, in rset}
     return eids, stable_ids
 
 
@@ -237,8 +293,6 @@ def delete_from_es(cnx, stable_ids):
         # portal_indexer
         cnx.vreg["es"].select("indexer", cnx, published=True),
     )
-    if cnx.vreg.config["enable-kibana-indexes"]:
-        indexers += (cnx.vreg["es"].select("kibana-ir-indexer", cnx),)
     for indexer in indexers:
         es = indexer.get_connection()
         es_docs = []
@@ -301,27 +355,145 @@ def delete_finding_aid(cnx, eid_map, stable_ids, esonly=True, interactive=True, 
     # but deciding to commit or rollback should not be the responsibility of
     # this function.
     # cnx.rollback()
+    #
+    # Important: although cw_Files are deleted, their related s3 or BFSS files
+    # are not. We try here to remove at least all S3 published or unpublished files
+    # reachable in UI
+    files_to_remove = []
+    storage = cnx.repo.system_source.storage("File", "data")
+    if S3_ACTIVE:
+        for fa_eid in eid_map["cw_findingaid"]:
+            files_to_remove.extend(
+                cnx.execute(
+                    """DISTINCT Any H, N WITH H, N BEING (
+                (Any H, N WHERE FA eid %(eid)s, FA fa_referenced_files F,
+                F data_hash H, F data_name N)
+                UNION
+                (Any H, N  WHERE FA eid %(eid)s, FAC finding_aid FA,
+                FAC fa_referenced_files F, F data_hash H, F data_name N)
+                )""",
+                    {"eid": fa_eid},
+                    build_descr=False,
+                )
+            )
+            files_to_remove.extend(
+                cnx.execute(
+                    """Any H, N WHERE FA findingaid_support F,
+                       FA eid %(eid)s, NOT F data_format "application/xml",
+                       F data_hash H, F data_name N""",
+                    {"eid": fa_eid},
+                    build_descr=False,
+                )
+            )
     with no_trigger(cnx, interactive=interactive):
+        deffer_foreign_key_constraints(cnx)
         cursor = cnx.cnxset.cu
+        # clean published table which are never cleaned as all triggers are disabled
+        published = cnx.system_sql(
+            """SELECT TRUE FROM information_schema.schemata
+               WHERE schema_name = 'published'"""
+        ).fetchone()
+        published = published[0] if published else False
         for etypetable in eid_map:
             eids = [(e,) for e in eid_map[etypetable]]
             LOGGER.debug("etypetable %s (%s eids)", etypetable, len(eids))
             cursor.execute("DROP TABLE IF EXISTS tmp_eid_to_remove")
             # XXX add uuid in table name ?
-            cursor.execute("CREATE TABLE tmp_eid_to_remove (eid integer)")
+            cursor.execute("CREATE TABLE tmp_eid_to_remove (eid integer PRIMARY KEY)")
             cursor.execute("CREATE INDEX tmp_eid_idx ON tmp_eid_to_remove(eid)")
             cursor.executemany("INSERT INTO tmp_eid_to_remove (eid) VALUES (%s)", eids)
+            if etypetable == "cw_findingaid":
+                # for published findingaids
+                cursor.executemany("DELETE FROM in_state_relation WHERE eid_from = %s", eids)
+                cursor.executemany("DELETE FROM cw_trinfo where cw_wf_info_for = %s", eids)
             if etypetable in ("cw_facomponent", "cw_findingaid"):
                 cursor.executemany(
                     "DELETE FROM fa_referenced_files_relation WHERE eid_from = %s", eids
                 )
-            if etypetable == "cw_facomponent":
-                cursor.executemany(
-                    "DELETE FROM digitized_versions_relation WHERE eid_from = %s", eids
-                )
+                # why do we need this table ?
+                if published:
+                    cursor.executemany(
+                        "DELETE FROM published.fa_referenced_files_relation WHERE eid_from = %s",
+                        eids,
+                    )
+
+            cursor.executemany("DELETE FROM digitized_versions_relation WHERE eid_from = %s", eids)
             if etypetable in ("cw_geogname", "cw_agentname", "cw_subject"):
                 cursor.executemany("DELETE FROM index_relation WHERE eid_from = %s", eids)
+                # why do we need this table ?
+                if published:
+                    cursor.executemany(
+                        "DELETE FROM published.index_relation WHERE eid_from = %s", eids
+                    )
             cursor.execute("SELECT delete_entities('%s', '%s')" % (etypetable, "tmp_eid_to_remove"))
+        cnx.commit()
+        # remove S3 published or unpublished files
+        if files_to_remove:
+            if S3_ACTIVE:
+                for data_hash, data_name in files_to_remove:
+                    key = f"{data_hash}_{data_name}"
+                    for fpath in (key, f".hidden/{key}"):
+                        if storage.file_exists(fpath):
+                            storage.s3cnx.delete_object(Bucket=storage.bucket, Key=fpath)
+            else:
+                cnx.error("todo remove published symlinks")
+
+
+def delete_nomina_records_from_es(cnx, stable_ids):
+    """Delete NominaRecord entities from
+    both ElasticSearch indexes.
+
+    :param Connection cnx: CubicWeb database connection
+    :param list stable_ids: stable IDs
+    """
+    # there is only one index for NominaRecords in edition and consultation
+    indexer = cnx.vreg["es"].select("nomina-indexer", cnx)
+    es = indexer.get_connection()
+    es_docs = []
+    for stable_id in list(stable_ids):
+        es_docs.append(
+            {
+                "_op_type": "delete",
+                "_index": indexer.index_name,
+                "_type": "_doc",
+                "_id": stable_id,
+            }
+        )
+    es_bulk_index(es, es_docs, raise_on_error=False)
+
+
+def delete_nomina_records(cnx, stable_ids, esonly=False, interactive=True):
+    """Delete NominaRecord(s).
+
+    :param Connection cnx: CubicWeb database connection
+    :param dict stable_ids: stable IDs to be removed
+    :param bool esonly: whether only Elasticsearch document of finding aid(s) should be removed
+    :param bool interactive: toggle interactive on/off
+    """
+    try:
+        delete_nomina_records_from_es(cnx, stable_ids)
+    except Exception:
+        cnx.exception("failed to delete %s from elasticsearch, continuing anyway", stable_ids)
+    if esonly:
+        return
+    # XXX without a commit() or rollback() we might get a lock on next commit call
+    # but deciding to commit or rollback should not be the responsibility of
+    # this function.
+    # cnx.rollback()
+    with no_trigger(cnx, interactive=interactive):
+        deffer_foreign_key_constraints(cnx)
+        cursor = cnx.cnxset.cu
+        cursor.execute("DROP TABLE IF EXISTS tmp_eid_to_remove")
+        cursor.execute("CREATE TABLE tmp_eid_to_remove (eid integer PRIMARY KEY)")
+        cursor.execute("CREATE INDEX tmp_eid_idx ON tmp_eid_to_remove(eid)")
+        cursor.execute(
+            """
+        INSERT INTO tmp_eid_to_remove (eid)
+            SELECT cw_eid from cw_nominarecord
+                WHERE cw_stable_id=ANY(%s)""",
+            (list(stable_ids),),
+        )
+        cursor.execute("SELECT delete_entities('cw_nominarecord', '%s')" % ("tmp_eid_to_remove"))
         cnx.commit()
 
 
@@ -339,7 +511,14 @@ def ead_foreign_key_tables(schema):
         "AgentAuthority",
         "LocationAuthority",
         "SubjectAuthority",
-        "Person",
         "EsDocument",
+    }
+    return foreign_key_tables(schema, etypes)
+
+
+def nomina_foreign_key_tables(schema):
+    etypes = {
+        "NominaRecord",
+        "AgentAuthority",
     }
     return foreign_key_tables(schema, etypes)

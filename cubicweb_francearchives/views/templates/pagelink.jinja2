@@ -1,0 +1,12 @@
+<div class="pagelink">
+{% if page_link.link %}
+<a href="{{ page_link.link }}" title="{{ page_link.title }}"  rel="nofollow noopener">
+  {{ page_link.name }}
+  {% if page_link.hidden_label %}
+  <span class="visually-hidden">{{ page_link.hidden_label }}</span>
+  {% endif %}
+</a>
+{% else %}
+<span>{{ page_link.name }}</span>
+{% endif %}
+</div>

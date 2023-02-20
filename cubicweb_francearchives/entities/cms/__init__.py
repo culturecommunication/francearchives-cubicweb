@@ -37,8 +37,6 @@ import urllib.request
 import urllib.parse
 import urllib.error
 
-from babel.dates import format_date
-
 import json
 from io import StringIO
 
@@ -58,16 +56,22 @@ from cubicweb_francearchives.entities.es import (
     TranslatableIndexSerializableMixin,
 )
 from cubicweb_francearchives.entities.ead import IndexableMixin
-from cubicweb_francearchives.dataimport import normalize_entry
 from cubicweb_francearchives.dataimport.pdf import pdf_infos
 from cubicweb_francearchives.dataimport.eadreader import unique_indices
-from cubicweb_francearchives.utils import safe_cut, id_for_anchor
+from cubicweb_francearchives.utils import safe_cut, remove_html_tags
 
 from cubicweb_francearchives.xmlutils import process_html_as_xml, add_title_on_external_links
-from cubicweb_francearchives.utils import remove_html_tags
+
+from cubicweb_francearchives.views import format_date
 
 
 class RelatedAutorityIndexableMixin(IndexableMixin):
+    def indexes(self):
+        return self._cw.execute(
+            """DISTINCT Any X, XP WHERE E eid %(e)s, E related_authority X, X label XP""",
+            {"e": self.eid},
+        )
+
     def agent_indexes(self):
         return self._cw.execute(
             "DISTINCT Any X, XP WHERE E eid %(e)s, "
@@ -78,7 +82,7 @@ class RelatedAutorityIndexableMixin(IndexableMixin):
 
     def subject_indexes(self):
         return self._cw.execute(
-            "DISTINCT Any X, XP WHERE E eid %(e)s, "
+            "DISTINCT Any X, XP ORDERBY XP WHERE E eid %(e)s, "
             "E related_authority X, X is SubjectAuthority, "
             "X label XP",
             {"e": self.eid},
@@ -86,7 +90,7 @@ class RelatedAutorityIndexableMixin(IndexableMixin):
 
     def geo_indexes(self):
         return self._cw.execute(
-            "DISTINCT Any X, XP WHERE E eid %(e)s, "
+            "DISTINCT Any X, XP ORDERBY XP  WHERE E eid %(e)s, "
             "E related_authority X, X is LocationAuthority, "
             "X label XP",
             {"e": self.eid},
@@ -95,14 +99,15 @@ class RelatedAutorityIndexableMixin(IndexableMixin):
     def es_indexes(self):
         """method used in AbstractCMSIFTIAdapter"""
         return self._cw.execute(
-            "Any L, NORMALIZE_ENTRY(L), A WHERE X related_authority A, A label L, X eid %(e)s",
+            """Any L, NORMALIZE_ENTRY(L), A ORDERBY L
+            WHERE X related_authority A, A label L, X eid %(e)s""",
             {"e": self.eid},
         )
 
     def main_indexes(self, itype):
         # itype is only here for compatibility with IndexableMixin
         return self._cw.execute(
-            "DISTINCT Any X, XP WHERE E eid %(e)s, "
+            "DISTINCT Any X, XP ORDERBY XP WHERE E eid %(e)s, "
             "E related_authority X, X is AgentAuthority, "
             "X label XP",
             {"e": self.eid},
@@ -166,6 +171,7 @@ class HTMLMixIn(object):
 
 class CmsObject(ImageMixIn, HTMLMixIn, AnyEntity):
     __abstract__ = True
+    rest_attr = "eid"
 
     @cachedproperty
     def img(self):
@@ -173,12 +179,35 @@ class CmsObject(ImageMixIn, HTMLMixIn, AnyEntity):
 
     @cachedproperty
     def fmt_creation_date(self):
-        return format_date(self.creation_date, "d MMMM y", locale=self._cw.lang)
+        return format_date(self.creation_date, self._cw, fmt="d MMMM y")
+
+    @property
+    def fmt_modification_date(self):
+        return format_date(self.modification_date, self._cw, fmt="d MMMM y")
 
     def dc_authors(self):
+        authors = self.cw_adapt_to("IMeta").author()
+        if authors:
+            return "; ".join(authors)
+
+    @property
+    def abstract(self):
+        if hasattr(self, "header") and self.header:
+            return self.header
+        else:
+            return safe_cut(self.content, 500, remove_html=True)
+
+    @property
+    def printable_content(self):
+        return self.printable_value("content")
+
+    @property
+    def etype(self):
+        return self.cw_etype
+
+    def dc_subjects(self):
         if self.metadata:
-            return self.metadata[0].creator
-        return super(CmsObject, self).dc_authors()
+            return self.metadata[0].keywords
 
 
 class TranslatableCmsObject(CmsObject):
@@ -196,6 +225,27 @@ class TranslatableCmsObject(CmsObject):
     def i18n_rset(self, *args, **kwargs):
         query = self.i18n_query(*args, **kwargs)
         return self._cw.execute(query, {"e": self.eid})
+
+    def i18n_links(self):
+        query = """Any L ORDERBY L WHERE X translation_of E,
+                   X language L, NOT X language %(curlang)s,
+                   E eid %(e)s"""
+        langs = [
+            lang for lang, in self._cw.execute(query, {"e": self.eid, "curlang": self._cw.lang})
+        ]
+        if self._cw.lang != "fr":
+            langs.insert(0, "fr")
+        if langs:
+            langs.insert(0, self._cw.lang)
+        return [
+            (
+                self._cw._(f"{lang}_lang"),
+                self._cw.uiprops[f"FLAG_{lang.upper()}"],
+                f"{self._cw.base_url()}{lang}/{self.rest_path()}",
+                f"Translate in {lang}",
+            )
+            for lang in langs
+        ]
 
     def translations(self, *args, **kwargs):
         values = {}
@@ -227,7 +277,7 @@ class TranslatableCmsObject(CmsObject):
 class BaseContent(RelatedAutorityIndexableMixin, TranslatableCmsObject):
     __regid__ = "BaseContent"
     image_rel_name = "basecontent_image"
-    i18nfields = ("title", "content", "summary")
+    i18nfields = ("title", "header", "content", "summary")
 
     def dc_title(self):
         if self._cw.lang == "fr":
@@ -243,16 +293,21 @@ class BaseContent(RelatedAutorityIndexableMixin, TranslatableCmsObject):
             return self.basecontent_service[0]
 
     @property
-    def is_a_publication(self):
-        return bool(
-            self._cw.execute(
-                ("Any X WHERE X is Section, X name %(n)s, " "X children B, B eid %(e)s"),
-                {"n": "publication", "e": self.eid},
-            )
-        )
+    def services(self):
+        return self.basecontent_service
+
+    @property
+    def dates(self):
+        return self.fmt_modification_date
+
+    @property
+    def etype(self):
+        return self.content_type
 
 
 class TranslationMixin(object):
+    rest_attr = "eid"
+
     def rest_path(self):
         return "{}/{}".format(self.cw_etype.lower(), self.eid)
 
@@ -281,6 +336,17 @@ class NewsContent(CmsObject):
     def keywords(self):
         pass
 
+    @property
+    def dates(self):
+        if self.start_date and self.stop_date:
+            if self.start_date == self.stop_date:
+                return format_date(self.start_date, self._cw, fmt="d MMMM y")
+            start_date = format_date(self.start_date, self._cw, fmt="d MMMM y")
+            stop_date = format_date(self.stop_date, self._cw, fmt="d MMMM y")
+            return "-".join([start_date, stop_date])
+        date = self.start_date or self.stop_date
+        return format_date(date, self._cw, fmt="d MMMM y")
+
 
 class Circular(AnyEntity):
     __regid__ = "Circular"
@@ -292,7 +358,7 @@ class Circular(AnyEntity):
     def dc_title(self):
         return self.title
 
-    def sort_date(self):
+    def sortdate(self):
         return self.siaf_daf_signing_date or self.signing_date
 
     @property
@@ -324,12 +390,16 @@ class Service(ImageMixIn, HTMLMixIn, AnyEntity):
             "city",
             "address",
             "short_name",
+            "dpt_code",
+            "zip_code",
+            "code_insee_commune",
             "thumbnail_url",
             "thumbnail_dest",
         ]
     )
     __regid__ = "Service"
     image_rel_name = "service_image"
+    rest_attr = "eid"
 
     @staticmethod
     def from_code(req, code):
@@ -348,6 +418,14 @@ class Service(ImageMixIn, HTMLMixIn, AnyEntity):
         else:
             code = "c-{}".format(self.eid)
         return self._cw.build_url("inventaires/{}".format(code))
+
+    def nominarecords_url(self):
+        if self.code:
+            code = self.code
+        else:
+            code = "c-{}".format(self.eid)
+        # XXX url to be validated
+        return self._cw.build_url("basedenoms/{}".format(code))
 
     def dc_title(self):
         if self.level == "level-D":
@@ -374,10 +452,7 @@ class Service(ImageMixIn, HTMLMixIn, AnyEntity):
         return self.search_form_url or self.website_url
 
     def rest_path(self):
-        if self.level in ("level-D", "level-C") and self.dpt_code:
-            return "annuaire/departements?dpt=%s" % self.dpt_code
-        else:
-            return "service/{}".format(self.eid)
+        return "service/{}".format(self.eid)
 
     def physical_address(self):
         terms = [self.address, self.zip_code, self.city]
@@ -388,30 +463,6 @@ class Service(ImageMixIn, HTMLMixIn, AnyEntity):
         if not publisher and self.code:
             return self.code.upper()
         return publisher
-
-    @property
-    def url_anchor(self):
-        return "{}#{}".format(self.absolute_url(), id_for_anchor(self.dc_title()))
-
-
-class Person(AnyEntity):
-    __regid__ = "Person"
-
-    def dc_title(self):
-        return "{} {}".format(self.forenames, self.name)
-
-    @property
-    def label(self):
-        """property to ease compatibility with AgentName entities"""
-        return self.dc_title()
-
-    def agent_indexes(self):
-        return self._cw.execute(
-            """
-            DISTINCT Any A, L ORDERBY L WHERE P eid %(e)s,
-            P authority A, A label L""",
-            {"e": self.eid},
-        )
 
 
 # XXX duplicated from cubes.frarchives_edition.views.primary
@@ -430,18 +481,29 @@ def get_ancestors(entity, result=None):
 
 class ExternRef(RelatedAutorityIndexableMixin, CmsObject):
     __regid__ = "ExternRef"
-    fetch_attrs, cw_fetch_order = fetch_config(["title", "reftype", "content"])
+    fetch_attrs, cw_fetch_order = fetch_config(
+        ["title", "reftype", "content", "start_year", "stop_year"]
+    )
     image_rel_name = "externref_image"
+    rest_attr = "uuid"
 
     @property
-    def years(self):
-        years = [self.start_year, self.stop_year]
-        return " - ".join(str(e) for e in years if e)
+    def dates(self):
+        dates = [self.start_year, self.stop_year]
+        return " - ".join(str(e) for e in dates if e is not None)
 
     @property
     def service(self):
         if self.exref_service:
             return self.exref_service[0]
+
+    @property
+    def services(self):
+        return self.exref_service
+
+    @property
+    def etype(self):
+        return self.reftype
 
 
 class MapCSVReader(object):
@@ -465,6 +527,7 @@ class Map(MapCSVReader, ImageMixIn, HTMLMixIn, AnyEntity):
     __regid__ = "Map"
     fetch_attrs = ("title", "map_title", "top_content", "bottom_content")
     image_rel_name = "map_image"
+    rest_attr = "eid"
 
     def dc_title(self):
         return self.title
@@ -521,11 +584,12 @@ class AbstractCMSIFTIAdapter(PniaIFullTextIndexSerializable):
         data = super(AbstractCMSIFTIAdapter, self).serialize(complete)
         data["escategory"] = ETYPE_CATEGORIES[self.entity.cw_etype]
         data["ancestors"] = get_ancestors(self.entity)
+        data["dates"] = {
+            "gte": self.entity.modification_date.year,
+            "lte": self.entity.modification_date.year,
+        }
+        data["sortdate"] = self.entity.modification_date.strftime("%Y-%m-%d")
         return data
-
-
-class CommemoCollectionIFTIAdapter(AbstractCMSIFTIAdapter):
-    __select__ = AbstractCMSIFTIAdapter.__select__ & is_instance("CommemoCollection")
 
 
 class CardIFTIAdapter(AbstractCMSIFTIAdapter):
@@ -534,12 +598,28 @@ class CardIFTIAdapter(AbstractCMSIFTIAdapter):
     def serialize(self, complete=True):
         if not self.entity.do_index:
             return {}
-        return super().serialize(complete=complete)
+        data = super().serialize(complete=complete)
+        data["cw_etype"] = "Article"
+        return data
 
 
 class NewsContentIFTIAdapter(AbstractCMSIFTIAdapter):
     __select__ = AbstractCMSIFTIAdapter.__select__ & is_instance("NewsContent")
     custom_indexable_attributes = ("start_date", "stop_date")
+
+    def serialize(self, complete=True):
+        """XXX do we still need to index "start_date", "stop_date" ?"""
+        data = super(NewsContentIFTIAdapter, self).serialize(complete)
+
+        # if start date or stop date are defined, use these dates for facet
+        # search and for date sorting
+        # otherwise, use modification date (default behaviour cf AbstractCMSIFTIAdapter)
+        start_date = self.entity.start_date or self.entity.stop_date
+        stop_date = self.entity.stop_date or start_date
+        if start_date or stop_date:
+            data["dates"] = {"gte": start_date.year, "lte": stop_date.year}
+            data["sortdate"] = start_date.strftime("%Y-%m-%d")
+        return data
 
 
 class MapIFTIAdapter(AbstractCMSIFTIAdapter):
@@ -556,9 +636,13 @@ class BaseContentMixIn(TranslatableIndexSerializableMixin):
         data = super(BaseContentMixIn, self).serialize(complete)
         services = self.entity.basecontent_service
         if services:
-            data["publisher"] = [s.short_name or s.dc_title() for s in services]
-        if self.entity.is_a_publication:
-            data["cw_etype"] = self._cw._("Publication")
+            data["publisher"] = [s.short_name or s.name2 or s.name for s in services]
+            data["service"] = [
+                {"eid": s.eid, "code": s.code, "level": s.level, "title": s.dc_title()}
+                for s in services
+            ]
+        if self.entity.content_type:
+            data["cw_etype"] = self.entity.content_type
         data["index_entries"] = [
             {"label": label, "normalized": normalized, "authority": auth}
             for label, normalized, auth in self.entity.es_indexes()
@@ -567,32 +651,8 @@ class BaseContentMixIn(TranslatableIndexSerializableMixin):
         return data
 
 
-class BaseContentWithoutManifProgIFTIAdapter(BaseContentMixIn, AbstractCMSIFTIAdapter):
-    __select__ = (
-        AbstractCMSIFTIAdapter.__select__
-        & is_instance("BaseContent")
-        & ~score_entity(lambda bc: bc.reverse_manif_prog)
-    )
-
-
-class BaseContentManifProgIFTIAdapter(BaseContentMixIn, AbstractCMSIFTIAdapter):
-    __select__ = (
-        AbstractCMSIFTIAdapter.__select__
-        & is_instance("BaseContent")
-        & score_entity(lambda bc: bc.reverse_manif_prog)
-    )
-
-    @cachedproperty
-    def ift_commemo(self):
-        commemo_item = self.entity.reverse_manif_prog
-        return commemo_item[0].cw_adapt_to("IFullTextIndexSerializable")
-
-    @property
-    def es_id(self):
-        return self.ift_commemo.es_id
-
-    def serialize(self, complete=True):
-        return self.ift_commemo.serialize(complete)
+class BaseContentIFTIAdapter(BaseContentMixIn, AbstractCMSIFTIAdapter):
+    __select__ = AbstractCMSIFTIAdapter.__select__ & is_instance("BaseContent")
 
 
 class FileAttachmentIFTIAdapter(AbstractCMSIFTIAdapter):
@@ -621,17 +681,27 @@ class FileAttachmentIFTIAdapter(AbstractCMSIFTIAdapter):
 
 class CommemorationItemIFTIAdapter(TranslatableIndexSerializableMixin, AbstractCMSIFTIAdapter):
     __select__ = AbstractCMSIFTIAdapter.__select__ & is_instance("CommemorationItem")
-    i18nfields = ("title", "subtitle", "content")
+    i18nfields = ("title", "header", "subtitle", "content")
 
     def serialize(self, complete=True, **kwargs):
         data = super(CommemorationItemIFTIAdapter, self).serialize(complete)
+        data.pop("dates", None)
+        data.pop("sortdate", None)
+        if self.entity.start_year is not None or self.entity.stop_year is not None:
+            start_year = self.entity.start_year or self.entity.stop_year
+            stop_year = self.entity.stop_year or start_year
+            data["dates"] = {"gte": start_year, "lte": stop_year}
+            if self.entity.start_year < 0:
+                # TODO f"BC {abs(start_year):04d}-01-01"
+                # "sortdate": {"type": "date", "format": "yyyy-MM-dd||G yyy-MM-dd" }
+                # BC dates are not taken into account of for the moment. Just set them to 0
+                data["sortdate"] = "0000-01-01"
+            else:
+                data["sortdate"] = f"{self.entity.start_year:04}-01-01"
         data["index_entries"] = [
             {"label": label, "normalized": normalized, "authority": auth}
             for label, normalized, auth in self.entity.es_indexes()
         ]
-        prog = [bc.content for bc in self.entity.manif_prog if bc.content]
-        if prog:
-            data["manif_prog"] = remove_html_tags(" ".join(prog))
         data.update(self.add_translations(complete=complete, **kwargs))
         return data
 
@@ -662,11 +732,14 @@ class CircularIFTIAdapter(AbstractCMSIFTIAdapter):
 
     def serialize(self, complete=True):
         data = super(CircularIFTIAdapter, self).serialize(complete)
-        signing_date = self.entity.sort_date()
+        signing_date = self.entity.sortdate()
         index_entries = []
+        data.pop("dates", None)
+        data.pop("sortdate", None)
         if signing_date:
-            data["sort_date"] = signing_date
+            data["sortdate"] = signing_date.strftime("%Y-%m-%d")
             data["siaf_daf_signing_year"] = signing_date.year
+            data["dates"] = {"gte": signing_date.year, "lte": signing_date.year}
         for attr in ("siaf_daf_signing_date", "signing_date"):
             if attr in data:
                 del data[attr]
@@ -715,6 +788,21 @@ class ExternRefIFTIAdapter(AbstractCMSIFTIAdapter):
 
     def serialize(self, complete=True):
         data = super(ExternRefIFTIAdapter, self).serialize(complete)
+
+        # if start year or stop year, use start/stop year for facet and sort
+        # otherwise, fallback to default (modification date) behaviour
+        # cf AbstractCMSIFTIAdapter
+        if self.entity.start_year is not None or self.entity.stop_year is not None:
+            start_year = self.entity.start_year or self.entity.stop_year
+            stop_year = self.entity.stop_year or start_year
+            data["dates"] = {"gte": start_year, "lte": stop_year}
+            if start_year < 0:
+                # TODO f"BC {abs(start_year):04d}-01-01"
+                # "sortdate": {"type": "date", "format": "yyyy-MM-dd||G yyy-MM-dd" }
+                # BC dates are not taken into account of for the moment. Just set them to 0
+                data["sortdate"] = "0000-01-01"
+            else:
+                data["sortdate"] = f"{start_year:04d}-01-01"
         data["cw_etype"] = self.entity.reftype.capitalize()
         data["reftype"] = self.entity.reftype.lower()
         data["index_entries"] = [
@@ -723,19 +811,11 @@ class ExternRefIFTIAdapter(AbstractCMSIFTIAdapter):
         ]
         services = self.entity.exref_service
         if services:
-            data["publisher"] = [s.short_name or s.dc_title() for s in services]
-        return data
-
-
-class PersonIFTIAdapter(AbstractCMSIFTIAdapter):
-    __select__ = AbstractCMSIFTIAdapter.__select__ & is_instance("Person")
-
-    def serialize(self, complete=True):
-        data = super(PersonIFTIAdapter, self).serialize(complete)
-        data["index_entries"] = [
-            {"label": label, "normalized": normalize_entry(label), "type": "persname"}
-            for __, label, __ in self.entity.agent_indexes()
-        ]
+            data["publisher"] = [s.short_name or s.name2 or s.name for s in services]
+            data["service"] = [
+                {"eid": s.eid, "code": s.code, "level": s.level, "title": s.dc_title()}
+                for s in services
+            ]
         return data
 
 
@@ -776,7 +856,7 @@ class GlossaryTerm(AnyEntity):
 
     @cachedproperty
     def fmt_creation_date(self):
-        return format_date(self.creation_date, "d MMMM y", locale=self._cw.lang)
+        return format_date(self.creation_date, self._cw, fmt="d MMMM y")
 
 
 class FaqItem(TranslatableCmsObject):
@@ -786,10 +866,30 @@ class FaqItem(TranslatableCmsObject):
 
     def dc_title(self):
         if self._cw.lang == "fr":
-            return self.question
+            return remove_html_tags(self.question)
         return self.cw_adapt_to("ITemplatable").entity_param().question
 
 
 class FaqItemTranslation(TranslationMixin, AnyEntity):
     __regid__ = "FaqItemTranslation"
     fetch_attrs, cw_fetch_order = fetch_config(["answer", "question"])
+
+
+class SiteLink(AnyEntity):
+    __regid__ = "SiteLink"
+    fetch_attrs, cw_fetch_order = fetch_config(
+        ["url", "context", "label_fr", "label_en", "label_es", "label_de", "order"]
+    )
+
+    def dc_title(self):
+        label = self.label_fr
+        return getattr(self, "label_{}".format(self._cw.lang)) or label
+
+    def url(self):
+        link = self.link
+        return link if link.startswith("http") else self._cw.build_url(link)
+
+
+class Metadata(AnyEntity):
+    __regid__ = "Metadata"
+    rest_attr = "uuid"

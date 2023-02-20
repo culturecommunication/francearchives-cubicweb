@@ -1,0 +1,23 @@
+{
+  "@context": {
+    "schema": "http://schema.org/"
+  },
+  "@id": "http://testing.fr/cubicweb/service/{{eid}}",
+  "@type": "schema:ArchiveOrganization",
+  "schema:address":{
+    "@type": "schema:PostalAddress",
+    "schema:addressCountry": "fr",
+    "schema:addressLocality": "Paris",
+    "schema:postalCode": "75",
+    "schema:streetAddress": "s1-address"
+  },
+  "schema:email": "s1-email",
+  "schema:employee": "jean michel",
+  "schema:legalName": "s1",
+  "schema:openingHours": "op-period",
+  "schema:subOrganization": {
+    "@id": "http://testing.fr/cubicweb/service/{{eidSub}}"
+  },
+  "schema:telephone": "s1-phone",
+  "schema:url": "http://www.s1.fr"
+}

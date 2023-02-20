@@ -31,20 +31,30 @@
 """cubicweb-francearchives specific hooks and operations"""
 
 import logging
+import os
 from uuid import uuid4
 from rql import BadRQLQuery
+
 from cubicweb.server import hook
 
 from cubicweb.hooks.integrity import IntegrityHook, TidyHtmlFields
 from cubicweb.predicates import score_entity, is_instance, relation_possible, adaptable
 
-from cubicweb_francearchives import init_bfss, check_static_css_dir, register_auth_history, Authkey
+from cubicweb_francearchives import (
+    init_bfss,
+    check_static_css_dir,
+    register_auth_history,
+    Authkey,
+    SECTIONS,
+    FranceArchivesS3Storage,
+    S3_ACTIVE,
+)
 from cubicweb_francearchives.cssimages import HERO_SIZES
 
 from cubicweb_francearchives.cssimages import generate_thumbnails
 from cubicweb_francearchives.htmlutils import soup2xhtml
 from cubicweb_francearchives.utils import populate_terms_cache
-from cubicweb_francearchives.xmlutils import enhance_accessibility
+from cubicweb_francearchives.xmlutils import enhance_accessibility, handle_subtitles
 
 from cubicweb_varnish.hooks import PurgeUrlsOnUpdate, InvalidateVarnishCacheOp
 
@@ -67,6 +77,12 @@ class ServerStartupHook(hook.Hook):
     def __call__(self):
         init_bfss(self.repo)
         check_static_css_dir(self.repo)
+        if not self.repo.config.creating:
+            # we don't want to execute the hook when we are creating database
+            with self.repo.internal_cnx() as cnx:
+                rset = cnx.execute("Any X WHERE X is Section, X name 'gerer'")
+                if rset:
+                    SECTIONS["gerer"] = rset[0][0]
 
 
 def is_css_image(entity):
@@ -98,10 +114,11 @@ class AuthorityRenameHook(hook.Hook):
     __select__ = hook.Hook.__select__ & is_instance(
         "AgentAuthority", "LocationAuthority", "SubjectAuthority"
     )
-    events = ("after_update_entity",)
+    events = ("before_update_entity",)
 
     def __call__(self):
-        if "label" in self.entity.cw_edited:
+        old_label, new_label = self.entity.cw_edited.oldnewvalue("label")
+        if old_label != new_label:
             RegisterRenamedAuthHistoryOp.get_instance(self._cw).add_data((self.entity.eid))
 
 
@@ -121,10 +138,19 @@ class AuthorityDeleteHook(hook.Hook):
                     )
                 )
             )
+        if not self._cw.transaction_data.get(
+            "delete-orphans"
+        ) and not self._cw.transaction_data.get("blacklist"):
+            self.error(f"Trying to delete authority {self.entity.cw_etype} {self.entity.eid} ")
+            from traceback import print_stack
+
+            print_stack()
+            raise AuthorityIntegrityError(f"Forbidden attempt to delete an authority {self.entity}")
 
 
 class RegisterRenamedAuthHistoryOp(hook.DataOperationMixIn, hook.Operation):
     def precommit_event(self):
+        # XXX should we do it in postcommit ?
         for auth_eid in self.get_data():
             self.cnx.entity_from_eid(auth_eid).add_to_auth_history()
 
@@ -144,9 +170,6 @@ class RegisterAuthHistoryOp(hook.DataOperationMixIn, hook.Operation):
         for eidto, eidfrom in self.get_data():
             auth = cnx.entity_from_eid(eidto)
             controlaccess = cnx.entity_from_eid(eidfrom)
-            if controlaccess.cw_etype == "Person":
-                # forget Person for now
-                continue
             try:
                 fa_or_fac = controlaccess.index[0]
                 if fa_or_fac.cw_etype == "FindingAid":
@@ -278,6 +301,10 @@ class PniaTidyHtmlFields(IntegrityHook):
                     value = soup2xhtml(value, self._cw.encoding)
                     # applied rgaa rules
                     value = enhance_accessibility(value, cnx)
+                    if attr == "content":
+                        # look for subtitles
+                        lang = getattr(self.entity, "language", None)
+                        value = handle_subtitles(value, cnx, lang=lang)
                     edited[attr] = value
 
 
@@ -295,14 +322,22 @@ class GlossaryStartupHook(hook.Hook):
             # we don't want to execute the hook when we are creating database
             return
         with self.repo.internal_cnx() as cnx:
-            cnx.warning("remove the test below in cubicweb_francearchives > 2.8.0")
-            if not cnx.vreg.schema.get("GlossaryTerm"):
-                return
             self.info("Creating Glossary cache")
             try:
                 populate_terms_cache(cnx)
             except BadRQLQuery:
                 pass
+
+
+class S3StorageStartupHook(hook.Hook):
+    __regid__ = "francearchives.server-startup-hook"
+    events = ("server_startup", "server_maintenance")
+
+    def __call__(self):
+        # feature flag: do not handle S3 attributes when S3 is disabled
+        if S3_ACTIVE:
+            storage = FranceArchivesS3Storage(os.getenv("AWS_S3_BUCKET_NAME"))
+            self.repo.system_source.set_storage("File", "data", storage)
 
 
 def registration_callback(vreg):

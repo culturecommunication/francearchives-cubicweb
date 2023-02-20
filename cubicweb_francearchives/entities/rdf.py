@@ -30,303 +30,705 @@
 #
 """francearchives rdf adpaters"""
 import logging
-from itertools import chain
-import urllib.request
-import urllib.parse
-import urllib.error
-from collections import defaultdict
 
 from lxml import etree
-
-from rdflib.term import BNode
+import os
+from rdflib.term import BNode, Literal, URIRef
 
 from logilab.common.decorators import cachedproperty
 
 from cubicweb.predicates import is_instance
-from cubicweb.view import EntityAdapter
+from cubicweb.pyramid.core import CubicWebPyramidRequest
+from cubicweb.entities.adapters import EntityRDFAdapter as CWEntityRDFAdapter
+from cubicweb_eac.entities.rdf import AuthorityRecordRDFAdapter, AuthorityRecordRICORDFAdapter
 
-from cubicweb_francearchives.xy import NS_VARS
+RDF_FORMAT_EXTENSIONS = {
+    "xml": "RDF/XML",
+    "ttl": "Turtle",
+    "nt": "n-triples",
+    "n3": "n3",
+    "jsonld": "JSON-LD",
+}
 
 
-class EntityRDFAdapter(EntityAdapter):
-    __abstract__ = True
-    rdf_type = None
-
-    @cachedproperty
-    def uri(self):
-        req = self._cw
-        # NOTE: do not call absolute_url() to avoid including lang prefix
-        return "{}{}".format(req.base_url(), self.entity.rest_path())
-
-    def statements(self):
-        if self.rdf_type is not None:
-            yield (self.uri, "rdf", "type", self.rdf_type, None)
-        for prop in self.properties():
-            yield (self.uri,) + prop
-        for relinfo in self.relations():
-            yield (self.uri,) + relinfo + (None,)
-        for relinfo in self.object_relations():
-            yield relinfo + (self.uri, None)
-        for statement in self.extra_statements():
-            yield statement
-
-    def properties(self):
-        return ()
-
-    def relations(self):
-        return ()
-
-    def object_relations(self):
-        return ()
-
-    def extra_statements(self):
-        return ()
-
-    @classmethod
-    def _date_iso8601(cls, date):
-        if date:
-            return date.strftime("%Y-%m-%d")
+# NOTE: do not call absolute_url() or cnx.build_url to avoid including lang prefix
+def build_uri(req, restpath):
+    if os.environ.get("RDFDUMP_PUBLISHED"):
+        base_url = req.vreg.config.get("consultation-base-url")
+        base_url = f"{base_url.rstrip('/')}/" if base_url else req.base_url()
+    else:
+        base_url = req.base_url()
+    return URIRef(f"{base_url}{restpath}")
 
 
 def plaintext(html):
     if html:
         try:
             html = etree.HTML(html)
-            return " ".join(html.xpath("//text()"))
+            return (" ".join(html.xpath("//text()"))).strip()
         except Exception:
             logging.warning("failed to extract text from %r", html)
             return html
     return ""
 
 
-class ComponentMixin(object):
-    rdf_type = NS_VARS["schema"] + "CreativeWork"
+def check_dataproperty_value(subject, predicate, data):
+    if data.value is None or data.value == "":
+        return []
+    yield (subject, predicate, data)
+
+
+class EntityRDFAdapter(CWEntityRDFAdapter):
+    __abstract__ = True
+
+    @cachedproperty
+    def uri(self):
+        req = self._cw
+        return build_uri(req, self.entity.rest_path())
+
+
+class ArchiveComponent2Schemaorg(EntityRDFAdapter):
+    __abstract__ = True
+    MAX_COMPONENTS_DISPLAY = 500
+    MAX_SUBJECTS_DISPLAY = 100
 
     @cachedproperty
     def subject_indexes(self):
-        return self.entity.subject_indexes()
+        return self.entity.subject_authority_indexes()
 
-    def properties(self):
+    def schema_org_triples(self):
         entity = self.entity
         did = entity.did[0]
-        yield ("schema", "name", entity.dc_title(), {})
-        yield ("schema", "contentLocation", did.origination, {})
-        yield ("schema", "mentions", plaintext(entity.scopecontent), {})
-        for subject in self.subject_indexes.entities():
-            authority_url = subject.authority[0].absolute_url()
-            yield ("schema", "about", authority_url, {})
+        RDF = self._use_namespace("rdf")
+        SCHEMA = self._use_namespace("schema")
+        yield (self.uri, RDF.type, SCHEMA.ArchiveComponent)
+        yield (self.uri, SCHEMA.name, Literal(entity.dc_title()))
+        if did.origination:
+            yield (self.uri, SCHEMA.contentLocation, Literal(plaintext(did.origination)))
+        if entity.scopecontent:
+            yield (self.uri, SCHEMA.mentions, Literal(plaintext(entity.scopecontent)))
+        if len(self.subject_indexes) < self.MAX_SUBJECTS_DISPLAY:
+            for subject_eid, subject_label in self.subject_indexes:
+                subject_uri = build_uri(self._cw, f"subject/{subject_eid}")
+                yield (self.uri, SCHEMA.about, subject_uri)
+                yield (subject_uri, SCHEMA.name, Literal(subject_label))
 
-    def extra_statements(self):
-        # XXX not sure if these same_as statement should be on facomponent
-        for subject in self.subject_indexes.entities():
-            authority = subject.authority[0]
-            authority_url = authority.absolute_url()
-            for url in authority.same_as_refs:
-                yield (authority_url, "schema", "sameAs", url, {})
+    def digitized_versions_triples(self):
+        SCHEMA = self._use_namespace("schema")
+        entity = self.entity
+        RDF = self._use_namespace("schema")
+
+        digitized_urls = [
+            (url, "DataDownload")
+            for url in entity.cw_adapt_to("entity.main_props").digitized_urls()
+        ]
+        if entity.illustration_url:
+            digitized_urls.append((entity.illustration_url, "ImageObject"))
+
+        for digitized_url, digitized_type in digitized_urls:
+            encoding = BNode()
+            yield (encoding, RDF.type, SCHEMA[digitized_type])
+            yield (encoding, SCHEMA.contentUrl, URIRef(digitized_url))
+            yield (self.uri, SCHEMA.encoding, encoding)
 
 
-class FindingAid2SchemaOrg(ComponentMixin, EntityRDFAdapter):
+class FindingAid2SchemaOrg(ArchiveComponent2Schemaorg):
     __regid__ = "rdf.schemaorg"
     __select__ = is_instance("FindingAid")
-    rdf_type = NS_VARS["schema"] + "CreativeWork"
 
-    def relations(self):
-        for comp in self.entity.top_components:
-            yield ("schema", "hasPart", comp.cw_adapt_to("rdf.schemaorg").uri)
+    def triples(self):
+        SCHEMA = self._use_namespace("schema")
+        entity = self.entity
+        yield from self.schema_org_triples()
+        top_components = entity.top_components_stable_ids_and_labels()
+        if len(top_components) < self.MAX_COMPONENTS_DISPLAY:  # avoid making pages too heavy
+            for _, fc_stable_id, fc_label in top_components:
+                facomponent_uri = build_uri(self._cw, f"facomponent/{fc_stable_id}")
+                yield (self.uri, SCHEMA.hasPart, facomponent_uri)
+                yield (facomponent_uri, SCHEMA.name, Literal(fc_label))
+        if entity.service:
+            yield (self.uri, SCHEMA.holdingArchive, Literal(entity.service[0].dc_title()))
+            yield from self.digitized_versions_triples()
 
 
-class FAComponent2SchemaOrg(ComponentMixin, EntityRDFAdapter):
+class FAComponent2SchemaOrg(ArchiveComponent2Schemaorg):
     __regid__ = "rdf.schemaorg"
     __select__ = is_instance("FAComponent")
 
-    def relations(self):
-        if self.entity.parent_component:
+    def triples(self):
+        SCHEMA = self._use_namespace("schema")
+        entity = self.entity
+        yield from self.schema_org_triples()
+        if entity.parent_component:
             yield (
-                "schema",
-                "isPartof",
-                self.entity.parent_component[0].cw_adapt_to("rdf.schemaorg").uri,
+                self.uri,
+                SCHEMA.isPartOf,
+                entity.parent_component[0].cw_adapt_to("rdf.schemaorg").uri,
             )
         else:
             yield (
-                "schema",
-                "isPartof",
-                self.entity.finding_aid[0].cw_adapt_to("rdf.schemaorg").uri,
+                self.uri,
+                SCHEMA.isPartOf,
+                entity.finding_aid[0].cw_adapt_to("rdf.schemaorg").uri,
             )
-        for comp in self.entity.reverse_parent_component:
-            yield ("schema", "hasPart", comp.cw_adapt_to("rdf.schemaorg").uri)
+        children_components = entity.children_components_stable_ids_and_labels()
+        if len(children_components) < self.MAX_COMPONENTS_DISPLAY:  # avoid making pages too heavy
+            for _, fc_stable_id, fc_label in children_components:
+                facomponent_uri = build_uri(self._cw, f"facomponent/{fc_stable_id}")
+                yield (self.uri, SCHEMA.hasPart, facomponent_uri)
+                yield (facomponent_uri, SCHEMA.name, Literal(fc_label))
 
-    def extra_statements(self):
-        for dv in self.entity.digitized_versions:
-            encoding = BNode()
-            url = None
-            if dv.illustration_url:
-                url = dv.illustration_url
-                yield (encoding, "schema", "type", NS_VARS["schema"] + "ImageObject", None)
-            elif dv.url:
-                url = dv.url
-                yield (encoding, "schema", "type", NS_VARS["schema"] + "DataDownload", None)
-            if url:
-                yield (encoding, "schema", "contentUrl", url, None)
-                yield (self.uri, "schema", "encoding", encoding, None)
-        for statement in super(FAComponent2SchemaOrg, self).extra_statements():
-            yield (statement)
+        if entity.finding_aid[0].service:
+            yield (
+                self.uri,
+                SCHEMA.holdingArchive,
+                Literal(entity.finding_aid[0].service[0].dc_title()),
+            )
+        yield from self.digitized_versions_triples()
 
 
-class Service2SchemaOrg(EntityRDFAdapter):
+class ServiceRDFAdapter(EntityRDFAdapter):
+    __regid__ = "rdf"
+    __select__ = is_instance("Service")
+
+    @cachedproperty
+    def address_uri(self):
+        return URIRef(f"{self.uri}#address")
+
+    def contact_triples(self):
+        RDF = self._use_namespace("rdf")
+        SCHEMA = self._use_namespace("schema")
+        yield from check_dataproperty_value(
+            self.uri, SCHEMA.employee, Literal(self.entity.contact_name)
+        )
+        yield from check_dataproperty_value(
+            self.uri, SCHEMA.telephone, Literal(self.entity.phone_number)
+        )
+        yield from check_dataproperty_value(
+            self.uri, SCHEMA.openingHours, Literal(self.entity.opening_period)
+        )
+        yield from check_dataproperty_value(self.uri, SCHEMA.email, Literal(self.entity.email))
+        yield from check_dataproperty_value(self.uri, SCHEMA.url, Literal(self.entity.website_url))
+
+        address = self.address_uri
+        yield (self.uri, SCHEMA.address, address)
+        yield (address, RDF.type, SCHEMA.PostalAddress)
+        yield from check_dataproperty_value(
+            address, SCHEMA.postalCode, Literal(self.entity.zip_code)
+        )
+        yield from check_dataproperty_value(
+            address, SCHEMA.streetAddress, Literal(self.entity.address)
+        )
+        yield from check_dataproperty_value(
+            address, SCHEMA.addressLocality, Literal(self.entity.city)
+        )
+        yield (address, SCHEMA.addressCountry, Literal("fr"))
+
+    def hierarchical_triples(self, relation_uri, parent_uri, child_uri):
+        RDF = self._use_namespace("rdf")
+        RICO = self._use_namespace("rico", base_url="https://www.ica.org/standards/RiC/ontology#")
+        yield (relation_uri, RDF.type, RICO.AgentHierarchicalRelation)
+        yield (relation_uri, RICO.agentHierarchicalRelationHasSource, parent_uri)
+        yield (relation_uri, RICO.agentHierarchicalRelationHasTarget, child_uri)
+        yield (parent_uri, RICO.agentIsSourceOfAgentHierarchicalRelation, relation_uri)
+        yield (child_uri, RICO.agentIsTargetOfAgentHierarchicalRelation, relation_uri)
+        yield (parent_uri, RICO.hasOrHadSubordinate, child_uri)
+        yield (child_uri, RICO.isOrWasSubordinateTo, parent_uri)
+
+    def triples(self):
+        RDF = self._use_namespace("rdf")
+        RICO = self._use_namespace("rico", base_url="https://www.ica.org/standards/RiC/ontology#")
+        GEO = self._use_namespace("geo", base_url="http://www.w3.org/2003/01/geo/wgs84_pos#")
+        self.entity.complete()
+        yield (self.uri, RDF.type, RICO.Agent)
+        yield (self.uri, RDF.type, RICO.CorporateBody)
+        yield from check_dataproperty_value(self.uri, RICO.identifier, Literal(self.entity.code))
+        yield from check_dataproperty_value(self.uri, RICO.name, Literal(self.entity.name))
+        yield from check_dataproperty_value(self.uri, RICO.name, Literal(self.entity.name2))
+        yield from check_dataproperty_value(self.uri, RICO.name, Literal(self.entity.short_name))
+        yield from check_dataproperty_value(self.uri, RICO.name, Literal(self.entity.name2))
+        yield from check_dataproperty_value(self.uri, RICO.type, Literal(self.entity.level))
+
+        yield from self.contact_triples()
+
+        if self.entity.annex_of:
+            parent_uri = self.entity.annex_of[0].cw_adapt_to("rdf").uri
+            relation_uri = URIRef(f"{parent_uri}#hierarchical_to_{self.entity.eid}")
+            yield from self.hierarchical_triples(relation_uri, parent_uri, self.uri)
+
+        for child in self.entity.reverse_annex_of:
+            child_uri = child.cw_adapt_to("rdf").uri
+            relation_uri = URIRef(f"{self.uri}#hierarchical_to_{child.eid}")
+            yield from self.hierarchical_triples(relation_uri, self.uri, child_uri)
+
+        if self.entity.latitude and self.entity.longitude:
+            yield (self.uri, GEO.lat, Literal(self.entity.latitude))
+            yield (self.uri, GEO.long, Literal(self.entity.longitude))
+
+
+class Service2SchemaOrg(ServiceRDFAdapter):
     __regid__ = "rdf.schemaorg"
     __select__ = is_instance("Service")
-    rdf_type = NS_VARS["schema"] + "Organization"
 
-    def properties(self):
-        entity = self.entity
-        yield ("schema", "legalName", entity.dc_title(), {})
-        yield ("schema", "employee", entity.contact_name, {})
-        yield ("schema", "telephone", entity.phone_number, {})
-        yield ("schema", "openinghours", entity.opening_period, {})
-        yield ("schema", "faxNumber", entity.fax, {})
-        yield ("schema", "email", entity.email, {})
+    @cachedproperty
+    def address_uri(self):
+        return BNode()
 
-    def relations(self):
+    def triples(self):
+        RDF = self._use_namespace("rdf")
+        SCHEMA = self._use_namespace("schema")
         entity = self.entity
+        yield (self.uri, RDF.type, SCHEMA.ArchiveOrganization)
+        yield (self.uri, SCHEMA.legalName, Literal(entity.dc_title()))
+        if entity.illustration_url:
+            yield (self.uri, SCHEMA.logo, Literal(entity.illustration_url))
+
         if entity.annex_of:
             parent = entity.annex_of[0].cw_adapt_to("rdf.schemaorg")
             if parent:
-                yield ("schema", "parentOrganization", parent.uri)
+                yield (self.uri, SCHEMA.parentOrganization, parent.uri)
+
         for child in entity.reverse_annex_of:
             child = child.cw_adapt_to("rdf.schemaorg")
             if child:
-                yield ("schema", "subOrganization", child.uri)
-        if entity.illustration_url:
-            yield ("schema", "logo", entity.illustration_url)
+                yield (self.uri, SCHEMA.subOrganization, child.uri)
 
-    def extra_statements(self):
-        entity = self.entity
-        address = BNode()
-        yield (self.uri, "schema", "address", address, None)
-        yield (address, "schema", "type", NS_VARS["schema"] + "PostalAddress", None)
-        yield (address, "schema", "postalCode", entity.zip_code, {})
-        yield (address, "schema", "streetAddress", entity.address, {})
-        yield (address, "schema", "addressLocality", entity.city, {})
-        yield (address, "schema", "addressCountry", "fr", {})
+        if entity.latitude and entity.longitude:
+            yield (self.uri, SCHEMA.latitude, Literal(entity.latitude))
+            yield (self.uri, SCHEMA.longitude, Literal(entity.longitude))
+        yield from self.contact_triples()
+
+
+class AuthorityRICOAdapter(EntityRDFAdapter):
+    __abstract__ = True
+
+    def triples(self):
+        OWL = self._use_namespace("owl")
+        RICO = self._use_namespace("rico", base_url="https://www.ica.org/standards/RiC/ontology#")
+        yield (self.uri, RICO.name, Literal(self.entity.label))
+        for ref in self.entity.same_as:
+            if ref.cw_etype == "ExternalUri":
+                yield (self.uri, OWL.sameAs, URIRef(ref.uri))
+            elif ref.cw_etype == "Concept":
+                yield (self.uri, OWL.sameAs, URIRef(ref.cwuri))
+            elif ref.cw_etype != "AuthorityRecord":
+                yield (self.uri, OWL.sameAs, ref.cw_adapt_to("rdf").uri)
 
 
 class AgentAuthority(EntityRDFAdapter):
     __regid__ = "rdf.schemaorg"
     __select__ = is_instance("AgentAuthority")
-    rdf_type = NS_VARS["schema"] + "Person"
 
-    def properties(self):
+    def triples(self):
+        RDF = self._use_namespace("rdf")
+        SCHEMA = self._use_namespace("schema")
         entity = self.entity
+        agent_types = self.entity.index_types
+        if len(agent_types) > 0:
+            if "persname" in agent_types[0]:
+                yield (self.uri, RDF.type, SCHEMA.Person)
+            else:
+                yield (self.uri, RDF.type, SCHEMA.Organization)
+        else:
+            yield (self.uri, RDF.type, SCHEMA.Thing)
         adapter = entity.cw_adapt_to("entity.main_props")
         info = adapter.eac_info() or adapter.agent_info()
         if info:
-            birthdate = info["dates"].get("birthdate")
-            deathdate = info["dates"].get("deathdate")
-            for (dtype, dateinfo) in (("birthDate", birthdate), ("deathDate", deathdate)):
-                if dateinfo and dateinfo["isdate"] and not dateinfo["isbc"]:
-                    yield ("schema", dtype, dateinfo["timestamp"], {})
-            yield ("schema", "description", info["description"], {})
-        yield ("schema", "name", entity.label, {})
-        yield ("schema", "url", self.uri, {})
+            if "dates" in info:
+                birthdate = info["dates"].get("birthdate")
+                deathdate = info["dates"].get("deathdate")
+                for dtype, dateinfo in (("birthDate", birthdate), ("deathDate", deathdate)):
+                    if dateinfo and dateinfo["isdate"] and not dateinfo["isbc"]:
+                        yield (self.uri, SCHEMA[dtype], Literal(dateinfo["timestamp"]))
+            if "description" in info:
+                yield (self.uri, SCHEMA.description, Literal(info["description"]))
+        yield (self.uri, SCHEMA.name, Literal(entity.label))
+        yield (self.uri, SCHEMA.url, Literal(self.uri))
 
-    def extra_statements(self):
         for url in self.entity.same_as_refs:
-            yield (self.uri, "schema", "sameAs", url, {})
+            yield (self.uri, SCHEMA.sameAs, Literal(url))
+
+
+class AgentAuthorityRDFAdapter(AuthorityRICOAdapter):
+    __regid__ = "rdf"
+    __select__ = is_instance("AgentAuthority")
+
+    def dates_triples(self, beginProperty, endProperty):
+        XSD = self._use_namespace("xsd")
+        adapter = self.entity.cw_adapt_to("entity.main_props")
+        info = adapter.eac_info() or adapter.agent_info()
+        if info:
+            if "dates" in info:
+                birthdate = info["dates"].get("birthdate")
+                deathdate = info["dates"].get("deathdate")
+                for propUri, dateinfo in ((beginProperty, birthdate), (endProperty, deathdate)):
+                    if dateinfo and dateinfo["isdate"] and not dateinfo["isbc"]:
+                        yield (
+                            self.uri,
+                            propUri,
+                            Literal(dateinfo["timestamp"], datatype=XSD.date),
+                        )
+
+    def triples(self):
+        if not self.entity.quality:
+            return []
+        yield from super().triples()
+        RICO = self._use_namespace("rico", base_url="https://www.ica.org/standards/RiC/ontology#")
+        RDF = self._use_namespace("rdf")
+
+        yield (self.uri, RDF.type, RICO.Agent)
+        RDFS = self._use_namespace("rdfs")
+        yield (self.uri, RDFS.label, Literal(self.entity.dc_title()))
+        types = self.entity.index_types
+
+        if types:
+            if len(types) > 1:  # if the authority is of more than one type
+                yield (self.uri, RDF.type, RICO.Agent)
+            elif types[0][0] == "persname":
+                yield (self.uri, RDF.type, RICO.Person)
+                yield from self.dates_triples(RICO.birthDate, RICO.deathDate)
+
+            else:
+                yield from self.dates_triples(RICO.beginningDate, RICO.endDate)
+
+                if types[0][0] == "corpname":
+                    yield (self.uri, RDF.type, RICO.CorporateBody)
+                elif types[0][0] == "famname":
+                    yield (self.uri, RDF.type, RICO.Family)
+
+        authority_record_rset = self._cw.execute(
+            "DISTINCT Any R WHERE X is AgentAuthority,"
+            "X eid %(e)s, X same_as R, R is AuthorityRecord",
+            {"e": self.entity.eid},
+        )
+        if authority_record_rset:
+            for record in authority_record_rset.entities():
+                yield from record.cw_adapt_to("rdf").agent_triples()
 
 
 class LocationAuthority(EntityRDFAdapter):
     __regid__ = "rdf.schemaorg"
     __select__ = is_instance("LocationAuthority")
-    rdf_type = NS_VARS["schema"] + "Place"
 
-    def properties(self):
+    def triples(self):
+        RDF = self._use_namespace("rdf")
+        SCHEMA = self._use_namespace("schema")
         entity = self.entity
-        yield ("schema", "name", entity.label, {})
+        yield (self.uri, RDF.type, SCHEMA.Place)
+        yield (self.uri, SCHEMA.name, Literal(entity.label))
+        yield (self.uri, SCHEMA.url, Literal(self.uri))
 
-    def extra_statements(self):
-        entity = self.entity
-        geo = BNode()
-        yield (self.uri, "schema", "geo", geo, None)
-        yield (geo, "schema", "type", NS_VARS["schema"] + "GeoCoordinates", None)
-        yield (geo, "schema", "latitude", entity.latitude, {})
-        yield (geo, "schema", "longitude", entity.longitude, {})
+        if entity.latitude and entity.longitude:
+            yield (self.uri, SCHEMA.latitude, Literal(entity.latitude))
+            yield (self.uri, SCHEMA.longitude, Literal(entity.longitude))
         for url in self.entity.same_as_refs:
-            yield (self.uri, "schema", "sameAs", url, {})
+            yield (self.uri, SCHEMA.sameAs, Literal(url))
 
 
-class BaseContent2SchemaOrg(EntityRDFAdapter):
+class LocationAuthorityRDFAdapter(AuthorityRICOAdapter):
+    __regid__ = "rdf"
+    __select__ = is_instance("LocationAuthority")
+
+    def triples(self):
+        if not self.entity.quality:
+            return []
+        yield from super().triples()
+        RICO = self._use_namespace("rico", base_url="https://www.ica.org/standards/RiC/ontology#")
+        RDF = self._use_namespace("rdf")
+        GEO = self._use_namespace("geo", base_url="http://www.w3.org/2003/01/geo/wgs84_pos#")
+        yield (self.uri, RDF.type, RICO.Place)
+        if self.entity.latitude and self.entity.longitude:
+            yield (self.uri, GEO.lat, Literal(self.entity.latitude))
+            yield (self.uri, GEO.long, Literal(self.entity.longitude))
+
+        parent_levels = {
+            "adm4": {"table": "adm4_geonames", "field": "admin4_code"},
+            "adm3": {"table": "adm3_geonames", "field": "admin3_code"},
+            "adm2": {"table": "adm2_geonames", "field": "admin2_code"},
+            "adm1": {"table": "adm1_geonames", "field": "admin1_code"},
+            "country": {"table": "country_geonames", "field": "country_code"},
+        }
+
+        for key, value in parent_levels.items():
+            cnx = self._cw
+
+            # CubicWebPyramidRequest does not have system_sql
+            if type(cnx) == CubicWebPyramidRequest:
+                cnx = self._cw.cnx
+
+            res = cnx.system_sql(
+                f"""
+                WITH parent AS (SELECT CAST(_P.geonameid AS TEXT) as parent_id
+                FROM cw_ExternalUri AS _Y, same_as_relation AS rel_same_as0,
+                    geonames AS _Z, {value["table"]} as _P
+                WHERE rel_same_as0.eid_from=%(eid)s AND rel_same_as0.eid_to=_Y.cw_eid
+                AND _Y.cw_source='geoname'
+                AND _Z.geonameid= NULLIF(_Y.cw_extid, '')::int
+                AND _P.{value["field"]}=_Z.{value["field"]}
+                {"AND _Z.country_code='FR'" if "adm" in key else ""}
+                )
+                SELECT L.cw_eid
+                FROM cw_LocationAuthority as L, same_as_relation AS same_as, cw_ExternalUri as E
+                WHERE E.cw_extid IN (SELECT parent_id FROM parent)
+                AND E.cw_source='geoname'
+                AND same_as.eid_from=L.cw_eid AND same_as.eid_to=E.cw_eid AND L.cw_quality=True
+                AND L.cw_eid != %(eid)s;
+            """,
+                {"eid": self.entity.eid},
+            ).fetchall()
+            if res:
+                for parent_eid in res:
+                    parent_uri = (
+                        self._cw.entity_from_eid(parent_eid[0], etype="LocationAuthority")
+                        .cw_adapt_to("rdf")
+                        .uri
+                    )
+                    yield (parent_uri, RICO.containsOrContained, self.uri)
+                    yield (self.uri, RICO.isOrWasContainedBy, parent_uri)
+
+
+class SubjectAuthority(EntityRDFAdapter):
+    __regid__ = "rdf.schemaorg"
+    __select__ = is_instance("SubjectAuthority")
+
+    def triples(self):
+        RDF = self._use_namespace("rdf")
+        SCHEMA = self._use_namespace("schema")
+        entity = self.entity
+        yield (self.uri, RDF.type, SCHEMA.Thing)
+        yield (self.uri, SCHEMA.url, Literal(self.uri))
+        yield (self.uri, SCHEMA.name, Literal(entity.label))
+        for url in self.entity.same_as_refs:
+            yield (self.uri, SCHEMA.sameAs, Literal(url))
+
+
+class SubjectAuthorityRDFAdapter(AuthorityRICOAdapter):
+    __regid__ = "rdf"
+    __select__ = is_instance("SubjectAuthority")
+
+    def triples(self):
+        if not self.entity.quality:
+            return []
+        yield from super().triples()
+        RICO = self._use_namespace("rico", base_url="https://www.ica.org/standards/RiC/ontology#")
+        RDF = self._use_namespace("rdf")
+        yield (self.uri, RDF.type, RICO.Concept)
+        TYPE_TO_RICO = {
+            "genreform": RICO.DocumentaryFormType,
+            "subject": RICO.Concept,
+            "function": RICO.ActivityType,
+            "occupation": RICO.OccupationType,
+        }
+
+        rset = self._cw.execute(
+            "DISTINCT Any TYPE WHERE X is SubjectAuthority,"
+            "X eid %(e)s, I is Subject, I authority X,"
+            "I type TYPE",
+            {"e": self.entity.eid},
+        )  # no better way to find what kind of subject this is supposed to be
+        if rset:
+            if len(rset[0]) == 1 and rset[0][0] in TYPE_TO_RICO:
+                yield (self.uri, RDF.type, TYPE_TO_RICO[rset[0][0]])
+
+
+class AuthorityRecord2SchemaOrg(EntityRDFAdapter, AuthorityRecordRDFAdapter):
+    __select__ = AuthorityRecordRDFAdapter.__select__ & is_instance("AuthorityRecord")
+
+
+class AuthorityRecordRDFAdapter(EntityRDFAdapter, AuthorityRecordRICORDFAdapter):
+    __regid__ = "rdf"
+
+    @cachedproperty
+    def agent_uri(self):
+        agent = self.entity.qualified_authority
+        if agent:
+            return agent[0].cw_adapt_to("rdf").uri
+        return super().agent_uri
+
+    def triples(self):
+        RICO = self._use_namespace("rico", base_url="https://www.ica.org/standards/RiC/ontology#")
+        yield from self.record_triples()
+
+        # output agent_triples only if they are not already output by an existing authority
+        if self.agent_uri.startswith(self.uri):
+            yield from self.agent_triples()
+
+        if self.entity.maintainer:
+            service_uri = URIRef(self.entity.maintainer[0].cw_adapt_to("rdf").uri)
+            yield (self.uri, RICO.hasCreator, service_uri)
+            yield (self.inst_uri, RICO.hasOrHadHolder, service_uri)
+
+
+class EntityBNodeAdapter(CWEntityRDFAdapter):
+    __abstract__ = True
+
+    @cachedproperty
+    def uri(self):
+        return BNode()
+
+
+class EntitySameAsAdapter(CWEntityRDFAdapter):
+    __abstract__ = True
+
+    @cachedproperty
+    def uri(self):
+        equiv = self.entity.equivalent_concept
+        if equiv:
+            return build_uri(self._cw, equiv[0].rest_path())
+        return BNode()
+
+
+class ActivityRDFAdapter(EntityBNodeAdapter):
+    __select__ = is_instance("Activity")
+
+
+class MandateRDFAdapter(EntitySameAsAdapter):
+    __select__ = is_instance("Mandate")
+
+
+class OccupationRDFAdapter(EntitySameAsAdapter):
+    __select__ = is_instance("Occupation")
+
+
+class AgentFunctionRDFAdapter(EntitySameAsAdapter):
+    __select__ = is_instance("AgentFunction")
+
+
+class LegalStatusRDFAdapter(EntitySameAsAdapter):
+    __select__ = is_instance("LegalStatus")
+
+
+class PlaceEntryRDFAdapter(EntitySameAsAdapter):
+    __select__ = is_instance("PlaceEntry")
+
+
+class NameEntryRDFAdapter(EntityBNodeAdapter):
+    __select__ = is_instance("NameEntry")
+
+
+class AgentPlaceRDFAdapter(EntityBNodeAdapter):
+    __select__ = is_instance("AgentPlace")
+
+
+class ArticleSchemaOrg(EntityRDFAdapter):
+    __regid__ = "rdf.schemaorg"
+    __abstract__ = True
+
+    article_type = "Article"
+
+    def author_triples(self):
+        SCHEMA = self._use_namespace("schema")
+        RDF = self._use_namespace("rdf")
+        authors = self.entity.cw_adapt_to("IMeta").author()
+        if authors:
+            for name in authors:
+                author = BNode()
+                yield (author, RDF.type, SCHEMA.Person)
+                yield (author, SCHEMA.name, Literal(name))
+                yield (self.uri, SCHEMA.author, author)
+        else:
+            author = BNode()
+            yield (author, RDF.type, SCHEMA.Organization)
+            yield (author, SCHEMA.name, Literal("FranceArchives"))
+            yield (self.uri, SCHEMA.author, author)
+
+    def dates_triples(self):
+        SCHEMA = self._use_namespace("schema")
+        yield (
+            self.uri,
+            SCHEMA.datePublished,
+            Literal(self.entity.creation_date.strftime("%Y-%m-%d")),
+        )
+        yield (
+            self.uri,
+            SCHEMA.dateCreated,
+            Literal(self.entity.creation_date.strftime("%Y-%m-%d")),
+        )
+        yield (
+            self.uri,
+            SCHEMA.dateModified,
+            Literal(self.entity.modification_date.strftime("%Y-%m-%d")),
+        )
+
+    def triples(self):
+        RDF = self._use_namespace("rdf")
+        SCHEMA = self._use_namespace("schema")
+        entity = self.entity
+        yield (self.uri, RDF.type, SCHEMA[self.article_type])
+        yield (self.uri, SCHEMA.name, Literal(entity.dc_title()))
+        yield (self.uri, SCHEMA.headline, Literal(entity.dc_title()))
+        yield (self.uri, SCHEMA.inLanguage, Literal(entity.dc_language().upper()))
+        yield (self.uri, SCHEMA.mainEntityOfPage, Literal(self.uri))
+        if entity.dc_subjects():
+            yield (self.uri, SCHEMA.keywords, Literal(entity.dc_subjects()))
+        if entity.illustration_url:
+            yield (self.uri, SCHEMA.image, Literal(entity.illustration_url))
+            # XXX TODO : ideally, each article should have an illustration
+        yield (self.uri, SCHEMA.url, Literal(self.uri))
+
+        yield from self.dates_triples()
+        yield from self.author_triples()
+
+        francearchives = BNode()
+        yield (self.uri, SCHEMA.publisher, francearchives)
+        yield (francearchives, SCHEMA.name, Literal("FranceArchives"))
+        yield (francearchives, RDF.type, SCHEMA.Organization)
+        yield (
+            francearchives,
+            SCHEMA.logo,
+            Literal(self._cw.vreg.config.uiprops["AMP_LOGO"]),
+        )
+        # XXX TODO : data_url is not found (how to retrieve it ?)
+
+        if entity.header:
+            yield (self.uri, SCHEMA.description, Literal(entity.header))
+
+        sections = [s.dc_title() for s in entity.cw_adapt_to("ITree").iterparents()]
+        for section in sections:
+            yield (self.uri, SCHEMA.articleSection, Literal(section))
+        yield (self.uri, SCHEMA.isAccessibleForFree, Literal("True"))
+
+
+class BaseContent2SchemaOrg(ArticleSchemaOrg):
     __regid__ = "rdf.schemaorg"
     __select__ = is_instance("BaseContent")
-    rdf_type = NS_VARS["schema"] + "Article"
-
-    def properties(self):
-        entity = self.entity
-        yield ("schema", "name", entity.dc_title(), {})
-        yield ("schema", "datePublished", entity.creation_date.strftime("%Y-%m-%d"), {})
-        yield ("schema", "dateCreated", entity.creation_date.strftime("%Y-%m-%d"), {})
-        yield ("schema", "dateModified", entity.modification_date.strftime("%Y-%m-%d"), {})
-        yield ("schema", "author", entity.dc_authors(), {})
-        yield ("schema", "inLanguage", entity.dc_language().upper(), {})
-        yield ("schema", "keywords", entity.keywords, {})
-        yield ("schema", "url", self.uri, {})
 
 
-class NewsContent2SchemaOrg(EntityRDFAdapter):
+class NewsContent2SchemaOrg(ArticleSchemaOrg):
     __regid__ = "rdf.schemaorg"
     __select__ = is_instance("NewsContent")
-    rdf_type = NS_VARS["schema"] + "Article"
 
-    def properties(self):
-        entity = self.entity
-        yield ("schema", "name", entity.dc_title(), {})
-        yield ("schema", "dateCreated", entity.creation_date.strftime("%Y-%m-%d"), {})
-        yield ("schema", "dateModified", entity.modification_date.strftime("%Y-%m-%d"), {})
-        yield ("schema", "datePublished", entity.start_date.strftime("%Y-%m-%d"), {})
-        yield ("schema", "author", entity.dc_authors(), {})
-        yield ("schema", "inLanguage", entity.dc_language().upper(), {})
-        yield ("schema", "keywords", entity.keywords, {})
-        yield ("schema", "url", self.uri, {})
+    article_type = "NewsArticle"
+
+    def dates_triples(self):
+        SCHEMA = self._use_namespace("schema")
+        yield (
+            self.uri,
+            SCHEMA.dateCreated,
+            Literal(self.entity.creation_date.strftime("%Y-%m-%d")),
+        )
+        yield (
+            self.uri,
+            SCHEMA.dateModified,
+            Literal(self.entity.modification_date.strftime("%Y-%m-%d")),
+        )
+        if self.entity.start_date:
+            yield (
+                self.uri,
+                SCHEMA.datePublished,
+                Literal(self.entity.start_date.strftime("%Y-%m-%d")),
+            )
+        else:
+            yield (
+                self.uri,
+                SCHEMA.datePublished,
+                Literal(self.entity.creation_date.strftime("%Y-%m-%d")),
+            )
 
 
-class CommemorationItem2SchemaOrg(EntityRDFAdapter):
+class CommemorationItem2SchemaOrg(ArticleSchemaOrg):
     __regid__ = "rdf.schemaorg"
     __select__ = is_instance("CommemorationItem")
-    rdf_type = NS_VARS["schema"] + "Event"
-
-    def properties(self):
-        entity = self.entity
-        yield ("schema", "name", entity.dc_title(), {})
-        yield ("schema", "datePublished", entity.creation_date.strftime("%Y-%m-%d"), {})
-        yield ("schema", "author", entity.dc_authors(), {})
-        yield ("schema", "inLanguage", entity.dc_language().upper(), {})
-        yield ("schema", "url", self.uri, {})
-
-    def extra_statements(self):
-        super_event = BNode()
-        yield (self.uri, "schema", "superEvent", super_event, None)
-        yield (super_event, "schema", "type", NS_VARS["schema"] + "Event", None)
-        yield (super_event, "schema", "url", self.entity.collection.absolute_url(), {})
-
-
-class CommemoCollection2SchemaOrg(EntityRDFAdapter):
-    __regid__ = "rdf.schemaorg"
-    __select__ = is_instance("CommemoCollection")
-    rdf_type = NS_VARS["schema"] + "Event"
-
-    def properties(self):
-        entity = self.entity
-        yield ("schema", "name", entity.dc_title(), {})
-        yield ("schema", "datePublished", entity.creation_date.strftime("%Y-%m-%d"), {})
-        yield ("schema", "author", entity.dc_authors(), {})
-        yield ("schema", "inLanguage", entity.dc_language().upper(), {})
-        yield ("schema", "url", self.uri, {})
-
-    def extra_statements(self):
-        for commemoration_item in self.entity.reverse_collection_top:
-            sub_event = BNode()
-            yield (self.uri, "schema", "subEvent", sub_event, None)
-            yield (sub_event, "schema", "type", NS_VARS["schema"] + "Event", None)
-            yield (sub_event, "schema", "url", commemoration_item.absolute_url(), {})
 
 
 def set_related_cache(entity, rtype, related, role="subject"):
@@ -335,183 +737,204 @@ def set_related_cache(entity, rtype, related, role="subject"):
     entity._cw_related_cache[cache_key] = (None, related)
 
 
-class EDMComponentMixin(object):
-    @cachedproperty
-    def uri(self):
-        req = self._cw
-        # NOTE: do not call absolute_url() to avoid including lang prefix
-        return "{}{}".format(req.base_url(), self.entity.rest_path())
+class ArchiveComponentRDFAdapter(EntityRDFAdapter):
+    __abstract__ = True
 
-    @cachedproperty
-    def agg_uri(self):
-        return self.uri + "#Aggregation"
+    @property
+    def main_instance_uri(self):
+        return URIRef(f"{self.uri}#record_resource_inst")
 
-    def properties(self):
-        entity = self.entity
-        did = entity.did[0]
-        yield ("dcterms", "identifier", did.unitid, {})
-        yield ("dcterms", "title", entity.dc_title(), {})
-        yield ("dcterms", "date", did.unitdate, {})
-        yield ("dcterms", "description", entity.description, {})
+    def main_instance_triples(self):
+        RICO = self._use_namespace("rico", base_url="https://www.ica.org/standards/RiC/ontology#")
+        RDF = self._use_namespace("rdf")
+        inst_uri = self.main_instance_uri
+        yield (inst_uri, RDF.type, RICO.Instantiation)
+        yield (inst_uri, RICO.isInstantiationOf, self.uri)
+        yield (self.uri, RICO.hasInstantiation, inst_uri)
+        entity_service = self.entity.related_service
+        if entity_service:
+            yield (
+                inst_uri,
+                RICO.hasOrHadHolder,
+                entity_service.cw_adapt_to("rdf").uri,
+            )
+        for originator in self.entity.qualified_originators:
+            adapted_authority = originator.cw_adapt_to("rdf")
+            yield (inst_uri, RICO.hasProvenance, adapted_authority.uri)
 
-    def extra_statements(self):
-        # XXX check ore vs. edm
-        # (cf. http://www-e.uni-magdeburg.de/predoiu/sda2011/sda2011_06.pdf)
-        if self.entity.cw_etype == "FindingAid":
-            agg_type = NS_VARS["ore"] + "Aggregation"
+    def did_triples(self):
+        XSD = self._use_namespace("xsd")
+        RICO = self._use_namespace("rico", base_url="https://www.ica.org/standards/RiC/ontology#")
+        did = self.entity.did[0]
+        did.complete()
+        start_year = did.startyear
+        stop_year = did.stopyear
+        if start_year and stop_year:
+            yield from check_dataproperty_value(
+                self.uri, RICO.beginningDate, Literal(start_year, datatype=XSD.gYear)
+            )
+            yield from check_dataproperty_value(
+                self.uri, RICO.endDate, Literal(stop_year, datatype=XSD.gYear)
+            )
         else:
-            agg_type = NS_VARS["edm"] + "Aggregation"
-        yield (self.agg_uri, "rdf", "type", agg_type, None)
-        yield (self.agg_uri, "ore", "aggregates", self.uri, None)
-        indices = self.entity.indices
-        for index in chain(indices["agents"], indices["subjects"], indices["locations"]):
-            index_uri = index.absolute_url()  # XXX
-            yield (self.uri, "dcterms", "subject", index_uri, None)
-            yield (index_uri, "rdf", "type", NS_VARS["skos"] + "Concept", None)
-            yield (index_uri, "skos", "prefLabel", index.label, {})
-            for url in index.authority[0].same_as_refs:
-                yield (index_uri, "skos", "exactMatch", url, {})
-        for agent in indices["agents"]:
-            index_uri = agent.absolute_url()  # XXX
-            agent_uri = index_uri + "#Agent"
-            # XXX skos:Concept foaf:focus foaf:Agent
-            if agent.type == "persname":
-                foaf_type = "Person"
-            elif agent.type == "corpname":
-                foaf_type = "Organization"
+            yield from check_dataproperty_value(
+                self.uri, RICO.date, Literal(start_year or stop_year, datatype=XSD.gYear)
+            )
+        yield from check_dataproperty_value(self.uri, RICO.identifier, Literal(did.unitid))
+
+        yield from check_dataproperty_value(
+            self.uri, RICO.history, Literal(plaintext(did.origination))
+        )
+
+        # Define the RecordResource instance
+        if did.physdesc or did.physloc:
+            yield from self.main_instance_triples()
+            yield from check_dataproperty_value(
+                self.main_instance_uri,
+                RICO.physicalCharacteristics,
+                Literal(plaintext(did.physdesc)),
+            )
+
+    def record_resource_triples(self):
+        RICO = self._use_namespace("rico", base_url="https://www.ica.org/standards/RiC/ontology#")
+        RDF = self._use_namespace("rdf")
+        DCTERMS = self._use_namespace("dcterms")
+        DCMITYPE = self._use_namespace("dcmitype", base_url="http://purl.org/dc/dcmitype/")
+        RDFS = self._use_namespace("rdfs")
+        entity = self.entity
+        entity.complete()
+        yield (self.uri, RDF.type, RICO.RecordResource)
+        yield from check_dataproperty_value(self.uri, RICO.title, Literal(entity.dc_title()))
+        yield from check_dataproperty_value(self.uri, RDFS.label, Literal(entity.dc_title()))
+        yield from self.did_triples()
+        yield from check_dataproperty_value(
+            self.uri, RICO.scopeAndContent, Literal(plaintext(entity.scopecontent))
+        )
+        yield from check_dataproperty_value(
+            self.uri, RICO.conditionsOfAccess, Literal(plaintext(entity.accessrestrict))
+        )
+        yield from check_dataproperty_value(
+            self.uri, RICO.conditionsOfUse, Literal(plaintext(entity.userestrict))
+        )
+        yield from check_dataproperty_value(
+            self.uri, RICO.history, Literal(plaintext(entity.acquisition_info))
+        )
+        # Link to authority
+        for authority_eid, authority_type in entity.qualified_index_authorities:
+            authority_uri = self._cw.entity_from_eid(authority_eid).cw_adapt_to("rdf").uri
+            if authority_type == "genreform":
+                yield (self.uri, RICO.hasOrHadSubject, authority_uri)
+                yield (authority_uri, RDF.type, RICO.DocumentaryFormType)
+            elif authority_type == "function":
+                activity = BNode()
+                yield (self.uri, RICO.documents, activity)
+                yield (activity, RICO.hasActivityType, authority_uri)
+            elif authority_type == "occupation":
+                yield (self.uri, RICO.hasOrHadSubject, authority_uri)
+                yield (authority_uri, RDF.type, RICO.OccupationType)
             else:
-                foaf_type = "Agent"
-            yield (agent_uri, "rdf", "type", NS_VARS["foaf"] + foaf_type, None)
-            yield (self.uri, "dcterms", "subject", agent_uri, None)
-            yield (agent_uri, "foaf", "name", agent.label, {})
-            yield (index_uri, "foaf", "focus", agent_uri, None)
+                yield (self.uri, RICO.hasOrHadSubject, authority_uri)
+        for originator in entity.qualified_originators:
+            authority_uri = originator.cw_adapt_to("rdf").uri
+            yield (self.uri, RICO.hasProvenance, authority_uri)
+
+        # Define digitized_versions instance
+        inst_number = 1
+        if entity.related_service:
+            service_uri = entity.related_service.cw_adapt_to("rdf").uri
+        else:
+            service_uri = None
+        digitized_urls = [
+            (url, "Dataset") for url in entity.cw_adapt_to("entity.main_props").digitized_urls()
+        ]
+        if entity.illustration_url:
+            digitized_urls.append((entity.illustration_url, "Image"))
+
+        for digitized_url, digitized_type in digitized_urls:
+            digitized_version_uri = URIRef(f"{self.uri}#record_resource_inst{inst_number}")
+            yield (digitized_version_uri, RDF.type, RICO.Instantiation)
+            yield (digitized_version_uri, RICO.isInstantiationOf, self.uri)
+            yield (self.uri, RICO.hasInstantiation, digitized_version_uri)
+            yield (digitized_version_uri, DCTERMS["type"], DCMITYPE[digitized_type])
+            yield (digitized_version_uri, DCTERMS["source"], Literal(digitized_url))
+            if service_uri:
+                yield (
+                    digitized_version_uri,
+                    RICO.hasProvenance,
+                    service_uri,
+                )
+            inst_number += 1
+
+        if service_uri:
+            yield (self.uri, RICO.hasOrHadManager, service_uri)
 
 
-class FindingAid2EDM(EDMComponentMixin, EntityRDFAdapter):
-    __regid__ = "rdf.edm"
+class FindingAidRDFAdapter(ArchiveComponentRDFAdapter):
+    __regid__ = "rdf"
     __select__ = is_instance("FindingAid")
-    rdf_type = NS_VARS["ore"] + "Proxy"
 
-    def properties(self):
-        for stmt in super(FindingAid2EDM, self).properties():
-            yield stmt
+    def triples(self):
+        RDF = self._use_namespace("rdf")
+        RDFS = self._use_namespace("rdfs")
+        DCTERMS = self._use_namespace("dcterms")
+        RICO = self._use_namespace("rico", base_url="https://www.ica.org/standards/RiC/ontology#")
+        RICO_FORMTYPES = self._use_namespace(
+            "ricoformtypes",
+            base_url="https://www.ica.org/standards/RiC/vocabularies/documentaryFormTypes#",
+        )
         entity = self.entity
-        yield ("dcterms", "publisher", entity.publisher, {})  # should be an URI ?
-        if entity.service:
-            yield ("dcterms", "publisher", entity.service[0].absolute_url(), None)
+        yield from self.record_resource_triples()
+
+        # Define a record for the FA
+        record_uri = URIRef(f"{self.uri}#record")
+        yield (record_uri, RDF.type, RICO.Record)
+        yield (record_uri, RICO.identifier, Literal(entity.eadid))
+        yield (record_uri, RICO.hasDocumentaryFormType, RICO_FORMTYPES.FindingAid)
+        yield (record_uri, RICO.describesOrDescribed, self.uri)
+        yield (self.uri, RICO.isOrWasDescribedBy, record_uri)
+
+        # Define the FA instanciation
+        instance_uri = URIRef(f"{self.uri}#record_inst1")
+        yield (instance_uri, RDF.type, RICO.Instantiation)
+        yield (instance_uri, RICO.isInstantiationOf, record_uri)
+        yield (record_uri, RICO.hasInstantiation, instance_uri)
+        yield (instance_uri, DCTERMS["format"], Literal("text/csv"))
+        yield (instance_uri, RDFS.seeAlso, build_uri(self._cw, "%s.csv" % entity.rest_path()))
+
+        # Include top FAComponent
+        for _, fc_stable_id, fc_label in entity.top_components_stable_ids_and_labels():
+            facomponent_uri = build_uri(self._cw, f"facomponent/{fc_stable_id}")
+            yield (self.uri, RICO.includesOrIncluded, facomponent_uri)
+
         if entity.fa_header[0].lang_code:
-            yield ("dcterms", "language", entity.fa_header[0].lang_code, {})
-
-    def all_components(self):
-        entity = self.entity
-        rset = self._cw.execute(
-            "Any C,F,D,DID,DD,DT,DL,CA,CU,CD,CS,P "
-            "WHERE F eid %(f)s, C finding_aid F, C did D, "
-            "D unitid DID, D unitdate DD, D unittitle DT, "
-            "D lang_code DL, C accessrestrict CA, "
-            "C userestrict CU, C description CD, "
-            "C stable_id CS, C parent_component P?",
-            {"f": entity.eid},
-        )
-        components = {comp.eid: comp for comp in rset.entities()}
-        indices = defaultdict(lambda: defaultdict(list))
-        agents_rset = self._cw.execute(
-            "DISTINCT Any I, L, T, C "
-            "WHERE X is AgentAuthority, "
-            "X label L, I type T, "
-            "I authority X, I index C, "
-            "C finding_aid F, F eid %(f)s",
-            {"f": entity.eid},
-        )
-        for row, agent in zip(agents_rset, agents_rset.entities()):
-            comp_eid = row[-1]
-            indices[comp_eid]["agents"].append(agent)
-        subjects_rset = self._cw.execute(
-            "DISTINCT Any I, L, C "
-            "WHERE X is SubjectAuthority, "
-            "X label L, "
-            "I authority X, I index C, "
-            "C finding_aid F, F eid %(f)s",
-            {"f": entity.eid},
-        )
-        for row, subject in zip(subjects_rset, subjects_rset.entities()):
-            comp_eid = row[-1]
-            indices[comp_eid]["subjects"].append(subject)
-        locations_rset = self._cw.execute(
-            "DISTINCT Any I, L, C "
-            "WHERE X is LocationAuthority, "
-            "X label L, "
-            "I authority X, I index C, "
-            "C finding_aid F, F eid %(f)s",
-            {"f": entity.eid},
-        )
-        for row, location in zip(locations_rset, locations_rset.entities()):
-            comp_eid = row[-1]
-            indices[comp_eid]["locations"].append(location)
-        for comp in list(components.values()):
-            if comp.eid in indices:
-                comp.__dict__["indices"] = indices[comp.eid]
-            else:
-                comp.__dict__["indices"] = {"agents": [], "subjects": [], "locations": []}
-        digitized_rset = self._cw.execute(
-            "Any D, DR, DU, DI, C WHERE "
-            "D role DR, D url DU, D illustration_url DI, "
-            "C digitized_versions D, "
-            "C finding_aid F, F eid %(f)s",
-            {"f": entity.eid},
-        )
-        dvs = defaultdict(list)
-        for row, dv in zip(digitized_rset, digitized_rset.entities()):
-            comp_eid = row[-1]
-            dvs[comp_eid].append(dv)
-        for comp in list(components.values()):
-            set_related_cache(comp, "digitized_versions", dvs.get(comp.eid, ()))
-        return list(components.values())
-
-    def extra_statements(self):
-        for stmt in super(FindingAid2EDM, self).extra_statements():
-            yield stmt
-        for facomponent in self.all_components():
-            adapter = facomponent.cw_adapt_to("rdf.edm")
-            for stmt in adapter.statements():
-                yield stmt
+            yield from check_dataproperty_value(
+                self.uri, DCTERMS.language, Literal(entity.fa_header[0].lang_code)
+            )
 
 
-class FAComponent2EDM(EDMComponentMixin, EntityRDFAdapter):
-    __regid__ = "rdf.edm"
+class FAComponentRDFAdapter(ArchiveComponentRDFAdapter):
+    __regid__ = "rdf"
     __select__ = is_instance("FAComponent")
-    rdf_type = NS_VARS["edm"] + "ProvidedCHO"
 
-    def properties(self):
-        for stmt in super(FAComponent2EDM, self).properties():
-            yield stmt
+    def triples(self):
+        RICO = self._use_namespace("rico", base_url="https://www.ica.org/standards/RiC/ontology#")
         entity = self.entity
-        yield ("dcterms", "accessRights", entity.accessrestrict, {})
-        yield ("dcterms", "rights", entity.userestrict, {})
-
-    def relations(self):
-        entity = self.entity
-        if entity.parent_component:
-            parent_uri = entity.parent_component[0].cw_adapt_to("rdf.edm").uri
-            yield ("dcterms", "isPartOf", parent_uri)
+        yield from self.record_resource_triples()
+        if not entity.parent_component:
+            finding_aid = entity.finding_aid[0]
+            findingaid_uri = build_uri(self._cw, f"findingaid/{finding_aid.stable_id}")
+            yield (self.uri, RICO.isOrWasIncludedIn, findingaid_uri)
         else:
-            findingaid = entity.finding_aid[0]
-            yield ("dcterms", "isPartOf", findingaid.cw_adapt_to("rdf.edm").uri)
+            parent_component = entity.parent_component[0]
+            facomponent_uri = build_uri(self._cw, f"facomponent/{parent_component.stable_id}")
 
-    def extra_statements(self):
-        for stmt in super(FAComponent2EDM, self).extra_statements():
-            yield stmt
-        for dv in self.entity.digitized_versions:
-            url = None
-            if dv.illustration_url:
-                url = dv.illustration_url
-                description = dv.role or "thumbnail"  # default to thumbnail
-            elif dv.url:
-                url = dv.url
-                description = dv.role
-            if not url:
-                continue
-            url = urllib.parse.quote(url.encode("utf-8"))
-            yield (url, "rdf", "type", NS_VARS["edm"] + "WebResource", None)
-            yield (url, "dcterms", "description", description, {})
-            yield (self.agg_uri, "edm", "hasView", url, None)
+            yield (self.uri, RICO.isOrWasIncludedIn, facomponent_uri)
+        children_components = entity.children_components_stable_ids_and_labels()
+        if children_components:
+            for _, fc_stable_id, fc_label in children_components:
+                facomponent_uri = build_uri(self._cw, f"facomponent/{fc_stable_id}")
+                yield (self.uri, RICO.includesOrIncluded, facomponent_uri)
+        else:
+            # if FAComponent is a leaf component, create the main
+            # Instantiation
+            yield from self.main_instance_triples()

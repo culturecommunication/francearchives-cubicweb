@@ -44,14 +44,17 @@ from glob import glob
 from datetime import datetime
 from itertools import chain
 from functools import partial
+import logging
 import csv
+from rql import parse as rql_parse
+import time
 import tqdm
-
 import yaml
 
 from urllib.parse import urlparse
 
 from elasticsearch.helpers import scan, parallel_bulk
+from elasticsearch_dsl import Search, query as dsl_query
 
 from logilab.database import get_connection
 from logilab.common.decorators import monkeypatch
@@ -67,6 +70,8 @@ from cubicweb_elasticsearch import es as cwes
 from cubicweb_elasticsearch.ccplugin import IndexInES
 from cubicweb_elasticsearch.es import indexable_entities
 
+from cubicweb_francearchives import S3_ACTIVE, NOMINA_INDEXABLE_ETYPES, ColoredLogsMixIn
+from cubicweb_francearchives.storage import S3BfssStorageMixIn
 from cubicweb_francearchives import admincnx, i18n, sitemap, init_bfss, utils, rdfdump, commemodump
 from cubicweb_francearchives.dataimport.dc import import_filepath as dc_import_filepath
 from cubicweb_francearchives.dataimport.directories import import_directory
@@ -82,17 +87,38 @@ from cubicweb_francearchives.entities.indexes import (
 from cubicweb_francearchives.dataimport.eac import eac_import_files
 from cubicweb_francearchives.dataimport.maps import import_maps
 from cubicweb_francearchives.dataimport.newsletter import import_subscribers
-from cubicweb_francearchives.utils import init_repository
+from cubicweb_francearchives.utils import init_repository, es_start_letter
 from cubicweb_francearchives.xmlutils import enhance_accessibility
 from cubicweb_francearchives import CMS_OBJECTS, CMS_I18N_OBJECTS
 from cubicweb_francearchives.dataimport.scripts.generate_ape_ead import generate_ape_ead_files
 from cubicweb_francearchives.scripts.nginx_confs_from_faredirects import write_nginx_confs
 from cubicweb_francearchives.scripts.reindex_authority import reindex_authority
+from cubicweb_francearchives.scripts.reindex_nomina import reindex_nomina
 from cubicweb_francearchives.scripts.dead_links import run_linkchecker, clean_up_linkchecker
+from cubicweb_francearchives.scripts.eval_tags import EvalTagValues
+from cubicweb_francearchives.scripts.check_db_integrity import DBIntegrityHelper
+from cubicweb_francearchives.scripts.index_nomina import index_nomina_in_es
+from cubicweb_francearchives.esutils import delete_autority_from_es
 
 _tqdm = partial(tqdm.tqdm, disable=None)
 
 HERE = osp.dirname(osp.abspath(__file__))
+
+
+ETYPES_ES_MAP = {
+    "ExternRef": {
+        "cw_etypes": ["Virtual_exhibit", "Blog", "Other"],
+        "rtype": "reftype",
+    },
+    "BaseContent": {
+        "cw_etypes": [
+            "Publication",
+            "SearchHelp",
+            "Article",
+        ],
+        "rtype": "content_type",
+    },
+}
 
 
 def get_indexable_fa(cnx, etype, chunksize=100000):
@@ -123,9 +149,14 @@ class PniaIndexInEs(IndexInES):
 
     def bulk_actions(self, etypes, cnx, index_name=None, dry_run=False):
         etypes = set(etypes) & set(cwes.indexable_types(cnx.vreg.schema))
+        if not etypes:
+            print("-> abort indexation: found no suitable etypes to index")
+            return
         index_name = index_name or "%s_all" % cnx.vreg.config["index-name"]
         init_bfss(cnx.repo)
         for etype in etypes:
+            cnx.info(f"[{index_name}] Start indexing {etype}...")
+            print(f"[{index_name}] Start indexing {etype}...")
             if etype in ("FAComponent", "FindingAid"):
                 gen = get_indexable_fa(cnx, etype, self.config.chunksize)
             else:
@@ -148,7 +179,7 @@ class PniaIndexInEs(IndexInES):
                     # "doc_type" in kwargs bellow must be container data.
                     data = {
                         "_op_type": "index",
-                        "_index": index_name or cnx.vreg.config["index-name"],
+                        "_index": index_name or cnx.vreg.config["index-name"],  # FIXME
                         "_type": "_doc",
                         "_id": serializer.es_id,
                         "_source": json,
@@ -156,6 +187,19 @@ class PniaIndexInEs(IndexInES):
                     self.customize_data(data)
                     yield data
                 cnx.info("[{}] indexed {} {} entities".format(index_name, idx, etype))
+            print(f"[{index_name}]: Finished indexing {etype} \n")
+        print(f"[{index_name}]: Indexing completed for all {etypes}\n")
+        cnx.info(f"[{index_name}]: Indexing completed for all {etypes}\n")
+        time.sleep(1)  # wait for ES to finish
+        for etype in etypes:
+            search = Search(index="{}".format(index_name))
+            if etype in ETYPES_ES_MAP:
+                must = [{"terms": {"cw_etype": ETYPES_ES_MAP[etype]["cw_etypes"]}}]
+            else:
+                must = [{"term": {"cw_etype": etype}}]
+            search.query = dsl_query.Bool(must=must)
+            cnx.info(f"[{index_name}]: found {search.count()} indexed {etype}")
+            print(f"[{index_name}]: found {search.count()} indexed {etype}")
 
     def customize_data(self, data):
         self.strip_html_from_es_data(data)
@@ -169,7 +213,7 @@ class PniaIndexInEs(IndexInES):
     def strip_html_from_es_data(data):
         """Remove HTML tags from the data that will be sent to ElasticSearch"""
         # FIXME: get the attribute list from schema introspection
-        attributes_to_strip = ["content", "manif_prog"]
+        attributes_to_strip = ["content"]
 
         for attr in attributes_to_strip:
             if attr in data["_source"] and data["_source"][attr]:
@@ -481,7 +525,7 @@ class IndexESAutocomplete(Command):
             {
                 "type": "yn",
                 "default": False,
-                "help": "set to True if you want to print" "out debug info and progress",
+                "help": "set to True if you want to print out debug info and progress",
             },
         ),
         (
@@ -493,6 +537,15 @@ class IndexESAutocomplete(Command):
                 "specified in the all-in-one.conf file. "
                 "(Note that no implicit _suggest suffix will be "
                 "appended to the index name specified by this option)",
+            },
+        ),
+        (
+            "etypes",
+            {
+                "type": "csv",
+                "default": "",
+                "help": "only index given etypes: "
+                "LocationAuthority, SubjectAuthority, AgentAuthority",
             },
         ),
     ]
@@ -507,6 +560,10 @@ class IndexESAutocomplete(Command):
         """run the command with its specific arguments"""
         appid = args.pop(0)
         with admincnx(appid) as cnx:
+            self.log = logging.getLogger("index-es-suggest")
+            if self.config.debug:
+                self.log.setLevel(logging.DEBUG)
+                self.log.debug("index: %s", self.suggest_index_name(cnx))
             indexer = cnx.vreg["es"].select("suggest-indexer", cnx)
             indexer.indexable_etypes = SUGGEST_ETYPES
             indexer.create_index(index_name=self.suggest_index_name(cnx))
@@ -515,7 +572,7 @@ class IndexESAutocomplete(Command):
                 log_in_db(self.index_es_autosuggest)(cnx, es)
             else:
                 if self.config.debug:
-                    print("no elasticsearch configuration found, skipping")
+                    self.log.debug("no elasticsearch configuration found, skipping")
 
     def index_es_autosuggest(self, cnx, es):
         for _ in parallel_bulk(
@@ -538,27 +595,47 @@ class IndexESAutocomplete(Command):
     }
 
     def bulk_actions(self, cnx, es, dry_run=False):
+        etypes = self.config.etypes or self.etype2type.keys()
+        auth_circ_map = dict(
+            cnx.execute(
+                """DISTINCT Any A, COUNT(X) GROUPBY A WITH X, A BEING (
+                (Any X, A WHERE X is Circular, X business_field F, A same_as F)
+                UNION
+                (Any X, A WHERE X is Circular, X action F, A same_as F)
+                UNION
+                (Any X, A WHERE X is Circular, X document_type F, A same_as F)
+                UNION
+                (Any X, A WHERE X is Circular, X historical_context F, A same_as F)
+                )"""
+            )
+        )
         try:
             suggest_index_name = self.suggest_index_name(cnx)
-            for etype, authtable, indextable, in (
+            for (
+                etype,
+                authtable,
+                indextable,
+            ) in (
                 ("LocationAuthority", "cw_locationauthority", "cw_geogname"),
                 ("SubjectAuthority", "cw_subjectauthority", "cw_subject"),
                 ("AgentAuthority", "cw_agentauthority", "cw_agentname"),
             ):
+                if etype not in etypes:
+                    continue
+                cnx.info(f"[{suggest_index_name}]: processing {etype}: loading data...")
                 if self.config.debug:
-                    print("processing {}".format(etype))
+                    print(f"[{suggest_index_name}]: processing {etype}: loading data...")
                 # execute an SQL query instead of RQL like
                 # Any X, L, COUNT(F), COUNT(B), COUNT(X1) GROUPBY X, L WHERE X is {etype},
                 # X label L, A? authority X, B? related_authority X, A index F?,
                 # X grouped_with X1?
                 # as there is no simple way in RQL to count only distinct values
+
                 query = """
-                WITH concepts AS ({concepts})
-                SELECT at.cw_eid, at.cw_label,
+                SELECT at.cw_eid, at.cw_label, at.cw_quality,
                     COUNT(DISTINCT rel_index.eid_to),
                     COUNT(DISTINCT rel_auth.eid_from),
-                    COUNT(DISTINCT rel_group.eid_to),
-                    COUNT(DISTINCT concepts.circ)
+                    COUNT(DISTINCT rel_group.eid_to)
                 FROM {authtable} AS at
                     LEFT OUTER JOIN {indextable} AS it ON (it.cw_authority=at.cw_eid)
                     LEFT OUTER JOIN same_as_relation AS sa ON (sa.eid_from=at.cw_eid)
@@ -568,33 +645,28 @@ class IndexESAutocomplete(Command):
                               ON (rel_index.eid_from=it.cw_eid)
                     LEFT OUTER JOIN grouped_with_relation AS rel_group
                               ON (rel_group.eid_from=at.cw_eid)
-                    LEFT OUTER JOIN concepts
-                              ON (concepts.con=sa.eid_to)
                 GROUP BY at.cw_eid,at.cw_label"""
-                concepts = " UNION ".join(
-                    [
-                        """SELECT cw_circular.cw_eid AS circ, cw_concept.cw_eid AS con
-                        FROM cw_circular
-                        JOIN {rel}_relation ON eid_from=cw_circular.cw_eid
-                        JOIN cw_concept ON eid_to=cw_concept.cw_eid""".format(
-                            rel=rel
-                        )
-                        for rel in (
-                            "business_field",
-                            "document_type",
-                            "historical_context",
-                            "action",
-                        )
-                    ]
-                )
                 rset = cnx.system_sql(
-                    query.format(authtable=authtable, indextable=indextable, concepts=concepts)
+                    query.format(authtable=authtable, indextable=indextable)
                 ).fetchall()
+                cnx.info(f"start indexing {len(rset)} {etype}...")
                 if self.config.debug:
-                    print("   > number of entities {}".format(len(rset)))
-                for autheid, label, countfa, countcomext, countgrouped, countcirculars in rset:
+                    print(f"start indexing {len(rset)} {etype}...")
+                progress_bar = _tqdm(total=len(rset))
+                for i, (
+                    autheid,
+                    label,
+                    quality,
+                    countfa,
+                    countcomext,
+                    countgrouped,
+                ) in enumerate(rset):
                     if not dry_run:
-                        count = countfa + countcomext + countcirculars
+                        try:
+                            progress_bar.update()
+                        except Exception:
+                            pass
+                        count_docs = countcomext + auth_circ_map.get(autheid, 0)
                         yield {
                             "_op_type": "index",
                             "_index": suggest_index_name,
@@ -608,19 +680,152 @@ class IndexESAutocomplete(Command):
                                 # because user could have group authorities so
                                 # one authority could have 2 AgentName with two different
                                 # type
+                                "label": label,
                                 "type": self.etype2type[etype],
-                                "additional": "",
                                 "urlpath": "{}/{}".format(self.etype2urlsegment[etype], autheid),
-                                "count": count,
+                                "archives": countfa,
+                                "siteres": count_docs,
+                                "count": countfa + count_docs,
                                 "grouped": bool(countgrouped),
+                                "quality": quality,
+                                "letter": es_start_letter(label),
                             },
                         }
+                cnx.info(f"[{suggest_index_name}]: Finished indexing {etype}")
+                if self.config.debug:
+                    print(f"[{suggest_index_name}]: Finished indexing {etype}")
+
         except Exception as err:
             import traceback
 
             traceback.print_exc()
-            print("oups !!!", err)
+            print(f"Error while indexing!!! {err}")
             raise
+        cnx.info(f"\n[{suggest_index_name}]: Suggest indexing terminated\n")
+        if self.config.debug:
+            print(f"\n[{suggest_index_name}]: Suggest indexing terminated\n")
+        if self.config.debug:
+            time.sleep(1)  # wait for ES to finish
+            for etype in self.etype2type.keys():
+                search = Search(index="{}".format(suggest_index_name))
+                must = [{"term": {"cw_etype.keyword": etype}}]
+                search.query = dsl_query.Bool(must=must)
+                cnx.info(f"[{suggest_index_name}] -> found {search.count()} indexed {etype}")
+                print(f"[{suggest_index_name}] -> found {search.count()} indexed {etype}")
+
+
+@CWCTL.register
+class IndexESNominaRecords(Command):
+    """Index NominaRecords content.
+
+    <instance id>
+      identifier of the instance
+
+    """
+
+    name = "index-es-nomina"
+    min_args = max_args = 1
+    arguments = "<instance id>"
+    options = [
+        (
+            "dry-run",
+            {
+                "type": "yn",
+                "default": False,
+                "help": "set to True if you want to skip the insertion in ES",
+            },
+        ),
+        (
+            "debug",
+            {
+                "type": "yn",
+                "default": True,
+                "help": "set to True if you want to print out debug info and progress",
+            },
+        ),
+        (
+            "stats",
+            {
+                "type": "yn",
+                "default": False,
+                "help": "set to True if you only want see indexed documents stats",
+            },
+        ),
+        (
+            "services",
+            {
+                "type": "csv",
+                "default": (),
+                "help": (
+                    "List of services codes to be indexed separated by comma."
+                    "If the list is empty, all services will be indexed"
+                ),
+            },
+        ),
+        ("chunksize", {"type": "int", "default": 100000, "help": "chunksize size"}),
+        (
+            "index-name",
+            {
+                "type": "string",
+                "default": None,
+                "help": "use a custom index name rather than the one "
+                "specified in the all-in-one.conf file. "
+                "(Note that no implicit _suggest suffix will be "
+                "appended to the index name specified by this option)",
+            },
+        ),
+    ]
+    indexable_etypes = NOMINA_INDEXABLE_ETYPES
+    failed_mark = "\033[91m" + "x" + "\033[0m"
+    passed_mark = "\033[32m" + "\u2713" + "\33[0m"
+
+    def index_name(self, cnx):
+        if self.config.index_name:
+            return self.config.index_name
+        else:
+            return cnx.vreg.config["nomina-index-name"]
+
+    def run(self, args):
+        """run the command with its specific arguments"""
+        appid = args.pop(0)
+        with admincnx(appid) as cnx:
+            indexer = cnx.vreg["es"].select("nomina-indexer", cnx)
+            indexer.indexable_etypes = self.indexable_etypes
+            index_name = self.index_name(cnx)
+            indexer.create_index(index_name=index_name)
+            es = indexer.get_connection()
+            self.log = logging.getLogger("index-es-nomina")
+            if self.config.debug:
+                self.log.setLevel(logging.DEBUG)
+            if self.config.stats:
+                for etype in self.indexable_etypes:
+                    self.show_stats(cnx, es, index_name, etype)
+                return
+            if es:
+                log_in_db(index_nomina_in_es)(
+                    cnx,
+                    es,
+                    index_name,
+                    self.logger,
+                    services=self.config.services,
+                    dry_run=self.config.dry_run,
+                )
+            else:
+                if self.config.debug:
+                    self.log.error("Error: no elasticsearch configuration found, abort.")
+
+    def show_stats(self, cnx, es, index_name, etype, processed=None):
+        if not processed:
+            processed = cnx.execute(f"Any COUNT(X) WHERE X is {etype}")[0][0]
+        search = Search(index=f"{index_name}")
+        must = [{"term": {"cw_etype": etype}}]
+        search.query = dsl_query.Bool(must=must)
+        status = search.count() == processed
+        message = f"[{index_name}] {search.count()}/{processed} {etype}(s) have been indexed"
+        if status:
+            self.log.info(f" {self.passed_mark} {message}")
+        else:
+            self.log.warning(f" {self.failed_mark} {message}")
 
 
 class ImportDC(Command):
@@ -764,22 +969,33 @@ class GenSitemap(Command):
                 "help": ("clear destination directory content before generating " "sitemap files"),
             },
         ),
+        (
+            "debug",
+            {
+                "type": "yn",
+                "default": True,
+                "help": "set to True if you want to print out info",
+            },
+        ),
     ]
 
     def run(self, args):
         appid = args.pop()
         with admincnx(appid) as cnx:
+            cnx.info("[sitemap]: start generating sitemap")
             dst = cnx.vreg.config.get("sitemap-dir")
+            if not dst:
+                cnx.error('[sitemap]: abort: no "sitemap-dir" value found in all-in-one')
+                return
+            st = S3BfssStorageMixIn()
             if self.config.clear_sitemap_dir:
-                for fname in os.listdir(dst):
-                    fpath = osp.join(dst, fname)
-                    if osp.isfile(fpath):
-                        os.unlink(fpath)
-                    else:
-                        shutil.rmtree(fpath)
+                if self.config.debug:
+                    print(f'-> [sitemap]: remove existing files in sitemap directory "{dst}"')
+                st.storage_clean_sitemap_files(dst)
             if self.config.base_url:
                 cnx.vreg.config.global_set_option("base-url", self.config.base_url)
-            sitemap.dump_sitemaps(cnx, dst)
+            sitemap.dump_sitemaps(cnx, st, dst)
+            cnx.info("[sitemap]: finished generating sitemap files")
 
 
 @CWCTL.register
@@ -1048,6 +1264,96 @@ class ReindexIR(Command):
 
 
 @CWCTL.register
+class ReindexIRFromESDoc(Command):
+    """reindex IR (PDF / XML) for its IFullTextIndexSerializable serialization"""
+
+    name = "fa-reindex-ead-esdoc"
+    arguments = "<instance> <stable_id>"
+    min_args = max_args = 2
+
+    options = [
+        (
+            "force",
+            {
+                "type": "yn",
+                "default": False,
+                "help": "delete existing data and reindex all",
+            },
+        ),
+        (
+            "index-name",
+            {
+                "type": "string",
+                "default": None,
+                "help": "use a custom index name rather than the one "
+                "specified in the all-in-one.conf file. "
+                "(Note that no implicit _suggest suffix will be "
+                "appended to the index name specified by this option)",
+            },
+        ),
+        (
+            "debug",
+            {
+                "type": "yn",
+                "default": True,
+                "help": "set to True if you want to print out debug info and progress",
+            },
+        ),
+    ]
+
+    def run(self, args):
+        appid, stable_id = args
+        with admincnx(appid) as cnx:
+            self.log = logging.getLogger("fa-reindex-ead-esdoc")
+            if self.config.debug:
+                self.log.setLevel(logging.DEBUG)
+            init_bfss(cnx.repo)
+            rset = cnx.execute(
+                """Any X WHERE X stable_id %(sti)s""",
+                {"sti": stable_id},
+            )
+            if not rset:
+                self.log.error(
+                    "[fa-reindex-ead-esdoc] Error: no Findingaid "
+                    "with stable_id {} found".format(stable_id)
+                )
+                return
+            indexer = cnx.vreg["es"].select("indexer", cnx)
+            index_name = self.config.index_name or indexer.index_name
+            self.log.debug(f"[fa-reindex-ead-esdoc]: index in '{index_name}' index")
+            es = indexer.get_connection()
+            if not es:
+                self.log.error(
+                    "[fa-reindex-ead-esdoc] Error: no elasticsearch configuration found, skipping"
+                )
+                return
+            entity = rset.one()
+            if self.config.force:
+                self.log.info("[fa-reindex-es-service] Delete indexed data")
+                es.delete_by_query(
+                    index_name,
+                    doc_type="_doc",
+                    body={"query": {"match": {"stable_id": stable_id}}},
+                )
+            try:
+                serializer = entity.cw_adapt_to("IFullTextIndexSerializable")
+                json = serializer.serialize(complete=False)
+            except Exception:
+                cnx.error(
+                    "[{}] Failed to serialize entity {}".format(indexer.index_name, entity.eid)
+                )
+                return
+            data = {
+                "_op_type": "index",
+                "_index": index_name,
+                "_type": "_doc",
+                "_id": serializer.es_id,
+                "_source": json,
+            }
+            es_bulk_index(es, [data], raise_on_error=True)
+
+
+@CWCTL.register
 class ReindexIRByStableId(Command):
     """reindex one IR (PDF / XML) documents stored in the database.
 
@@ -1056,7 +1362,7 @@ class ReindexIRByStableId(Command):
     """
 
     name = "fa-es-reindex"
-    arguments = "<instance><stable_id>"
+    arguments = "<instance> <stable_id>"
     min_args = max_args = 2
 
     def run(sealf, args):
@@ -1076,19 +1382,49 @@ class ReindexIRByStableId(Command):
             import_filepaths(cnx, filepaths, readerconfig(cnx.vreg.config, appid, True))
 
 
+SERVICE_ETPYES = ["FindingAid", "FAComponent", "BaseContent", "ExternRef"]
+
+
 @CWCTL.register
 class ReindexEsService(Command):
     """reindex FindingAid and FAComponent in es by service.
 
     This command dont delete existing data.
 
-    arguments = '<instance> <service_code> <index>
+    arguments = '<instance> <service_code>'
     """
 
     name = "fa-reindex-es-service"
     arguments = "<instance>"
     min_args = max_args = 3
     options = [
+        (
+            "index-name",
+            {
+                "type": "string",
+                "default": None,
+                "help": "use a custom index name rather than the one "
+                "specified in the all-in-one.conf file. "
+                "(Note that no implicit _suggest suffix will be "
+                "appended to the index name specified by this option)",
+            },
+        ),
+        (
+            "etypes",
+            {
+                "type": "csv",
+                "default": SERVICE_ETPYES,
+                "help": ("list of cwetypes to be exported: %s" % SERVICE_ETPYES),
+            },
+        ),
+        (
+            "force",
+            {
+                "type": "yn",
+                "default": False,
+                "help": "delete existing data and reindex all",
+            },
+        ),
         (
             "dry-run",
             {
@@ -1098,24 +1434,63 @@ class ReindexEsService(Command):
             },
         ),
         ("chunksize", {"type": "int", "default": 100000, "help": "chunksize size"}),
+        (
+            "debug",
+            {
+                "type": "yn",
+                "default": True,
+                "help": "set to True if you want to print out debug info and progress",
+            },
+        ),
     ]
 
     def run(self, args):
-        appid, service_code, es_index = args
+        appid, service_code, index_name = args
         with admincnx(appid) as cnx:
+            self.log = logging.getLogger("fa-reindex-es-service")
+            if self.config.debug:
+                self.log.setLevel(logging.DEBUG)
             service = cnx.execute("Any X WHERE X code %(c)s", {"c": service_code})
             if not service:
-                print("No service with code {} exists".format(service_code))
+                self.log.error(
+                    "[fa-reindex-es-service] Error: "
+                    "no service with code {} exists".format(service_code)
+                )
                 return
             publisher = service.one().publisher()
             indexer = cnx.vreg["es"].select("indexer", cnx)
+            index_name = self.config.index_name or indexer.index_name
             es = indexer.get_connection()
+            if not es:
+                self.log.error(
+                    "[fa-reindex-es-service] Error: no elasticsearch configuration found, skipping"
+                )
+                return
+            if self.config.force:
+                self.log.info(
+                    f"[fa-reindex-es-service] Delete {', '.join(self.config.etypes) }"
+                    f" indexed data in {index_name} for '{publisher}'"
+                )
+                must = [{"term": {"service.code": service_code}}]
+                esetypes = []
+                for etype in self.config.etypes:
+                    if etype in ETYPES_ES_MAP:
+                        esetypes.extend(ETYPES_ES_MAP[etype]["cw_etypes"])
+                    else:
+                        esetypes.append(etype)
+                must.append({"terms": {"cw_etype": esetypes}})
+                es.delete_by_query(
+                    index_name,
+                    doc_type="_doc",
+                    body={"query": {"bool": {"must": must}}},
+                )
             for _ in parallel_bulk(
                 es,
                 self.bulk_actions(
                     cnx,
                     publisher,
-                    index_name=es_index,
+                    index_name=index_name,
+                    service_code=service_code,
                     chunksize=self.config.chunksize,
                     dry_run=self.config.dry_run,
                 ),
@@ -1124,15 +1499,24 @@ class ReindexEsService(Command):
             ):
                 pass
 
-    def bulk_actions(self, cnx, publisher, index_name, chunksize, dry_run=True):
-        for etype in ("FindingAid", "FAComponent"):
-            gen = self.get_indexable_fa(cnx, etype, publisher, chunksize)
+    def bulk_actions(self, cnx, publisher, index_name, service_code, chunksize, dry_run=True):
+        for etype, gen in (
+            ("FindingAid", self.get_indexable_fa(cnx, "FindingAid", publisher, chunksize)),
+            ("FAComponent", self.get_indexable_fa(cnx, "FAComponent", publisher, chunksize)),
+            (
+                "BaseContent",
+                self.get_indexable_cms(cnx, "BaseContent", "basecontent_service", service_code),
+            ),
+            ("ExternRef", self.get_indexable_cms(cnx, "ExternRef", "exref_service", service_code)),
+        ):
+            if etype not in self.config.etypes:
+                continue
             for idx, entity in enumerate(gen, 1):
                 try:
                     serializer = entity.cw_adapt_to("IFullTextIndexSerializable")
                     json = serializer.serialize(complete=False)
                 except Exception:
-                    cnx.error(
+                    self.log.error(
                         "[{}] Failed to serialize entity {} ({})".format(
                             index_name, entity.eid, etype
                         )
@@ -1152,7 +1536,20 @@ class ReindexEsService(Command):
                     }
                     yield data
 
+    def get_indexable_cms(self, cnx, etype, rel, service_code):
+        rql = cwes.fulltext_indexable_rql(etype, cnx)
+        rqlst = rql_parse(rql).children[0]
+        mainvar = next(rqlst.get_selected_variables())
+        rset = cnx.execute(
+            f"{rql}, {mainvar} {rel} {mainvar}SERVICE, {mainvar}SERVICE code '{service_code}'"
+        )
+        self.log.info(f"[fa-reindex-es-service] Reindex {rset.rowcount} {etype}")
+        for e in rset.entities():
+            e.complete()
+            yield e
+
     def get_indexable_fa(self, cnx, etype, publisher, chunksize=100000):
+        self.log.info(f"[fa-reindex-es-service] Reindex {etype}")
         rqlpart = (
             "X publisher %(p)s, "
             if etype == "FindingAid"
@@ -1193,6 +1590,57 @@ class ReindexEsAuthority(Command):
         appid, eid = args
         with admincnx(appid) as cnx:
             reindex_authority(cnx, eid)
+
+
+@CWCTL.register
+class ReindexESNomina(Command):
+    """reindex NominaRecotd for its INominaIndexSerializable serialization"""
+
+    name = "fa-reindex-es-nomina"
+    arguments = "<instance> <stable_id>"
+    min_args = max_args = 2
+
+    options = [
+        (
+            "force",
+            {
+                "type": "yn",
+                "default": False,
+                "help": "delete existing data and reindex all",
+            },
+        ),
+        (
+            "index-name",
+            {
+                "type": "string",
+                "default": None,
+                "help": "use a custom index name rather than the one "
+                "specified in the all-in-one.conf file. ",
+            },
+        ),
+        (
+            "debug",
+            {
+                "type": "yn",
+                "default": True,
+                "help": "set to True if you want to print out debug info and progress",
+            },
+        ),
+    ]
+
+    def run(self, args):
+        appid, stable_id = args
+        log = logging.getLogger("fa-reindex-es-nomina")
+        if self.config.debug:
+            log.setLevel(logging.DEBUG)
+        with admincnx(appid) as cnx:
+            reindex_nomina(
+                cnx,
+                stable_id,
+                index_name=self.config.index_name,
+                delete=self.config.force,
+                logger=log,
+            )
 
 
 @CWCTL.register
@@ -1246,7 +1694,7 @@ class HarvestRepos(Command):
 
 @CWCTL.register
 class RdfDump(Command):
-    """harvest OAI-PMH repositories registered in the database."""
+    """create a RDF dump of entities"""
 
     name = "fa-rdfdump"
     arguments = "<instance>"
@@ -1257,9 +1705,15 @@ class RdfDump(Command):
             {
                 "type": "csv",
                 "default": list(rdfdump.ETYPES_ADAPTERS),
-                "help": (
-                    "liste des types d'entité à exporter " "de la dernière date de moissonnage"
-                ),
+                "help": ("list of cwetypes to be exported: %s" % list(rdfdump.ETYPES_ADAPTERS)),
+            },
+        ),
+        (
+            "published",
+            {
+                "type": "yn",
+                "default": True,
+                "help": "execute on published schema",
             },
         ),
         (
@@ -1267,23 +1721,107 @@ class RdfDump(Command):
             {
                 "type": "string",
                 "default": "/tmp",
-                "help": ("répertoire dans lequel les archives seront créées"),
+                "help": (
+                    "directory where the rdf dumps are stored on the filesystem or "
+                    "S3 name bucket"
+                ),
             },
         ),
         (
             "formats",
             {
                 "type": "csv",
-                "default": ("nt", "n3", "xml"),
-                "help": ("liste des formats dans lequel on veut sérialiser le rdf"),
+                "default": ("nt",),
+                "help": (
+                    "comma separated list of formats you want to generate: 'nt', 'n3', 'xml' "
+                    "(default to nt)"
+                ),
+            },
+        ),
+        (
+            "chunksize",
+            {
+                "type": "int",
+                "default": 2000,
+                "help": "chunksize size",
+            },
+        ),
+        (
+            "limit",
+            {
+                "type": "int",
+                "default": None,
+                "help": "max number of entities generated",
+            },
+        ),
+        (
+            "offset",
+            {
+                "type": "int",
+                "default": 0,
+                "help": "offset of entities",
+            },
+        ),
+        (
+            "s3",
+            {
+                "action": "store_true",
+                "default": False,
+                "help": "store in s3 from AWS_S3_RDF_BUCKET_NAME",
+            },
+        ),
+        (
+            "s3db",
+            {
+                "action": "store_true",
+                "default": False,
+                "help": "delete existing s3 AWS_S3_BUCKET_NAME bucket",
+            },
+        ),
+        (
+            "s3rb",
+            {
+                "action": "store_true",
+                "default": False,
+                "help": "rename existing s3 AWS_S3_BUCKET_NAME bucket",
+            },
+        ),
+        (
+            "nbprocesses",
+            {
+                "type": "int",
+                "help": "number of subprocesses to spawn to generate RDF dumps",
+            },
+        ),
+        (
+            "logfile",
+            {
+                "type": "string",
+                "default": "/tmp/rdfdump.log",
+                "help": "rdfdump logfil",
+            },
+        ),
+        (
+            "rqllog",
+            {
+                "action": "store_true",
+                "default": False,
+                "help": "dump rql queries on stdout",
+            },
+        ),
+        (
+            "profile",
+            {
+                "action": "store_true",
+                "default": False,
+                "help": "use cProfile to monitor execution (dump in /tmp/rdfdump.prof)",
             },
         ),
     ]
 
     def run(self, args):
         appid = args.pop()
-        with admincnx(appid) as cnx:
-            rdfdump.create_dumps(cnx, self)
+        rdfdump.rdfdumps(appid, self)
 
 
 class InitDatabase(Command):
@@ -1524,6 +2062,14 @@ class ProcessOrphanAuthorities(Command):
                 "help": "only process/delete orphan authorities of given etypes",
             },
         ),
+        (
+            "debug",
+            {
+                "type": "yn",
+                "default": False,
+                "help": "set to True if you want to print out debug info and progress",
+            },
+        ),
     ]
 
     etype2class = {
@@ -1536,6 +2082,9 @@ class ProcessOrphanAuthorities(Command):
         appid = args.pop()
         etypes = ("LocationAuthority", "SubjectAuthority", "AgentAuthority")
         do_delete = not self.config.dry_run
+        self.log = logging.getLogger(self.name)
+        if self.config.debug:
+            self.log.setLevel(logging.DEBUG)
         with admincnx(appid) as cnx:
             if self.config.etypes:
                 etypes = self.config.etypes
@@ -1546,18 +2095,34 @@ class ProcessOrphanAuthorities(Command):
                 if do_delete:
                     print("Delete {count} orphan {etype}".format(count=rset.rowcount, etype=etype))
                     progress_bar = _tqdm(total=rset.rowcount)
+                    eids_to_delete = []
                     for i, eid in enumerate(rset):
+                        eid = eid[0]
+                        eids_to_delete.append(eid)
+                        cnx.transaction_data["delete-orphans"] = True
+                        # delete all trailing same_as for "LocationAuthority"
+                        # and "SubjectAuthority")
+                        if etype in ("LocationAuthority", "SubjectAuthority"):
+                            cnx.execute("DELETE S same_as A WHERE A eid %(eid)s", {"eid": eid})
+                            cnx.execute("DELETE A same_as S WHERE A eid %(eid)s", {"eid": eid})
                         cnx.execute(
-                            "DELETE {etype} X WHERE X eid {eid}".format(etype=etype, eid=eid[0])
+                            "DELETE {etype} X WHERE X eid {eid}".format(etype=etype, eid=eid)
                         )
+                        # delete from history table
+                        cnx.system_sql(f"delete from authority_history where autheid={eid}")
                         if not i % 100:
                             # commit every 100 entities to limit memory consumption
                             cnx.commit()
+                            # update es indexes
+                            delete_autority_from_es(cnx, eids_to_delete, self.log)
+                            eids_to_delete = []
                         try:
                             progress_bar.update()
                         except Exception:
                             pass
                     cnx.commit()
+                    # update es indexes
+                    delete_autority_from_es(cnx, eids_to_delete, self.log)
 
 
 @CWCTL.register
@@ -1607,6 +2172,256 @@ class CommemoDump(Command):
             shutil.rmtree(output_dir)
 
 
+@CWCTL.register
+class FACheckData(Command, ColoredLogsMixIn):
+    """Check Fa Es data consistency"""
+
+    arguments = "<instance>"
+    name = "fa-check-data"
+    min_args = max_args = 1
+
+    options = [
+        (
+            "index-name",
+            {"type": "string", "default": None, "help": "an existing es index "},
+        ),
+    ]
+
+    def run(self, args):
+        self.appid = args.pop(0)
+        with admincnx(self.appid) as cnx:
+            self.check_es_indexation(cnx)
+
+    def check_es_indexation(self, cnx):
+        """Compare the numbre of indexable entities in Postgres with the number of
+        actually ES indexed entities
+
+        """
+        print("\n1. Check Elasticsearch/PostgreSQL data consistency\n")
+        index_name = self.config.index_name or cnx.vreg.config["index-name"]
+
+        es = cwes.get_connection(
+            {
+                "elasticsearch-locations": cnx.vreg.config["elasticsearch-locations"],
+                "index-name": index_name,
+                "elasticsearch-verify-certs": cnx.vreg.config["elasticsearch-verify-certs"],
+                "elasticsearch-ssl-show-warn": cnx.vreg.config["elasticsearch-ssl-show-warn"],
+            }
+        )
+        if not es:
+            self.log("Error: no elasticsearch configuration found, skipping")
+            return
+        self.check_es_indexation_all(cnx, index_name)
+        self.check_es_indexation_suggest(cnx, index_name)
+
+    def check_es_indexation_all(self, cnx, index_name):
+        all_index = f"{index_name}_all"
+        search = Search(index=all_index)
+        indexables_types = list(
+            set(cwes.indexable_types(cnx.vreg.schema)[:]).difference(
+                (
+                    "File",
+                    "SectionTranslation",
+                    "BaseContentTranslation",
+                    "SectionTranslation",
+                    "CommemorationItemTranslation",
+                )
+            )
+        )
+        # we dont index File, XXXTranslation entities are indexed on their french version
+        print(f"[{all_index}]\n")
+        for etype in sorted(indexables_types):
+            if etype in ETYPES_ES_MAP:
+                must = [{"terms": {"cw_etype": ETYPES_ES_MAP[etype]["cw_etypes"]}}]
+            else:
+                must = [{"term": {"cw_etype": etype}}]
+            if etype == "Card":
+                rset = cnx.execute("Any COUNT(X) WHERE X is Card, X do_index True")
+            else:
+                rset = cnx.execute(f"Any COUNT(X) WHERE X is {etype}")
+            search.query = dsl_query.Bool(must=must)
+            es_search_count = search.count()
+            self.log(
+                cnx,
+                f"[{all_index}] {es_search_count}/{rset[0][0]} {etype} indexed",
+                status=rset[0][0] == es_search_count,
+            )
+
+            # specific cases
+            if etype in ETYPES_ES_MAP:
+                rtype = ETYPES_ES_MAP[etype]["rtype"]
+                for es_cw_type in ETYPES_ES_MAP[etype]["cw_etypes"]:
+                    search.query = dsl_query.Bool(must=[{"term": {"cw_etype": es_cw_type}}])
+                    rset = cnx.execute(f'Any COUNT(X) WHERE X is {etype}, X {rtype} "{es_cw_type}"')
+                    es_search_count = search.count()
+                    self.log(
+                        cnx,
+                        f"[{all_index}]  -> {es_search_count}/{rset[0][0]} {es_cw_type} indexed",
+                        status=rset[0][0] == es_search_count,
+                    )
+
+    def check_es_indexation_suggest(self, cnx, index_name):
+        suggest_index = f"{index_name}_suggest"
+        search = Search(index=suggest_index)
+        print(f"\n[{suggest_index}]\n")
+        for etype in ["AgentAuthority", "LocationAuthority", "SubjectAuthority"]:
+            search.query = dsl_query.Bool(must=[{"term": {"cw_etype.keyword": etype}}])
+            rset = cnx.execute(f"Any COUNT(X) WHERE X is {etype}")
+            es_search_count = search.count()
+            self.log(
+                cnx,
+                f"[{suggest_index}] {es_search_count}/{rset[0][0]} {etype} indexed",
+                status=rset[0][0] == es_search_count,
+            )
+
+
+@CWCTL.register
+class FACheckFiles(Command, ColoredLogsMixIn):
+    """Check Files data consistency"""
+
+    arguments = "<instance>"
+    name = "fa-check-files"
+    min_args = max_args = 1
+
+    options = [
+        (
+            "output-dir",
+            {
+                "type": "string",
+                "default": "/tmp",
+                "help": ("Directory to store log files"),
+            },
+        ),
+        (
+            "check-content",
+            {
+                "action": "store_true",
+                "default": "False",
+                "help": ("Check files exist"),
+            },
+        ),
+        (
+            "check-all",
+            {
+                "action": "store_true",
+                "default": "False",
+                "help": ("Check only IR files"),
+            },
+        ),
+    ]
+
+    def run(self, args):
+        self.appid = args.pop(0)
+        with admincnx(self.appid) as cnx:
+            init_bfss(cnx.repo)
+            self.check_filepaths(cnx)
+
+    def is_orphan_file(self, cnx, file_eid):
+        """Returns true is the file is not linked to any other entity"""
+        raise  # for now
+        eschema = cnx.vreg.schema.eschema("File")
+        objrels = [e.type for e in eschema.objrels if not e.meta]
+        rels = ["X{i} {rel} F".format(i=i, rel=rel) for i, rel in enumerate(objrels)]
+        vars = ["X{i}".format(i=i) for i in range(len(objrels))]
+        file_query = "Any {vars} WHERE F eid {eid}, {rels}".format(
+            vars=", ".join(vars), rels=", ".join(rels), eid=file_eid
+        )
+        return not bool(cnx.execute(file_query).rowcount)
+
+    def check_filepaths(self, cnx):
+        print("\n1. Check S3/PostgreSQL data consistency\n")
+        missings = set()
+        unknown = set()
+        missings_fpath = osp.join("/tmp", "missing_files.csv")
+        if S3_ACTIVE:
+            from botocore.exceptions import ClientError
+        missings_fpath = osp.join(self.config.output_dir, "missing_files.csv")
+        with open(missings_fpath, "w") as csvfile:
+            csvwriter = csv.writer(csvfile, delimiter="\t")
+            csvwriter.writerow(("filepath", "CWFile eid"))
+        for etype, storagedict in cnx.repo.system_source._storages.items():  # noqa
+            for attr in storagedict:
+                storage = cnx.repo.system_source.storage(etype, attr)
+                if self.config.check_all:
+                    rset = cnx.execute(f"Any S, FSPATH(D) WHERE F is {etype}, F {attr} D")
+                    print("Checking all files")
+                else:
+                    rset = cnx.execute(
+                        """Any S, FSPATH(D) WHERE X is FindingAid,
+                        X findingaid_support S, S data D
+                        """
+                    )
+                    print("Checking only IR files")
+                print(f"Checking {rset.rowcount} {etype} : {storagedict}")
+                progress_bar = _tqdm(total=rset.rowcount)
+                for idx, (eid, filepath) in enumerate(rset, 1):
+                    if filepath is None:
+                        missings.add(("", eid))
+                        continue
+                    filepath = filepath.getvalue().decode("utf8")
+                    # orphan = self.is_orphan_file(cnx, eid)
+                    if S3_ACTIVE:
+                        try:
+                            if self.config.check_content:
+                                storage.s3cnx.get_object(Bucket=storage.bucket, Key=filepath)
+                            else:
+                                storage.s3cnx.head_object(Bucket=storage.bucket, Key=filepath)
+                        except ClientError:
+                            with open(missings_fpath, "a") as csvfile:
+                                missings.add((filepath, filepath, eid))
+                                csvwriter = csv.writer(csvfile, delimiter="\t")
+                                csvwriter.writerow((filepath, eid))
+                    else:
+                        if not osp.isfile(filepath):
+                            missings.add((filepath, "", eid))
+                            continue
+                    try:
+                        progress_bar.update()
+                    except Exception:
+                        pass
+
+        missings_dirs = osp.join("/tmp", "unknown_files.csv")
+        with open(missings_dirs, "w") as csvfile:
+            csvwriter = csv.writer(csvfile, delimiter="\t")
+            csvwriter.writerow(("filepath",))
+            for fpath in unknown:
+                csvwriter.writerow((fpath,))
+            # print(f" -> {fpath} \n")
+        print(f"Found {len(unknown)} unknown files")
+        print(f"Found {len(missings)} missing files storage")
+        if missings:
+            print(f"CSV file of missing paths {missings_fpath }")
+
+
+@CWCTL.register
+class DBIntegrity(Command, DBIntegrityHelper):
+    """While importing data we disable all triggers which may result lein data
+    unconsistency. Check DataBase consistency. For now it check onyly a few
+    tables. To be continued.
+
+    """
+
+    arguments = "<instance>"
+    name = "fa-db-check"
+    min_args = max_args = 1
+
+    options = [
+        (
+            "v",
+            {"type": "yn", "default": True, "help": """print the queries"""},
+        )
+    ]
+
+    def run(self, args):
+        self.appid = args.pop(0)
+        with admincnx(self.appid) as cnx:
+            print("""Check database integrity after imports which will take some time.\n""")
+            helper = DBIntegrityHelper(self.config)
+            helper.check_indexes(cnx)
+            helper.check_ir_documents(cnx)
+            helper.check_authority_history(cnx)
+
+
 for cmdclass in (
     ImportEAD,
     ImportEAC,
@@ -1621,6 +2436,8 @@ for cmdclass in (
     InitDatabase,
     EnhanceAccessibility,
     GenerateApeEadFiles,
+    EvalTagValues,
+    DBIntegrity,
 ):
     CWCTL.register(cmdclass)
 i18n.register_cwctl_commands()

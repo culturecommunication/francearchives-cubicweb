@@ -1,0 +1,44 @@
+<form id="nomnia-search-bar-form" action="{{ base_url }}/basedenoms" class="row">
+  <div class="col-lg-12">
+    <div class="row">
+      <div class="col-lg-4">
+        <label for="es_names" class="visually-hidden">{{ _('Names') }}</label>
+        <input id="es_names" class="search-query form-control" type="text"
+               autocomplete="off" name="es_names"
+               value="{{ query_names |e }}"
+               placeholder="{{ _('Names') }}" />
+      </div>
+      <div class="col-lg-4">
+        <label for="es_forenames" class="visually-hidden">{{ _('Forenames') }}</label>
+        <input id="es_forenames" class="search-query form-control" type="text"
+               autocomplete="off" name="es_forenames"
+               value="{{ query_forenames |e }}"
+               placeholder="{{ _('Forenames') }}" />
+      </div>
+      <div class="col-lg-4">
+        <label for="es_locations" class="visually-hidden">{{ _('Locations') }}</label>
+        <input id="es_locations" class="search-query form-control" type="text"
+               autocomplete="off" name="es_locations"
+               value="{{ query_locations |e }}"
+               placeholder="{{ _('Locations') }}" />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-12">
+        <label for="es_fulltext_facet" class="visually-hidden">{{ _('Nomina free search') }}</label>
+        <input id="es_fulltext_facet" class="search-query form-control" type="text"
+               autocomplete="off" name="fulltext_facet"
+               value="{{ query_fulltext |e }}"
+               placeholder="{{ _('Nomina free search') }}" />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-lg-4 offset-lg-8">
+        <button type="submit" class="search-nomina-submit" value="" title="{{ _("Search in the name base") }}">
+          <i aria-hidden="true" class="icon"></i>
+          <span class="text">{{ _("###ToSearch###") }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</form>

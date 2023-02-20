@@ -28,6 +28,8 @@
 # The fact that you are presently reading this means that you have had
 # knowledge of the CeCILL-C license and that you accept its terms.
 #
+
+from mock import patch
 import unittest
 
 from cubicweb.devtools.testlib import CubicWebTC
@@ -46,6 +48,10 @@ def get_authority_history(cnx):
     return cnx.system_sql(query).fetchall()
 
 
+def get_indexed(authority):
+    return [f.eid for aut in authority.reverse_authority for f in aut.index]
+
+
 class GroupAuthoritiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
     readerconfig = merge_dicts({}, EADImportMixin.readerconfig, {"nodrop": False})
 
@@ -53,6 +59,7 @@ class GroupAuthoritiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
         super(GroupAuthoritiesTests, self).setUp()
         with self.admin_access.cnx() as cnx:
             self.service = cnx.create_entity("Service", code="FRAD054", category="foo")
+            self.service = cnx.create_entity("Service", code="FRAD0541", category="foo")
             cnx.commit()
             self.location_label = "Nancy (Meurthe-et-Moselle, France)"
 
@@ -60,7 +67,7 @@ class GroupAuthoritiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
         with self.admin_access.cnx() as cnx:
             # assure Nancy (Meurthe-et-Moselle, France) is present in FRAD054_0000000407.xml
             fc_rql = "Any X WHERE X is FAComponent, X did D, D unitid %(u)s"
-            self.import_filepath(cnx, self.datapath("ir_data/FRAD054_0000000407.xml"))
+            self.import_filepath(cnx, "ir_data/FRAD054_0000000407.xml")
             fc = cnx.execute(fc_rql, {"u": "31 Fi 47-185"}).one()
             locations = [
                 ie.authority[0].label for ie in fc.reverse_index if ie.cw_etype == "Geogname"
@@ -83,10 +90,7 @@ class GroupAuthoritiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
         """
         fc_rql = "Any X WHERE X is FAComponent, X did D, D unitid %(u)s"
         self.import_filepath(
-            cnx,
-            self.datapath("ir_data/FRAD054_0000000407.xml"),
-            service_infos=service_infos,
-            **custom_settings
+            cnx, "ir_data/FRAD054_0000000407.xml", service_infos=service_infos, **custom_settings
         )
         fc = cnx.execute(fc_rql, {"u": "31 Fi 47-185"}).one()
         locations = [ie.authority[0] for ie in fc.reverse_index if ie.cw_etype == "Geogname"]
@@ -164,7 +168,7 @@ class GroupAuthoritiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
         with self.admin_access.cnx() as cnx:
             self.import_filepath(
                 cnx,
-                self.datapath("ir_data/FRAD092_subject.xml"),
+                "ir_data/FRAD092_subject.xml",
                 autodedupe_authorities="service/strict",
             )
             expected = ["Léningrad", "leningrad", "LeninGrad?"]
@@ -221,7 +225,7 @@ class GroupAuthoritiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
         with self.admin_access.cnx() as cnx:
             self.import_filepath(
                 cnx,
-                self.datapath("ir_data/FRAD092_subject.xml"),
+                "ir_data/FRAD092_subject.xml",
                 autodedupe_authorities="service/normalize",
             )
             main_auth = cnx.find("SubjectAuthority").one()
@@ -329,7 +333,7 @@ class GroupAuthoritiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
             cnx.commit()
             self.import_filepath(
                 cnx,
-                self.datapath("ir_data/FRAD054_0000000407.xml"),
+                "ir_data/FRAD054_0000000407.xml",
                 autodedupe_authorities="service/strict",
             )
             all_authorities = self.reader.all_authorities
@@ -358,13 +362,13 @@ class GroupAuthoritiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
             cnx.commit()
             self.import_filepath(
                 cnx,
-                self.datapath("ir_data/FRAD054_0000000407.xml"),
+                "ir_data/FRAD054_0000000407.xml",
                 autodedupe_authorities="global/strict",
             )
             all_authorities = self.reader.all_authorities
             for data in (
-                ("LocationAuthority", "paris (France)", None),
-                ("LocationAuthority", "Paris (France)", None),
+                ("LocationAuthority", "paris (France)", 0),
+                ("LocationAuthority", "Paris (France)", 0),
             ):
                 self.assertEqual(all_authorities[hash(data)], loc2.eid)
             for eid in (loc1.eid, loc3.eid, loc4.eid):
@@ -387,14 +391,79 @@ class GroupAuthoritiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
             cnx.commit()
             self.import_filepath(
                 cnx,
-                self.datapath("ir_data/FRAD054_0000000407.xml"),
+                "ir_data/FRAD054_0000000407.xml",
                 autodedupe_authorities="global/normalize",
             )
             all_authorities = self.reader.all_authorities
-            for data in (("LocationAuthority", "paris france", None),):
+            for data in (("LocationAuthority", "paris france", 0),):
                 self.assertEqual(all_authorities[hash(data)], loc2.eid)
             for eid in (loc1.eid, loc3.eid, loc4.eid):
                 self.assertNotIn(eid, list(all_authorities.values()))
+
+    def test_subject_global_normalize(self):
+        """
+        Trying: import 2 identical IR for 2 different services with 20 SubjectAuthorities each
+                under index_policy == 'global/normalize'
+        Expecting: SubjectAuthorities are not duplcated
+        """
+        with self.admin_access.cnx() as cnx:
+            self.import_filepath(
+                cnx,
+                "ir_data/FRAD054_0000000407.xml",
+                autodedupe_authorities="global/normalize",
+            )
+            subjects = cnx.find("SubjectAuthority")
+            self.assertEqual(20, subjects.rowcount)
+            self.import_filepath(
+                cnx,
+                "ir_data/FRAD0541_0000000407.xml",
+                autodedupe_authorities="global/normalize",
+            )
+            subjects = cnx.find("SubjectAuthority")
+            self.assertEqual(20, subjects.rowcount)
+            for subject in subjects.entities():
+                self.assertEqual(2, len(subject.reverse_authority))
+
+    def test_subject_service_normalize(self):
+        """
+        Trying: import 2 identical IR for 2 different services with 20 SubjectAuthorities each
+        Expecting: SubjectAuthorities are not duplicated
+        """
+        with self.admin_access.cnx() as cnx:
+            self.import_filepath(
+                cnx,
+                "ir_data/FRAD054_0000000407.xml",
+                autodedupe_authorities="service/normalize",
+            )
+            subjects = cnx.find("SubjectAuthority")
+            self.assertEqual(20, subjects.rowcount)
+            self.import_filepath(
+                cnx,
+                "ir_data/FRAD0541_0000000407.xml",
+                autodedupe_authorities="service/normalize",
+            )
+            subjects = cnx.find("SubjectAuthority")
+            self.assertEqual(20, subjects.rowcount)
+            for subject in subjects.entities():
+                self.assertEqual(2, len(subject.reverse_authority))
+
+    def test_subject_orphan_service_normalize(self):
+        """
+        Trying: create two SubjectAuthorities and import an IR with
+                20 SubjectAuthorities including those
+        Expecting: there are still 20 SubjectAuthorities
+        """
+        with self.admin_access.cnx() as cnx:
+            cnx.create_entity("SubjectAuthority", label="Fête")
+            cnx.create_entity("SubjectAuthority", label="Fête nationale")
+            cnx.commit()
+            self.import_filepath(
+                cnx,
+                "ir_data/FRAD054_0000000407.xml",
+                autodedupe_authorities="service/normalize",
+            )
+            subjects = cnx.find("SubjectAuthority")
+            self.assertEqual(20, subjects.rowcount)
 
     def test_grouped_location_history(self):
         """In case locations authorities are grouped,
@@ -445,16 +514,12 @@ class GroupAuthoritiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
             cnx.commit()
             fa2 = create_findingaid(cnx, "Jacques Chirac", service=self.service)
             index = cnx.create_entity("AgentName", label="Chirac, Jacques", index=fa2)
-            collection = cnx.create_entity(
-                "CommemoCollection", title="élection du Président", year=2019
-            )
             commemo_item = cnx.create_entity(
                 "CommemorationItem",
                 title="Commemoration",
                 alphatitle="commemoration",
                 content="content",
                 commemoration_year=2019,
-                collection_top=collection,
             )
             extref = cnx.create_entity(
                 "ExternRef", reftype="Virtual_exhibit", title="externref-title"
@@ -477,6 +542,378 @@ class GroupAuthoritiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
                 [fa1.eid, fa2.eid], [fa.eid for i in agent.reverse_authority for fa in i.index]
             )
 
+    def test_orphan_locations(self):
+        """
+        Trying: create two LocationAuthorities and import an IR with
+                9 LocationAuthorities including thoses under `service/normalize` policy
+        Expecting: there are still 9 LocationAuthorities
+        """
+        with self.admin_access.cnx() as cnx:
+            cnx.create_entity("LocationAuthority", label="Épinal (Vosges, France)")
+            cnx.create_entity("LocationAuthority", label="Londres")
+            cnx.commit()
+            self.import_filepath(
+                cnx,
+                "ir_data/FRAD054_0000000407.xml",
+                autodedupe_authorities="service/normalize",
+            )
+            locations = cnx.find("LocationAuthority")
+            self.assertEqual(9, locations.rowcount)
+
+    def test_subjects_of_basecontent(self):
+        """
+        Trying: create a ServiceAuthority for a particular BaseContent
+                and import an IR with
+                20 SubjectAuthorities including it under `service/normalize` policy
+        Expecting: there are still 20 SubjectAuthorities
+        """
+        with self.admin_access.cnx() as cnx:
+            service = cnx.find("Service", code="FRAD054").one()
+            fete = cnx.create_entity("SubjectAuthority", label="Fête")
+            cnx.create_entity(
+                "BaseContent", title="title", related_authority=fete, basecontent_service=service
+            )
+            cnx.commit()
+            self.import_filepath(
+                cnx,
+                "ir_data/FRAD054_0000000407.xml",
+                autodedupe_authorities="service/normalize",
+            )
+            subjects = cnx.find("SubjectAuthority")
+            self.assertEqual(20, subjects.rowcount)
+
+    def test_locations_of_basecontent(self):
+        """
+        Trying: create a LocationAuthority for a particular BaseContent
+                and import an IR with
+                9 LocationAuthorities including it under `service/normalize` policy
+        Expecting: there are still 9 LocationAuthorities
+        """
+        with self.admin_access.cnx() as cnx:
+            service = cnx.find("Service", code="FRAD054").one()
+            epinal = cnx.create_entity("LocationAuthority", label="Épinal (Vosges, France)")
+            cnx.create_entity(
+                "BaseContent", title="title", related_authority=epinal, basecontent_service=service
+            )
+            cnx.commit()
+            self.import_filepath(
+                cnx,
+                "ir_data/FRAD054_0000000407.xml",
+                autodedupe_authorities="service/normalize",
+            )
+            locations = cnx.find("LocationAuthority")
+            self.assertEqual(9, locations.rowcount)
+
+    def test_quality_authority_order_service_normalized(self):
+        """
+        Trying: create LocationAuthorities with similar labels one of which is a
+                qualified authority.
+        Expecting: the newly imported IR is indexed on the qualified authority
+        """
+        with self.admin_access.cnx() as cnx:
+            service = cnx.create_entity("Service", code="FRAD054", category="foo")
+            other_service = cnx.create_entity("Service", code="FRAD051", category="foo")
+            loc_orphan = cnx.create_entity(
+                "LocationAuthority", label="Nancy (Meurthe-et-Moselle, France)"
+            )  # orphan
+            loc_qualified = cnx.create_entity(
+                "LocationAuthority", label="Nancy (Meurthe-et-MOSELLE, France)", quality=True
+            )
+            loc_grouped = cnx.create_entity(
+                "LocationAuthority", label="Nancy (MEurthe-et-Moselle, France)'"
+            )  # grouped with loc_orphan
+            ir_FRAD051 = create_findingaid(cnx, "ir_FRAD051", other_service)
+            loc_ir_FRAD051 = cnx.create_entity(
+                "LocationAuthority",
+                label="Nancy (Meurthe-et-Moselle, France)",
+                reverse_authority=cnx.create_entity(
+                    "Geogname", label="Nancy (Meurthe-et-Moselle, France)", index=ir_FRAD051
+                ),
+            )
+            ir_FRAD054 = create_findingaid(cnx, "ir_FRAD054", service)
+            loc_ir_FRAD054 = cnx.create_entity(
+                "LocationAuthority",
+                label="Nancy (Meurthe-et-Moselle, France)",
+                reverse_authority=cnx.create_entity(
+                    "Geogname", label="Nancy (Meurthe-et-Moselle, France)", index=ir_FRAD054
+                ),
+            )
+            cnx.commit()
+            loc_orphan.group([loc_grouped.eid])
+            cnx.commit()
+            self.import_filepath(
+                cnx,
+                "ir_data/FRAD054_0000000407.xml",
+                autodedupe_authorities="service/normalize",
+            )
+            all_authorities = self.reader.all_authorities
+            # Check that grouped and other service authorities are not
+            # considered globally by the reader
+            for eid in (loc_grouped.eid, loc_ir_FRAD051.eid):
+                self.assertNotIn(eid, list(all_authorities.values()))
+            # Check that the qualifed, orphan and FRAD054 service authority are
+            # considered globally by the reader
+            for eid in (loc_orphan.eid, loc_qualified.eid, loc_ir_FRAD054.eid):
+                self.assertIn(eid, list(all_authorities.values()))
+            for entity in (loc_orphan, loc_qualified, loc_grouped, loc_ir_FRAD054, loc_ir_FRAD051):
+                entity.cw_clear_all_caches()
+            new_ir = cnx.execute("Any X WHERE X is FindingAid, X eadid 'FRAD054_0000000407'").one()
+
+            self.assertIn(ir_FRAD054.eid, get_indexed(loc_ir_FRAD054))
+            self.assertEqual([ir_FRAD051.eid], get_indexed(loc_ir_FRAD051))
+            # Check that only the qualified authority was used to index the imported FA
+            indexed_fa = [
+                f
+                for aut in loc_qualified.reverse_authority
+                for f in aut.index
+                if f.cw_etype == "FAComponent"
+            ]
+            self.assertEqual(144, len(indexed_fa))
+            for fa in indexed_fa:
+                self.assertEqual(new_ir.eid, fa.finding_aid[0].eid)
+            # Check that (loc_orphan and loc_grouped) authorities are not used to index the
+            #  the imported FA
+            for loc in (loc_orphan, loc_grouped):
+                self.assertFalse(loc.reverse_authority)
+
+    def test_same_service_authority_order_service_normalized(self):
+        """
+        Trying: create LocationAuthorities with similar label one of which already indexes
+                an IR with the same Service
+        Expecting: the newly imported IR is indexed on the authority which already indexes
+                an IR with the same Service
+        """
+        with self.admin_access.cnx() as cnx:
+            service = cnx.create_entity("Service", code="FRAD054", category="foo")
+            other_service = cnx.create_entity("Service", code="FRAD051", category="foo")
+            loc_orphan = cnx.create_entity(
+                "LocationAuthority", label="Nancy (Meurthe-et-Moselle, France)"
+            )  # orphan
+            loc_grouped = cnx.create_entity(
+                "LocationAuthority", label="Nancy (MEurthe-et-Moselle, France)'"
+            )  # grouped with loc_orphan
+            ir_FRAD051 = create_findingaid(cnx, "ir_FRAD051", other_service)
+            loc_ir_FRAD051 = cnx.create_entity(
+                "LocationAuthority",
+                label="Nancy (Meurthe-et-Moselle, France)",
+                reverse_authority=cnx.create_entity(
+                    "Geogname", label="Nancy (Meurthe-et-Moselle, France)", index=ir_FRAD051
+                ),
+            )
+            ir_FRAD054 = create_findingaid(cnx, "ir_FRAD054", service)
+            loc_ir_FRAD054 = cnx.create_entity(
+                "LocationAuthority",
+                label="Nancy (Meurthe-et-Moselle, France)",
+                reverse_authority=cnx.create_entity(
+                    "Geogname", label="Nancy (Meurthe-et-Moselle, France)", index=ir_FRAD054
+                ),
+            )
+            cnx.commit()
+            loc_orphan.group([loc_grouped.eid])
+            cnx.commit()
+            self.import_filepath(
+                cnx,
+                "ir_data/FRAD054_0000000407.xml",
+                autodedupe_authorities="service/normalize",
+            )
+            all_authorities = self.reader.all_authorities
+            # Check that grouped and other service authorities are not
+            # considered globally by the reader
+            for eid in (loc_grouped.eid, loc_ir_FRAD051.eid):
+                self.assertNotIn(eid, list(all_authorities.values()))
+            # Check that the orphan and FRAD054 service authority are
+            # considered globally by the reader
+            for eid in (loc_orphan.eid, loc_ir_FRAD054.eid):
+                self.assertIn(eid, list(all_authorities.values()))
+            for entity in (loc_orphan, loc_grouped, loc_ir_FRAD054, loc_ir_FRAD051):
+                entity.cw_clear_all_caches()
+            new_ir = cnx.execute("Any X WHERE X is FindingAid, X eadid 'FRAD054_0000000407'").one()
+
+            self.assertIn(ir_FRAD054.eid, get_indexed(loc_ir_FRAD054))
+            self.assertEqual([ir_FRAD051.eid], get_indexed(loc_ir_FRAD051))
+            # Check that only the FRAD054 authority was used to index the imported FA
+            indexed_fa = [
+                f
+                for aut in loc_ir_FRAD054.reverse_authority
+                for f in aut.index
+                if f.cw_etype == "FAComponent"
+            ]
+            self.assertEqual(144, len(indexed_fa))
+            for fa in indexed_fa:
+                self.assertEqual(new_ir.eid, fa.finding_aid[0].eid)
+            # Check that (loc_orphan and loc_grouped) authorities are not used to index the
+            #  the imported FA
+            for loc in (loc_orphan, loc_grouped):
+                self.assertFalse(loc.reverse_authority)
+
+    def test_other_service_authority_order_service_normalized(self):
+        """
+        Trying: create LocationAuthorities with similar label and no authority which already indexes
+                an IR with the same Service
+        Expecting: the newly imported IR is indexed on the orphan authority
+        """
+        with self.admin_access.cnx() as cnx:
+            other_service = cnx.create_entity("Service", code="FRAD051", category="foo")
+            loc_orphan = cnx.create_entity(
+                "LocationAuthority", label="Nancy (Meurthe-et-Moselle, France)"
+            )  # orphan
+            loc_grouped = cnx.create_entity(
+                "LocationAuthority", label="Nancy (MEurthe-et-Moselle, France)'"
+            )  # grouped with loc_orphan
+            ir_FRAD051 = create_findingaid(cnx, "ir_FRAD051", other_service)
+            loc_ir_FRAD051 = cnx.create_entity(
+                "LocationAuthority",
+                label="Nancy (Meurthe-et-Moselle, France)",
+                reverse_authority=cnx.create_entity(
+                    "Geogname", label="Nancy (Meurthe-et-Moselle, France)", index=ir_FRAD051
+                ),
+            )
+            cnx.commit()
+            loc_orphan.group([loc_grouped.eid])
+            cnx.commit()
+            self.import_filepath(
+                cnx,
+                "ir_data/FRAD054_0000000407.xml",
+                autodedupe_authorities="service/normalize",
+            )
+            all_authorities = self.reader.all_authorities
+            # Check that grouped and other service authorities are not
+            # considered globally by the reader
+            for eid in (loc_grouped.eid, loc_ir_FRAD051.eid):
+                self.assertNotIn(eid, list(all_authorities.values()))
+            # Check that the orphan and FRAD054 service authority are
+            # considered globally by the reader
+            for eid in (loc_orphan.eid,):
+                self.assertIn(eid, list(all_authorities.values()))
+            for entity in (loc_orphan, loc_grouped, loc_ir_FRAD051):
+                entity.cw_clear_all_caches()
+            new_ir = cnx.execute("Any X WHERE X is FindingAid, X eadid 'FRAD054_0000000407'").one()
+
+            self.assertEqual([ir_FRAD051.eid], get_indexed(loc_ir_FRAD051))
+            # Check that only the orphan authority was used to index the imported FA
+            indexed_fa = [
+                f
+                for aut in loc_orphan.reverse_authority
+                for f in aut.index
+                if f.cw_etype == "FAComponent"
+            ]
+            self.assertEqual(144, len(indexed_fa))
+            for fa in indexed_fa:
+                self.assertEqual(new_ir.eid, fa.finding_aid[0].eid)
+            # Check that loc_grouped authority is notxs used to index the
+            #  the imported FA
+            for loc in (loc_grouped,):
+                self.assertFalse(loc.reverse_authority)
+
+    def test_quality_orphan_authority_service_normalized(self):
+        """
+        Trying: create LocationAuthorities with a similar labels one of which is a
+                qualified authority and the other is orphan.
+        Expecting: the newly imported IR is indexed on the qualified authority
+        """
+        with self.admin_access.cnx() as cnx:
+            cnx.create_entity("Service", code="FRAD054", category="foo")
+            loc_orphan = cnx.create_entity(
+                "LocationAuthority", label="Nancy (Meurthe-et-Moselle, France)"
+            )  # orphan
+            loc_qualified = cnx.create_entity(
+                "LocationAuthority", label="Nancy (Meurthe-et-MOSELLE, France)", quality=True
+            )
+            cnx.commit()
+            self.import_filepath(
+                cnx,
+                "ir_data/FRAD054_0000000407.xml",
+                autodedupe_authorities="service/normalize",
+            )
+            all_authorities = self.reader.all_authorities
+            # Check that the qualifed, orphan  service authority are
+            # considered globally by the reader
+            for eid in (loc_orphan.eid, loc_qualified.eid):
+                self.assertIn(eid, list(all_authorities.values()))
+            for entity in (loc_orphan, loc_qualified):
+                entity.cw_clear_all_caches()
+            new_ir = cnx.execute("Any X WHERE X is FindingAid, X eadid 'FRAD054_0000000407'").one()
+            # Check that only the qualified authority was used to index the imported FA
+            indexed_fa = [
+                f
+                for aut in loc_qualified.reverse_authority
+                for f in aut.index
+                if f.cw_etype == "FAComponent"
+            ]
+            self.assertEqual(144, len(indexed_fa))
+            for fa in indexed_fa:
+                self.assertEqual(new_ir.eid, fa.finding_aid[0].eid)
+            # Check that (loc_orphan and loc_grouped) authorities are not used to index the
+            #  the imported FA
+            for loc in (loc_orphan,):
+                self.assertFalse(loc.reverse_authority)
+
+    def test_grouping_authority_order_service_normalized(self):
+        """
+        Trying: create 4 LocationAuthorities with similar labels and group two of them.
+        Expecting: the grouping authority is indexed
+        """
+        with self.admin_access.cnx() as cnx:
+            loc_grouping = cnx.create_entity(
+                "LocationAuthority", label="Nancy (Meurthe-et-Moselle, France)"
+            )
+            loc2 = cnx.create_entity(
+                "LocationAuthority", label="Nancy (Meurthe-et-MOSELLE, France)"
+            )
+            loc3 = cnx.create_entity(
+                "LocationAuthority", label="Nancy (MEurthe-et-Moselle, France)"
+            )
+            loc4 = cnx.create_entity(
+                "LocationAuthority", label="nancy (Meurthe-et-Moselle, France)"
+            )
+            cnx.commit()
+            loc_grouping.group([loc3.eid, loc4.eid])
+            cnx.commit()
+            for loc in (loc_grouping, loc2, loc3, loc4):
+                loc.cw_clear_all_caches()
+            self.assertCountEqual(
+                (loc3.eid, loc4.eid), [a.eid for a in loc_grouping.reverse_grouped_with]
+            )
+            self.import_filepath(
+                cnx,
+                "ir_data/FRAD054_0000000407.xml",
+                autodedupe_authorities="service/normalize",
+            )
+            all_authorities = self.reader.all_authorities
+            # Check that the grouping authority is considered globally by
+            # the reader
+            for eid in (loc_grouping.eid,):
+                self.assertIn(eid, list(all_authorities.values()))
+            # Check that grouped authorities are not considered globally by
+            # the reader
+            for eid in (loc2.eid, loc3.eid, loc4.eid):
+                self.assertNotIn(eid, list(all_authorities.values()))
+            # Check that only the grouping authority was used to index the FA"
+            self.assertTrue(loc_grouping.reverse_authority)
+            # "Check that the grouped authorities were not used to index the
+            for loc in (loc2, loc3, loc4):
+                self.assertFalse(loc.reverse_authority)
+
+    def test_unqualify_grouped_authorities(self):
+        """Triyng: create two qualified SubjectAuthority and group them.
+
+        Expecting: the grouped authority is unqualified.
+        """
+        with self.admin_access.cnx() as cnx:
+            label = "Jean Valjean (1769-1833)"
+            loc2 = cnx.create_entity("SubjectAuthority", label=label, quality=True)
+            loc_grouping = cnx.create_entity("SubjectAuthority", label=label, quality=True)
+            cnx.commit()
+            self.assertTrue(loc_grouping.quality)
+            self.assertTrue(loc2.quality)
+            loc_grouping.group([loc2.eid])
+            cnx.commit()
+            loc_grouping.cw_clear_all_caches()
+            loc2.cw_clear_all_caches()
+            self.assertEqual((loc_grouping,), loc2.grouped_with)
+            self.assertTrue(loc_grouping.quality)
+            self.assertFalse(loc2.quality)
+
 
 class AuthoritiesHistoryTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
     readerconfig = merge_dicts({}, EADImportMixin.readerconfig, {"nodrop": False})
@@ -487,7 +924,7 @@ class AuthoritiesHistoryTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
         Expecting: renamed authority with all indexed IR are present in authority_history table
         """
         with self.admin_access.cnx() as cnx:
-            filepath = self.datapath("ir_data/FRAN_IR_053754.xml")
+            filepath = "ir_data/FRAN_IR_053754.xml"
             self.import_filepath(cnx, filepath)
             old_label = "Mac-mahon (Patrice de), duc de Magenta, maréchal de France"
             main_mac = cnx.find("AgentAuthority", label=old_label).one()
@@ -529,7 +966,7 @@ class AuthoritiesHistoryTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
                    is present in `authority_history` table
         """
         with self.admin_access.cnx() as cnx:
-            self.import_filepath(cnx, self.datapath("ir_data/FRAN_IR_053754.xml"))
+            self.import_filepath(cnx, "ir_data/FRAN_IR_053754.xml")
             main_mac = cnx.find(
                 "AgentAuthority",
                 label=("Mac-mahon (Patrice de), " "duc de Magenta, maréchal de France"),
@@ -587,10 +1024,11 @@ class AuthoritiesHistoryTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
         """
         Trying: import an IR and rename a related AgentAuthority.
                 Delete and reimport the IR under `global/normalize` policy.
-        Expecting: no new AgentAutority is created.
+        Expecting: no new AgentAutority is created as the renamed authority
+               is kept in authority_history
         """
         with self.admin_access.cnx() as cnx:
-            filepath = self.datapath("ir_data/FRAN_IR_053754.xml")
+            filepath = "ir_data/FRAN_IR_053754.xml"
             self.import_filepath(cnx, filepath)
             old_agents = self.filtered_authorities_eids(cnx.find("AgentAuthority"))
             old_label = "Mac-mahon (Patrice de), duc de Magenta, maréchal de France"
@@ -614,9 +1052,7 @@ class AuthoritiesHistoryTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
             self.assertFalse(
                 cnx.execute("Any X WHERE X is IN (FindingAid, FAComponent, AgentName)")
             )
-            self.import_filepath(
-                cnx, self.datapath(filepath), autodedupe_authorities="global/normalize"
-            )
+            self.import_filepath(cnx, filepath, autodedupe_authorities="global/normalize")
             # assert no new AgentAuthority with old_label has been created
             new_agents = self.filtered_authorities_eids(cnx.find("AgentAuthority"))
             self.assertCountEqual(old_agents, new_agents)
@@ -631,6 +1067,22 @@ class AuthoritiesHistoryTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
                 )
             ]
             self.assertEqual(indexed_irs, new_indexed_irs)
+            cu = cnx.system_sql(
+                """
+                SELECT fa_stable_id, type, label, indexrole, autheid
+                FROM authority_history ORDER BY fa_stable_id"""
+            )
+            auth_history = []
+            for fa_stable_id, type, label, indexrole, auth in cu.fetchall():
+                key = Authkey(fa_stable_id, type, label, indexrole)
+                auth_history.append((key.as_tuple(), auth))
+            expected = [
+                (
+                    ("01c7b52c477ca45a3589858bc25203e0011a660c", "persname", old_label, "index"),
+                    main_mac.eid,
+                )
+            ]
+            self.assertEqual(expected, auth_history)
 
     def create_bergbieten(self, cnx, link_fa=True):
         """
@@ -660,10 +1112,9 @@ class AuthoritiesHistoryTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
                 "FRAD067_EDF1_archives_communales_deposees.xml",
                 "FRAD067_EDF1_archives_paroissiales.xml",
             ):
-                filepath = self.datapath("ir_data/{}".format(filename))
                 self.import_filepath(
                     cnx,
-                    filepath,
+                    f"ir_data/{filename}",
                     service_info={"code": service.code, "eid": service.eid},
                     autodedupe_authorities="global/normalize",
                 )
@@ -688,10 +1139,9 @@ class AuthoritiesHistoryTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
                 "FRAD067_EDF1_archives_communales_deposees.xml",
                 "FRAD067_EDF1_archives_paroissiales.xml",
             ):
-                filepath = self.datapath("ir_data/{}".format(filename))
                 self.import_filepath(
                     cnx,
-                    filepath,
+                    f"ir_data/{filename}",
                     service_info={"code": service.code, "eid": service.eid},
                     autodedupe_authorities="global/normalize",
                 )
@@ -715,10 +1165,9 @@ class AuthoritiesHistoryTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
                 "FRAD067_EDF1_archives_communales_deposees.xml",
                 "FRAD067_EDF1_archives_paroissiales.xml",
             ):
-                filepath = self.datapath("ir_data/{}".format(filename))
                 self.import_filepath(
                     cnx,
-                    filepath,
+                    f"ir_data/{filename}",
                     service_info={"code": service.code, "eid": service.eid},
                     autodedupe_authorities="service/strict",
                 )
@@ -746,10 +1195,9 @@ class AuthoritiesHistoryTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
                 "FRAD067_EDF1_archives_communales_deposees.xml",
                 "FRAD067_EDF1_archives_paroissiales.xml",
             ):
-                filepath = self.datapath("ir_data/{}".format(filename))
                 self.import_filepath(
                     cnx,
-                    filepath,
+                    f"ir_data/{filename}",
                     service_info={"code": service.code, "eid": service.eid},
                     autodedupe_authorities="service/strict",
                 )
@@ -779,10 +1227,9 @@ class AuthoritiesHistoryTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
                 "FRAD067_EDF1_archives_communales_deposees.xml",
                 "FRAD067_EDF1_archives_paroissiales.xml",
             ):
-                filepath = self.datapath("ir_data/{}".format(filename))
                 self.import_filepath(
                     cnx,
-                    filepath,
+                    f"ir_data/{filename}",
                     service_info={"code": service.code, "eid": service.eid},
                     autodedupe_authorities="service/strict",
                 )
@@ -811,10 +1258,9 @@ class AuthoritiesHistoryTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
                 "FRAD067_EDF1_archives_communales_deposees.xml",
                 "FRAD067_EDF1_archives_paroissiales.xml",
             ):
-                filepath = self.datapath("ir_data/{}".format(filename))
                 self.import_filepath(
                     cnx,
-                    filepath,
+                    f"ir_data/{filename}",
                     service_info={"code": service.code, "eid": service.eid},
                     autodedupe_authorities="global/normalize",
                 )
@@ -844,10 +1290,9 @@ class AuthoritiesHistoryTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
                 "FRAD067_EDF1_archives_communales_deposees.xml",
                 "FRAD067_EDF1_archives_paroissiales.xml",
             ):
-                filepath = self.datapath("ir_data/{}".format(filename))
                 self.import_filepath(
                     cnx,
-                    filepath,
+                    f"ir_data/{filename}",
                     service_info={"code": service.code, "eid": service.eid},
                     autodedupe_authorities="service/strict",
                 )
@@ -871,7 +1316,7 @@ class AuthoritiesHistoryTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
             for filename in filenames:
                 self.import_filepath(
                     cnx,
-                    self.datapath("ir_data/{}".format(filename)),
+                    f"ir_data/{filename}",
                     service_info={"code": service.code, "eid": service.eid},
                     autodedupe_authorities=autodedupe_authorities,
                 )
@@ -907,7 +1352,7 @@ class AuthoritiesHistoryTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
             for filename in filenames:
                 self.import_filepath(
                     cnx,
-                    self.datapath("ir_data/{}".format(filename)),
+                    f"ir_data/{filename}",
                     service_info={"code": service.code, "eid": service.eid},
                     autodedupe_authorities=autodedupe_authorities,
                 )
@@ -949,7 +1394,7 @@ class AuthoritiesHistoryTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
             filename = "FRANOM_93202_11.xml"
             self.import_filepath(
                 cnx,
-                self.datapath("ir_data/{}".format(filename)),
+                f"ir_data/{filename}",
                 service_info={"code": service.code, "eid": service.eid},
                 autodedupe_authorities=autodedupe_authorities,
             )
@@ -966,7 +1411,7 @@ class AuthoritiesHistoryTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
             self.assertEqual(0, len(ain_touta.reverse_authority))
             self.import_filepath(
                 cnx,
-                self.datapath("ir_data/{}".format(filename)),
+                f"ir_data/{filename}",
                 service_info={"code": service.code, "eid": service.eid},
                 autodedupe_authorities=autodedupe_authorities,
             )
@@ -1034,10 +1479,9 @@ class AuthoritiesHistoryTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
                 "FRAD067_EDF1_archives_communales_deposees.xml",
                 "FRAD067_EDF1_archives_paroissiales.xml",
             ):
-                filepath = self.datapath("ir_data/{}".format(filename))
                 self.import_filepath(
                     cnx,
-                    filepath,
+                    f"ir_data/{filename}",
                     service_info={"code": service.code, "eid": service.eid},
                     autodedupe_authorities="global/normalize",
                 )
@@ -1084,10 +1528,9 @@ class AuthoritiesHistoryTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
                 "FRAD067_EDF1_archives_communales_deposees.xml",
                 "FRAD067_EDF1_archives_paroissiales.xml",
             ):
-                filepath = self.datapath("ir_data/{}".format(filename))
                 self.import_filepath(
                     cnx,
-                    filepath,
+                    f"ir_data/{filename}",
                     service_info={"code": service.code, "eid": service.eid},
                     autodedupe_authorities="service/strict",
                 )
@@ -1117,20 +1560,27 @@ class AuthoritiesHistoryTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
             )
             cnx.create_entity(
                 "ExternalUri",
-                uri="https://fr.wikipedia.org/wiki/BERGBIETEN",
-                same_as=(bergbieten1.eid, bergbieten2.eid),
+                uri="https://fr.wikipedia.org/wiki/BERGBIETEN1",
+                label="BERGBIETEN1",
+                same_as=bergbieten1.eid,
+            )
+            cnx.create_entity(
+                "ExternalUri",
+                uri="https://fr.wikipedia.org/wiki/BERGBIETEN2",
+                label="BERGBIETEN2",
+                same_as=bergbieten2.eid,
             )
             cnx.commit()
             bergbieten1 = cnx.find("LocationAuthority", eid=bergbieten1.eid).one()
             bergbieten2 = cnx.find("LocationAuthority", eid=bergbieten2.eid).one()
-            self.assertEqual(1, len(bergbieten1.same_as))
-            self.assertEqual(1, len(bergbieten2.same_as))
+            self.assertEqual(["BERGBIETEN1"], [same.label for same in bergbieten1.same_as])
+            self.assertEqual(["BERGBIETEN2"], [same.label for same in bergbieten2.same_as])
             bergbieten1.group([bergbieten2.eid])
             cnx.commit()
             bergbieten1 = cnx.find("LocationAuthority", eid=bergbieten1.eid).one()
             bergbieten2 = cnx.find("LocationAuthority", eid=bergbieten2.eid).one()
-            self.assertEqual(1, len(bergbieten1.same_as))
-            self.assertEqual(0, len(bergbieten2.same_as))
+            self.assertEqual(["BERGBIETEN1"], [same.label for same in bergbieten1.same_as])
+            self.assertEqual([], [same.label for same in bergbieten2.same_as])
 
 
 class AuthoritiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
@@ -1156,7 +1606,7 @@ class AuthoritiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
             ):
                 self.import_filepath(
                     cnx,
-                    self.datapath("ir_data/{}".format(filepath)),
+                    f"ir_data/{filepath}",
                     service_info={"code": self.service.code, "eid": self.service.eid},
                     autodedupe_authorities="service/normalize",
                 )
@@ -1187,7 +1637,7 @@ class AuthoritiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
             ):
                 self.import_filepath(
                     cnx,
-                    self.datapath("ir_data/{}".format(filepath)),
+                    f"ir_data/{filepath}",
                     service_info={"code": self.service.code, "eid": self.service.eid},
                     autodedupe_authorities="service/strict",
                 )
@@ -1203,6 +1653,106 @@ class AuthoritiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
             for eid, label in rset:
                 self.assertIn(label, expected)
             self.assertEqual(3, rset.rowcount)
+
+    def test_duplicated_subjects(self):
+        """
+        Trying: import an IR services with 20 SubjectAuthorities each
+                under index_policy == 'global/normalize'
+        Expecting: SubjectAuthority arm��e is duplicated because
+                python normalize_entry("arm��e") == "arm__e"
+                sql NORMALIZE_ENTRY("arm��e") == "arm��e"
+        """
+        with self.admin_access.cnx() as cnx:
+            cnx.create_entity("SubjectAuthority", label="arm��e")
+            cnx.create_entity("SubjectAuthority", label="armée de terre")
+            cnx.commit()
+            self.import_filepath(
+                cnx,
+                "ir_data/FRAD054_0000000405.xml",
+                autodedupe_authorities="global/normalize",
+            )
+            subjects = cnx.find("SubjectAuthority")
+            self.assertEqual(3, subjects.rowcount)
+            rset = cnx.find("SubjectAuthority", label="arm��e")
+            self.assertEqual(2, rset.rowcount)
+
+
+def mock_unindex(authority):
+    # skip the reindex in es part of unindex method
+    authority._cw.execute(
+        "DELETE {index_type} I WHERE I authority E, E eid %(eid)s".format(
+            index_type=authority.index_etype
+        ),
+        {"eid": authority.eid},
+    )
+
+
+class DeleteAuthoritiesTests(EADImportMixin, PostgresTextMixin, CubicWebTC):
+    readerconfig = merge_dicts({}, EADImportMixin.readerconfig, {"nodrop": False})
+
+    def setUp(self):
+        super(DeleteAuthoritiesTests, self).setUp()
+        with self.admin_access.cnx() as cnx:
+            self.service = cnx.create_entity("Service", code="FRAD054", category="foo")
+            self.service = cnx.create_entity("Service", code="FRAD0541", category="foo")
+            cnx.commit()
+            self.location_label = "Nancy (Meurthe-et-Moselle, France)"
+
+    @patch("cubicweb_francearchives.entities.indexes.AbstractAuthority.unindex", new=mock_unindex)
+    def test_delete_blacklisted_authority(self):
+        """
+        Trying: import an IR, group 'SUCCESSION' with SubjectAuthority "TABLE ALPHABETIQUE"
+                and delete SubjectAuthority "TABLE ALPHABETIQUE"
+
+        Expecting: the SubjectAuthority and its grouped Authorities are deleted.
+        """
+        fc_rql = "Any X WHERE X is FAComponent, X did D, D unitid %(u)s"
+        with self.admin_access.cnx() as cnx:
+            filepath = "FRAD095_00374.xml"
+            self.import_filepath(cnx, filepath)
+            fc = cnx.execute(fc_rql, {"u": "3Q7 753 - 773"}).one()
+            subjects = [(i.label, i.type) for i in fc.subject_indexes().entities()]
+            expected = [
+                ("ENREGISTREMENT", "subject"),
+                ("SUCCESSION", "subject"),
+                ("TABLE ALPHABETIQUE", "genreform"),
+            ]
+            self.assertCountEqual(expected, subjects)
+            subject = cnx.find("SubjectAuthority", label="TABLE ALPHABETIQUE").one()
+            cnx.create_entity(
+                "ExternalUri",
+                uri="https://fr.wikipedia.org/wiki/TABLE ALPHABETIQUE",
+                label="TABLE ALPHABETIQUE",
+                same_as=subject.eid,
+            )
+            cnx.commit()
+            grouped = cnx.find("SubjectAuthority", label="SUCCESSION").one()
+            grouped.cw_set(label="test")
+            cnx.commit()
+            self.assertEqual(
+                [
+                    (
+                        "f5051f99c331da3e2da1464b6374dd4917c00b8e",
+                        "subject",
+                        "SUCCESSION",
+                        "index",
+                        grouped.eid,
+                    )
+                ],
+                get_authority_history(cnx),
+            )
+            grouped.cw_set(grouped_with=subject)
+            cnx.commit()
+            fc.cw_clear_all_caches()
+            mock_unindex(subject)
+            subject.delete_blacklisted()
+            self.assertFalse(cnx.find("SubjectAuthority", eid=subject.eid))
+            self.assertFalse(cnx.find("SubjectAuthority", eid=grouped.eid))
+            self.assertEqual([], get_authority_history(cnx))
+            self.assertCountEqual(
+                [("ENREGISTREMENT", "subject")],
+                [(i.label, i.type) for i in fc.subject_indexes().entities()],
+            )
 
 
 if __name__ == "__main__":

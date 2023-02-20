@@ -10,15 +10,17 @@
 
 %sticky-btn {
   z-index: 99;
-  outline: none;
   background-color: $royal-blue;
   color: white;
   cursor: pointer;
-  border-radius: 7em;
-  border: 3px solid #fff;
-  font-size: 18px;
+  border: 1px solid #fff;
+  padding: 0.7rem 0.9rem;
 }
 
 %sticky-btn-hover {
-  background-color: $dark-dodger-blue; /* Add a dark-grey background on hover */
+  background-color: $dark-dodger-blue;
+}
+
+%pnia-btn {
+  padding: 0.5rem 1.5rem;
 }

@@ -1,39 +1,37 @@
-<section id="document" class="{{ entity.cw_etype.lower() }}-view">
-  {% block head %}
-    <h1>
-    <span class="dark-grey">{{_("translation_of").capitalize() }}</span>
-    "{{ original }}"
-    </h1>
-  {% endblock %}
-    <div class="content-metadata">
-       {% for data, icon in content_meta %}
-         <div class="content-metadata-item">
-            <i class="fa fa-{{ icon }}" aria-hidden="true"></i>
-            <span> {{ data }} </span>
-         </div>
-       {% endfor %}
+{% from "./mixins.jinja2" import content_metadata, index_values -%}
+<div class="row article-page-container">
+    <div class="{% if editable -%}col-xl-6 {% else -%} col-xl-9 {% endif -%}translation-content">
+        <article id="translation" class="{{ entity.cw_etype|lower }}-view">
+            <h1>
+                <span class="dark-grey">{{_("translation_of").capitalize() }}</span>
+                "{{ original }}"
+            </h1>
+             {{ content_metadata(metadata, _) }}
+             {% if editable -%}
+                 {% for label, value in main_props -%}
+                     <div class="row props-values">
+                         <div class="col-lg-4 props-values__label">{{ label }}{{ _(":") }}</div>
+                         <div class="col-lg-8">{{ value }}</div>
+                     </div>
+                {% endfor -%}
+            {% else %}
+                {{ index_values(main_props) }}
+            {% endif %}
     </div>
-  {% for propname, value in main_props %}
-  <div class="row indexes-values">
-     <div class="col-md-3"><h2 class="no-style">{{ propname }}</h2></div>
-     <div class="col-md-9">{{ value }}</div>
-  </div>
-  {% endfor %}
-
-
- {% if editable %}
-   <h2>
-     <i class="fa fa-language" aria-hidden="true"></i>
-     <span>{{_("See other translations")}}
-   </h2>
-   <div class="well">
-   {% for lang, trad in translations %}
-      <div class="row indexes-values">
-        <div class="col-md-3"><h2 class="no-style">{{ lang }}</h2></div>
-        <div class="col-md-9">{{ trad }}</div>
-      </div>
-   {% endfor %}
-    </div>
+    {% if editable %}
+    <aside class=" col-xl-3 siderelated d-print-none">
+        <div class="siderelated-container">
+            <h1 class="no-style siderelated__header">
+            <i class="fa fa-language" aria-hidden="true"></i>
+            <span>{{_("Other translations")}}
+            </h1>
+            {% for lang, trad in translations -%}
+            <div class="row props-values">
+                <div class="col-lg-4 props-values__label">{{ lang }}{{ _(":") }}</div>
+                <p class="col-lg-8 props-values__value">{{ trad }}</p>
+            </div>
+            {% endfor -%}
+       </div>
+    </aside>
  {% endif %}
-
-</section>
+</div>

@@ -1,0 +1,19 @@
+<div class="row document-view">
+  <h1>{{ title }}</h1>
+  <p class="d-md-none">
+      {{ mobile_alert }}
+  </p>
+  <aside class="d-none d-md-block services-map">
+    {{ map }}
+  </aside>
+  {% if a11y_alert %}
+     <p class="visually-hidden d-print-none">{{ a11y_alert }}</p>
+  {% endif %}
+  {% if service_directory_content %}
+  <section id="service-listing" class="visually-hidden">
+    {{ service_directory_content }}
+  </section>
+  {% endif %}
+</div>
+
+

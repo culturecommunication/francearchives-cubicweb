@@ -36,6 +36,7 @@ from cubicweb.devtools import testlib
 from cubicweb.devtools import PostgresApptestConfiguration
 
 from cubicweb_francearchives import SUPPORTED_LANGS
+from cubicweb_francearchives.testutils import S3BfssStorageTestMixin
 
 from pgfixtures import setup_module, teardown_module  # noqa
 
@@ -43,7 +44,7 @@ LANGS = list(SUPPORTED_LANGS[:])
 LANGS.remove("fr")
 
 
-class SectionTranslatableTests(testlib.CubicWebTC):
+class SectionTranslatableTests(S3BfssStorageTestMixin, testlib.CubicWebTC):
     configcls = PostgresApptestConfiguration
 
     def setup_database(self):
@@ -129,7 +130,7 @@ class SectionTranslatableTests(testlib.CubicWebTC):
             self.assertEqual("titre - sous-titre", section.dc_title())
 
 
-class BaseContentTranslatableTests(testlib.CubicWebTC):
+class BaseContentTranslatableTests(S3BfssStorageTestMixin, testlib.CubicWebTC):
     configcls = PostgresApptestConfiguration
 
     def setup_database(self):
@@ -165,9 +166,10 @@ class BaseContentTranslatableTests(testlib.CubicWebTC):
             bc = cnx.find("BaseContent", eid=self.bc.eid).one()
             for lang, values in bc.translations().items():
                 for attr in bc.i18nfields:
-                    if attr == "summary":
-                        continue
-                    self.assertEqual("{}_{}".format(getattr(bc, attr), lang), values[attr])
+                    if attr in ("summary", "header"):
+                        self.assertEqual(None, values[attr])
+                    else:
+                        self.assertEqual("{}_{}".format(getattr(bc, attr), lang), values[attr])
 
     def test_basecontent_translation_in_lang(self):
         """
@@ -211,14 +213,11 @@ class BaseContentTranslatableTests(testlib.CubicWebTC):
             self.assertEqual("titre", bc.dc_title())
 
 
-class CommemorationItemTranslatableTests(testlib.CubicWebTC):
+class CommemorationItemTranslatableTests(S3BfssStorageTestMixin, testlib.CubicWebTC):
     configcls = PostgresApptestConfiguration
 
     def setup_database(self):
         with self.admin_access.cnx() as cnx:
-            collection = cnx.create_entity(
-                "CommemoCollection", title="élection du Président", year=2019
-            )
             self.citem = cnx.create_entity(
                 "CommemorationItem",
                 title="titre",
@@ -226,7 +225,6 @@ class CommemorationItemTranslatableTests(testlib.CubicWebTC):
                 alphatitle="titre",
                 content="content",
                 commemoration_year=2019,
-                collection_top=collection,
             )
             cnx.commit()
             self.create_translations(cnx, self.citem)
@@ -299,7 +297,7 @@ class CommemorationItemTranslatableTests(testlib.CubicWebTC):
             self.assertEqual("titre", citem.dc_title())
 
 
-class FaqItemTranslatableTests(testlib.CubicWebTC):
+class FaqItemTranslatableTests(S3BfssStorageTestMixin, testlib.CubicWebTC):
     configcls = PostgresApptestConfiguration
 
     def setup_database(self):

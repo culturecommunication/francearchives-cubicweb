@@ -111,6 +111,24 @@ class MetaTests(CubicWebTC):
                 ],
             )
 
+    def test_faqitem_default_metadata(self):
+        """tests IMeta when for FaqItem"""
+        with self.admin_access.cnx() as cnx:
+            newscontent = cnx.create_entity(
+                "FaqItem",
+                question="<p>question</p>",
+                answer="answser",
+            )
+            meta = newscontent.cw_adapt_to("IMeta")
+            self.assertEqual(
+                meta.meta_data(),
+                [
+                    ("title", "question"),
+                    ("twitter:card", "summary"),
+                    ("twitter:site", "@FranceArchives"),
+                ],
+            )
+
 
 class OpenGraphTests(CubicWebTC):
     def test_news_opengraph(self):

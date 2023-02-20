@@ -40,6 +40,7 @@ from yams.buildobjs import (
     RichString,
     Int,
     Boolean,
+    Date,
 )
 from cubicweb import _
 from cubicweb.schema import WorkflowableEntityType
@@ -102,6 +103,7 @@ class FindingAid(EntityType):
     notes = RichString(default_format="text/html")
     scopecontent = RichString(fulltextindexed=True, default_format="text/html")
     stable_id = String(required=True, unique=True, maxsize=64)
+    digitized_versions = SubjectRelation("DigitizedVersion")
     service = SubjectRelation("Service", cardinality="?*", inlined=True)
     website_url = String(maxsize=512, description=_("used as bounce url"))
     oai_id = String(maxsize=512, indexed=True)
@@ -176,6 +178,9 @@ class OAIRepository(EntityType):
     should_normalize = Boolean(default=True)
     # "Index policy: consider indexes within the service
     context_service = Boolean(default=True)
+    # Is concerned by automatical delta oai import
+    periodical_import = Boolean(default=False)
+    last_successful_import = Date()
 
 
 class OAIImportTask(WorkflowableEntityType):

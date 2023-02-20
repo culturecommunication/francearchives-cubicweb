@@ -1,0 +1,9 @@
+{
+  "@context": {
+    "schema": "http://schema.org/"
+  },
+  "@id": "http://testing.fr/cubicweb/subject/{{eid}}",
+  "@type": "schema:Thing",
+  "schema:name": "le vélo",
+  "schema:url": "http://testing.fr/cubicweb/subject/{{eid}}"
+}

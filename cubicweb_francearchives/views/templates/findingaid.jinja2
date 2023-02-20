@@ -1,92 +1,146 @@
-<section id="document" class="document-view">
-  {% block head %}
-    <h1><span class="sr-only">{{ _(entity.__regid__) }} : </span>{{ title }}</h1>
-  {% endblock %}
-  {% block metadata %}
-    <div class="content-metadata">
-      <div class="content-metadata-item">
-        <i class="fa fa-calendar-o" aria-hidden="true">&nbsp;</i><span>{{date}}</span>
-      </div>
-      {% for attachment in attachments %}
-      <div class="content-metadata-item">
-        <a href="{{ attachment.url | e }}"
-          {% if attachment.target_blank %}
-          target="_blank" rel="noopener noreferrer nofollow"
-          {% endif %}
-          {% if attachment.title %}
-          title="{{ attachment.title }}"
-          {% endif %}
-        >
-          <i class="fa fa-download" aria-hidden="true"></i>
-          {{ attachment.link }}
-        </a>
-      </div>
-      {% endfor %}
-    </div>
-  {% endblock %}
-
-  {% block subhead %}
-  {% endblock %}
-
-  {% set publisher_title = entity.publisher_title %}
-  {% if publisher %}
-  <div class="grey-sidebar right-col">
-    <h2 class="no-style">{{ publisher.title_label }}</h2> {{ publisher.title }}
-    <div class="grey-sidebar_buttons">
-      {% if publisher.contact_url %}
-      <a href="{{ publisher.contact_url }}">{{ publisher.contact_label }}</a>
-      {% endif %}
-      {% if publisher.site_url %}
-      <a href="{{ publisher.site_url }}"
-        title="{{ _('Go to the site:') }} {{ publisher_title }} {{ _('- New window') }}"
-        {% if publisher.xiti %}
-            data-xiti-level="C"
-            data-xiti-type="{{ publisher.xiti.type }}"
-            data-xiti-name="{{ publisher.xiti.access_site}}"
-            data-xiti-n2="{{ publisher.xiti.n2}}"
-         {% endif %}
-        target="_blank" rel="noopener noreferrer nofollow" >{{ publisher.site_label }}
-      </a>
-      {% endif %}
-    </div>
-  </div>
+<section class="document-view">
+  {% if site_tour_url %}
+  {% include "site-tour.jinja2"%}
   {% endif %}
-
+</section>
+<section id="document" class="document-view finding-document">
+  <div class="page-main-content">
+    {% block head %}
+    <h1><span class="visually-hidden">{{ _(entity.__regid__) }} : </span>{{ title }}</h1>
+    {% endblock %}
+    {% block metadata %}
+    <div class="content-metadata">
+      <p class="content-metadata-item">
+        {{date}}
+      </p>
+      <p class="content-metadata-item">
+        <a class="fi-context" href="#tree-hierarchy">{{ _('See the context of the notice') }}</a>
+      </p>
+    </div>
+    {% endblock %}
+    {% block subhead %}
+    {% endblock %}
+    {% set publisher_title = entity.publisher_title %}
+    <div class="left-col">
+      <div class="document-header{% if illustation_src or digitized_urls %} document-digit-versions{% endif %}">
+        {% if iiif_manifest %}
+            {% from "./mixins.jinja2" import mirador_viewer %}
+            {{  mirador_viewer(iiif_manifest, data_url, lang) }}
+        {% else %}
+        {% if illustation_src %}
+        <div class="media-left">
+          <a target="_blank"
+             rel="noopener noreferrer nofollow"
+             href="{{ entity.thumbnail_dest }}"
+             {% if publisher.xiti %}
+             data-xiti-level="C"
+             data-xiti-type="{{ publisher.xiti.type }}"
+             data-xiti-name="{{ publisher.xiti.thumbnail_access_site }}"
+             data-xiti-n2="{{ publisher.xiti.n2}}"
+             {% endif %}
+             >
+            <img src="{{ illustation_src }}"
+                 alt="{{ _("Expand image") }} {{ _('- New window') }}"
+                 data-defaultsrc="{{ default_picto_src }}"
+            />
+          </a>
+        </div>
+        {% endif %}
+        <div class="header-buttons-wrapper">
+          {% if digitized_urls -%}
+          {% for url in digitized_urls -%}
+          <div class="grey-button">
+            <a href="{{url}}" title="{{_("Consult the digitized version")}}"
+               {% if publisher.xiti %}
+               data-xiti-level="C"
+               data-xiti-type="{{ publisher.xiti.type }}"
+               data-xiti-name="{{ publisher.xiti.digitized_version }}"
+               data-xiti-n2="{{ publisher.xiti.n2}}"
+               {% endif %}
+               target="_blank" rel="noopener noreferrer nofollow">
+              {{_("Consult the digitized version")}}
+            </a>
+          </div>
+          {% endfor -%}
+          {% endif -%}
+          {% if inventory_source %}
+          <div class="pdf-download-button">
+            <a href="{{ inventory_source.url | e }}" class="blue-button"
+               {% if inventory_source.target_blank %}
+               target="_blank" rel="noopener noreferrer nofollow"
+               {% endif %}
+               {% if inventory_source.title %}
+               title="{{ inventory_source.title }}"
+               {% endif %}
+            >
+              {{ inventory_source.link }}
+              <span class="doc-info">{{ inventory_source.info }}</span>
+              <i class="fa fa-download" aria-hidden="true"></i>
+            </a>
+          </div>
+          {% endif %}
+        </div>
+        {% endif %}
+      </div>
+      {% from "./mixins.jinja2" import index_values %}
+      {{  index_values(main_props) }}
+      {% if indexes_props %}
+      {{  index_values(indexes_props, "ir-indexes") }}
+      {% endif %}
+    </div>
+    <div class="clearfix"></div>
+    {% if faqs %}
+    {% from "./mixins.jinja2" import modalfaq %}
+    {{  modalfaq(faqs, _) }}
+    {% endif %}
+  </div>
   {% set publisher_title = entity.publisher_title %}
-  <div class="media left-col">
-    {% if entity.illustration_url %}
-    <div class="media-left">
-      <a target="_blank"
-         rel="noopener noreferrer nofollow"
-         href="{{ entity.thumbnail_dest }}"
-         {% if publisher.xiti %}
-            data-xiti-level="C"
-            data-xiti-type="{{ publisher.xiti.type }}"
-            data-xiti-name="{{ publisher.xiti.thumbnail_access_site }}"
-            data-xiti-n2="{{ publisher.xiti.n2}}"
-         {% endif %}
-         title="{{ _('Go to the site:') }} {{ publisher_title }} {{ _('- New window') }}"
-         aria-hidden="true">
-        <img src="{{ entity.illustration_url }}"
-           data-defaultsrc="{{ default_picto_src }}"
-           alt="{{_('Site:')}} {{ publisher_title }}"
-        />
-      </a>
+  <div class="ir-right-sidebar right-col">
+    {% if publisher %}
+    <div class="ir-location">
+      <div class="ir-location__header">
+        <h2>{{ _('To consult this document') }}&nbsp;:</h2>
+        <p class="publisher-title">{{ publisher.title }}</p>
+      </div>
+      <div class="ir-location__buttons">
+        {% if publisher.site_url %}
+        <a class="service-site-button blue-button" href="{{ publisher.site_url }}"
+           title="{{ publisher_title }} {{ _('- New window') }}"
+           {% if publisher.xiti %}
+           data-xiti-level="C"
+           data-xiti-type="{{ publisher.xiti.type }}"
+           data-xiti-name="{{ publisher.xiti.access_site}}"
+           data-xiti-n2="{{ publisher.xiti.n2}}"
+           {% endif %}
+           target="_blank" rel="noopener noreferrer nofollow" >
+           {{ publisher.site_label }}
+          <i class="fa fa-external-link" aria-hidden="true"></i>
+        </a>
+        {% endif %}
+        {% if publisher.contact_url %}
+        <a class="service-url-button white-button"
+           href="{{ publisher.contact_url }}">
+           {{ publisher.contact_label }}
+        </a>
+        {% endif %}
+      </div>
     </div>
     {% endif %}
+    <div class="ir-location__buttons">
+      <a class="csv-download-button white-button" href="{{ csv_props.url | e }}"
+         {% if csv_props.target_blank %}
+         target="_blank" rel="noopener noreferrer nofollow"
+         {% endif %}
+         {% if csv_props.title %}
+         title="{{ csv_props.title }}"
+         {% endif %}
+      >
+        {{ csv_props.link }}
+        <i class="fa fa-download" aria-hidden="true"></i>
 
-    <div class="media-body">
-      {% for propname, value in main_props %}
-      <div class="row indexes-values">
-        <div class="col-md-3"><h2 class="no-style">{{ propname }}</h2></div>
-        <div class="col-md-9">{{ value }}</div>
-      </div>
-      {% endfor %}
+      </a>
+
+      {% include "rdf-download-button.jinja2"%}
     </div>
   </div>
- <div class="clearfix"></div>
-  {% if cms and faqs %}
-  {% from "./mixins.jinja2" import modalfaq %}
-  {{  modalfaq(faqs, _) }}
-  {% endif %}
 </section>

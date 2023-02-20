@@ -1,0 +1,9 @@
+<section id="on-frontpage">
+<section class="article-title-container">
+  <h1 class="article-title">{{ _('On the front page') }}</h1>
+</section>
+  <div class="card-columns">
+  {% from "./mixins.jinja2" import on_front_page %}
+  {{ on_front_page(entities, _) }}
+  </div>
+</section>

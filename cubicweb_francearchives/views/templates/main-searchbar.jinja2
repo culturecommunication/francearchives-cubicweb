@@ -1,0 +1,45 @@
+        <form id="search-bar-form" action="{{ base_url }}/search" role="search" class="row">
+          <!-- 2 extra divs for typeahead -->
+          <div class="search-bar col-lg-8 offset-lg-2">
+            <div class="typeahead__container">
+              <div class="typeahead__field">
+                <label for="norql" class="visually-hidden">{{ _('###ToSearch###') }}</label>
+                <input id="norql" class="search-query" type="text"
+                       autocomplete="off" name="q"
+                       value="{{ query |e }}"
+                       title="{{ _('###ToSearch###') }}"
+                       placeholder="{{ _('###ToSearch###') }}" />
+              </div>
+              <button type="submit" class="search-submit-button" value="" title="{{ _('###ToSearch###') }}">
+                <span class="visually-hidden">{{  _('###ToSearch###') }}</span>
+              </button>
+            </div>
+            <div class="search-info fa fa-question">
+              <a href="{{ search_info_url }}" target="_blank" title="{{ _('How to search on FranceArchives?') }}"></a>
+            </div>
+          </div>
+          <span id="rbl1" class="visually-hidden">{{ _('Choose search perimeter') }}</span>
+          <div id="site-search-options" class="search-options col-lg-8 offset-lg-2" role="group" aria-labelledby="rbl1">
+            <div class="checkbox search-options__item">
+              <label for="rb1">
+                <input id="rb1" type="checkbox" name="es_escategory" value="archives"
+                       aria-labelledby="rblv1"/>
+                <span id="rblv1">{{ archives_label }}</span>
+                <span  id="rbm1" class="checkmark"></span>
+              </label>
+            </div>
+            <div class="checkbox search-options__item">
+              <label for="rb2">
+                <input id="rb2" type="checkbox" name="es_escategory" value="siteres"
+                       aria-labelledby="rblv2"/>
+                <span id="rblv2">{{ siteres_label }}</span>
+                <span id="rbm2" class="checkmark"></span>
+              </label>
+            </div>
+            {% if display_advanced_search %}
+            <div class="advanced-search search-options__item">
+                <a href="{{ advanced_search_url }}">{{ _("Advanced search") }}</a>
+            </div>
+            {% endif %}
+          </div>
+        </form>

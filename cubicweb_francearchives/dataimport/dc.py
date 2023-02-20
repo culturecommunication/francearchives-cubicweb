@@ -30,6 +30,7 @@
 #
 
 import csv
+from collections import defaultdict
 import os.path as osp
 
 import logging
@@ -39,14 +40,13 @@ from cubicweb.dataimport.stores import RQLObjectStore
 
 from cubicweb_francearchives import init_bfss
 from cubicweb_francearchives.dataimport import (
-    clean_row,
+    clean_row_dc_csv,
     strip_html,
     default_csv_metadata,
     get_date,
     get_year,
     clean_values,
-    usha1,
-    facomponent_stable_id,
+    component_stable_id_for_dc,
     load_metadata_file,
     sqlutil,
     es_bulk_index,
@@ -60,6 +60,7 @@ from cubicweb_francearchives.dataimport.ead import (
     capture_exception,
     service_infos_for_es_doc,
 )
+from cubicweb_francearchives.storage import S3BfssStorageMixIn
 
 from cubicweb_francearchives.dataimport.stores import create_massive_store
 from cubicweb_francearchives.dataimport.scripts.generate_ape_ead import (
@@ -71,16 +72,26 @@ LOGGER = logging.getLogger()
 CSV_METADATA_CACHE = {}
 
 
-def parse_dc_csv(fpath):
+def parse_dc_csv(read_func, fpath, fieldnames, log):
     """Generate a data dict by CSV entry of `fpath`"""
-    with open(fpath) as csvfile:
+    rows = []
+    with read_func(fpath) as csvfile:
         dcreader = csv.DictReader(csvfile)
+        # clean file fieldnames
+        # remove possible whitespaces in header names
+        dcreader.fieldnames = [f.strip() for f in dcreader.fieldnames]
+        if len(dcreader.fieldnames) < len(fieldnames):
+            log.error(
+                f"""Abort importing {fpath}: only found {len(dcreader.fieldnames)} fieldnames {", ".join(['"%s"' % f for f in  dcreader.fieldnames])} while {len(fieldnames)} expected. Please, check fields delimiter which must be ','"""  # noqa
+            )
+            return rows
         for row in dcreader:
-            # remove possible whitespaces in header names
             for key in list(row.keys()):
-                value = row.pop(key) or ""
-                row[key.strip()] = value.strip()
-            yield row
+                if key:
+                    value = row.pop(key) or ""
+                    row[key] = value.strip()
+            rows.append(row)
+    return rows
 
 
 def csv_metadata_without_cache(filepath, metadata_filepath=None):
@@ -90,51 +101,92 @@ def csv_metadata_without_cache(filepath, metadata_filepath=None):
     filename = osp.basename(filepath)
     if not metadata_filepath:
         return default_csv_metadata(remove_extension(filename))
-    return load_metadata_file(metadata_filepath, csv_filename=filename)[filename]
+    st = S3BfssStorageMixIn()
+    metadata_filepath = st.storage_get_metadata_file(metadata_filepath)
+    return load_metadata_file(st.storage_read_file, metadata_filepath, csv_filename=filename)[
+        filename
+    ]
 
 
 def csv_metadata_from_cache(filepath, metadata_filepath=None):
     """if import is done from CWCcommand `import_dc`:
     - look for the metadata in the same direcrtory
-    - use the cache"""
+    - use the cache
+    """
+    st = S3BfssStorageMixIn()
     if metadata_filepath:
-        return load_metadata_file(metadata_filepath)[osp.basename(filepath)]
-    directory = osp.dirname(filepath)
-    metadata_file = osp.join(directory, "metadata.csv")
+        metadata_filepath = st.storage_get_metadata_file(metadata_filepath)
+        return load_metadata_file(st.storage_read_file, metadata_filepath)[osp.basename(filepath)]
+    # try to find a metadata from the filepath
+    metadata_file = st.storage_get_metadata_file(filepath)
     all_metadata = {}
-    if not osp.isfile(metadata_file):
-        LOGGER.warning("metadata.csv file is missing in directory %s", directory)
+    if metadata_file is None:
+        LOGGER.warning(f"{metadata_file} file is missing")
     elif metadata_file not in CSV_METADATA_CACHE:
-        all_metadata = load_metadata_file(metadata_file)
+        all_metadata = load_metadata_file(st.storage_read_file, metadata_file)
         CSV_METADATA_CACHE[metadata_file] = all_metadata
     else:
         all_metadata = CSV_METADATA_CACHE[metadata_file]
     filename = osp.basename(filepath)
     if filename not in all_metadata:
-        LOGGER.info("using dummy metadata for %s", filename)
+        LOGGER.info(f"using dummy metadata for {filename}")
         return default_csv_metadata(remove_extension(filename))
     return all_metadata[filename]
 
 
 class CSVReader(Reader):
-    """expected columns for FAComoponents are:
-    ['identifiant_cote', 'date1', 'date2',
-     'description', 'format', 'langue', 'index_collectivite',
-     'index_lieu', 'conditions_acces', 'index_personne',
-     'identifiant_URI', 'origine', 'conditions_utilisation',
-     'source_complementaire', 'titre', 'type', 'source_image',
-     'index_matiere']
-    """
+    """expected columns for FAComoponents are:"""
+
+    fieldnames = [
+        "identifiant_cote",
+        "titre",
+        "origine",
+        "date1",
+        "date2",
+        "description",
+        "type",
+        "format",
+        "index_matiere",
+        "index_lieu",
+        "index_personne",
+        "index_collectivite",
+        "langue",
+        "conditions_acces",
+        "conditions_utilisation",
+        "source_complementaire",
+        "identifiant_URI",
+        "source_image",
+    ]
 
     def cleaned_rows(self, filepath):
         """check rows/files integrity"""
-        csv_empty_value = 'Skip row  {row}: missing required value for column "{col}" \n'
+        res = []
+        data = dict(
+            (idx, row)
+            for idx, row in enumerate(
+                parse_dc_csv(self.storage.storage_read_file, filepath, self.fieldnames, self.log)
+            )
+        )
+        if not data:
+            return res
+        csv_empty_value = 'Skip row {row}: missing required value for column "{col}" \n'
         csv_missing_col = 'The required column "{col}" is missing \n'
         mandatory_columns = ("titre", "identifiant_cote")
-        res = []
-        for i, row in enumerate(parse_dc_csv(filepath)):
+        identifiant_cotes = defaultdict(list)
+        # check for duplicated "identifiant_cote"
+        for idx, row in data.items():
+            identifiant_cotes[row["identifiant_cote"]].append(idx)
+        for cote, idx in identifiant_cotes.items():
+            if len(idx) > 1:
+                for i in idx:
+                    data.pop(i)
+                self.log.warning(
+                    f"""Skip rows {", ".join([str(i) for i in idx])} with duplicated values {cote} for 'identifiant_cotes' \n"""  # noqa
+                )
+        # check missing / wrong values
+        for idx, row in data.items():
             errors = []
-            if i == 0:
+            if idx == 0:
                 errors.extend(
                     [csv_missing_col.format(col=col) for col in mandatory_columns if col not in row]
                 )
@@ -143,24 +195,26 @@ class CSVReader(Reader):
             else:
                 errors.extend(
                     [
-                        csv_empty_value.format(row=i, col=col)
+                        csv_empty_value.format(row=idx, col=col)
                         for col in mandatory_columns
                         if not row[col]
                     ]
                 )
             if not errors:
-                res.append(clean_row(row))
+                res.append(clean_row_dc_csv(row))
             else:
                 self.log.warning(" ".join(errors))
         return res
 
     def import_filepath(self, services_map, filepath, metadata_filepath=None):
+        # check csv file data are valid
+        cleaned_csv_data = self.cleaned_rows(filepath)
+        if not cleaned_csv_data:
+            self.log.error(f"{filepath}: no data to import.")
+            return []
         service_infos = service_infos_from_filepath(filepath, services_map)
         self._stable_id_map = None
-        sha1 = usha1(open(filepath).read())
-        if not self.config["esonly"] and self.ignore_filepath(filepath, sha1):
-            return []
-        fa_support = self.create_file(filepath, sha1=sha1)
+        fa_support = self.create_file(filepath)
         if fa_support is None:
             return []
         if not self.config.get("dc_no_cache"):
@@ -179,9 +233,13 @@ class CSVReader(Reader):
         findingaid_attrs.update(
             {"service": service_infos.get("eid"), "creation_date": creation_date}
         )
-        for order, row in enumerate(self.cleaned_rows(filepath)):
+
+        for order, row in enumerate(cleaned_csv_data):
             es_docs.append(self.import_facomponent(row, findingaid_attrs, order, service_infos))
         self.delete_from_filename(filepath)
+        self.storage.storage_make_symlink_to_publish(
+            filepath, fa_support["data_hash"], self.config.get("appfiles-dir")
+        )
         return es_docs
 
     def import_facomponent(self, entry, findingaid_data, order, service_infos):
@@ -202,7 +260,7 @@ class CSVReader(Reader):
         did_data = self.create_entity("Did", clean_values(did_attrs))
         comp_attrs = {
             "finding_aid": findingaid_data["eid"],
-            "stable_id": facomponent_stable_id(cote, fa_stable_id),
+            "stable_id": component_stable_id_for_dc(cote, fa_stable_id),
             "did": did_data["eid"],
             "scopecontent": self.richstring_html(entry.get("description"), "scopecontent"),
             "scopecontent_format": "text/html",
@@ -224,6 +282,7 @@ class CSVReader(Reader):
         if daodef:
             digit_ver_attrs = self.create_entity("DigitizedVersion", clean_values(daodef))
             self.add_rel(comp_eid, "digitized_versions", digit_ver_attrs["eid"])
+
         es_doc = self.build_complete_es_doc(
             "FAComponent",
             comp_data,
@@ -234,7 +293,6 @@ class CSVReader(Reader):
             scopecontent=strip_html(comp_attrs.get("scopecontent")),
             index_entries=self.index_entries(entry, comp_eid, findingaid_data),
             digitized=bool(daodef),
-            digitized_versions=daodef,
             **service_infos_for_es_doc(self.store._cnx, service_infos),
         )
         self.create_entity("EsDocument", {"doc": json_dumps(es_doc["_source"]), "entity": comp_eid})

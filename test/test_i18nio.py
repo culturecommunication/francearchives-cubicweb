@@ -42,15 +42,18 @@ class PolibTests(BaseTestCase):
     def test_po_catalogs_update(self):
         po_files = i18n.all_pofiles()
         po_dicts = i18n.pofiles_as_dicts(po_files, skip_msgctxt=False)
-        po_dicts["en"][("", "Person")].msgstr = ""
+        po_dicts["en"][("", "NominaRecord")].msgstr = ""
         po_dicts = i18n.update_i18n_catalogs(
             po_files, self.datapath("translations.csv"), autosave=False, skip_msgctxt=False
         )
-        self.assertEqual("auteurfr", po_dicts["fr"][("", "Person")].msgstr)
-        self.assertEqual("auteurfr", po_dicts["en"][("", "Person")].msgstr)
-        self.assertEqual("auteurde", po_dicts["de"][("", "Person")].msgstr)
+        self.assertEqual("auteurfr", po_dicts["fr"][("", "NominaRecord")].msgstr)
+        self.assertEqual("auteurfr", po_dicts["en"][("", "NominaRecord")].msgstr)
+        self.assertEqual("auteurde", po_dicts["de"][("", "NominaRecord")].msgstr)
         self.assertEqual("nameservde", po_dicts["de"][("Service", "name")].msgstr)
         self.assertEqual("namesecten", po_dicts["en"][("Section", "name")].msgstr)
+        self.assertEqual("Article", po_dicts["fr"][("", "BaseContent")].msgstr)
+        self.assertEqual("Content", po_dicts["en"][("", "BaseContent")].msgstr)
+        self.assertEqual("Article", po_dicts["de"][("", "BaseContent")].msgstr)
 
     def test_schema_msgid_filtered(self):
         po_files = i18n.all_pofiles()

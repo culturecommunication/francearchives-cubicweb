@@ -50,20 +50,19 @@ class AbstractStaticFormView(StartupView):
         if card is not None:
             self.wview("primary", entity=card)
         form = self._cw.vreg["forms"].select(self.__regid__, self._cw)
-        with T.div(self.w, klass="row"):
-            with T.div(self.w, klass="col-md-6"):
-                form.render(w=self.w, display_progress_div=False, submitted=submitted_values)
+        form.render(w=self.w, display_progress_div=False, submitted=submitted_values)
 
 
 class AbstractPniaStaticFormRenderer(FormRenderer):
     __abstract__ = True
 
     def render_content(self, w, form, values):
-        """ pnia customization: rgaa remove useless fieldset without label"""
+        """pnia customization: rgaa remove useless fieldset without label"""
         if self.display_progress_div:
             w('<div id="progress">%s</div>' % self._cw._("validating..."))
-        self.render_fields(w, form, values)
-        self.render_buttons(w, form)
+        with T.div(w, klass="document-view"):
+            self.render_fields(w, form, values)
+            self.render_buttons(w, form)
 
     def render_fields(self, w, form, values):
         form.ctl_errors = {}

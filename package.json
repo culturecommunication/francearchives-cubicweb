@@ -1,42 +1,59 @@
 {
-  "name": "pnia",
-  "version": "1.0.0",
-  "description": "Summary ------- pnia",
-  "main": "index.js",
-  "directories": {
-    "test": "test"
-  },
-  "dependencies": {
-    "prettier": "^2.0.5",
-    "react": "^16.0.0",
-    "react-bootstrap-table": "^4.1.1",
-    "react-dom": "^16.0.0",
-    "sticky-sidebar": "^3.3.1"
-  },
-  "devDependencies": {
-    "async": "^2.6.0",
-    "babel": "^6.23.0",
-    "babel-core": "^6.26.0",
-    "babel-loader": "^7.1.2",
-    "babel-polyfill": "^6.26.0",
-    "babel-preset-env": "^1.6.1",
-    "chalk": "^2.3.0",
-    "eslint": "^4.9.0",
-    "eslint-plugin-react": "^7.4.0",
-    "pa11y": "^5.0.0-beta.5",
-    "webpack": "^3.8.1",
-    "wordwrap": "^1.0.0"
-  },
-  "scripts": {
-    "clean": "rm -rf build",
-    "format": "prettier --check appjs",
-    "format:fix": "prettier --write appjs",
-    "build": "webpack --progress",
-    "a11y": "A11Y_HOST=http://localhost:8080 node pa11y-runner.js",
-    "build-dev": "FA_DEV=1 webpack --progress",
-    "watch": "FA_DEV=1 webpack --progress -d --watch",
-    "lint": "eslint --cache appjs"
-  },
-  "author": "LOGILAB <contact@logilab.fr>",
-  "license": "CECILL-2.1"
+    "name": "pnia",
+    "version": "1.0.0",
+    "description": "Summary ------- pnia",
+    "main": "index.js",
+    "directories": {
+        "test": "test"
+    },
+    "dependencies": {
+        "@babel/core": "^7.18.6",
+        "@babel/polyfill": "^7.12.1",
+        "@babel/preset-env": "^7.18.6",
+        "@babel/preset-react": "^7.18.6",
+        "@biblissima/mirador-dl-plugin": "^0.13.0",
+        "@biblissima/mirador-image-tools": "^0.11.0",
+        "@elastic/elasticsearch": "^8.4.0",
+        "@triply/yasgui": "^4.0.114",
+        "babel-loader": "^8.2.5",
+        "bootstrap": "^5.2.0",
+        "intro.js": "^3.4.0",
+        "mirador": "^3.3.0",
+        "prettier": "^2.7.1",
+        "react": "^16.14.0",
+        "react-bootstrap": "^2.4.0",
+        "react-bootstrap-table": "^4.1.1",
+        "react-bootstrap-typeahead": "^5.2.2",
+        "react-dom": "^16.14.0",
+        "react-select": "^5.7.0"
+    },
+    "devDependencies": {
+        "async": "^2.6.0",
+        "babel": "^6.23.0",
+        "babel-preset-env": "^1.6.1",
+        "chalk": "^2.3.0",
+        "css-loader": "^6.7.3",
+        "eslint": "^7.28.1",
+        "eslint-config-prettier": "^8.5.0",
+        "eslint-plugin-prettier": "^4.0.0",
+        "eslint-plugin-react": "^7.4.0",
+        "pa11y": "^5.0.0-beta.5",
+        "style-loader": "^3.3.1",
+        "ts-loader": "^8.0.14",
+        "webpack": "^5.73.0",
+        "webpack-cli": "^4.10.0",
+        "wordwrap": "^1.0.0"
+    },
+    "scripts": {
+        "clean": "rm -rf build",
+        "format": "prettier --check appjs webpack.config.js",
+        "format:fix": "prettier --write appjs webpack.config.js",
+        "build": "webpack --progress --mode=production",
+        "a11y": "A11Y_HOST=http://localhost:8080 node pa11y-runner.js",
+        "build-dev": "FA_DEV=1 webpack --progress --mode=development",
+        "watch": "webpack --progress --watch --mode=development",
+        "lint": "eslint --cache appjs"
+    },
+    "author": "LOGILAB <contact@logilab.fr>",
+    "license": "CECILL-2.1"
 }

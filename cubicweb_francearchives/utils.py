@@ -39,6 +39,7 @@ import urllib.parse
 from collections import OrderedDict
 
 from elasticsearch.exceptions import NotFoundError
+from elasticsearch_dsl import Search, query as dsl_query
 from functools import reduce
 
 from logilab.mtconverter import xml_escape, html_unescape
@@ -47,7 +48,7 @@ from logilab.common.textutils import unormalize
 
 from cubicweb.uilib import remove_html_tags as cw_remove_html_tags
 
-from cubicweb_francearchives import GLOSSARY_CACHE
+from cubicweb_francearchives import GLOSSARY_CACHE, INDEX_ETYPE_2_URLSEGMENT
 
 from cubicweb_elasticsearch.es import get_connection
 
@@ -75,7 +76,7 @@ def format_entity_attributes(elem, result):
             for label, values in elem.items():
                 if values:
                     if label:
-                        result += '<div class="ead-label">{label}</div><div>{value}</div>'.format(
+                        result += '<div class="eac-label">{label}</div>{value}'.format(
                             label=label, value=format_entity_attributes(values, "")
                         )
                     else:
@@ -425,7 +426,7 @@ def normalize_term(term):
 
 
 def populate_terms_cache(req):
-    """"""
+    """ """
     glossary = dict(
         (term, (eid, desc))
         for eid, term, desc in req.execute(
@@ -444,21 +445,21 @@ def populate_terms_cache(req):
         if not term.strip():
             continue
         eid, desc = glossary[term]
-        html = """<a data-content="{content}" rel="popover" class="glossary-term" data-placement="auto" href="{url}" target="_blank">{{term}}\n<i class="fa fa-question"></i>\n</a>""".format(  # noqa
+        html = """<a data-bs-content="{content}" data-bs-toggle="popover" class="glossary-term" data-bs-placement="auto" data-bs-trigger="hover focus" data-bs-html="true" href="{url}" target="_blank">{{term}}\n<i class="fa fa-question"></i>\n</a>""".format(  # noqa
             content=xml_escape(desc), url=req.build_url("glossaire#{eid}".format(eid=eid))
         )
         # this don't handle accents. add it from unidecode import unidecode?
         GLOSSARY_CACHE.append((normalize_term(term), html))
 
 
-def reveal_glossary(req, text):
+def reveal_glossary(req, text, cached=False):
     def replace_term(matchobj):
         term = matchobj.group(0)
         if term:
             return glossary[normalize_term(term)].format(term=term)
         return term
 
-    if not GLOSSARY_CACHE:
+    if GLOSSARY_CACHE or not cached:
         populate_terms_cache(req)
     if not GLOSSARY_CACHE:
         return text
@@ -466,3 +467,265 @@ def reveal_glossary(req, text):
     substrs = (r"\b{}\b".format(t) for t in glossary.keys())
     regexp = re.compile("|".join(substrs), re.I | re.U | re.M)
     return regexp.sub(replace_term, text)
+
+
+def build_faq_url(req, faq_category):
+    return req.build_url("faq#{}".format(faq_category))
+
+
+def number_of_archives(req):
+    es = get_connection(req.vreg.config)
+    if not es:
+        req.error("no elastisearch connection available")
+        return 0
+    index_name = req.vreg.config["index-name"]
+    search = Search(index="{}_all".format(index_name))
+    must = [{"term": {"escategory": "archives"}}]
+    search.query = dsl_query.Bool(must=must)
+    return search.count()
+
+
+def number_of_qualified_authorities(req, auth_etype):
+    es = get_connection(req.vreg.config)
+    if not es:
+        req.error("no elastisearch connection available")
+        return 0
+    index_name = f"{req.vreg.config['index-name']}_suggest"
+    search = Search(index=index_name)
+    must = [
+        {"match": {"cw_etype": auth_etype}},
+        {"range": {"count": {"gte": 1}}},
+        {"match": {"quality": True}},
+    ]
+    search.query = dsl_query.Bool(must=must)
+    return search.count()
+
+
+def get_hp_articles(req, hp_context):
+    """Select articles for Home Page
+
+    We convert year and dates to string rather than in dates because of
+    problems with ExternRef B.C year conversions to dates
+
+    """
+    entities = []
+    sql_query = """
+    SELECT T1.C0, T1.C1, T1.C2, T1.C4, T1.C5, T1.C6 FROM
+    (SELECT DISTINCT _T0.C0 AS C0, _T0.C1 AS C1, _T0.C2 AS C2, _T0.C3 AS C3, _T0.C4 AS C4,
+     _T0.C5 AS C5, _T0.C6 AS C6
+      FROM (
+       (SELECT bc.cw_eid AS C0,
+               TRANSLATE_ENTITY(bc.cw_eid, 'title', %(lang)s) AS C1,
+               TRANSLATE_ENTITY(bc.cw_eid, 'header', %(lang)s) AS C2,
+               bc.cw_on_homepage_order AS C3,
+               bc.cw_content_type AS C4,
+               null AS C5, null AS C6
+        FROM cw_BaseContent AS bc
+        WHERE bc.cw_on_homepage=%(hp_context)s AND NOT (bc.cw_on_homepage_order IS NULL)
+      UNION ALL
+       SELECT nc.cw_eid AS C0, nc.cw_title AS C1, nc.cw_header AS C2, nc.cw_on_homepage_order AS C3,
+              'NewsContent'  AS C4,
+              to_char(cw_start_date, 'YYYYMMDD') AS C5, to_char(cw_stop_date, 'YYYYMMDD') AS C6
+       FROM cw_NewsContent AS nc
+        WHERE nc.cw_on_homepage=%(hp_context)s AND NOT (nc.cw_on_homepage_order IS NULL)
+     UNION ALL
+       SELECT er.cw_eid AS C0, er.cw_title AS C1, er.cw_header AS C2, er.cw_on_homepage_order AS C3,
+              cw_reftype  AS C4,
+              to_char(cw_start_year, '9999') AS C5, to_char(cw_stop_year, '9999') AS C6
+       FROM cw_ExternRef AS er
+        WHERE er.cw_on_homepage=%(hp_context)s AND NOT (er.cw_on_homepage_order IS NULL)
+       UNION ALL
+       SELECT ci.cw_eid AS C0,
+              TRANSLATE_ENTITY(ci.cw_eid, 'title', %(lang)s) AS C1,
+              TRANSLATE_ENTITY(ci.cw_eid, 'header', %(lang)s) AS C2,
+              ci.cw_on_homepage_order AS C3,
+              'CommemorationItem'  AS C4,
+              null AS C5, null AS C6
+       FROM cw_CommemorationItem AS ci
+       WHERE ci.cw_on_homepage=%(hp_context)s AND NOT (ci.cw_on_homepage_order IS NULL))
+     UNION ALL
+      (SELECT sec.cw_eid AS C0,
+              TRANSLATE_ENTITY(sec.cw_eid, 'title', %(lang)s) AS C1,
+              TRANSLATE_ENTITY(sec.cw_eid, 'header', %(lang)s) AS C2,
+              sec.cw_on_homepage_order AS C3,
+              'Section'  AS C4,
+              null AS C5, null AS C6
+       FROM cw_Section AS sec
+       WHERE sec.cw_on_homepage=%(hp_context)s AND NOT (sec.cw_on_homepage_order IS NULL))
+      )
+     AS _T0 ORDER BY 4)
+    AS T1 """
+    rset = req.cnx.system_sql(sql_query, {"hp_context": hp_context, "lang": req.lang}).fetchall()
+    for eid, title, header, etype, start_date, stop_date in rset:
+        entity = req.entity_from_eid(eid)
+        image = entity.image
+        default_picto_srcs = (
+            [
+                image.image_file[0].download_url(),
+                req.uiprops["DOCUMENT_IMG"],
+            ]
+            if image
+            else []
+        )
+        entities.append(
+            {
+                "url": entity.absolute_url(),
+                "title": title,
+                "plain_title": remove_html_tags(title),
+                "header": header,
+                "dates": entity.dates if start_date or stop_date else None,
+                "link_title": title_for_link(req, title),
+                "image": image,
+                "etype": req._(etype),
+                "default_picto_srcs": ";".join(default_picto_srcs),
+            }
+        )
+    return entities
+
+
+def get_autorities_by_label_es(req, label, auth_etype=None, normalize=True):
+    es = get_connection(req.vreg.config)
+    if not es:
+        req.error("no elastisearch connection available")
+        return 0
+    index_name = f"{req.vreg.config['index-name']}_suggest"
+    search = Search(index=index_name)
+    must = [{"match": {"text.raw": label}}]
+    if auth_etype:
+        must.append({"match": {"cw_etype": auth_etype}})
+    search.query = dsl_query.Bool(must=must)
+    try:
+        response = search.execute()
+    except NotFoundError:
+        return []
+    results = []
+    if response and response.hits.total:
+        for result in response:
+            results.append(
+                {
+                    "eid": result.eid,
+                    "url": req.build_url(result.urlpath),
+                    "label": result.text,
+                    "etype": result.cw_etype,
+                    "count": result.count,
+                }
+            )
+    return results
+
+
+def get_autorities_by_label(req, label, auth_etypes=None, normalize=True):
+    return get_autorities_by(req, "cw_label", label, auth_etypes=auth_etypes, normalize=normalize)
+
+
+def get_autorities_by_eid(req, eid):
+    return get_autorities_by(req, "cw_eid", eid)
+
+
+def get_autorities_by(req, where_attr, where_value, auth_etypes=None, normalize=True):
+    queries = []
+    for (
+        etype,
+        authtable,
+        indextable,
+    ) in (
+        ("LocationAuthority", "cw_locationauthority", "cw_geogname"),
+        ("SubjectAuthority", "cw_subjectauthority", "cw_subject"),
+        ("AgentAuthority", "cw_agentauthority", "cw_agentname"),
+    ):
+        if auth_etypes and etype not in auth_etypes:
+            continue
+        queries.append(
+            f"""
+        (SELECT
+           at.cw_eid,
+           at.cw_label,
+           COUNT(DISTINCT rel_index.eid_to),
+           COUNT(DISTINCT rel_group.eid_to),
+           '{etype}' as etype
+        FROM {authtable} AS at
+           LEFT OUTER JOIN {indextable} AS it ON (it.cw_authority=at.cw_eid)
+           LEFT OUTER JOIN related_authority_relation AS rel_auth
+                      ON (rel_auth.eid_to=at.cw_eid)
+           LEFT OUTER JOIN index_relation AS rel_index
+                     ON (rel_index.eid_from=it.cw_eid)
+           LEFT OUTER JOIN grouped_with_relation AS rel_group
+                              ON (rel_group.eid_from=at.cw_eid)
+           WHERE at.{where_attr}=%(value)s
+        GROUP BY  at.cw_eid,at.cw_label)"""
+        )
+    rset = req.cnx.system_sql(" UNION ".join(queries), {"value": where_value}).fetchall()
+    if not rset:
+        return []
+    results = []
+    for i, (autheid, label, count, grouped, etype) in enumerate(rset):
+        results.append(
+            {
+                "eid": autheid,
+                "url": req.build_url(f"{INDEX_ETYPE_2_URLSEGMENT[etype]}/{autheid}"),
+                "label": label,
+                "type": etype,
+                "count": count,
+            }
+        )
+    return results
+
+
+def _build_transmap(substitute):
+    transmap = {}
+    for i in range(2**16 - 1):
+        newc = unormalize(chr(i), substitute=substitute)
+        if len(newc) == 1:
+            transmap[i] = ord(newc)
+        else:
+            transmap[i] = newc
+    return transmap
+
+
+TRANSMAP = _build_transmap(substitute="_")
+
+ES_TRANSMAP = _build_transmap(substitute="#")
+
+
+NO_PUNCT_MAP = dict.fromkeys((ord(c) for c in string.punctuation), " ")
+
+
+def register_blacklisted_authorities(cnx, label):
+    if label:
+        cnx.system_sql(
+            """INSERT INTO blacklisted_authorities (label) VALUES
+            (%(label)s) ON CONFLICT (label) DO NOTHING""",
+            {"label": label},
+        )
+
+
+def es_start_letter(label):
+    if label is None:
+        return ""
+    label = label.strip()
+    letter = label[0] if len(label) > 0 else ""
+    if letter.isdigit():
+        return "0"
+    if letter in string.punctuation:
+        return "!"
+    letter = letter.strip().translate(ES_TRANSMAP).lower()
+    return letter
+
+
+def delete_from_es_by_eid(cnx, eids, indexes):
+    for index_name in indexes:
+        es = get_connection(
+            {
+                "elasticsearch-locations": cnx.vreg.config["elasticsearch-locations"],
+                "index-name": index_name,
+                "elasticsearch-verify-certs": cnx.vreg.config["elasticsearch-verify-certs"],
+                "elasticsearch-ssl-show-warn": cnx.vreg.config["elasticsearch-ssl-show-warn"],
+            }
+        )
+        if not es:
+            return
+        for eid in eids:
+            es.delete_by_query(
+                index_name,
+                doc_type="_doc",
+                body={"query": {"match": {"eid": eid}}},
+            )

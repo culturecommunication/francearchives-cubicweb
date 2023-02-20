@@ -1,5 +1,7 @@
-<section id="document" class="card-view">
+<section id="document" class="card-view document-view">
+    {% block head %}
     <h1>{{ entity.title }}</h1>
+    {% endblock %}
     {% if entity.synopsis %}
     <div class="card-view__summary">{{ entity.synopsis }}</div>
     {% endif %}

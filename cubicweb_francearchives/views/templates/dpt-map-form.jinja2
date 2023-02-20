@@ -1,7 +1,6 @@
 <form id="dpt-vmap-form" action="{{ base_url + 'annuaire/departements' }}">
   <div class="input-group">
-   <label class="sr-only" for="selector-dpt">{{ _("Select department") }}</label>
-    <select id="selector-dpt" name="dpt" class="form-control">
+    <select id="selector-dpt" name="dpt" class="form-select" aria-label="{{ _("Select department") }}">
       <option disabled="disabled" {% if selected_dpt is none %} selected="selected" {% endif %}>{{ _('Select department') }}</option>
       {% for s in services %}
         <option value="{{ s.dpt_code.lower() }}" {% if selected_dpt and selected_dpt.lower() == s.dpt_code.lower() %} selected="selected" {% endif %}>{{ s.name }}</option>

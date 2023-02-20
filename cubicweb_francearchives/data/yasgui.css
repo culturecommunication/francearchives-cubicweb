@@ -1,0 +1,17 @@
+.selectors {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-bottom: 1em;
+  position: relative;
+  z-index: 1000;
+}
+.selectors .selector {
+  width: 49%;
+  position: relative;
+  z-index: 0;
+}
+
+.yasgui .dataTable {
+  width: auto !important;
+}

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd">
+  <responseDate>2021-12-06T09:32:59Z</responseDate>
+  <request verb="ListRecords" metadataPrefix="nomina" set="ad08_registres_matricules">http://archives.cd08.fr/arkotheque/oai-pmh-2/oai2.php</request>
+  <ListRecords>
+    <record>
+      <header status="deleted">
+        <identifier>888</identifier>
+        <datestamp>2020-09-23T21:27:47Z</datestamp>
+        <setSpec>ad08_registres_matricules</setSpec>
+      </header>
+    </record>
+  </ListRecords>
+</OAI-PMH>

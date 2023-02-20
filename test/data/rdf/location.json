@@ -1,0 +1,16 @@
+{
+  "@context": {
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "schema": "http://schema.org/"
+  },
+  "@id": "http://testing.fr/cubicweb/location/{{eid}}",
+  "@type": "schema:Place",
+  "schema:latitude": 59.9,
+  "schema:longitude": 30.3,
+  "schema:name": "Saint-Pétersbourg",
+  "schema:sameAs": [
+    "https://fr.wikipedia.org/wiki/Saint-P%C3%A9tersbourg",
+    "http://www.geonames.org/498817/saint-petersburg.html"
+  ],
+  "schema:url": "http://testing.fr/cubicweb/location/{{eid}}"
+}

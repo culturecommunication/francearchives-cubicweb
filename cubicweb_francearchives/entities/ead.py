@@ -33,6 +33,7 @@
 import os.path as osp
 import json
 from collections import defaultdict
+import requests
 
 from urllib.parse import urlparse
 
@@ -44,6 +45,7 @@ from cubicweb.entities import AnyEntity, fetch_config
 
 from cubicweb_elasticsearch.entities import IFullTextIndexSerializable
 
+from cubicweb_francearchives import FEATURE_IIIF, get_user_agent
 from cubicweb_francearchives.utils import is_absolute_url
 from cubicweb_francearchives.entities import systemsource_entity
 from cubicweb_francearchives.dataimport.ead import dates_for_es_doc, service_infos_for_es_doc
@@ -122,24 +124,13 @@ class FAComponentIFTIAdapter(IFullTextIndexSerializable):
             ][0]
             es_doc.update(service_infos_for_es_doc(self._cw, infos["service"]))
             es_doc.update(dates_for_es_doc(infos))
-            if self.entity.cw_etype == "FAComponent":
-                sql_query = """
-                SELECT _DA.cw_url,_DA.cw_illustration_url, _DA.cw_role
-                FROM cw_DigitizedVersion AS _DA,
-                     digitized_versions_relation AS reldv
-                WHERE reldv.eid_from=%(eid)s AND
-                     reldv.eid_to=_DA.cw_eid
-                """
-                cu = self._cw.system_sql(sql_query, {"eid": self.entity.eid})
-                es_doc["digitized_versions"] = [
-                    {"role": role, "illustration_url": illustration_url, "url": url}
-                    for (url, illustration_url, role) in cu.fetchall()
-                ]
 
         if isinstance(es_doc, str):
             # sqlite return unicode instead of dict
             es_doc = json.loads(es_doc)
         es_doc.update(data)
+        if "dates" in es_doc and not es_doc["dates"]:
+            es_doc.pop("dates")
         return es_doc
 
 
@@ -188,9 +179,17 @@ class IndexableMixin(object):
             {"e": self.eid},
         )
 
+    def subject_authority_indexes(self):
+        return self._cw.execute(
+            "DISTINCT Any A, AP WHERE E eid %(e)s, "
+            "X is Subject, X index E, "
+            "A label AP, X authority A",
+            {"e": self.eid},
+        )
+
     def geo_indexes(self):
         return self._cw.execute(
-            "DISTINCT Any X, XP WHERE E eid %(e)s, " "X is Geogname, X index E, " "X label XP",
+            "DISTINCT Any X, XP WHERE E eid %(e)s, X is Geogname, X index E, X label XP",
             {"e": self.eid},
         )
 
@@ -242,39 +241,14 @@ class FindingAidBaseMixin(object):
                     if fa.eadid.startswith("FRAD015"):
                         path = dv.url.replace("\\", "/")
                         urls.append(
-                            "http://archives.cantal.fr/"
-                            "accounts/mnesys_ad15/datas/medias"
-                            "/{}".format(path)
+                            "http://archives.cantal.fr/accounts/mnesys_ad15/datas/medias/{}".format(
+                                path
+                            )
                         )
-        return urls
-
-
-@systemsource_entity
-class Did(AnyEntity):
-    __regid__ = "Did"
-    fetch_attrs, cw_fetch_order = fetch_config(["unitid", "unittitle", "startyear", "stopyear"])
-
-    def dc_title(self):
-        return self.unittitle or self.unitid or "???"
-
-    @property
-    def period(self):
-        period = []
-        if self.startyear:
-            period.append(str(self.startyear))
-        if self.stopyear:
-            period.append(str(self.stopyear))
-        return " - ".join(period)
-
-
-@systemsource_entity
-class FAComponent(IndexableMixin, FindingAidBaseMixin, AnyEntity):
-    __regid__ = "FAComponent"
-    fetch_attrs, cw_fetch_order = fetch_config(["component_order", "stable_id"], pclass=None)
-    rest_attr = "stable_id"
-
-    def dc_title(self):
-        return self.did[0].dc_title()
+        # try to sort urls especially for the case of viewer links such as
+        # http://www.archinoe.fr/ark:/77293/c2mzpfn3jmb4ootg/1,
+        # http://www.archinoe.fr/ark:/77293/c2mzpfn3jmb4ootg/N
+        return sorted(urls)
 
     def unprocessed_illustration_url(self):
         dvs = self.digitized_versions
@@ -343,8 +317,9 @@ class FAComponent(IndexableMixin, FindingAidBaseMixin, AnyEntity):
         elif service_code == "FRAD015":
             basepath, ext = osp.splitext(url)
             return (
-                "http://archives.cantal.fr/accounts/mnesys_ad15/"
-                "datas/medias/{}_{}_/0_0{}".format(basepath.replace("\\", "/"), ext[1:], ext)
+                "http://archives.cantal.fr/accounts/mnesys_ad15/datas/medias/{}_{}_/0_0{}".format(
+                    basepath.replace("\\", "/"), ext[1:], ext
+                )
             )
         elif service_code == "QUAIBR75":
             basepath, ext = osp.splitext(url)
@@ -365,9 +340,90 @@ class FAComponent(IndexableMixin, FindingAidBaseMixin, AnyEntity):
         return url
 
     @cachedproperty
+    def iiif_manifest(self):
+        if not FEATURE_IIIF or not self.digitized_urls:
+            return None
+        manifest = None
+        service = self.related_service
+        if not service:
+            self.error("No service found for %s (stable_id %s)", self, self.stable_id)
+            return None
+        if self._cw.vreg.config.get("instance-type") == "consultation" and not service.iiif_extptr:
+            # so far in cms we try all services
+            return None
+        # services with iiif manifest url encoded in <extptr> (LIGEO editor)
+        extptr = self.did[0].extptr
+        if extptr and "ark:/" in extptr:
+            manifest = f"{extptr.rstrip('/')}/manifest"
+        if manifest:
+            try:
+                headers = {
+                    "Accept": "application/json",
+                    "user-agent": get_user_agent(),
+                }
+                response = requests.head(manifest, headers=headers)
+                # should we check the manifest is a valid json file ?
+            except Exception as ex:
+                self.exception("[iiif urls] %s" % ex)
+                return None
+            if response.status_code >= 400:
+                # XXX response.status_code != HTTPStatus.OK
+                return None
+            if "json" not in response.headers.get("Content-Type", "").lower():
+                return None
+            # or test response.json
+        return manifest
+
+    @property
+    def qualified_index_authorities(self):
+        """indexes with role other than "index" come from tags other than <origination>"""
+        return self._cw.execute(
+            """Any A,T WHERE I authority A, I index F, I type T,
+                F eid %(eid)s, I role "index", A quality True""",
+            {"eid": self.eid},
+        )
+
+    @property
+    def qualified_originators(self):
+        """indexes with role other than "index" come from <origination>"""
+        return self._cw.execute(
+            """DISTINCT Any A WHERE F eid %(e)s, I index F, NOT I role 'index',
+            I authority A, A quality True""",
+            {"e": self.eid},
+        ).entities()
+
+
+@systemsource_entity
+class Did(AnyEntity):
+    __regid__ = "Did"
+    fetch_attrs, cw_fetch_order = fetch_config(["unitid", "unittitle", "startyear", "stopyear"])
+
+    def dc_title(self):
+        return self.unittitle or self.unitid or "???"
+
+    @property
+    def period(self):
+        period = []
+        if self.startyear:
+            period.append(str(self.startyear))
+        if self.stopyear:
+            period.append(str(self.stopyear))
+        return " - ".join(period)
+
+
+@systemsource_entity
+class FAComponent(IndexableMixin, FindingAidBaseMixin, AnyEntity):
+    __regid__ = "FAComponent"
+    fetch_attrs, cw_fetch_order = fetch_config(["component_order", "stable_id"], pclass=None)
+    rest_attr = "stable_id"
+
+    def dc_title(self):
+        return self.did[0].dc_title()
+
+    @cachedproperty
     def publisher(self):
         rset = self._cw.execute(
-            "Any P WHERE X finding_aid FA, FA publisher P, " "X eid %(x)s", {"x": self.eid}
+            "Any P WHERE X finding_aid FA, FA publisher P, X eid %(x)s", {"x": self.eid}
         )
         return rset[0][0]
 
@@ -381,6 +437,13 @@ class FAComponent(IndexableMixin, FindingAidBaseMixin, AnyEntity):
         if service:
             return self.related_service.dc_title()
         return self.publisher
+
+    def children_components_stable_ids_and_labels(self):
+        query = """Any FC, SI, LA WHERE
+                X is FAComponent, X eid %(eid)s,
+                FC parent_component X, FC stable_id SI,
+                FC did D, D unittitle LA"""
+        return self._cw.execute(query, {"eid": self.eid})
 
 
 class FAHeader(AnyEntity):
@@ -420,6 +483,10 @@ class FindingAid(IndexableMixin, FindingAidBaseMixin, AnyEntity):
             return self.service[0]
 
     @cachedproperty
+    def services(self):
+        return self.service
+
+    @cachedproperty
     def publisher_title(self):
         service = self.related_service
         if service:
@@ -440,6 +507,13 @@ class FindingAid(IndexableMixin, FindingAidBaseMixin, AnyEntity):
                 F eid %(eid)s, FA finding_aid F)
             )"""
         return {eid[0] for eid in self._cw.execute(query, {"eid": self.eid})}
+
+    def top_components_stable_ids_and_labels(self):
+        query = """Any FC, SI, LA WHERE
+                F is FindingAid, F eid %(eid)s,
+                F top_components FC, FC stable_id SI,
+                FC did D, D unittitle LA"""
+        return self._cw.execute(query, {"eid": self.eid})
 
 
 class DigitizedVersion(AnyEntity):

@@ -34,7 +34,6 @@
 
 # standard library imports
 
-
 import hashlib
 
 from lxml import etree
@@ -42,11 +41,41 @@ from lxml import etree
 import os
 import os.path
 
+from sickle import Sickle
 from sickle.iterator import OAIItemIterator
+from sickle.response import OAIResponse, XMLParser
 
 import urllib.parse
 
+from logilab.common.decorators import cachedproperty
+
+
 from cubicweb_francearchives.dataimport import normalize_for_filepath
+from cubicweb_francearchives.storage import S3BfssStorageMixIn
+
+
+class PniaOAIResponse(OAIResponse):
+    @cachedproperty
+    def http_fixed_content(self):
+        return self.http_response.content.replace(
+            b"https://www.openarchives.org/OAI", b"http://www.openarchives.org/OAI"
+        )
+
+    @property
+    def xml(self):
+        """The server's response as parsed XML, after the HTTPS replacement."""
+        return etree.XML(self.http_fixed_content, parser=XMLParser)
+
+
+class PniaSickle(Sickle):
+    def harvest(self, **kwargs):
+        """Make HTTP requests to the OAI server.
+
+        :param kwargs: OAI HTTP parameters.
+        :rtype: :class:`PniaOAIResponse`
+        """
+        oai_response = super(PniaSickle, self).harvest(**kwargs)
+        return PniaOAIResponse(oai_response.http_response, oai_response.params)
 
 
 class OAIXMLError(Exception):
@@ -55,7 +84,7 @@ class OAIXMLError(Exception):
     pass
 
 
-class OAIPMHWriter(object):
+class OAIPMHWriter:
     """OAI-PMH writer."""
 
     def __init__(self, ead_services_dir, service_infos, subdirectories=[]):
@@ -65,6 +94,7 @@ class OAIPMHWriter(object):
         :param dict service_infos: service information
         :param list subdirectories: list of subdirectories
         """
+        self.storage = S3BfssStorageMixIn()
         self.ead_services_dir = ead_services_dir
         self.service_infos = service_infos
         self.directory = self.makedir(subdirectories)
@@ -77,10 +107,10 @@ class OAIPMHWriter(object):
         :returns: directory
         :rtype: str
         """
-        directory = os.path.join(self.ead_services_dir, self.service_infos["code"], *subdirectories)
-        if not os.path.exists(directory):
-            os.makedirs(directory)
-        return directory
+        dirs = [self.ead_services_dir, self.service_infos["code"]]
+        if subdirectories:
+            dirs.extend(subdirectories)
+        return self.storage.storage_makedir(dirs)
 
     def get_file_path(self, eadid):
         """Get file path.
@@ -100,6 +130,8 @@ class OAIPMHWriter(object):
             else:
                 filename = "{}{}".format(postfix, filename)
         file_path = os.path.join(self.directory, filename)
+        if self.storage.s3_bucket:
+            return self.storage.s3.ensure_key(file_path)
         return file_path
 
     def get_file_contents(self, *args):
@@ -113,10 +145,8 @@ class OAIPMHWriter(object):
 
         :returns: str file_path: filepath
         """
-        file_path = self.get_file_path(eadid)
-        with open(file_path, "wb") as fp:
-            fp.write(file_contents)
-        return file_path
+        filepath = self.get_file_path(eadid)
+        return self.storage.storage_write_file(filepath, file_contents)
 
     def add_record(self, header, metadata):
         """Add record to list of records.

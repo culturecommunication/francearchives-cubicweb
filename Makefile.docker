@@ -1,0 +1,16 @@
+version = $(shell hg log -r . -T "{sub(':.*', '', '{latesttag}')}{sub('^-0-.*', '', '-{latesttagdistance}-hg{shortest(node, 7)}')}\n")
+tag-version = $(REGISTRY):$(version)
+tag-latest = $(REGISTRY):latest
+
+all: build
+
+build:
+	docker build --pull -t $(tag-version) .
+
+build-nocache:
+	docker build --pull --no-cache -t $(tag-version) .
+
+push:
+	docker push $(tag-version)
+	docker tag $(tag-version) $(tag-latest)
+	docker push $(tag-latest)

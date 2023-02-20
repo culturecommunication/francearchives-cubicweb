@@ -33,7 +33,7 @@ import csv
 from logilab.common import flatten
 
 from cubicweb.dataimport.importer import ExtEntity, ExtEntitiesImporter
-from cubicweb.dataimport.massive_store import MassiveObjectStore
+from cubicweb_francearchives.dataimport.stores import DeferredMassiveObjectStore
 
 
 def generte_subscribers(filepath, existing):
@@ -53,7 +53,7 @@ def generte_subscribers(filepath, existing):
 
 
 def import_subscribers(cnx, filepath):
-    store = MassiveObjectStore(cnx)
+    store = DeferredMassiveObjectStore(cnx)
     importer = ExtEntitiesImporter(cnx.vreg.schema, store)
     existing = flatten(cnx.execute("Any E WHERE X is NewsLetterSubscriber, X email E"))
     importer.import_entities(generte_subscribers(filepath, existing))

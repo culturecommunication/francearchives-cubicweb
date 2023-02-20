@@ -36,7 +36,7 @@ from collections import defaultdict
 from logilab.common.decorators import cachedproperty
 
 from cubicweb.predicates import is_instance
-from cubes.eac.entities import AbstractXmlAdapter
+from cubicweb_eac.entities import AbstractXmlAdapter
 
 from cubicweb_francearchives.entities.oai import AbstractOAIDownloadView
 from cubicweb_francearchives.dataimport.eadreader import cleanup_ns
@@ -143,14 +143,15 @@ class FindingAidOAIEADXmlAdapter(AbstractXmlAdapter):
             indexes[eid].append((itype, label))
         # fetch all subject indexes on the FindingAid and its components
         rset = self._cw.execute(
-            " (DISTINCT Any L, X WHERE A is Subject, A label L, A index X, X eid %(x)s) "
+            " (DISTINCT Any L, T, X WHERE A is Subject, A label L, A type T, "
+            " A index X, X eid %(x)s) "
             " UNION "
-            " (DISTINCT Any L, FC WHERE A is Subject, A label L, "
+            " (DISTINCT Any L, T, FC WHERE A is Subject, A label L, A type T,"
             "  A index FC, FC finding_aid X, X eid %(x)s)",
             {"x": fa_eid},
         )
-        for label, eid in rset:
-            indexes[eid].append(("subject", label))
+        for label, itype, eid in rset:
+            indexes[eid].append((itype, label))
         # fetch all gegonames indexes on the FindingAid and its components
         rset = self._cw.execute(
             " (DISTINCT Any L, X WHERE A is Geogname, A label L, A index X, X eid %(x)s) "
@@ -205,6 +206,11 @@ class FindingAidOAIEADXmlAdapter(AbstractXmlAdapter):
     def ead_from_file(self):
         ape_file = self.findingaid.ape_ead_file
         if ape_file:
+            if not ape_file[0].data:
+                self.exception(
+                    f"failed to build ead tree for FindingAid {self.findingaid.stable_id}: ape_file not found"  # noqa
+                )
+                return None
             try:
                 xmlcontent = ape_file[0].data.getvalue()
                 tree = etree.fromstring(xmlcontent)
@@ -212,7 +218,7 @@ class FindingAidOAIEADXmlAdapter(AbstractXmlAdapter):
                 return cleanup_ns(tree, "ns0")
             except Exception:
                 self.exception(
-                    "failed to build ead tree for FindingAid %s", self.findingaid.dc_title()
+                    f"failed to build ead tree for FindingAid {self.findingaid.stable_id}"
                 )
         return None
 
@@ -224,7 +230,7 @@ class FindingAidOAIEADXmlAdapter(AbstractXmlAdapter):
         html_ = getattr(entity, attr)
         if html_:
             html_ = remove_html_tags(html_.replace("\n", "")).strip(" ")
-            html_ = html.parser.HTMLParser().unescape(html_)
+            html_ = html.unescape(html_)
             return html_ if html_ else None
 
     def eadheader_element(self, parent_element):

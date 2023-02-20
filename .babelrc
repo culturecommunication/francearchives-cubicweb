@@ -2,7 +2,7 @@
   "env": {
     "production": {
       "presets": [
-        ["env", {
+        ["@babel/preset-react", {
           "targets": {
             "browsers": ["Firefox >= 48", "Chrome >= 50", "ie >= 9"]
           }
@@ -11,7 +11,7 @@
     },
     "development": {
       "presets": [
-        ["env", {
+        ["@babel/preset-react", {
           "targets": {
             "browsers": ["last 1 Chrome version", "last 1 Firefox version"]
           }
@@ -20,14 +20,12 @@
     },
     "test": {
       "presets": [
-        [
-          "env",
-          {
-            "targets": {
-              "node": "current"
-            }
-          }
-        ]
+          "@babel/preset-react",
+          ["@babel/preset-env", {
+              "targets": {
+                  "node": "current"
+              }
+          }]
       ]
     }
   }

@@ -1,0 +1,16 @@
+# ignore hidden files
+.*
+# except .babelrc, needed to build bundles-*.js by webpack
+!.babelrc
+
+*.egg-info
+**/__pycache__
+Dockerfile
+Jenkinsfile
+Makefile
+tox.ini
+deploy
+data
+test
+debian
+node_modules

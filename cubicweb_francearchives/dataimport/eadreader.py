@@ -33,13 +33,13 @@
 import logging
 import os.path as osp
 import re
-from collections import defaultdict
+from collections import defaultdict, Counter
 from itertools import chain
-
 
 from lxml import etree
 
 from logilab.common.decorators import cachedproperty
+from string import punctuation
 
 from cubicweb import _
 
@@ -48,7 +48,6 @@ from cubicweb_francearchives.dataimport import (
     normalize_entry,
     remove_extension,
     strip_nones,
-    usha1,
     InvalidFindingAid,
     clean,
 )
@@ -95,7 +94,10 @@ def unnest(node):
 
 
 def to_html(node):
-    return raw_content(html_formatter(node))
+    if isinstance(node, (list, tuple)):
+        return "\n".join([raw_content(html_formatter(node)) or "" for node in node])
+    else:
+        return raw_content(html_formatter(node))
 
 
 def optset(value):
@@ -313,7 +315,15 @@ def component_acqinfo(node):
     return "\n".join(description).strip() or None
 
 
-def file_info(node, relfiles):
+def file_info(node, relfiles, get_sha1_func):
+    """
+    :node: XML node
+    :relfiles: list of existing RELFILES for the given service
+    :get_sha1_func:  function to compute a file sha1 from its filepath
+
+    :returns: file_info
+    :rtype: dict
+    """
     href = node.attrib.get("href")
     if href:
         title = osp.basename(href)
@@ -322,11 +332,11 @@ def file_info(node, relfiles):
             return {
                 "filepath": filepath,
                 "title": osp.basename(href),
-                "sha1": usha1(open(filepath, "rb").read()),
+                "sha1": get_sha1_func(filepath),
             }
 
 
-def component_additional(node, relfiles):
+def component_additional(node, relfiles, get_sha1_func):
     description = []
     referenced_files = []
     for tag in ("otherfindaid", "relatedmaterial", "separatedmaterial", "originalsloc"):
@@ -334,7 +344,7 @@ def component_additional(node, relfiles):
             if tag != "originalsloc" and relfiles:
                 # index files
                 for archref in child.xpath(".//archref"):
-                    finfo = file_info(archref, relfiles)
+                    finfo = file_info(archref, relfiles, get_sha1_func)
                     if finfo:
                         archref.set("href", "../file/{}/{}".format(finfo["sha1"], finfo["title"]))
                         if not archref.text:
@@ -347,6 +357,23 @@ def component_additional(node, relfiles):
 
 def component_scopecontent(node):
     return elt_description(node.find("scopecontent"))
+
+
+def component_accessrestrict(node):
+    for lnode in node.findall("accessrestrict/legalstatus"):
+        altrender = lnode.get("altrender")
+        if altrender:
+            altrender.strip().rstrip(punctuation).strip()
+            lnode.text = altrender + ". " + (lnode.text or "")
+    content = to_html(node.findall("accessrestrict"))
+    if content:
+        return f'<div class="ead-section ead-accessrestrict">{content}</div>'
+
+
+def component_userestrict(node):
+    content = to_html(node.findall("userestrict"))
+    if content:
+        return f'<div class="ead-section ead-userestrict">{content}</div>'
 
 
 def component_publicationstmt(node):
@@ -390,9 +417,6 @@ def eadheader_props(eadheader):
     }
 
 
-FRAD085_RE = re.compile(r"^(fr\\ad85)\\(.*)", re.I)
-
-
 def cleanup_ns(tree, ns=None):
     """hack: remove default NS.
 
@@ -414,20 +438,24 @@ def cleanup_ns(tree, ns=None):
     return root
 
 
-def preprocess_ead(filepath):
+def preprocess_ead(data):
     """Preprocesses the EAD xml file to remove ns and internal content
 
     Parameters:
     -----------
 
-    filepath : the path to the EAD xml file
+    data : the path to the EAD xml file or EAD xml file  Binary file content
 
     Returns:
     --------
 
     the lxml etree object, cleaned from internal content
     """
-    tree = etree.parse(filepath)
+    if isinstance(data, bytes):
+        from io import BytesIO
+
+        data = BytesIO(data)
+    tree = etree.parse(data)
     cleanup_ns(tree)
     for elt in tree.findall('//*[@audience="internal"]'):
         elt.getparent().remove(elt)
@@ -444,9 +472,16 @@ def iter_components(node):
 
 def index_infos(node, role="index"):
     if node.text is None:
-        return None
-    index_label = remove_html_tags(node.text).strip()
-    index_label = next(clean(index_label))
+        return
+    index_label = None
+    #  see https://extranet.logilab.fr/73966141
+    if node.tag in ("corpname", "famname", "name", "persname", "geogname", "genreform", "subject"):
+        index_label = node.attrib.get("normal")
+        if index_label:
+            index_label = index_label.strip()
+    if not index_label:
+        index_label = remove_html_tags(node.text).strip()
+        index_label = next(clean(index_label))
     if not index_label:
         return None
     if index_label and len(index_label) > 256:
@@ -473,9 +508,10 @@ def unique_indices(entries, keys=("type", "normalized")):
 
 
 class EADXMLReader(object):
-    def __init__(self, tree, relfiles=None, log=None):
+    def __init__(self, tree, get_sha1_func, relfiles=None, log=None):
         self.tree = tree
         self.relfiles = relfiles
+        self.get_sha1_func = get_sha1_func
         self.log = LOGGER if log is None else log
 
     @cachedproperty
@@ -504,44 +540,53 @@ class EADXMLReader(object):
     def fa_headerprops(self):
         return eadheader_props(self.tree.find("eadheader"))
 
-    def archdesc_index_nodes(self):
-        for node in self.archdesc_controlacces_nodes(INDEX_TYPES):
-            yield node
+    def is_imprinted_geoname(self, node):
+        if node.tag == "geogname":
+            parent = node.getparent()
+            if parent.tag == "imprint":
+                return True
+        return False
 
-    def archdesc_controlacces_nodes(self, tagnames):
+    def archdesc_indexes(self):
+        for node in chain(
+            self.archdesc_indexes_nodes(INDEX_TYPES),
+            self.fa_maindid.findall("physdesc/{}".format("genreform")),
+        ):
+            if node is not None and not self.is_imprinted_geoname(node):
+                yield node
+
+    def archdesc_indexes_nodes(self, tagnames):
         archdesc = self.archdesc
         did = self.fa_maindid
         for tagname in tagnames:
             for node in chain(
                 archdesc.findall("controlaccess/{}".format(tagname)),
-                did.findall(".//unittitle/{}".format(tagname)),
+                did.findall("unittitle/{}".format(tagname)),
+                archdesc.findall("bioghist/{}".format(tagname)),
+                archdesc.findall("bioghist/p/{}".format(tagname)),
+                archdesc.findall("scopecontent/{}".format(tagname)),
+                archdesc.findall("scopecontent/p/{}".format(tagname)),
             ):
-                if node is not None:
-                    yield node
+                yield node
 
-    def archdesc_controlacces(self, tagname):
-        values = []
-        for node in self.archdesc_controlacces_nodes((tagname,)):
-            if node is not None and node.text:
-                values.append(node.text.strip())
-        return " ; ".join(values)
+    def component_indexes(self, component):
+        for node in chain(
+            self.component_indexes_nodes(component, INDEX_TYPES),
+            component.findall("did/physdesc//{}".format("genreform")),
+        ):
+            if node is not None and not self.is_imprinted_geoname(node):
+                yield node
 
-    def component_index_nodes(self, component):
-        for node in self.component_controlacces_nodes(component, INDEX_TYPES):
-            yield node
-
-    def component_controlacces_nodes(self, component, tagnames):
+    def component_indexes_nodes(self, component, tagnames):
+        did = component.find("did")
         for tagname in tagnames:
-            for node in component.findall("controlaccess/{}".format(tagname)):
-                if node is not None:
-                    yield node
-
-    def component_controlacces(self, component, tagname):
-        values = []
-        for node in self.component_controlacces_nodes(component, (tagname,)):
-            if node is not None and node.text:
-                values.append(node.text.strip())
-        return " ; ".join(values)
+            for node in chain(
+                component.findall("controlaccess//{}".format(tagname)),
+                did.findall("unittitle//{}".format(tagname)),
+                component.findall("bioghist//{}".format(tagname)),
+                component.findall("scopecontent//{}".format(tagname)),
+            ):
+                yield node
 
     def origination(self, host_node):
         origination = host_node.find("origination")
@@ -582,7 +627,9 @@ class EADXMLReader(object):
     def fa_properties(self):
         """FindingAid properties"""
         archdesc = self.archdesc
-        additional_resources, referenced_files = component_additional(archdesc, self.relfiles)
+        additional_resources, referenced_files = component_additional(
+            archdesc, self.relfiles, self.get_sha1_func
+        )
         did_info = self.did_properties(self.fa_maindid)
         return {
             "fatype": archdesc.get("type"),
@@ -592,9 +639,9 @@ class EADXMLReader(object):
             "bibliography_format": "text/html",
             "bioghist": to_html(archdesc.find("bioghist")),
             "bioghist_format": "text/html",
-            "accessrestrict": to_html(archdesc.find("accessrestrict")),
+            "accessrestrict": component_accessrestrict(archdesc),
             "accessrestrict_format": "text/html",
-            "userestrict": to_html(archdesc.find("userestrict")),
+            "userestrict": component_userestrict(archdesc),
             "userestrict_format": "text/html",
             "acquisition_info": component_acqinfo(archdesc),
             "acquisition_info_format": "text/html",
@@ -604,9 +651,10 @@ class EADXMLReader(object):
             "scopecontent_format": "text/html",
             "notes": to_html(archdesc.find("odd")),
             "notes_format": "text/html",
-            "index_entries": list(self.index_entries(self.archdesc_index_nodes())),
+            "index_entries": list(self.index_entries(self.archdesc_indexes())),
             "origination": list(self.origination(self.fa_maindid)),
             "did": did_info,
+            "daos": self.component_daos(archdesc),
             "referenced_files": referenced_files,
             "website_url": self.website_url(did_info),
         }
@@ -620,8 +668,8 @@ class EADXMLReader(object):
         for idx, comp_node in enumerate(iter_components(current_node)):
             try:
                 comp_props = self.component_properties(comp_node, context, component_index=idx)
-            except InvalidFindingAid:
-                self.log.warning("ignoring invalid component at path %s", idx)
+            except InvalidFindingAid as err:
+                self.log.warning("ignoring invalid component at path %s: %s", idx, err)
                 continue
             yield comp_node, comp_props
             for subcomp_node, subcomp_props in self.walk(comp_node, comp_props):
@@ -630,8 +678,10 @@ class EADXMLReader(object):
     def component_properties(self, cnode, parent, component_index):
         """FAComponent properties"""
         did = cnode.find("did")
-        eadid = self.fa_headerprops()["eadid"]
-        additional_resources, referenced_files = component_additional(cnode, self.relfiles)
+        c_id = cnode.get("id", None)
+        additional_resources, referenced_files = component_additional(
+            cnode, self.relfiles, self.get_sha1_func
+        )
         return {
             "__parent__": parent,
             "did": self.did_properties(did, parent),
@@ -647,26 +697,23 @@ class EADXMLReader(object):
             "additional_resources_format": "text/html",
             "scopecontent": component_scopecontent(cnode),
             "scopecontent_format": "text/html",
-            "accessrestrict": to_html(cnode.find("accessrestrict")),
+            "accessrestrict": component_accessrestrict(cnode),
             "accessrestrict_format": "text/html",
-            "userestrict": to_html(cnode.find("userestrict")),
+            "userestrict": component_userestrict(cnode),
             "userestrict_format": "text/html",
             "origination": list(self.origination(did)),
             "notes": to_html(cnode.find("odd")),
             "notes_format": "text/html",
-            # 'stable_id': component_stable_id(context['fa']['stable_id'],  # XXX
-            #                                  context['path']),
-            "daos": self.component_daos(cnode, eadid),
+            "daos": self.component_daos(cnode),
             "path": parent.get("path", ()) + (component_index,),
             # remove exact duplicates but keep variants and let
             # postprocess_ead_index handle them
             "index_entries": unique_indices(
-                chain(
-                    parent["index_entries"], self.index_entries(self.component_index_nodes(cnode))
-                ),
+                chain(parent["index_entries"], self.index_entries(self.component_indexes(cnode))),
                 keys=("type", "label"),
             ),
             "referenced_files": referenced_files,
+            "c_id": c_id,
         }
 
     def daodef(self, dao):
@@ -725,45 +772,7 @@ class EADXMLReader(object):
             dao_defs.extend(defs)
         return dao_defs
 
-    def merge_daogrp_FRAD085(self, daogrp, eadid):
-        """cf. https://extranet.logilab.fr/ticket/15384564"""
-        dao_defs = []
-        base_url = (
-            "http://www.archinoe.net/cg85/visu_serie.php?serie={serie}&"
-            "dossier={dos}&page=1&pagefin={nombre}"
-        )
-        for tagpath in ("dao", "daoloc"):
-            kwargs = {}
-            illustration_url = None
-            illustration_role = None
-            for dao in daogrp.findall(tagpath):
-                ddef = self.daodef(dao)
-                if ddef is None:
-                    continue
-                role = ddef["role"]
-                if role == "nombre":
-                    kwargs["nombre"] = ddef["url"]
-                else:
-                    illustration_url = ddef["illustration_url"]
-                    illustration_role = role
-                    iurl = ddef["url"] or illustration_url
-                    matchobj = re.match(FRAD085_RE, iurl)
-                    if matchobj:
-                        dos = matchobj.groups()[1].replace("\\", "/")
-                        if dos.endswith(".jpg"):
-                            dos = dos.split(".jpg")[0]
-                        kwargs.update({"serie": eadid.split("FRAD085_")[1], "dos": dos})
-            kwargs = {k: v for k, v in list(kwargs.items()) if v}
-            try:
-                url = base_url.format(**kwargs)
-            except KeyError:
-                continue
-            dao_defs.append(
-                {"role": illustration_role, "url": url, "illustration_url": illustration_url}
-            )
-        return dao_defs
-
-    def component_daos(self, node, eadid):
+    def component_daos(self, node):
         dao_defs = []
         for tagpath in ("dao", "daoloc", "did/dao", "did/daoloc"):
             for dao in node.findall(tagpath):
@@ -772,8 +781,11 @@ class EADXMLReader(object):
                     dao_defs.append(ddef)
         for tagpath in ("daogrp", "did/daogrp"):
             for daogrp in node.findall(tagpath):
-                if eadid.startswith("FRAD085_"):
-                    dao_defs.extend(self.merge_daogrp_FRAD085(daogrp, eadid))
-                else:
-                    dao_defs.extend(self.merge_daogrp(daogrp))
+                dao_defs.extend(self.merge_daogrp(daogrp))
         return dao_defs
+
+    def check_c_id_unicity(self, tree):
+        c_ids = [x for x in tree.xpath(".//c[@id]/@id")]
+        duplicate_ids = [c_id for c_id, count in Counter(c_ids).items() if count > 1 and c_id != ""]
+        if duplicate_ids:
+            raise InvalidFindingAid(f"Duplicate c@id : {', '.join(duplicate_ids)}")

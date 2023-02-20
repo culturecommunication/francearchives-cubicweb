@@ -1,49 +1,78 @@
-<section id="document" class="document-view">
-  {% block head %}
-    <h1><span class="sr-only">{{ _(entity.__regid__) }} : </span>{{ entity.dc_title() }}</h1>
-  {% endblock %}
-  {% block metadata %}
-    {% if entity.main_date %}
-    <div class="content-metadata">
-      <div class="content-metadata-item">
-        <i class="fa fa-calendar-o", aria-hidden="true"></i>
-        {{ entity.main_date }}
+{% from "./mixins.jinja2" import index_values, sharelinks, content_metadata -%}
+<section id="document" class="authorityrecord-view finding-document document-view">
+  <div class="page-main-content">
+    {%- block head -%}
+    <h1><span class="visually-hidden">{{ _(entity.__regid__) }} : </span>{{ entity.dc_title() }}</h1>
+    <div class="document__actions">
+      {{  sharelinks(sharelinks_data, _) }}
+    </div>
+    {%- endblock -%}
+    {%- block metadata -%}
+    {{ content_metadata(metadata, _) }}
+    {%- endblock -%}
+
+    {%- block subhead -%}
+    {%- endblock -%}
+
+    {%- set publisher_title = entity.publisher_title -%}
+    <div class="left-col">
+      <div class="main-properties {%if class %}{{ class }}{% endif %}">
+        {% for propname, value in main_props -%}
+        <div class="row indexes-values">
+          <div class="index-value-title"><h2 class="no-style">{{ propname }}</h2></div>
+          {% if value %}
+          <div class="index-value-text">{{ value }}</div>
+          {% endif %}
+        </div>
+        {% endfor -%}
       </div>
     </div>
+
+    <div class="clearfix"></div>
+    {% if faqs %}
+    {% from "./mixins.jinja2" import modalfaq %}
+    {{  modalfaq(faqs, _) }}
     {% endif %}
-    {% endblock %}
-
-    {% block subhead %}
-    {% endblock %}
-
-  {% set publisher_title = entity.publisher_title %}
-  {% if publisher %}
-  <div class="grey-sidebar right-col">
-    <h2 class="no-style">{{ publisher.title_label }}</h2> {{ publisher.title }}
-    <div class="grey-sidebar_buttons">
-      {% if publisher.contact_url %}
-      <a href="{{ publisher.contact_url }}">{{ publisher.contact_label }}</a>
-      {% endif %}
-      {% if publisher.site_url %}
-      <a href="{{ publisher.site_url }}"
-        title="{{ _('Go to the site:') }} {{ publisher_title }} {{ _('- New window') }}"
-        target="_blank" rel="noopener noreferrer nofollow" >{{ publisher.site_label }}
-      </a>
-      {% endif %}
-    </div>
   </div>
-  {% endif %}
-
-    <div class="media left-col">
-      {% for propname, value in main_props %}
-      {% if value %}
-      <div class="row indexes-values">
-        <div class="col-md-3"><h2 class="no-style">{{ propname }}</h2></div>
-        <div class="col-md-9">{{ value }}</div>
+  <div class="ir-right-sidebar right-col">
+    {%- if publisher -%}
+    <div class="ir-location">
+      <div class="ir-location__header">
+        <h2>{{ _('Notice author ') }}{{_(':')}}</h2>
+        <p class="publisher-title">{{ publisher.title }}</p>
       </div>
-      {% endif %}
-      {% endfor %}
+      <div class="ir-location__buttons">
+        {% if publisher.site_url %}
+        <a href="{{ publisher.site_url }}"
+           title="{{ publisher_title }} {{ _('- New window') }}"
+           {% if publisher.xiti %}
+           data-xiti-level="C"
+           data-xiti-type="{{ publisher.xiti.type }}"
+           data-xiti-name="{{ publisher.xiti.access_site}}"
+           data-xiti-n2="{{ publisher.xiti.n2}}"
+           {% endif %}
+           target="_blank" rel="noopener noreferrer nofollow" >{{ publisher.site_label }}
+          <i class="fa fa-external-link" aria-hidden="true"></i>
+        </a>
+        {% endif %}
+        {% if publisher.contact_url %}
+        <a class="service-url-button white-button" href="{{ publisher.contact_url }}">{{ publisher.contact_label }}</a>
+        {% endif %}
+      </div>
+      {%- endif -%}
+      <div class="ir-location__buttons">
+        <a class="csv-download-button white-button" href="{{ csv_props.url | e }}"
+           {% if csv_props.target_blank %}
+           target="_blank" rel="noopener noreferrer nofollow"
+           {% endif %}
+           {% if csv_props.title %}
+           title="{{ csv_props.title }}"
+           {% endif %}
+        >
+          {{ csv_props.link }}
+        </a>
+        {% include "rdf-download-button.jinja2"%}
+      </div>
     </div>
   </div>
- <div class="clearfix"></div>
 </section>

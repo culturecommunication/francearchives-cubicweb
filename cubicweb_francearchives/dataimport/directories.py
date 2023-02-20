@@ -197,6 +197,8 @@ def build_extentities(directory, departements, logos_directory, schema_attrs=Non
             }
             if not any(entry.values()):
                 continue
+            # fax no more exists in Service schema
+            entry.pop("fax")
             extid = get_extid(entry)
             social_networks = set()
             values = {}

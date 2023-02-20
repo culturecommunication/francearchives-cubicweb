@@ -28,6 +28,7 @@
 # The fact that you are presently reading this means that you have had
 # knowledge of the CeCILL-C license and that you accept its terms.
 #
+import datetime
 import unittest
 from itertools import chain
 
@@ -61,11 +62,13 @@ class VarnishTests(PostgresTextMixin, CubicWebTC):
     @patch("cubicweb_varnish.varnishadm.VarnishCLI.connect")
     def test_newscontent_homepage(self, _connect, cli_execute):
         with self.admin_access.cnx() as cnx:
-            news = cnx.create_entity("NewsContent", title="title", start_date="2015-10-12")
+            news = cnx.create_entity(
+                "NewsContent", title="title", start_date=datetime.datetime(2015, 10, 12)
+            )
             cnx.commit()
             # first we set on_homepage so we should purge homepage
             cli_execute.reset_mock()
-            news.cw_set(on_homepage=True)
+            news.cw_set(on_homepage="onhp_hp")
             cnx.commit()
             rest_path = news.rest_path()
             self.assertBanned(
@@ -75,13 +78,14 @@ class VarnishTests(PostgresTextMixin, CubicWebTC):
                     lang_urls("actualite"),
                     lang_urls("actualites"),
                     lang_urls("sitemap"),
+                    lang_urls("gerer"),
                     lang_urls(""),
                 ),
             )
             # then we reset on_homepage so news is not on home page anymore
             # we should purge homepage again
             cli_execute.reset_mock()
-            news.cw_set(on_homepage=False)
+            news.cw_set(on_homepage=None)
             cnx.commit()
             rest_path = news.rest_path()
             self.assertBanned(
@@ -91,6 +95,7 @@ class VarnishTests(PostgresTextMixin, CubicWebTC):
                     lang_urls("actualite"),
                     lang_urls("actualites"),
                     lang_urls("sitemap"),
+                    lang_urls("gerer"),
                     lang_urls(""),
                 ),
             )
@@ -236,13 +241,11 @@ class VarnishTests(PostgresTextMixin, CubicWebTC):
     @patch("cubicweb_varnish.varnishadm.VarnishCLI.connect")
     def test_commemoration_cache_invalidation(self, _connect, cli_execute):
         with self.admin_access.cnx() as cnx:
-            coll = cnx.create_entity("CommemoCollection", title="recueil 2010", year=2010)
             commemo = cnx.create_entity(
                 "CommemorationItem",
                 title="item1",
                 alphatitle="item1",
                 commemoration_year=2010,
-                collection_top=coll,
             )
             section = cnx.create_entity("Section", title="politique", children=commemo)
             cnx.commit()
@@ -250,16 +253,11 @@ class VarnishTests(PostgresTextMixin, CubicWebTC):
             commemo.cw_set(title="item1bis")
             cnx.commit()
             commemo_rest_path = commemo.rest_path()
-            coll_rest_path = coll.rest_path()
             self.assertBanned(
                 cli_execute.call_args_list,
                 chain(
                     lang_urls(commemo_rest_path),
-                    lang_urls(coll_rest_path),
                     lang_urls(section.rest_path()),
-                    lang_urls("{}/index".format(coll_rest_path)),
-                    lang_urls("{}/timeline".format(coll_rest_path)),
-                    lang_urls("{}/timeline.json".format(coll_rest_path)),
                     lang_urls("sitemap"),
                 ),
             )
@@ -497,8 +495,71 @@ class VarnishTests(PostgresTextMixin, CubicWebTC):
             cnx.commit()
             rest_path = term.rest_path()
             self.assertBanned(
-                cli_execute.call_args_list, chain(lang_urls(rest_path), lang_urls("faq"))
+                cli_execute.call_args_list,
+                chain(
+                    lang_urls(rest_path),
+                    lang_urls("faq/"),
+                    lang_urls("search/"),
+                    lang_urls("circulaires/"),
+                    lang_urls("services/"),
+                ),
             )
+
+    @patch("cubicweb_varnish.varnishadm.VarnishCLI.execute")
+    @patch("cubicweb_varnish.varnishadm.VarnishCLI.connect")
+    def test_sitelink_cache_invalidation(self, _connect, cli_execute):
+        with self.admin_access.repo_cnx() as cnx:
+            link = cnx.create_entity(
+                "SiteLink", link="@doc", label_fr="SHERPA", order=0, context="main_menu_links"
+            )
+            cnx.commit()
+            cli_execute.reset_mock()
+            link.cw_set(label_fr="@docs")
+            cnx.commit()
+            rest_path = link.rest_path()
+            self.assertBanned(
+                cli_execute.call_args_list, chain(lang_urls(rest_path), lang_urls("sitelinks"))
+            )
+
+    @patch("cubicweb_varnish.varnishadm.VarnishCLI.execute")
+    @patch("cubicweb_varnish.varnishadm.VarnishCLI.connect")
+    def test_nominarecord_cache_invalidation(self, _connect, cli_execute):
+        with self.admin_access.cnx() as cnx:
+            service = cnx.create_entity(
+                "Service", code="FRAD092", short_name="AD 92", level="level-D", category="foo"
+            )
+            agent = cnx.create_entity("AgentAuthority", label="Jean Valjean")
+            record = cnx.create_entity(
+                "NominaRecord",
+                stable_id="FRAD008_42",
+                json_data={"p": [{"n": "Valjean"}], "t": "RM"},
+                service=service.eid,
+                same_as=agent,
+            )
+            cnx.commit()
+            rest_path = record.rest_path()
+            self.maxDiff = None
+            expected = list(
+                chain(
+                    lang_urls(rest_path),  # record
+                    lang_urls("basedenoms/"),
+                    lang_urls(agent.rest_path()),  # agent
+                    lang_urls(service.rest_path()),  # service
+                    lang_urls("annuaire"),  # service
+                    lang_urls("services"),  # service
+                )
+            )
+            self.assertBanned(cli_execute.call_args_list, expected)
+            cli_execute.reset_mock()
+            record.cw_set(json_data={"p": [{"n": "Valjean", "f": "Jean"}], "t": "RM"})
+            cnx.commit()
+            expected = list(
+                chain(
+                    lang_urls(rest_path),
+                    lang_urls("basedenoms/"),
+                )
+            )
+            self.assertBanned(cli_execute.call_args_list, expected)
 
 
 if __name__ == "__main__":

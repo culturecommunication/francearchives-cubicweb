@@ -34,9 +34,10 @@ from cubicweb.devtools import testlib
 from cubicweb import NoResultError
 
 from cubicweb_francearchives.dataimport.directories import import_directory, get_dpt_code
+from cubicweb_francearchives.testutils import S3BfssStorageTestMixin
 
 
-class ImportDirectoryTC(testlib.CubicWebTC):
+class ImportDirectoryTC(S3BfssStorageTestMixin, testlib.CubicWebTC):
     def test_dpt_code_computation(self):
         res = get_dpt_code("2000")
         self.assertEqual(res, "02")
@@ -52,6 +53,9 @@ class ImportDirectoryTC(testlib.CubicWebTC):
         self.assertEqual(res, "978")
 
     def test_import_directory(self):
+        """
+        This test tests the inital import. It was not adapted to s3.
+        """
         filepath = self.datapath("directory.csv")
         departements = self.datapath("departements.csv")
         logos_services = self.datapath("logos_services")
@@ -77,7 +81,6 @@ class ImportDirectoryTC(testlib.CubicWebTC):
                 self.assertEqual(gard.bounce_url({}), "http://archives.gard.fr")
                 self.assertEqual(gard.contact_name, "Nadine Rouayroux")
                 self.assertEqual(gard.phone_number, "04.66.05.05.10")
-                self.assertEqual(gard.fax, "04.66.05.05.55")
                 self.assertEqual(gard.email, "archives@gard.fr")
                 self.assertEqual(gard.annual_closure, "se renseigner")
                 self.assertEqual(gard.level, "level-D")

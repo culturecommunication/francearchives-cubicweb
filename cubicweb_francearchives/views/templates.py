@@ -31,6 +31,8 @@
 
 """pnia_content views/templates"""
 
+from collections import defaultdict
+from random import randint
 
 from logilab.common.decorators import monkeypatch, cachedproperty
 from logilab.mtconverter import xml_escape
@@ -38,7 +40,8 @@ from logilab.mtconverter import xml_escape
 from cubicweb.utils import HTMLStream, json_dumps, HTMLHead
 from cubicweb.web.views import basetemplates
 
-from cubicweb_francearchives.utils import find_card
+from cubicweb_francearchives import FEATURE_ADVANCED_SEARCH
+from cubicweb_francearchives.utils import find_card, build_faq_url, reveal_glossary
 from cubicweb_francearchives.entities import entity2schemaorg, entity2meta, entity2opengraph
 from cubicweb_francearchives.views import (
     JinjaViewMixin,
@@ -72,7 +75,6 @@ def picklabel(labels, lang):
 
 
 class PniaMainTemplate(JinjaViewMixin, basetemplates.TheMainTemplate):
-
     template = get_template("maintemplate.jinja2")
 
     def _handle_added_resources(self, tmpl_context):
@@ -88,8 +90,8 @@ class PniaMainTemplate(JinjaViewMixin, basetemplates.TheMainTemplate):
         # handle add_js() calls
         current_jsfiles = tmpl_context["jsfiles"]
         for jsfile in self._cw.html_headers.jsfiles:
-            if jsfile not in current_jsfiles:
-                current_jsfiles.append(jsfile)
+            if jsfile["src"] not in current_jsfiles:
+                current_jsfiles.append(jsfile["src"])
         # handle add_onload() calls
         tmpl_context["inline_scripts"] = self._cw.html_headers.post_inlined_scripts
         # handle add_css() calls
@@ -112,41 +114,60 @@ class PniaMainTemplate(JinjaViewMixin, basetemplates.TheMainTemplate):
     def portal_config(self):
         return load_portal_config(self._cw.vreg.config)
 
-    def heroimage_desc(self):
-        res = self._cw.execute(
-            "Any I, C, R, N ORDERBY O WHERE  X is CssImage, "
-            'X order O, X cssid LIKE "hero-%%", X cssid I, '
-            "X caption C, X copyright R, "
-            "X cssimage_of S, S name N"
-        ).rows
-        desc = []
-        for hcls, moto, source, section_name in res:
-            build_url = self._cw.build_url
-            desc.append(
+    @cachedproperty
+    def site_links(self):
+        rset = self._cw.execute(
+            """ Any X, C, U, LF, LE, LS, LD, O ORDERBY C, O WHERE
+            X is SiteLink, X link U, X order O,
+            X label_fr LF, X label_en LE,  X label_es LS, X label_de LD,
+            X context C
+            """
+        )
+        links = defaultdict(list)
+        for eid, context, link, lf, le, ls, ld, order in rset:
+            css = "d-none d-md-block" if link in ("annuaire/departements") else ""
+            link = link if link.startswith("http") else f"%(base_url)s{link}"
+            links[context].append(
                 {
-                    "url": build_url(section_name),
-                    "hero_src": build_url("static/css/hero-{}-lr.jpg".format(section_name)),
-                    "hero_xl_src": build_url("static/css/hero-{}-xl.jpg".format(section_name)),
-                    "hero_lg_src": build_url("static/css/hero-{}-lg.jpg".format(section_name)),
-                    "hero_md_src": build_url("static/css/hero-{}-md.jpg".format(section_name)),
-                    "hero_sm_src": build_url("static/css/hero-{}-sm.jpg".format(section_name)),
-                    "hero_xs_src": build_url("static/css/hero-{}-xs.jpg".format(section_name)),
-                    "hero_class": hcls,
-                    "motos": moto,
-                    "name": section_name,
-                    "sources": source,
+                    "url": link,
+                    "css": css,
+                    "labels": {"fr": lf, "en": le or lf, "es": ls or lf, "de": ld or lf},
                 }
             )
-        return desc
+        return links
+
+    def heroimage_desc(self):
+        res = self._cw.execute(
+            "Any I, N WHERE  X is CssImage, "
+            'X cssid LIKE "hero-%%", X cssid I, '
+            "X cssimage_of S, S name N"
+        ).rows
+        build_url = self._cw.build_url
+        if res:
+            hcls, section_name = res[randint(0, len(res) - 1)]
+        else:
+            hcls, section_name = "", ""
+        return {
+            "hero_src": build_url("static/css/hero-{}-lr.jpg".format(section_name)),
+            "hero_xl_src": build_url("static/css/hero-{}-xl.jpg".format(section_name)),
+            "hero_lg_src": build_url("static/css/hero-{}-lg.jpg".format(section_name)),
+            "hero_md_src": build_url("static/css/hero-{}-md.jpg".format(section_name)),
+            "hero_sm_src": build_url("static/css/hero-{}-sm.jpg".format(section_name)),
+            "hero_xs_src": build_url("static/css/hero-{}-xs.jpg".format(section_name)),
+            "hero_class": hcls,
+        }
 
     def alert(self):
         alert = find_card(self._cw, "alert")
         if alert is not None and alert.content.strip():
             return alert.content
 
-    def heroimages(self, view):
+    def heroimage(self, view):
         if view and view.__regid__ == "index":
-            return {"alert": self.alert(), "sections": self.heroimage_desc()}
+            return {
+                "alert": self.alert(),
+                "image": self.heroimage_desc(),
+            }
         else:
             return None
 
@@ -157,26 +178,72 @@ class PniaMainTemplate(JinjaViewMixin, basetemplates.TheMainTemplate):
         return sn_data
 
     def footer_sections(self):
-        footer_sections = self.portal_config.get("footer-sections", [])
-        if not footer_sections:
-            self.error('could not find "footer-sections" in portal config')
-        return footer_sections
+        return [
+            {
+                "labels": {"fr": self._cw._(section.split("footer_")[1])},
+                "links": self.site_links.get(section, []),
+            }
+            for section in (
+                "footer_public_sites",
+                "footer_archives_sites",
+                "footer_search_notebooks",
+                "footer_usefull_links",
+            )
+        ]
 
     def footer_links(self):
-        footer_links = self.portal_config.get("footer-links", [])
-        if not footer_links:
-            self.error('could not find "footer-links" in portal config')
-        return footer_links
+        return self.site_links.get("footer_links", [])
+
+    def footer_ministries(self):
+        return self.site_links.get("footer_ministries", [])
+
+    def mission_link(self):
+        link = self.site_links.get("foundout_link")
+        return link[0] if link else None
 
     def display_top_button(self, view):
-        notop_views = ("esearch", "fa-map", "pnia.vtimeline")
+        notop_views = ("esearch",)
         if view.__regid__ in notop_views or "search" in self._cw.form:
+            return False
+        if getattr(view, "notop", False):
             return False
         return True
 
+    def top_sections_desc(self):
+        cnx = self._cw
+        topsections = top_sections_desc(self._cw)
+        # add quick links
+        _ = self._cw._
+        title, desc, label, name = _("Quick access"), None, None, "quick_access"
+        children = []
+        for eid, link, child_label, child_desc in cnx.execute(
+            """ Any X, U, L, S ORDERBY O WHERE
+                X is SiteLink, X context "main_menu_links",
+                X order O, X link U,
+                X label_{lang} L, X description_{lang} S""".format(
+                lang=cnx.lang
+            )
+        ):
+            children.append(
+                (
+                    eid,
+                    link if link.startswith("http") else self._cw.build_url(link),
+                    child_label,
+                    child_desc or "",
+                )
+            )
+        if children:
+            topsections.append((title.upper(), label, name, name, desc or "", children))
+        return topsections
+
     def template_context(self, view):
-        heroimages = self.heroimages(view)
+        archives_label = self._cw._("###in archives###")
+        siteres_label = self._cw._("###site resources###")
         lang = self._cw.lang
+        if lang == "fr":
+            archives_label = reveal_glossary(self._cw, archives_label)
+            siteres_label = reveal_glossary(self._cw, siteres_label, cached=True)
+        heroimage = self.heroimage(view)
         ctx = {
             "header_row": None,
             "title": view.page_title(),
@@ -186,26 +253,31 @@ class PniaMainTemplate(JinjaViewMixin, basetemplates.TheMainTemplate):
             "base_url": self._cw.build_url("").rstrip("/"),
             "data_url": self._cw.datadir_url,
             "page_url": xml_escape(self._cw.url()),
+            "search_info_url": build_faq_url(self._cw, "02_faq_search"),
+            "archives_label": archives_label,
+            "siteres_label": siteres_label,
+            "advanced_search_url": self._cw.build_url("advancedSearch"),
             "cssfiles": self._cw.uiprops["STYLESHEETS"][:],
             "jsfiles": self._cw.uiprops["PNIA_JAVASCRIPTS"][:],
-            "homepage": bool(heroimages),
-            "page_id": "homepage" if heroimages else "page",
+            "homepage": bool(heroimage),
+            "mission_link": self.mission_link(),
+            "page_id": "homepage" if heroimage else "page",
             "display_totop": self.display_top_button(view),
             "_": self._cw._,
-            "topsections": top_sections_desc(self._cw),
-            "heroimages": heroimages,
-            "vtimeline": view.__regid__ == "pnia.vtimeline" if view else False,
+            "topsections": self.top_sections_desc(),
+            "heroimage": heroimage,
             "sn": self.sn_data(),
             "cms": self._cw.vreg.config.get("instance-type") == "cms",
             "footer": {
-                # NOTE: those links will need to be editable in the CMS
-                "mcc_url": "http://www.culturecommunication.gouv.fr/",
-                "mindef_url": "http://www.defense.gouv.fr",
-                "mae_url": "http://www.diplomatie.gouv.fr",
-                "footer_links": self.footer_links(),
+                "ministries": self.footer_ministries(),
                 "sections": self.footer_sections(),
+                "footer_links": self.footer_links(),
             },
+            "query": self._cw.form.get("q", ""),
             "default_picto_src": self._cw.uiprops["DOCUMENT_IMG"],
+            "display_professional_access": True,
+            "display_search_bar": True,
+            "display_advanced_search": FEATURE_ADVANCED_SEARCH,
         }
         # XXX fix breadcrumbs implementation (listview, etc.) later
         breadcrumbs = []
@@ -224,7 +296,7 @@ class PniaMainTemplate(JinjaViewMixin, basetemplates.TheMainTemplate):
                 ctx["breadcrumbs"] = breadcrumbs
             graph = entity2schemaorg(entity)
             if graph is not None:
-                ctx["jsonld_graph"] = graph.decode("utf-8")
+                ctx["jsonld_graph"] = graph
             ctx["meta"] = entity2meta(entity)
             ctx["open_graph"] = entity2opengraph(entity)
             # if the view explicitly defines some chapters, use them
@@ -236,11 +308,11 @@ class PniaMainTemplate(JinjaViewMixin, basetemplates.TheMainTemplate):
                     xiti_chapters = ixiti.chapters
         elif hasattr(view, "breadcrumbs"):
             ctx["breadcrumbs"] = view.breadcrumbs
-        xiti_config = self.portal_config.get("xiti")
-        if xiti_config:  # cms shouldn't have xiti config
+        xiti_site = self._cw.vreg.config.get("xiti_site")
+        if xiti_site:  # cms shouldn't have xiti config
             ctx["xiti"] = {
-                "site": xiti_config.get("site"),
-                "n2": xiti_config.get("n2", ""),
+                "site": xiti_site,
+                "n2": self._cw.vreg.config.get("xiti_n2", ""),
                 "pagename": pagename_from_chapters(xiti_chapters),
             }
         langswitch_comp = self._cw.vreg["components"].select(

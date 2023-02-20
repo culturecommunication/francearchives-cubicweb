@@ -70,6 +70,7 @@ def create_tables(cnx):
         );
 
         ALTER TABLE public.commemo_collection_dump ADD PRIMARY KEY (collection_eid);
+        ALTER TABLE public.commemo_collection_dump REPLICA IDENTITY FULL;
 
         -- create data for collection images
         CREATE TABLE IF NOT EXISTS public.commemo_collection_images_dump (

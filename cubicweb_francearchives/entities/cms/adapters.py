@@ -36,11 +36,11 @@ import vobject
 from logilab.common.decorators import cachedproperty
 
 from cubicweb import _
-from cubicweb.view import EntityAdapter
+from cubicweb.entity import EntityAdapter
 from cubicweb.predicates import is_instance, relation_possible
 from cubicweb.entities.adapters import ITreeAdapter
 
-from cubicweb_francearchives import FIRST_LEVEL_SECTIONS
+from cubicweb_francearchives import FIRST_LEVEL_SECTIONS, SECTIONS
 
 from cubicweb_francearchives.schema.cms import CMS_OBJECTS
 from cubicweb_francearchives.views import format_date
@@ -81,12 +81,7 @@ class CommemoITemplatable(ITemplatableTranslatableApdater):
     __select__ = ITemplatableTranslatableApdater.__select__ & is_instance("CommemorationItem")
 
     def entity_param(self):
-        entity = self.cache_entity_translations()
-        if entity.manif_prog:
-            entity.manif_prog_content = entity.manif_prog[0].content
-        else:
-            entity.manif_prog_content = ""
-        return entity
+        return self.cache_entity_translations()
 
 
 class CMSObjectITreeAdapter(ITreeAdapter):
@@ -110,14 +105,14 @@ class Service2VcardAdapater(EntityAdapter):
 
     def properties(self):
         entity = self.entity
+        title = entity.dc_title() or self._cw._("n/r")  # title is mandatory
         props = {
             "n": vobject.vcard.Name(given=entity.dc_title()),
-            "fn": entity.dc_title(),
+            "fn": title,
             "nickname": entity.code,
             "email": entity.email,
             "agent": entity.contact_name,
             "tel": entity.phone_number,
-            "tel.fax": entity.fax,
             "adr": vobject.vcard.Address(
                 street=(entity.address or ""),
                 city=(entity.city or ""),
@@ -169,39 +164,45 @@ class Service2CSV(Absctract2CSV):
     __select__ = EntityAdapter.__select__ & is_instance("Service")
 
     headers = (
-        "name",
-        "email",
-        "telephone",
-        "postal_address",
-        "address",
-        "city",
-        "postalcode",
-        "openinghours",
-        "website_url",
-        "francearchives_url",
-        "service_type",
-        "service_type_label",
-        "parent_organization",
+        "Nom_du_service",
+        "Identifiant_du_service",
+        "Courriel",
+        "Telephone",
+        "Adresse_postale",
+        "Adresse_du_service",
+        "Ville",
+        "Code_postal",
+        "Horaires_d_ouverture",
+        "Site_internet",
+        "Code_insee_commune",
+        "Latitude",
+        "Longitude",
+        "Lien_FranceArchives",
+        "Categorie_de_service",
+        "Categorie",
+        "Service_de_rattachement",
     )
 
     def properties(self):
         entity = self.entity
         props = {
-            "name": entity.dc_title(),
-            "email": entity.email,
-            "agent": entity.contact_name,
-            "telephone": entity.phone_number,
-            "fax": entity.fax,
-            "address": entity.address,
-            "postal_address": entity.mailing_address,
-            "city": entity.city,
-            "postalcode": entity.zip_code,
-            "openinghours": entity.opening_period,
-            "website_url": entity.website_url,
-            "francearchives_url": entity.absolute_url(),
-            "service_type": entity.level.rsplit("-", 1)[-1] if entity.level else None,
-            "service_type_label": self._cw._(entity.level) if entity.level else None,
-            "parent_organization": entity.annex_of[0].dc_title() if entity.annex_of else None,
+            "Nom_du_service": entity.dc_title(),
+            "Identifiant_du_service": entity.code,
+            "Courriel": entity.email,
+            "Telephone": entity.phone_number,
+            "Adresse_postale": entity.mailing_address,
+            "Adresse_du_service": entity.address,
+            "Ville": entity.city,
+            "Code_postal": entity.zip_code,
+            "Horaires_d_ouverture": entity.opening_period,
+            "Site_internet": entity.website_url,
+            "Code_insee_commune": entity.code_insee_commune,
+            "Latitude": entity.latitude,
+            "Longitude": entity.longitude,
+            "Lien_FranceArchives": entity.absolute_url(),
+            "Categorie_de_service": entity.level.rsplit("-", 1)[-1] if entity.level else None,
+            "Categorie": self._cw._(entity.level) if entity.level else None,
+            "Service_de_rattachement": entity.annex_of[0].dc_title() if entity.annex_of else None,
         }
         return props
 
@@ -285,3 +286,155 @@ class Circular2CSV(Absctract2CSV):
 
     def csv_row(self):
         return self.properties()
+
+
+class FAQAdapater(EntityAdapter):
+    __regid__ = "IFaq"
+    __abstract__ = True
+
+    def faq_category(self):
+        return None
+
+
+class BaseContentFAQAdapater(FAQAdapater):
+    __select__ = FAQAdapater.__select__ & is_instance("BaseContent")
+
+    @property
+    def faq_category(self):
+        root = self.entity.cw_adapt_to("ITree").root()
+        if not root:
+            return None
+        if root.eid != SECTIONS["gerer"]:
+            return "01_faq_basecontent_public"
+        return "05_faq_basecontent_pro"
+
+
+class FAFAQAdapater(FAQAdapater):
+    __select__ = FAQAdapater.__select__ & is_instance("FindingAid", "FAComponent")
+    faq_category = "03_faq_ir"
+
+
+class CircularFAQAdapater(FAQAdapater):
+    __select__ = FAQAdapater.__select__ & is_instance("Circular")
+    faq_category = "04_faq_circular"
+
+
+class SectionTreeAdapter(EntityAdapter):
+    __select__ = is_instance("Section")
+    __regid__ = "ISectionTree"
+    possible_document_types = {
+        "BaseContent": "article",
+        "NewsContent": "actualite",
+        "CommemorationItem": "pages_histoire",
+        "ExternRef": "externref",
+        "Map": "map",
+    }
+
+    def query_variables(self, depth, max_depth, attributes, etype):
+        variables = []
+        for i in range(depth):
+            for attribute in attributes:
+                if attribute == "title":
+                    variables.append(
+                        "translate_entity(_X%(i)s.cw_eid, '%(attr)s', '%(lang)s')"
+                        % {"i": i, "lang": self._cw.lang, "attr": attribute}
+                    )
+                elif attribute == "display_mode" and i == depth - 1:
+                    variables.append("null")
+                elif attribute == "etype":
+                    if i == depth - 1:
+                        variables.append(f"'{etype}'")
+                    else:
+                        variables.append("'Section'")
+                else:
+                    variables.append("_X%s.cw_%s" % (i, attribute))
+        # Fill variables with null until max_depth is reached
+        for i in range((max_depth - depth) * len(attributes)):
+            variables.append("null")
+        return ", ".join(variables)
+
+    def query_tables(self, depth, etype):
+        tables = ["cw_Section AS _G"]
+        for i in range(depth):
+            tables.append("children_relation as rel_children%s" % i)
+        for i in range(depth - 1):
+            tables.append("cw_Section AS _X%s" % i)
+        tables.append("cw_%s AS _X%s" % (etype, depth - 1))
+        return ", ".join(tables)
+
+    def query_triples(self, depth):
+        triples = [
+            "_G.cw_eid=%(eid)s",
+            "rel_children0.eid_from=_G.cw_eid",
+            "rel_children0.eid_to=_X0.cw_eid",
+        ]
+        for i in range(1, depth):
+            triples.append("rel_children%s.eid_from=_X%s.cw_eid" % (i, i - 1))
+            triples.append("rel_children%s.eid_to=_X%s.cw_eid" % (i, i))
+        return " AND ".join(triples)
+
+    def generate_query(self, attributes, max_depth=6):
+        queries = []
+        for etype in self.possible_document_types.keys():
+            # Reversed for types resolution in postgres
+            for depth in reversed(range(1, max_depth + 1)):
+                query_template = """
+                SELECT {variables}
+                FROM {tables}
+                WHERE {triples}""".format(
+                    variables=self.query_variables(depth, max_depth, attributes, etype),
+                    tables=self.query_tables(depth, etype),
+                    triples=self.query_triples(depth),
+                )
+                queries.append(query_template)
+        return " UNION ALL ".join(queries)
+
+    def parse_results(self, row, attributes, current_dict, section_mode=None):
+        subsection = row[: len(attributes)]
+        eid = str(subsection[0])
+        if eid not in current_dict:
+            current_dict[eid] = {}
+            for index in range(len(attributes)):
+                current_dict[eid][attributes[index]] = subsection[index]
+            current_dict[eid]["children"] = {}
+            etype = current_dict[eid]["etype"]
+            current_dict[eid]["url"] = self._cw.build_url(
+                f"{self.possible_document_types.get(etype, etype.lower())}/{eid}"
+            )
+        new_row = row[len(attributes) :]
+        if new_row and new_row[0] is not None:
+            if not section_mode or current_dict[eid]["display_mode"] == section_mode:
+                self.parse_results(
+                    new_row, attributes, current_dict[eid]["children"], section_mode=section_mode
+                )
+
+    def section_dict_to_array(self, section_dict):
+        if section_dict["children"]:
+            section_dict["children"] = sorted(
+                section_dict["children"].values(), key=lambda x: x["order"] if x["order"] else 1000
+            )
+            for child_dict in section_dict["children"]:
+                self.section_dict_to_array(child_dict)
+        return section_dict
+
+    def retrieve_subsections(self, section_mode=None):
+        # Get all subsections having documents of the following types
+        attributes = ["eid", "display_mode", "title", "order", "etype"]
+        sql_query = self.generate_query(attributes)
+        sys_source = self._cw.cnx.repo.system_source
+        attrs = {"eid": self.entity.eid, "section_mode": section_mode}
+        cu = sys_source.doexec(self._cw.cnx, sql_query, attrs)
+        res = cu.fetchall()
+
+        sections_dict = {}
+        for row in res:
+            self.parse_results(row, attributes, sections_dict, section_mode=section_mode)
+
+        # sort by order and retrieve absolute_urls of documents
+        sections = []
+        for key, value in sections_dict.items():
+            section = self.section_dict_to_array(value)
+            if section:
+                sections.append(section)
+
+        return sorted(sections, key=lambda x: x["order"] if x["order"] else 1000)

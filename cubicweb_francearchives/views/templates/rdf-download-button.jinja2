@@ -1,0 +1,13 @@
+<div class="rdf-download-container">
+  <div class="dropdown rdf-download">
+    <button class="white-button" type="button" id="rdfDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+      {{_("Download RDF")}}
+      <i id="rdf-logo"></i>
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="rdfDropdown">
+      {% for url, name in rdf_formats %}
+        <li><a class="dropdown-item" href="{{url}}">{{name}}</a></li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>

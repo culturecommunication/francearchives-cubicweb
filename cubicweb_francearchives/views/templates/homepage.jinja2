@@ -1,15 +1,26 @@
-<nav id="content-headings" role="navigation">
-<div class ="row">
-     <h1 class="sr-only">{{ _('Content') }} </h1>
-    {% for title, label, url, cssclass, desc in topsections %}
-    <div class="col-md-4">
-        <a href="{{ base_url }}/{{  url }}">
-            <div class="heading-{{ cssclass }}"></div>
-            <h2><span class="heading-item-top">{{ title }}</span>
-                <span class="heading-item-bottom">{{ label }}</span>
-            </h2>
+<h1 class="visually-hidden">{{ _('Content') }} </h1>
+<nav id="content-headings">
+  <div class ="row">
+    {% for title, label, url, cssclass, desc, subsections in topsections %}
+    {% if url in ("decouvrir", "comprendre", "rechercher") %}
+    <div class="col-lg-4 heading-container" id="heading-{{ cssclass }}">
+      <div class="content-heading">
+        <div class="content-heading__icon-{{ cssclass }}"></div>
+        <a href="{{ base_url }}/{{  url }}" class="content-heading__title">
+          <h2>{{ title }}</h2>
         </a>
+        <ul>
+          {% for eid, suburl, subtitle, subdesc in subsections[:3] %}
+          <li>
+            <a href="{{ suburl }}">{{ _(subtitle) }}</a>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
     </div>
+    {% endif %}
     {% endfor %}
-</div>
+  </div>
 </nav>
+{% block onhomepage %}
+{% endblock %}

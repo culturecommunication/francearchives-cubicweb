@@ -28,20 +28,40 @@
 # The fact that you are presently reading this means that you have had
 # knowledge of the CeCILL-C license and that you accept its terms.
 #
+from datetime import datetime
 import unittest
-import json
 
+from rdflib import Graph
+from rdflib.compare import graph_diff
+
+from cubicweb import Binary
 from cubicweb.devtools import testlib
 
 from cubicweb_francearchives.entities import entity2schemaorg
 
-from cubicweb_francearchives.testutils import PostgresTextMixin
+from cubicweb_francearchives.testutils import PostgresTextMixin, S3BfssStorageTestMixin
 from pgfixtures import setup_module, teardown_module  # noqa
 
 
-class SchemaOrgFindingAidTests(PostgresTextMixin, testlib.CubicWebTC):
+class SchemaOrgTests(S3BfssStorageTestMixin, testlib.CubicWebTC):
+    def compare_graphs(self, graph, target_rdf_filepath, template_params={}):
+        with open(self.datapath(target_rdf_filepath), "r") as f:
+            target_rdf_content = f.read()
+            for key, value in template_params.items():
+                target_rdf_content = target_rdf_content.replace("{{" + key + "}}", str(value))
+            target_graph = Graph().parse(data=target_rdf_content, format="json-ld")
+            common, tested_only, target_only = graph_diff(graph, target_graph)
+
+            self.assertEqual(len(tested_only), 0)
+            self.assertEqual(len(target_only), 0)
+
+
+class SchemaOrgFindingAidTests(SchemaOrgTests, PostgresTextMixin):
     def setup_database(self):
         with self.admin_access.cnx() as cnx:
+            service = cnx.create_entity(
+                "Service", code="FRAD084", category="foo", name="Archives dep"
+            )
             fadid = cnx.create_entity("Did", unitid="maindid", unittitle="maindid-title")
             fcdid = cnx.create_entity(
                 "Did",
@@ -58,6 +78,7 @@ class SchemaOrgFindingAidTests(PostgresTextMixin, testlib.CubicWebTC):
                 stable_id="FRAD084_xxx",
                 eadid="FRAD084_xxx",
                 publisher="FRAD084",
+                service=service,
                 did=fadid,
                 fa_header=cnx.create_entity("FAHeader"),
             )
@@ -82,16 +103,21 @@ class SchemaOrgFindingAidTests(PostgresTextMixin, testlib.CubicWebTC):
                 ),
                 index=fa,
             )
+            savonarole = cnx.create_entity(
+                "AgentAuthority",
+                label="Jérôme Savonarole",
+            )
+            cnx.create_entity(
+                "NominaRecord",
+                stable_id="FRAD084_42",
+                json_data={"p": [{"f": "Jérôme", "n": "Savonarole"}], "t": "AA"},
+                service=service,
+                same_as=savonarole,
+            )
             cnx.create_entity(
                 "AgentName",
                 role="indextest",
-                authority=cnx.create_entity(
-                    "AgentAuthority",
-                    label="Jérôme Savonarole",
-                    reverse_authority=cnx.create_entity(
-                        "Person", name="Savonarole", forenames="Jérôme", publisher="nomina"
-                    ),
-                ),
+                authority=savonarole,
                 index=facomp,
             )
             cnx.commit()
@@ -100,65 +126,22 @@ class SchemaOrgFindingAidTests(PostgresTextMixin, testlib.CubicWebTC):
 
     def test_facomponent(self):
         with self.admin_access.cnx() as cnx:
-            fa = cnx.entity_from_eid(self.fa_eid)
+            cnx.entity_from_eid(self.fa_eid)
             facomp = cnx.entity_from_eid(self.facomp_eid)
-            graph = entity2schemaorg(facomp)
-            self.assertDictEqual(
-                json.loads(graph.decode("utf-8")),
-                {
-                    "@context": {
-                        "crm": "http://www.cidoc-crm.org/rdfs/cidoc_crm_v5.0.2_english_label.rdfs#",
-                        "edm": "http://www.europeana.eu/schemas/edm/",
-                        "ore": "http://www.openarchives.org/ore/terms/",
-                        "rdaGr2": "http://rdvocab.info/ElementsGr2",
-                        "dcmitype": "http://purl.org/dc/dcmitype/",
-                        "dcterms": "http://purl.org/dc/terms/",
-                        "foaf": "http://xmlns.com/foaf/0.1/",
-                        "owl": "http://www.w3.org/2002/07/owl#",
-                        "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-                        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-                        "schema": "http://schema.org/",
-                        "skos": "http://www.w3.org/2004/02/skos/core#",
-                    },
-                    "@id": facomp.absolute_url(),
-                    "@type": "schema:CreativeWork",
-                    "schema:contentLocation": "fc-origination",
-                    "schema:mentions": "fc-scoppecontent",
-                    "schema:name": "fcdid-title",
-                    "schema:isPartof": {
-                        "@id": fa.absolute_url(),
-                    },
-                },
-            )
+            graph = Graph().parse(data=entity2schemaorg(facomp), format="json-ld")
+            self.compare_graphs(graph, "rdf/facomponent.json")
 
     def test_findingaid(self):
         with self.admin_access.cnx() as cnx:
             fa = cnx.entity_from_eid(self.fa_eid)
-            facomp = cnx.entity_from_eid(self.facomp_eid)
             authority = cnx.find("SubjectAuthority", label="Paris").one()
-            exturl = cnx.find("ExternalUri", uri="https://fr.wikipedia.org/wiki/Paris").one()
-            graph = json.loads(entity2schemaorg(fa).decode("utf-8"))["@graph"]
-            self.assertCountEqual(
-                graph,
-                [
-                    {
-                        "@id": authority.absolute_url(),
-                        "schema:sameAs": exturl.uri,
-                    },
-                    {
-                        "@id": fa.absolute_url(),
-                        "@type": "schema:CreativeWork",
-                        "schema:about": authority.absolute_url(),
-                        "schema:name": "maindid-title",
-                        "schema:hasPart": {
-                            "@id": facomp.absolute_url(),
-                        },
-                    },
-                ],
+            graph = Graph().parse(data=entity2schemaorg(fa), format="json-ld")
+            self.compare_graphs(
+                graph, "rdf/findingaid.json", template_params={"subjectEid": authority.eid}
             )
 
 
-class SchemaOrgTests(testlib.CubicWebTC):
+class SchemaOrgCmsTests(SchemaOrgTests):
     def test_service(self):
         with self.admin_access.cnx() as cnx:
             s1 = cnx.create_entity(
@@ -166,7 +149,7 @@ class SchemaOrgTests(testlib.CubicWebTC):
                 category="?1",
                 name="s1",
                 phone_number="s1-phone",
-                fax="s1-fax",
+                code_insee_commune="23910",
                 email="s1-email",
                 address="s1-address",
                 mailing_address="s1-maddress",
@@ -187,45 +170,15 @@ class SchemaOrgTests(testlib.CubicWebTC):
                 contact_name="jean paul",
                 annex_of=s1,
             )
-            graph = json.loads(entity2schemaorg(s1).decode("utf-8"))["@graph"]
-            # make sure organisation item comes first
-            graph = sorted(graph, key=lambda item: not item.get("@type") == "schema:Organization")
-            # can't predict blank node hash strings, just make sure
-            # that the same id is used to specify the "address" property
-            self.assertEqual(graph[0]["schema:address"]["@id"], graph[1]["@id"])
-            graph[0]["schema:address"]["@id"] = graph[1]["@id"] = "the-address"
-            self.assertEqual(
-                graph,
-                [
-                    {
-                        "@id": s1.absolute_url(),
-                        "@type": "schema:Organization",
-                        "schema:address": {"@id": "the-address"},
-                        "schema:email": "s1-email",
-                        "schema:employee": "jean michel",
-                        "schema:faxNumber": "s1-fax",
-                        "schema:legalName": "s1",
-                        "schema:openinghours": "op-period",
-                        "schema:subOrganization": {"@id": s2.absolute_url()},
-                        "schema:telephone": "s1-phone",
-                    },
-                    {
-                        "@id": "the-address",
-                        "schema:addressCountry": "fr",
-                        "schema:addressLocality": "Paris",
-                        "schema:postalCode": "75",
-                        "schema:streetAddress": "s1-address",
-                        "schema:type": {"@id": "schema:PostalAddress"},
-                    },
-                ],
+            graph = Graph().parse(data=entity2schemaorg(s1), format="json-ld")
+            self.compare_graphs(
+                graph, "rdf/service.json", template_params={"eid": s1.eid, "eidSub": s2.eid}
             )
 
-
-class SchemaOrgBaseContentTests(testlib.CubicWebTC):
     def test_base_content(self):
         base_content_data = {
             "title": "the-title",
-            "keywords": "the-keywords",
+            "keywords": "entity-keywords",
             "content": "the-content",
             "content_format": "text/plain",
             "creation_date": "1970-01-01",
@@ -233,38 +186,37 @@ class SchemaOrgBaseContentTests(testlib.CubicWebTC):
             "description": "the-description",
             "order": 1,
             "uuid": "the-uuid",
+            "header": "header",
         }
 
-        metadata_data = {"creator": "toto"}
-
+        metadata_data = {"creator": "toto", "keywords": "the-keywords"}
+        image_data = {
+            "caption": "caption",
+            "description": "description",
+            "copyright": "copyright",
+        }
         with self.admin_access.cnx() as cnx:
             metadata = cnx.create_entity("Metadata", **metadata_data)
-            entity = cnx.create_entity("BaseContent", metadata=metadata, **base_content_data)
+            image = cnx.create_entity(
+                "Image",
+                image_file=cnx.create_entity(
+                    "File",
+                    data=Binary(b"some-file-data"),
+                    data_name="image.png",
+                    data_format="image/png",
+                ),
+                **image_data
+            )
+            entity = cnx.create_entity(
+                "BaseContent", metadata=metadata, basecontent_image=image, **base_content_data
+            )
 
             cnx.commit()
             entity.cw_clear_all_caches()
 
-            graph = entity2schemaorg(entity)
-            data = json.loads(graph.decode("utf-8"))
+            graph = Graph().parse(data=entity2schemaorg(entity), format="json-ld")
+            self.compare_graphs(graph, "rdf/basecontent.json", template_params={"eid": entity.eid})
 
-            # Attributes that should be set
-            self.assertEqual(data["@context"]["schema"], "http://schema.org/")
-            self.assertEqual(data["@type"], "schema:Article")
-            self.assertEqual(data["@id"], entity.absolute_url())
-            self.assertEqual(data["schema:url"], entity.absolute_url())
-            self.assertEqual(data["schema:name"], base_content_data["title"])
-            self.assertEqual(data["schema:dateCreated"], base_content_data["creation_date"])
-            self.assertEqual(data["schema:datePublished"], base_content_data["creation_date"])
-            self.assertEqual(data["schema:dateModified"], base_content_data["modification_date"])
-            self.assertEqual(data["schema:keywords"], base_content_data["keywords"])
-            self.assertEqual(data["schema:inLanguage"], "FR")
-            self.assertEqual(data["schema:author"], metadata_data["creator"])
-
-            # Attributes that should not be set
-            self.assertNotIn("schema:articleBody", data)
-
-
-class SchemaOrgNewsContentTests(testlib.CubicWebTC):
     def test_news_content(self):
         news_content_data = {
             "title": "the-title",
@@ -276,36 +228,33 @@ class SchemaOrgNewsContentTests(testlib.CubicWebTC):
             "uuid": "the-uuid",
             "start_date": "2017-03-10",
         }
-
-        metadata_data = {"creator": "toto"}
-
+        metadata_data = {"creator": "toto", "keywords": "the-keywords"}
+        image_data = {
+            "caption": "caption",
+            "description": "description",
+            "copyright": "copyright",
+        }
         with self.admin_access.cnx() as cnx:
             metadata = cnx.create_entity("Metadata", **metadata_data)
-            entity = cnx.create_entity("NewsContent", metadata=metadata, **news_content_data)
+            image = cnx.create_entity(
+                "Image",
+                image_file=cnx.create_entity(
+                    "File",
+                    data=Binary(b"some-file-data"),
+                    data_name="image.png",
+                    data_format="image/png",
+                ),
+                **image_data
+            )
+            entity = cnx.create_entity(
+                "NewsContent", metadata=metadata, news_image=image, **news_content_data
+            )
             cnx.commit()
             entity.cw_clear_all_caches()
 
-            graph = entity2schemaorg(entity)
-            data = json.loads(graph.decode("utf-8"))
+            graph = Graph().parse(data=entity2schemaorg(entity), format="json-ld")
+            self.compare_graphs(graph, "rdf/newscontent.json", template_params={"eid": entity.eid})
 
-            # Attributes that should be set
-            self.assertEqual(data["@context"]["schema"], "http://schema.org/")
-            self.assertEqual(data["@type"], "schema:Article")
-            self.assertEqual(data["@id"], entity.absolute_url())
-            self.assertEqual(data["schema:url"], entity.absolute_url())
-            self.assertEqual(data["schema:name"], news_content_data["title"])
-            self.assertEqual(data["schema:dateCreated"], news_content_data["creation_date"])
-            self.assertEqual(data["schema:datePublished"], news_content_data["start_date"])
-            self.assertEqual(data["schema:dateModified"], news_content_data["modification_date"])
-            self.assertEqual(data["schema:inLanguage"], "FR")
-            self.assertEqual(data["schema:author"], metadata_data["creator"])
-
-            # Attributes that should not be set
-            self.assertNotIn("schema:articleBody", data)
-            self.assertNotIn("schema:keywords", data)
-
-
-class SchemaOrgCommemorationItemTests(testlib.CubicWebTC):
     def test_commemoration_item(self):
         commemoration_item_data = {
             "title": "the-title",
@@ -315,9 +264,9 @@ class SchemaOrgCommemorationItemTests(testlib.CubicWebTC):
             "uuid": "the-uuid",
             "subtitle": "the-subtitle",
             "alphatitle": "the-alphatitle",
-            "year": "1980",
+            "start_year": "1980",
             "commemoration_year": "2080",
-            "on_homepage": True,
+            "on_homepage": "onhp_hp",
             "creation_date": "1970-01-01",
             "modification_date": "2000-01-01",
         }
@@ -326,144 +275,15 @@ class SchemaOrgCommemorationItemTests(testlib.CubicWebTC):
 
         with self.admin_access.cnx() as cnx:
             metadata = cnx.create_entity("Metadata", **metadata_data)
-
-            commemoration = cnx.create_entity(
-                "CommemoCollection",
-                year=commemoration_item_data["year"],
-                title=commemoration_item_data["year"],
-            )
-
             entity = cnx.create_entity(
-                "CommemorationItem",
-                metadata=metadata,
-                collection_top=commemoration.eid,
-                **commemoration_item_data
+                "CommemorationItem", metadata=metadata, **commemoration_item_data
             )
             cnx.commit()
             entity.cw_clear_all_caches()
 
-            graph = entity2schemaorg(entity)
-            data = json.loads(graph.decode("utf-8"))
+            graph = Graph().parse(data=entity2schemaorg(entity), format="json-ld")
+            self.compare_graphs(graph, "rdf/commemoitem.json", template_params={"eid": entity.eid})
 
-            # Attributes that should be set
-            self.assertEqual(data["@context"]["schema"], "http://schema.org/")
-            self.assertTrue("@graph" in data)
-
-            event = self._get_event(data)
-
-            self.assertEqual(event["@type"], "schema:Event")
-            self.assertEqual(event["@id"], entity.absolute_url())
-            self.assertEqual(event["schema:url"], entity.absolute_url())
-            self.assertEqual(event["schema:name"], commemoration_item_data["title"])
-            self.assertEqual(
-                event["schema:datePublished"], commemoration_item_data["creation_date"]
-            )
-            self.assertEqual(event["schema:inLanguage"], "FR")
-            self.assertEqual(event["schema:author"], metadata_data["creator"])
-
-            super_event = self._get_super_event(data)
-
-            self.assertEqual(super_event["schema:url"], commemoration.absolute_url())
-
-    def _get_event(self, data):
-        for event in data["@graph"]:
-            if "@type" in event:
-                return event
-        raise Exception("No event in data")
-
-    def _get_super_event(self, data):
-        for event in data["@graph"]:
-            if "schema:type" in event:
-                return event
-        raise Exception("No supEvent in data")
-
-
-class SchemaOrgCommemoCollectionTests(testlib.CubicWebTC):
-    def test_commemo_collection(self):
-        nb_sub_events = 10
-
-        commemo_collection_data = {
-            "title": "the-title",
-            "content": "the-content",
-            "content_format": "text/plain",
-            "order": 1,
-            "uuid": "the-uuid",
-            "subtitle": "the-subtitle",
-            "name": "name",
-            "short_description": "the-short-description",
-            "year": "1980",
-            "creation_date": "1970-01-01",
-            "modification_date": "2000-01-01",
-        }
-
-        metadata_data = {"creator": "toto"}
-
-        with self.admin_access.cnx() as cnx:
-            metadata = cnx.create_entity("Metadata", **metadata_data)
-
-            entity = cnx.create_entity(
-                "CommemoCollection", metadata=metadata, **commemo_collection_data
-            )
-
-            for i in range(nb_sub_events):
-                cnx.create_entity(
-                    "CommemorationItem",
-                    commemoration_year="2000",
-                    title="title-{}".format(i),
-                    alphatitle="alphatitle-{}".format(i),
-                    collection_top=entity.eid,
-                )
-            cnx.commit()
-            entity.cw_clear_all_caches()
-
-            graph = entity2schemaorg(entity)
-            data = json.loads(graph.decode("utf-8"))
-
-            # Attributes that should be set
-            self.assertEqual(data["@context"]["schema"], "http://schema.org/")
-            self.assertTrue("@graph" in data)
-
-            event = self._get_event(data)
-
-            self.assertEqual(event["@type"], "schema:Event")
-            self.assertEqual(event["@id"], entity.absolute_url())
-            self.assertEqual(event["schema:url"], entity.absolute_url())
-            self.assertEqual(event["schema:name"], commemo_collection_data["title"])
-            self.assertEqual(
-                event["schema:datePublished"], commemo_collection_data["creation_date"]
-            )
-            self.assertEqual(event["schema:inLanguage"], "FR")
-            self.assertEqual(event["schema:author"], metadata_data["creator"])
-
-            sub_events = self._get_sub_events(data)
-
-            self.assertEqual(len(sub_events), nb_sub_events)
-            for sub_event in sub_events:
-                self.assertTrue(self._graph_contains_id(data["@graph"], sub_event["@id"]))
-
-    def _get_event(self, data):
-        for event in data["@graph"]:
-            if "@type" in event:
-                return event
-        raise Exception("No event in data")
-
-    def _get_sub_events(self, data):
-        events = []
-        for event in data["@graph"]:
-            if "schema:type" in event:
-                events.append(event)
-        return events
-
-    def _graph_contains_id(self, graph, id):
-        for node in graph:
-            if "@id" not in node:
-                continue
-            if node["@id"] == id:
-                return True
-        return False
-
-
-class SchemaOrgAgenthAuthorityTests(testlib.CubicWebTC):
     def test_agentauthority(self):
         agent_data = {
             "label": "Camus, Albert (1913-1960)",
@@ -471,14 +291,166 @@ class SchemaOrgAgenthAuthorityTests(testlib.CubicWebTC):
         with self.admin_access.repo_cnx() as cnx:
             entity = cnx.create_entity("AgentAuthority", **agent_data)
             cnx.commit()
-            graph = entity2schemaorg(entity)
-            data = json.loads(graph.decode("utf-8"))
-            # Attributes that should be set
-            self.assertEqual(data["@context"]["schema"], "http://schema.org/")
-            self.assertEqual(data["@type"], "schema:Person")
-            self.assertEqual(data["@id"], entity.absolute_url())
-            self.assertEqual(data["schema:url"], entity.absolute_url())
-            self.assertEqual(data["schema:name"], agent_data["label"])
+            graph = Graph().parse(data=entity2schemaorg(entity), format="json-ld")
+            self.compare_graphs(graph, "rdf/agent.json", template_params={"eid": entity.eid})
+
+    def test_person_authority(self):
+        agent_data = {
+            "label": "Camus, Albert (1913-1960)",
+        }
+        agent_name_data = {
+            "type": "persname",
+            "label": "Albert Camus",
+        }
+        with self.admin_access.repo_cnx() as cnx:
+            entity = cnx.create_entity("AgentAuthority", **agent_data)
+            cnx.create_entity("AgentName", authority=entity, **agent_name_data)
+            cnx.commit()
+            graph = Graph().parse(data=entity2schemaorg(entity), format="json-ld")
+            self.compare_graphs(graph, "rdf/personagent.json", template_params={"eid": entity.eid})
+
+    def test_organization_authority(self):
+        agent_data = {
+            "label": "ACME",
+        }
+        agent_name_data = {
+            "type": "corpname",
+            "label": "ACME",
+        }
+        with self.admin_access.repo_cnx() as cnx:
+            entity = cnx.create_entity("AgentAuthority", **agent_data)
+            cnx.create_entity("AgentName", authority=entity, **agent_name_data)
+            cnx.commit()
+            graph = Graph().parse(data=entity2schemaorg(entity), format="json-ld")
+            self.compare_graphs(
+                graph, "rdf/organizationagent.json", template_params={"eid": entity.eid}
+            )
+
+    def test_subjectauthority(self):
+        agent_data = {
+            "label": "le vélo",
+        }
+        with self.admin_access.repo_cnx() as cnx:
+            entity = cnx.create_entity("SubjectAuthority", **agent_data)
+            cnx.commit()
+            graph = Graph().parse(data=entity2schemaorg(entity), format="json-ld")
+            self.compare_graphs(graph, "rdf/subject.json", template_params={"eid": entity.eid})
+
+    def test_locationauthority(self):
+        with self.admin_access.repo_cnx() as cnx:
+            location_data = {
+                "label": "Saint-Pétersbourg",
+                "latitude": 59.9,
+                "longitude": 30.3,
+            }
+            entity = cnx.create_entity(
+                "LocationAuthority",
+                same_as=[
+                    cnx.create_entity(
+                        "ExternalUri",
+                        uri="https://fr.wikipedia.org/wiki/Saint-P%C3%A9tersbourg",
+                    ),
+                    cnx.create_entity(
+                        "ExternalUri",
+                        uri="http://www.geonames.org/498817/saint-petersburg.html",
+                    ),
+                ],
+                **location_data,
+            )
+            cnx.commit()
+            graph = Graph().parse(data=entity2schemaorg(entity), format="json-ld")
+            self.compare_graphs(graph, "rdf/location.json", template_params={"eid": entity.eid})
+
+    def test_person_authority_record(self):
+        with self.admin_access.repo_cnx() as cnx:
+            kind_eid = cnx.find("AgentKind", name="person")[0][0]
+            name = "Jean toto"
+            entity = cnx.create_entity(
+                "AuthorityRecord",
+                record_id="FRAN_NP_006883",
+                agent_kind=kind_eid,
+                reverse_name_entry_for=cnx.create_entity(
+                    "NameEntry", parts=name, form_variant="authorized"
+                ),
+                xml_support="foo",
+                start_date=datetime(1940, 1, 1),
+                end_date=datetime(2000, 5, 1),
+                reverse_occupation_agent=cnx.create_entity("Occupation", term="éleveur de poules"),
+                reverse_history_agent=cnx.create_entity(
+                    "History", text="<p>Il aimait les poules</p>"
+                ),
+                reverse_family_from=cnx.create_entity(
+                    "FamilyRelation",
+                    entry="Jean Lapin",
+                    family_to=cnx.create_entity(
+                        "AuthorityRecord",
+                        record_id="FRAN_NP_006884",
+                        xml_support="bar",
+                        agent_kind=kind_eid,
+                        reverse_name_entry_for=cnx.create_entity(
+                            "NameEntry", parts="Jean Lapin", form_variant="authorized"
+                        ),
+                    ),
+                ),
+                reverse_identity_from=cnx.create_entity(
+                    "IdentityRelation",
+                    entry="Toto, Jean",
+                    identity_to=cnx.create_entity("ExternalUri", uri="http://toto.fr#me"),
+                ),
+            )
+            cnx.commit()
+            graph = Graph().parse(data=entity2schemaorg(entity), format="json-ld")
+            self.compare_graphs(graph, "rdf/authorityrecord_person.json")
+
+    def test_organization_authority_record(self):
+        with self.admin_access.repo_cnx() as cnx:
+            kind_eid = cnx.find("AgentKind", name="authority")[0][0]
+            name = "La Toto compagnie"
+            entity = cnx.create_entity(
+                "AuthorityRecord",
+                record_id="FRAN_NP_00644",
+                agent_kind=kind_eid,
+                reverse_name_entry_for=cnx.create_entity(
+                    "NameEntry", parts=name, form_variant="authorized"
+                ),
+                xml_support="foo",
+                start_date=datetime(1940, 1, 1),
+                end_date=datetime(2000, 5, 1),
+                reverse_hierarchical_parent=cnx.create_entity(
+                    "HierarchicalRelation",
+                    entry="Toto poules",
+                    hierarchical_child=cnx.create_entity(
+                        "AuthorityRecord",
+                        record_id="FRAN_NP_006884",
+                        xml_support="bar",
+                        agent_kind=kind_eid,
+                        reverse_name_entry_for=cnx.create_entity(
+                            "NameEntry", parts="Toto poules", form_variant="authorized"
+                        ),
+                    ),
+                ),
+                reverse_hierarchical_child=cnx.create_entity(
+                    "HierarchicalRelation",
+                    entry="ACME",
+                    hierarchical_parent=cnx.create_entity(
+                        "AuthorityRecord",
+                        record_id="FRAN_NP_006874",
+                        xml_support="bar",
+                        agent_kind=kind_eid,
+                        reverse_name_entry_for=cnx.create_entity(
+                            "NameEntry", parts="ACME", form_variant="authorized"
+                        ),
+                    ),
+                ),
+                reverse_identity_from=cnx.create_entity(
+                    "IdentityRelation",
+                    entry="Toto cie",
+                    identity_to=cnx.create_entity("ExternalUri", uri="http://toto.fr#me"),
+                ),
+            )
+            cnx.commit()
+            graph = Graph().parse(data=entity2schemaorg(entity), format="json-ld")
+            self.compare_graphs(graph, "rdf/authorityrecord_organization.json")
 
 
 if __name__ == "__main__":

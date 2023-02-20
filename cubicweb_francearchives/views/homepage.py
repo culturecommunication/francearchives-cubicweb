@@ -31,226 +31,69 @@
 
 """pnia_content views/homepage views and components"""
 
-from datetime import datetime
-from babel.dates import format_date
-
-from cwtags import tag as T
-
 from logilab.common.decorators import cachedproperty
-
-from logilab.mtconverter import xml_escape
 
 from cubicweb.web.component import CtxComponent
 from cubicweb.web.views.startup import IndexView
 
-from cubicweb_francearchives.views import JinjaViewMixin, get_template
-from cubicweb_francearchives.utils import title_for_link, remove_html_tags
+from cubicweb_francearchives.views import JinjaViewMixin, format_number, get_template
+from cubicweb_francearchives.utils import (
+    get_hp_articles,
+    number_of_archives,
+    number_of_qualified_authorities,
+)
 
-_ = str
 
-
-class HomepageAbstractComponent(CtxComponent):
+class HomePageAbstractComponent(CtxComponent):
     __abstract__ = True
     context = "homepage"
 
-    def render(self, w, view=None):
-        self._render(w)
 
-    def _render(self, w):
-        raise NotImplementedError
-
-
-class HomeContentSectionComponent(CtxComponent):
-    __regid__ = "section-title-comp"
-    context = "section"
-
-    def render(self, w, grey_title, blue_title):
-        _ = self._cw._
-        with T.div(w, Class="content-section-header"):
-            with T.h1(w):
-                w(T.span(_(grey_title), Class="content-section-header-grey"))
-                w("&nbsp;")
-                w(T.span(_(blue_title), Class="content-section-header-blue"))
-        with T.div(w, Class="rhombus-title"):
-            w(T.span(Class="medium-grey-line mr20"))
-            w(T.span(Class="rhombus"))
-            w(T.span(Class="medium-grey-line ml20"))
-
-
-class HomeContentFlashComponent(JinjaViewMixin, HomepageAbstractComponent):
-    __regid__ = "homepage-content-flash"
-    template = get_template("flash-home.jinja2")
+class OnHomePageComponent(JinjaViewMixin, HomePageAbstractComponent):
+    __regid__ = "onhomepage"
+    template = get_template("onhomepage.jinja2")
     order = 1
 
     def call_template(self, w, **ctx):
         w(self.template.render(**ctx))
 
-    def _render(self, w):
+    def render(self, w):
         req = self._cw
-        rset = req.execute(
-            """
-            Any X, I, U LIMIT 1 WHERE  X basecontent_image I,
-            I uri U,
-            X is BaseContent, X on_homepage True"""
-        )
-        if rset:
-            entity = rset.one()
-            title = entity.title
-            content = {"content": entity.content, "link": entity.view("incontext")}
-            image = entity.basecontent_image[0] if entity.basecontent_image else None
-            content["image"] = {
-                "src": image.image_file[0].download_url(),
-                "alt": remove_html_tags(title),
-                "title": title_for_link(self._cw, title),
-                "href": image.uri,
-            }
-        else:
-            content = {}
         return self.call_template(
             w,
-            grey_title=_("###events_grey###"),
-            blue_title=_("###events_blue###"),
-            data=content,
+            _=req._,
+            entities=get_hp_articles(req, "onhp_hp"),
             default_picto_src=self._cw.uiprops["DOCUMENT_IMG"],
         )
 
 
-class HomeContentEventsComponent(JinjaViewMixin, HomepageAbstractComponent):
-    __regid__ = "homepage-content-events"
-    template = get_template("commemorations-home.jinja2")
-    order = 6
+class HomePageBottomLinks(JinjaViewMixin, HomePageAbstractComponent):
+    __regid__ = "homepage-bottom-links"
+    template = get_template("bottom-links.jinja2")
+    order = 2
 
     def call_template(self, w, **ctx):
         w(self.template.render(**ctx))
 
-    def _render(self, w):
+    def render(self, w):
         req = self._cw
-        rset = req.execute(
-            "Any X ORDERBY O LIMIT 10 WHERE "
-            "X is CommemorationItem, "
-            "X commemoration_year XA, "
-            "X on_homepage True, X on_homepage_order O"
-        )
-        _ = req._
-        commemos = [
-            {
-                "url": commemo.absolute_url(),
-                "title": commemo.title,
-                "plain_title": remove_html_tags(commemo.title),
-                "link_title": title_for_link(req, commemo.title),
-                "image": commemo.image,
-            }
-            for commemo in rset.entities()
-        ]
+        archives = format_number(number_of_archives(req), req)
+        agents = format_number(number_of_qualified_authorities(req, "AgentAuthority"), req)
+        subjects = format_number(number_of_qualified_authorities(req, "SubjectAuthority"), req)
+        locations = format_number(number_of_qualified_authorities(req, "LocationAuthority"), req)
         return self.call_template(
             w,
-            grey_title=_("###events_grey###"),
-            blue_title=_("###events_blue###"),
-            commemos=commemos,
-            default_picto_src=self._cw.uiprops["DOCUMENT_IMG"],
+            req=req,
+            homepage=True,
+            archives_label=req._("See {} archives").format(archives),
+            subjects_label=req._("{} Subjects").format(subjects),
+            agents_label=req._("{} Agents").format(agents),
+            locations_label=req._("{} Locations").format(locations),
         )
-
-
-class HomeContentNewsComponent(HomepageAbstractComponent):
-    __regid__ = "homepage-content-news"
-    order = 5
-
-    def _render(self, w):
-        _ = self._cw._
-        with T.section(w, id="content-news"):
-            w(T.div(Class="content-news-tbg"))
-            comp = self._cw.vreg["ctxcomponents"].select_or_none(
-                "section-title-comp", self._cw, rset=self.cw_rset
-            )
-            if comp:
-                comp.render(
-                    w=w,
-                    grey_title=_("###news_title__grey###"),
-                    blue_title=_("###new_title_blue###"),
-                )
-            now = datetime.now()
-            with T.div(w, id="content-news-date", Class="row"):
-                w(T.h2(format_date(now, "MMMM y", locale=self._cw.lang), Class="date"))
-            self.render_timeline(w)
-            w(T.div(Class="content-news-bbg"))
-
-    def render_timeline(self, w):
-        odd, even, ordered = [], [], []
-        self.w = w
-        req = self._cw
-        _ = self._cw._
-        last_news = req.execute(
-            "Any X ORDERBY SA DESC LIMIT 7 WHERE X is NewsContent, "
-            "X start_date SA, X on_homepage TRUE"
-        ).entities()
-        default_picto_src = self._cw.uiprops["DOCUMENT_IMG"]
-        with T.div(w, Class="timeline"):
-            last_date = None
-            for i, news in enumerate(last_news):
-                _even = i % 2
-                current_news = []
-                w = current_news.append
-                slide_classes = "timeline-slide"
-                if not news.start_date == last_date:
-                    slide_classes = slide_classes + " first-of-day"
-                last_date = news.start_date
-                title = news.title
-                link_title = title_for_link(self._cw, news.title)
-                with T.div(w, Class=slide_classes):
-                    w(T.span(Class="timeline-corner"))
-                    with T.div(w, Class="timeline-news"):
-                        with T.div(w, Class="clearfix"):
-                            if news.news_image:
-                                image = news.news_image[0]
-                                img_src = (
-                                    image.image_file[0].cw_adapt_to("IDownloadable").download_url()
-                                )
-                                with T.a(w, href=news.absolute_url(), title=link_title):
-                                    w(
-                                        T.img(
-                                            src=img_src,
-                                            data_defaultsrc=default_picto_src,
-                                            Class="timeline-news__picto responsive-img",
-                                            alt=remove_html_tags(title),
-                                        )
-                                    )
-                                    w(T.span(title, Class="sr-only"))
-                            with T.div(w, Class="timeline-news__datetime"):
-                                day, month = format_date(
-                                    news.start_date, "dd##MMM", locale=self._cw.lang
-                                ).split("##")
-                                w(T.div(day, Class="timeline-news__datetime__day"))
-                                w(T.div(month[:3], Class="timeline-news__datetime__month"))
-                        with T.div(w, Class="timeline-news__title"):
-                            with T.h3(w):
-                                w(T.a(title, href=news.absolute_url(), title=link_title))
-                        if news.header:
-                            w(T.div(news.header, Class="timeline-news__chapo"))
-                ordered.extend(current_news)
-                even.extend(current_news) if _even else odd.extend(current_news)
-
-            # XXX set border in javascript, not in CSS
-            with T.div(self.w, Class="row"):
-                with T.div(self.w, Class="col-12 ordered"):
-                    self.w("\n".join([str(e) for e in ordered]))
-            with T.div(self.w, Class="row"):
-                with T.div(self.w, Class="col-md-6 col-xs-6 odd"):
-                    self.w("\n".join([str(e) for e in odd]))
-                with T.div(self.w, Class="col-md-6 col-xs-6 even"):
-                    self.w("\n".join([str(e) for e in even]))
-            with T.div(self.w, Class="row"):
-                url = self._cw.build_url("actualites")
-                self.w(
-                    T.a(
-                        T.span(_("See all news"), Class="sr-only"),
-                        href=xml_escape(url),
-                        Class="timeline__more-events",
-                    )
-                )
 
 
 class PniaIndexView(IndexView):
-    needs_css = ("lightslider-master/css/lightslider.min.css",)
+    needs_css = ()
 
     @cachedproperty
     def xiti_chapters(self):
@@ -269,7 +112,6 @@ class PniaIndexView(IndexView):
         )
         for comp in comps:
             comp.render(w=self.w)
-        self._cw.add_js("lightslider-master/js/lightslider.min.js")
 
 
 def registration_callback(vreg):

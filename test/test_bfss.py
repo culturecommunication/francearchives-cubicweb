@@ -29,6 +29,7 @@
 # knowledge of the CeCILL-C license and that you accept its terms.
 #
 import unittest
+import os
 import os.path as osp
 import urllib.request
 import urllib.parse
@@ -40,6 +41,9 @@ from cubicweb.devtools.testlib import CubicWebTC
 from cubicweb_francearchives.testutils import HashMixIn
 
 
+@unittest.skipIf(
+    "AWS_S3_BUCKET_NAME" in os.environ, "BFSS specific tests, skipping when S3 activated"
+)
 class BfssTests(HashMixIn, CubicWebTC):
     def setUp(self):
         super(BfssTests, self).setUp()

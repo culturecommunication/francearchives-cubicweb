@@ -54,11 +54,20 @@ uncomment code below if you want to activate automatic test for your cube:
 
 from cubicweb.devtools.testlib import CubicWebTC
 
+from cubicweb_francearchives.testutils import PostgresTextMixin
 
-class FranceArchivesViewsTC(CubicWebTC):
+from pgfixtures import setup_module, teardown_module  # noqa
+
+
+class FranceArchivesViewsTC(PostgresTextMixin, CubicWebTC):
     vid_validators = {
         "index": lambda: None,
     }
+
+    @classmethod
+    def init_config(cls, config):
+        super(FranceArchivesViewsTC, cls).init_config(config)
+        config.set_option("instance-type", "cms")
 
     def setup_database(self):
         with self.admin_access.cnx() as cnx:

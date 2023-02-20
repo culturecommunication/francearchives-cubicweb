@@ -28,14 +28,20 @@
 # The fact that you are presently reading this means that you have had
 # knowledge of the CeCILL-C license and that you accept its terms.
 #
+from collections import defaultdict
+from datetime import datetime
 from itertools import count
-
+import json
 import logging
+import os.path
 
-from sickle import Sickle
 from sickle.models import Record
 
 from cubicweb.dataimport.importer import ExtEntity
+
+
+from cubicweb_francearchives.dataimport import ExtentityWithIndexImporter, sqlutil, usha1
+from cubicweb_francearchives.dataimport.oai_utils import OAIPMHWriter, PniaSickle
 from cubicweb_francearchives.dataimport.ead import readerconfig
 from cubicweb_francearchives.dataimport.oai_utils import PniaOAIItemIterator
 
@@ -48,6 +54,14 @@ def first(value):
     return next(iter(value))
 
 
+def compute_nomina_stable_id(service_code, notice_id):
+    if notice_id.startswith(f"{service_code}_"):
+        stable_id = notice_id
+    else:
+        stable_id = f"{service_code}_{notice_id}"
+    return usha1(stable_id)
+
+
 class OAIENominaRecord(Record):
     def __init__(self, record_element, strip_ns=True):
         self.error = None
@@ -58,6 +72,182 @@ class OAIENominaRecord(Record):
             return
         self.nomina = self.xml.find(".//" + self._oai_namespace + "metadata/")
         self.harvested_url = ""
+
+
+class OAINominaWriter(OAIPMHWriter):
+    """OAI-PMH writer (Nomina)."""
+
+    headers = [("stable_id", "oai_id", "json_data", "service", "delete", "harvested_url")]
+
+    def __init__(self, nomina_services_dir, service_infos, log=None):
+        """Initialize OAI-PMH writer (Dublin Core).
+
+        :param str nomina_services_dir: location of backup files
+        :param dict service_infos: service information
+        :param Logger log: logger
+        """
+        super(OAINominaWriter, self).__init__(
+            nomina_services_dir, service_infos, subdirectories=["oaipmh"]
+        )
+        if log is None:
+            log = logging.getLogger("rq.task")
+        self.log = log
+        self.rows = []
+        self.file_counter = 0
+        self.filepaths = []
+        self.service_code = self.service_infos["code"]
+
+    def init_csv(self):
+        #  add headers
+        self.rows = self.headers[:]
+        self.file_counter += 1
+
+    @property
+    def get_filepath(self):
+        """Get file path.
+        :returns: file path
+        :rtype: str
+        """
+        date = datetime.now().strftime("%Y%m%d%H%M%S")
+        filename = f"{self.service_code}_nomina_{date}_{self.file_counter}.csv"
+        filepath = os.path.join(self.directory, filename)
+        if self.storage.s3_bucket:
+            return self.storage.s3.ensure_key(filepath)
+        return filepath
+
+    def dump_csv(self):
+        """Dump file contents.
+        :param str file_contents: file contents
+
+        :returns: str file_path: filepath
+        """
+        filepath = self.get_filepath
+        self.log.info(f"Writing {len(self.rows) - 1} rows in {filepath}")
+        if len(self.rows) > 1 or self.rows != self.headers:
+            fpath = self.storage.storage_write_csv_file(filepath, self.rows)
+            self.filepaths.append(fpath)
+
+    def add_record(self, record, nomina=None):
+        stable_id = nomina.values["stable_id"] if nomina else ""
+        if stable_id:
+            stable_id = stable_id.pop()
+        self.rows.append(
+            (
+                stable_id,
+                record.header.identifier,
+                nomina.values["json_data"].pop() if nomina else "",
+                self.service_code,
+                "y" if record.deleted else "n",
+                record.harvested_url,
+            )
+        )
+
+
+class OAINominaHarvester:
+    """OAI Nomina schema haverster.
+
+    :ivar dict config: server-side configuration
+    :ivar OAINominaReader reader: OAI Nomina schema reader
+    """
+
+    def __init__(self, cnx, log=None):
+        """Initialize OAI Nomina schema reader.
+
+        :param Connection cnx: CubicWeb database connectio
+        :param Logger log: logger
+        """
+        self.cnx = cnx
+        if log is None:
+            log = logging.getLogger("rq.task")
+        self.log = log
+        self.reader = OAINominaReader()
+        self.filepaths = []
+
+    def harvest_records(
+        self, service_infos, headers, records_limit=None, csv_rows_limit=100000, **params
+    ):
+        """Harvest data and check they contain the needed information
+        :param Connection cnx: connection
+        :param dict service_infos: service information
+        :param String headers: http headers
+        :param int records_limit: only import limit documents number
+        :param int csv_rows_limit: rows limit in the resulting csv file
+        :param Logger log: logger
+
+        :param dict params: harvest parameters
+        """
+        csv_rows_limit = int(csv_rows_limit)
+        base_url = service_infos["oai_url"]
+        oai_mapping = {
+            "ListRecords": OAIENominaRecord,
+            "GetRecord": OAIENominaRecord,
+        }
+        self.client = PniaSickle(
+            base_url,
+            iterator=PniaOAIItemIterator,
+            class_mapping=oai_mapping,
+            headers=headers,
+            retry_status_codes=(500, 502, 503),
+        )
+        self.client.logger = self.log
+        self.log.setLevel(logging.INFO)
+        records = self.client.ListRecords(**params)
+        nomina_dir = self.cnx.vreg.config["nomina-services-dir"]
+        nomina_writer = OAINominaWriter(nomina_dir, service_infos, self.log)
+        nomina_writer.init_csv()
+        idx, complete_list_size = None, None
+        try:
+            for idx, record in enumerate(records):
+                if complete_list_size is None:
+                    try:
+                        complete_list_size = record.complete_list_size
+                        self.log.info(
+                            "Repository contains %s documents (completeListSize).",
+                            record.complete_list_size,
+                        )
+                    except Exception:
+                        pass
+                if record is None:
+                    # PniaOAIItemIterator raise an error before creating a record
+                    continue
+                identifier = record.header.identifier
+                url = record.harvested_url
+                if idx and idx % 1000 == 0:
+                    self.log.info("Processed %s documents", idx + 1)
+                if not hasattr(record, "metadata") and not record.deleted:
+                    self.log.warning(
+                        "%s. The record with identifier %r has no metadata.",
+                        url,
+                        identifier,
+                    )
+                    continue
+                if idx and idx % csv_rows_limit == 0.0:
+                    nomina_writer.dump_csv()
+                    nomina_writer.init_csv()
+                if record.deleted:
+                    self.log.info(
+                        "%s. The record with identifier %r is set to be deleted.",
+                        url,
+                        identifier,
+                    )
+                    nomina_writer.add_record(record, nomina=None)
+                    continue
+                for nomina in self.reader(record.nomina, record.header, service_infos, self.log):
+                    if nomina:
+                        nomina_writer.add_record(record, nomina)
+                if records_limit and idx == (records_limit - 1):
+                    break
+        except Exception as err:
+            self.log.error("Harvest aborted: %s", err)
+        if complete_list_size is None:
+            self.log.info(
+                """No information about records list size (completeListSize) could be found."""
+            )
+        if records_limit:
+            self.log.info("Expected %s documents.", records_limit)
+        self.log.info("Processed %s records.", idx + 1 if idx is not None else 0)
+        nomina_writer.dump_csv()
+        return nomina_writer.filepaths or []
 
 
 class OAINominaImporter(object):
@@ -80,6 +270,7 @@ class OAINominaImporter(object):
         if log is None:
             log = logging.getLogger("rq.task")
         self.log = log
+        self.store = store
         if config is None:
             config = readerconfig(
                 cwconfig,
@@ -93,9 +284,44 @@ class OAINominaImporter(object):
         self.config = config
         self.reader = OAINominaReader()
 
-    def import_records(self, service_infos, headers, **params):
-        """Harvest data and check they contain the needed information
+    def import_records(self, service_infos, headers, records_limit=None, dry_run=False, **params):
+        """Import NominaRecords from the CSV path
         :param dict service_infos: service information
+        :param String headers: http headers
+        :param int records_limit: only import limit documents number
+        :param int csv_rows_limit: rows limit in the resulting csv file
+        :param boolean dry_run: flag to import data in Postgres
+        :param dict params: harvest parameters
+        """
+        extentities = self.harvest_records(
+            service_infos, headers, records_limit=records_limit, **params
+        )
+        if dry_run:
+            return
+        cnx = self.store._cnx
+        notrigger_tables = sqlutil.nomina_foreign_key_tables(cnx.vreg.schema)
+        index_policy = {"autodedupe_authorities": "service/normalize"}
+        extid2eid = {}
+        service_eid = service_infos["eid"]
+        extid2eid["service-{}".format(service_eid)] = service_eid
+        importer = ExtentityWithIndexImporter(
+            cnx.vreg.schema, self.store, extid2eid, index_policy=index_policy, log=self.log
+        )
+        self.log.info("Start importing IR in Postgres")
+        with sqlutil.no_trigger(cnx, notrigger_tables, interactive=False):
+            importer.import_entities(extentities)
+            self.store.flush()
+            self.store.finish()
+        self.log.info("End importing IRs in Postgres")
+
+    def harvest_records(self, service_infos, headers, records_limit=None, **params):
+        """Harvest data and check they contain the needed information
+
+        :param dict service_infos: service information
+        :param String headers: http headers
+        :param int records_limit: only import limit documents number
+        :param int csv_rows_limit: rows limit in the resulting csv file
+        :param boolean dry_run: flag to import data in Postgres
         :param dict params: harvest parameters
         """
         base_url = service_infos["oai_url"]
@@ -103,7 +329,7 @@ class OAINominaImporter(object):
             "ListRecords": OAIENominaRecord,
             "GetRecord": OAIENominaRecord,
         }
-        self.client = Sickle(
+        self.client = PniaSickle(
             base_url,
             iterator=PniaOAIItemIterator,
             class_mapping=oai_mapping,
@@ -111,8 +337,9 @@ class OAINominaImporter(object):
             retry_status_codes=(500, 502, 503),
         )
         self.client.logger = self.log
+        self.log.setLevel(logging.INFO)
         records = self.client.ListRecords(**params)
-        for record in records:
+        for i, record in enumerate(records):
             if record is None:
                 # PniaOAIItemIterator raised an error before creating a record
                 continue
@@ -125,121 +352,188 @@ class OAINominaImporter(object):
                     identifier,
                 )
                 continue
+            if not (hasattr(record, "metadata") and hasattr(record, "nomina")):
+                self.log.warning(
+                    "%s. The record with identifier %r has no metadata.",
+                    url,
+                    identifier,
+                )
+                continue
             self.log.info("%s. Oai identifier: %s", url, identifier)
             # directly import data whitout storing it on the filesystem
-            for person in self.reader(record.nomina, service_infos):
-                yield person
+            for nomina in self.reader(record.nomina, record.header, service_infos, self.log):
+                yield nomina
+            if records_limit and i == (records_limit - 1):
+                break
 
 
 class OAINominaReader(object):
     def __init__(self):
         self.next_id = lambda c=count(1): next(c)
 
-    def __call__(self, record, service_infos):
+    def __call__(self, record, header, service_infos, log):
         """Generate extentities read from `record` etree"""
-        death_year, dates = build_dates(record)
-        locations = build_locations(record)
-        persons = build_persons(record, death_year, dates, locations)
-        if service_infos:
-            service_eid = service_infos.get("eid")
-            service_name = service_infos.get("name")
-        else:
-            service_eid = service_name = None
-        for person in persons:
-            if service_eid:
-                # use service extid, not eid
-                person["service"] = "service-{}".format(service_eid)
-            # "publisher" is supposed to be required
-            person["publisher"] = service_name or "unknown"
-            person_id = self.next_id()
-            person = ExtEntity("Person", person_id, format_data(person))
-            yield person
+        doctype_node = record.find(qname("type"))
+        if doctype_node is None:
+            log.warning("No document type found for record %s", header.identifier)
+            return
+        persons = build_persons(record)
+        if len(persons) == 0:
+            log.warning(
+                "No person name or person firstname found for record  %s", header.identifier
+            )
+            return
+        service_eid = service_infos["eid"]
+        stable_id = compute_nomina_stable_id(service_infos["code"], header.identifier)
+        info = {}
+        info["t"] = doctype_node.get("code", "#UN")
+        uri = record.get("uri")
+        if uri:
+            info["u"] = uri
+        for code, data in (
+            ("e", build_events(record)),
+            ("p", persons),
+            ("c", build_complement(record)),
+        ):
+            if data:
+                info[code] = data
+        json_data = json.dumps(info, sort_keys=True)
+        nomina_data = {
+            "stable_id": {stable_id},
+            "oai_id": {header.identifier},
+            "json_data": {json_data},
+            "service": {f"service-{service_eid}"},
+        }
+        nomina_id = self.next_id()
+        nomina = ExtEntity("NominaRecord", nomina_id, nomina_data)
+        yield nomina
+
+
+def str2bool(value):
+    if value in ("oui", "o", "1"):
+        return "y"
+    else:
+        return "n"
+
+
+def get_text(node):
+    if node is not None and node.text and node.text.strip():
+        return str(node.text.strip())
+
+
+def build_events(record):
+    events = {}
+    locations = build_locations(record)
+    dates = build_dates(record)
+    for key, value in dates.items():
+        desc = {"d": value}
+        loc = locations.pop(key, None)
+        if loc:
+            desc["l"] = loc
+        events[key] = desc
+    for key, value in locations.items():
+        assert key not in events
+        events[key] = {"l": value}
+    return events
 
 
 def build_dates(record):
-    death_year = None
-    dates_description = ""
+    dates = defaultdict(list)
     for date in record.findall(qname("date")):
-        year = date.attrib.get("annee")
-        code = date.get("code", "")
-        if code in ("D", "TD") and year:
-            try:
-                death_year = int(year)
-            except ValueError:
-                pass
+        fields = {}
+        code = date.get("code", "###")  # code is a mandatory attribute
+        full_date = date.text.strip() if date.text else ""
+        year = date.attrib.get("annee", "")
+        if not (year or full_date):
+            continue
+        if year == full_date:
+            fields["y"] = year
         else:
-            date = date.text or year
-            dates_description += '<li class="{0}">{1}</li>'.format(code, date)
-    if dates_description:
-        dates_description = "<ul>" + dates_description + "</ul>"
-    else:
-        dates_description = None
-    return death_year, dates_description
+            if year:
+                fields["y"] = year
+            if full_date:
+                fields["d"] = full_date
+        if fields:
+            dates[code].append(fields)
+    return dates
 
 
-def build_persons(record, death_year=None, dates=None, locations=None):
-    person_data = []
-    uri = record.get("uri") or None
+def build_persons(record):
+    persons_data = []
     for person in record.findall(qname("personne")):
         nomelt = person.find(qname("nom"))
-        if nomelt is not None and nomelt.text:
-            name = nomelt.text
-        else:
-            name = None
-        data = {
-            "name": name,
-            "death_year": death_year,
-            "dates_description": dates,
-            "locations_description": locations,
-            "document_uri": uri,
-        }
+        data = {}
+        if nomelt is not None:
+            data["n"] = get_text(nomelt)
         forenames = []
         for forenames_node in person.findall(qname("prenoms")):
-            if forenames_node.text:
-                forenames.append(forenames_node.text.strip())
-        data["forenames"] = " ".join(forenames)
-        person_data.append(data)
-    return person_data
+            if forenames_node is not None:
+                text = get_text(forenames_node)
+                if text:
+                    forenames.append(text)
+        if forenames:
+            data["f"] = " ".join(forenames)
+        if data:
+            persons_data.append(data)
+    return persons_data
 
 
 def build_locations(record):
-    locations_description = ""
+    locations = defaultdict(list)
     for location in record.findall(qname("localisation")):
-        code = location.get("code", "")
-        location_fields = []
+        code = location.get("code", "###")
+        fields = {}
         pays = location.find(qname("pays"))
-        if pays is not None and pays.text:
-            location_fields.append(pays.text)
+        if pays is not None and pays.text and pays.text.strip():
+            fields["c"] = pays.text.strip()
+            pays_code = pays.get("code")
+            if pays_code:
+                fields["cc"] = pays_code
         department = location.find(qname("departement"))
-        if department is not None and department.text:
-            location_fields.append(department.text)
-        precision = location.find(qname("precision"))
-        if precision is not None and precision.text:
-            location_fields.append(precision.text)
-        if location_fields:
-            locations_description += '<li class="{0}">{1}</li>'.format(
-                code, ", ".join(location_fields)
-            )
-    if locations_description:
-        locations_description = "<ul>" + locations_description + "</ul>"
-    else:
-        locations_description = None
-    return locations_description
+        text = get_text(department)
+        if text:
+            fields["d"] = text
+            department_code = department.get("code")
+            if department_code:
+                fields["dc"] = department_code
+        precisions = []
+        for precision_node in location.findall(qname("precision")):
+            text = get_text(precision_node)
+            if text:
+                precisions.append(text)
+        if precisions:
+            fields["p"] = ", ".join(precisions)
+        if fields:
+            locations[code].append(fields)
+    return locations
 
 
-def format_data(values):
-    """format `values` attributes dict
-
-    - convert str to unicode
-    - put values in sets
-    - ignore None attributes
-    """
-    formatted = {}
-    for key, value in list(values.items()):
-        if isinstance(value, str):
-            value = {str(value)}
-        else:
-            value = {value}
-        if value:
-            formatted[key] = value
-    return formatted
+def build_complement(record):
+    info = defaultdict(list)
+    complement = record.find(qname("complement"))
+    if complement is not None:
+        for key, tag in (
+            ("f", "conflit"),
+            ("c", "code"),
+            ("e", "niveau"),
+            ("n", "nro"),
+            ("m", "mention"),
+            ("a", "autre"),  # more info,
+        ):
+            node = complement.find(qname(tag))
+            if node is not None and node.text and node.text.strip:
+                info[key] = node.text.strip()
+        for key, tag in (
+            ("d", "numerise"),  # boolean
+            ("p", "payant"),  # boolean
+        ):
+            node = complement.find(qname(tag))
+            if node is not None and node.text and node.text.strip:
+                info[key] = str2bool(node.text.strip())
+        professions = []
+        for profession in complement.findall(qname("profession")):
+            if profession.text:
+                professions.append(profession.text.strip())
+        if professions:
+            info["o"] = professions
+    return info
